@@ -10,7 +10,11 @@ import {
   SPACING,
   StyledText,
 } from '@opentrons/components'
-import { DescriptionField } from '../../atoms'
+import {
+  // DescriptionField,
+  // DescriptionFieldContainer,
+  TextAreaField,
+} from '../../atoms'
 import { HandleEnter } from '../../atoms/HandleEnter'
 import { analyticsEvent } from '../../analytics/actions'
 import { ONBOARDING_FLOW_DURATION_EVENT } from '../../analytics/constants'
@@ -73,7 +77,15 @@ export function AddMetadata(props: AddMetadataProps): JSX.Element | null {
             <StyledText desktopStyle="captionRegular" color={COLORS.grey60}>
               {t('description')}
             </StyledText>
-            <DescriptionField {...register('fields.description')} />
+            <TextAreaField
+              {...register('fields.description')}
+              value={watch('fields.description')}
+              height="6.8125rem"
+              resize="none"
+            />
+            {/* <DescriptionFieldContainer>
+              <DescriptionField {...register('fields.description')} />
+            </DescriptionFieldContainer> */}
           </Flex>
           <Flex flexDirection={DIRECTION_COLUMN} gridGap={SPACING.spacing4}>
             <StyledText desktopStyle="captionRegular" color={COLORS.grey60}>

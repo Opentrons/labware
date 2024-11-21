@@ -3,6 +3,7 @@ import {
   BORDERS,
   COLORS,
   DIRECTION_COLUMN,
+  Flex,
   OVERFLOW_HIDDEN,
   SPACING,
   TYPOGRAPHY,
@@ -36,39 +37,56 @@ export const COLUMN_STYLE = css`
   flex: 1;
 `
 
-export const DescriptionField = styled.textarea`
-  min-height: 5rem;
-  width: 100%;
-  border: 1px ${BORDERS.styleSolid} ${COLORS.grey50};
+export const DescriptionFieldContainer: any = styled(Flex)`
   border-radius: ${BORDERS.borderRadius4};
-  padding: ${SPACING.spacing8};
-  font-size: ${TYPOGRAPHY.fontSizeP};
-  resize: none;
-
-  &:active:enabled {
-    border: 1px ${BORDERS.styleSolid} ${COLORS.blue50};
-  }
-
-  &:hover {
-    border: 1px ${BORDERS.styleSolid} ${COLORS.grey60};
-  }
 
   &:focus-visible {
     border: 1px ${BORDERS.styleSolid} ${COLORS.grey55};
     outline: 2px ${BORDERS.styleSolid} ${COLORS.blue50};
     outline-offset: 2px;
   }
+`
 
-  &:focus-within {
-    border: 1px ${BORDERS.styleSolid} ${COLORS.blue50};
+export const DescriptionField = styled.textarea`
+  min-height: 5rem;
+  width: 100%;
+  border: 1px ${BORDERS.styleSolid} ${COLORS.grey50}; /* Default border */
+  border-radius: ${BORDERS.borderRadius4};
+  padding: ${SPACING.spacing8};
+  font-size: ${TYPOGRAPHY.fontSizeP};
+  resize: none;
+
+  /* Default (no pseudo-classes) */
+  &:not(:hover):not(:focus):not(:active) {
+    border: 1px ${BORDERS.styleSolid} ${COLORS.grey50};
   }
 
+  /* Hover state */
+  &:hover {
+    border: 1px ${BORDERS.styleSolid} ${COLORS.grey60};
+  }
+
+  /* Active state (clicking) */
+  &:active {
+    border: 1px ${BORDERS.styleSolid} ${COLORS.blue50};
+    outline: none; /* Ensure the active state overrides focus-visible */
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  /* Focus-visible (keyboard focus) */
+  /* &:focus-visible {
+    border: 1px ${BORDERS.styleSolid} ${COLORS.grey55};
+    outline: 2px ${BORDERS.styleSolid} ${COLORS.blue50};
+    outline-offset: 2px;
+  } */
+
+  /* Disabled state */
   &:disabled {
     border: 1px ${BORDERS.styleSolid} ${COLORS.grey30};
-  }
-  input[type='number']::-webkit-inner-spin-button,
-  input[type='number']::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+    background-color: ${COLORS.grey20};
+    cursor: not-allowed;
   }
 `
