@@ -61,7 +61,7 @@ class LiquidHandlingWellLocationMixin(BaseModel):
     )
     wellLocation: LiquidHandlingWellLocation = Field(
         default_factory=LiquidHandlingWellLocation,
-        description="Relative well location at which to perform the operation",
+        description="Relative wwellell location at which to perform the operation",
     )
 
 

@@ -24,11 +24,12 @@ from typing import (
     cast,
     Sequence,
     Mapping,
+    Literal,
 )
 
 from opentrons_shared_data.labware.types import LabwareDefinition, LabwareParameters
 
-from opentrons.types import Location, Point, NozzleMapInterface
+from opentrons.types import Location, Point, NozzleMapInterface, MeniscusTracking
 from opentrons.protocols.api_support.types import APIVersion
 from opentrons.protocols.api_support.util import (
     requires_version,
@@ -233,16 +234,21 @@ class Well:
         return Location(self._core.get_center(), self)
 
     @requires_version(2, 21)
-    def meniscus(self, z: float = 0.0) -> Location:
+    def meniscus(
+        self, target: Literal["beginning", "end", "dynamic_meniscus"], z: float = 0.0
+    ) -> Location:
         """
         :param z: An offset on the z-axis, in mm. Positive offsets are higher and
             negative offsets are lower.
+        :param target: The relative position inside the well to target with respect to a liquid handling operation.
         :return: A :py:class:`~opentrons.types.Location` that indicates location is meniscus and that holds the ``z`` offset in its point.z field.
 
         :meta private:
         """
         return Location(
-            point=Point(x=0, y=0, z=z), labware=self, _ot_internal_is_meniscus=True
+            point=Point(x=0, y=0, z=z),
+            labware=self,
+            _meniscus_tracking=MeniscusTracking(target=target),
         )
 
     @requires_version(2, 8)

@@ -108,7 +108,6 @@ def test_well_meniscus(decoy: Decoy, mock_well_core: WellCore, subject: Well) ->
 
     assert isinstance(result, Location)
     assert result.point == Point(0, 0, 4.2)
-    assert result.is_meniscus is True
     assert result.labware.as_well() is subject
 
 

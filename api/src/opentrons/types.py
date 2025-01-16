@@ -11,6 +11,7 @@ from typing import (
     Optional,
     Protocol,
     Dict,
+    Literal,
 )
 
 from opentrons_shared_data.robot.types import RobotType
@@ -88,6 +89,20 @@ LocationLabware = Union[
 ]
 
 
+class MeniscusTracking:
+    def __init__(
+        self,
+        target: Union[
+            Literal["beginning"], Literal["end"], Literal["dynamic_meniscus"]
+        ] = "end",
+    ) -> None:
+        self._target = target
+
+    @property
+    def target(self) -> str:
+        return str(self._target)
+
+
 class Location:
     """Location(point: Point, labware: Union["Labware", "Well", str, "ModuleGeometry", LabwareLike, None, "ModuleContext"])
 
@@ -129,12 +144,12 @@ class Location:
             "ModuleContext",
         ],
         *,
-        _ot_internal_is_meniscus: Optional[bool] = None,
+        _meniscus_tracking: Optional[MeniscusTracking] = None,
     ):
         self._point = point
         self._given_labware = labware
         self._labware = LabwareLike(labware)
-        self._is_meniscus = _ot_internal_is_meniscus
+        self._meniscus_tracking = _meniscus_tracking
 
     # todo(mm, 2021-10-01): Figure out how to get .point and .labware to show up
     # in the rendered docs, and then update the class docstring to use cross-references.
@@ -148,8 +163,8 @@ class Location:
         return self._labware
 
     @property
-    def is_meniscus(self) -> Optional[bool]:
-        return self._is_meniscus
+    def meniscus_tracking(self) -> Optional[MeniscusTracking]:
+        return self._meniscus_tracking
 
     def __iter__(self) -> Iterator[Union[Point, LabwareLike]]:
         """Iterable interface to support unpacking. Like a tuple.
@@ -167,7 +182,7 @@ class Location:
             isinstance(other, Location)
             and other._point == self._point
             and other._labware == self._labware
-            and other._is_meniscus == self._is_meniscus
+            and other._meniscus_tracking == self._meniscus_tracking
         )
 
     def move(self, point: Point) -> "Location":
@@ -193,7 +208,7 @@ class Location:
         return Location(point=self.point + point, labware=self._given_labware)
 
     def __repr__(self) -> str:
-        return f"Location(point={repr(self._point)}, labware={self._labware}, is_meniscus={self._is_meniscus if self._is_meniscus is not None else False})"
+        return f"Location(point={repr(self._point)}, labware={self._labware}, meniscus_tracking={self._meniscus_tracking})"
 
 
 # TODO(mc, 2020-10-22): use MountType implementation for Mount

@@ -360,6 +360,7 @@ class VirtualPipettingHandler(PipettingHandler):
             raise InvalidPushOutVolumeError(
                 "push out value cannot have a negative value."
             )
+        raise ValueError("why am i here")
         self._validate_tip_attached(pipette_id=pipette_id, command_name="dispense")
         return _validate_dispense_volume(
             state_view=self._state_view, pipette_id=pipette_id, dispense_volume=volume
