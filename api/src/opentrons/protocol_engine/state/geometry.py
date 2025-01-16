@@ -1482,7 +1482,6 @@ class GeometryView:
             well_location=well_location,
             well_depth=well_depth,
         )
-        #  bookmark
         if (
             well_location.origin == WellOrigin.MENISCUS
             and not well_location.volumeOffset

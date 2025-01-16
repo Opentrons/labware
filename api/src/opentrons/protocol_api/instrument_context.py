@@ -170,7 +170,6 @@ class InstrumentContext(publisher.CommandPublisher):
         volume: Optional[float] = None,
         location: Optional[Union[types.Location, labware.Well]] = None,
         rate: float = 1.0,
-        # meniscus_tracking: Optional[Literal["start", "end", "dynamic_meniscus"]] = None
     ) -> InstrumentContext:
         """
         Draw liquid into a pipette tip.
@@ -206,11 +205,6 @@ class InstrumentContext(publisher.CommandPublisher):
                      as ``rate`` multiplied by :py:attr:`flow_rate.aspirate
                      <flow_rate>`. If not specified, defaults to 1.0. See
                      :ref:`new-plunger-flow-rates`.
-        :param meniscus_tracking: Whether to aspirate relative to the liquid meniscus
-                "start" - aspirate from the current liquid meniscus at the start of the operation
-                "end" - aspirate from the projected liquid meniscus at the end of the operation
-                "dynamic_meniscus" - move the pipette down while aspirating to maintain a given depth relative
-                    to the liquid meniscus.
         :type rate: float
         :returns: This instance.
 
@@ -421,133 +415,6 @@ class InstrumentContext(publisher.CommandPublisher):
         return self
 
     @requires_version(2, 0)
-    def dispense_while_tracking(
-        self,
-        volume: Optional[float] = None,
-        location: Optional[Union[types.Location, labware.Well]] = None,
-        rate: float = 1.0,
-        push_out: Optional[float] = None,
-    ) -> InstrumentContext:
-        """
-        Draw liquid into a pipette tip.
-
-        See :ref:`new-dispense` for more details and examples.
-
-        :param volume: The volume to dispense, measured in µL. If unspecified,
-                    defaults to the maximum volume for the pipette and its currently
-                    attached tip.
-
-                    If ``dispense`` is called with a volume of precisely 0, its behavior
-                    depends on the API level of the protocol. On API levels below 2.16,
-                    it will behave the same as a volume of ``None``/unspecified: dispense
-                    until the pipette is full. On API levels at or above 2.16, no liquid
-                    will be dispensed.
-        :type volume: int or float
-        :param location: Tells the robot where to dispense from. The location can be
-                         a :py:class:`.Well` or a :py:class:`.Location`.
-
-                            - If the location is a ``Well``, the robot will dispense at
-                              or above the bottom center of the well. The distance (in mm)
-                              from the well bottom is specified by
-                              :py:obj:`well_bottom_clearance.dispense
-                              <well_bottom_clearance>`.
-
-                            - If the location is a ``Location`` (e.g., the result of
-                              :py:meth:`.Well.top` or :py:meth:`.Well.bottom`), the robot
-                              will dispense from that specified position.
-
-                            - If the ``location`` is unspecified, the robot will
-                              dispense from its current position.
-        :param rate: A multiplier for the default flow rate of the pipette. Calculated
-                     as ``rate`` multiplied by :py:attr:`flow_rate.dispense
-                     <flow_rate>`. If not specified, defaults to 1.0. See
-                     :ref:`new-plunger-flow-rates`.
-        :type rate: float
-        :returns: This instance.
-
-        .. note::
-
-            If ``dispense`` is called with a single, unnamed argument, it will treat
-            that argument as ``volume``. If you want to call ``dispense`` with only
-            ``location``, specify it as a keyword argument:
-            ``pipette.dispense(location=plate['A1'])``
-
-        """
-        _log.debug(
-            "dispense {} from {} at {}".format(
-                volume, location if location else "current position", rate
-            )
-        )
-
-        move_to_location: types.Location
-        well: Optional[labware.Well] = None
-        last_location = self._get_last_location_by_api_version()
-        try:
-            target = validation.validate_location(
-                location=location, last_location=last_location
-            )
-        except validation.NoLocationError as e:
-            raise RuntimeError(
-                "If dispense is called without an explicit location, another"
-                " method that moves to a location (such as move_to or "
-                "dispense) must previously have been called so the robot "
-                "knows where it is."
-            ) from e
-
-        if isinstance(target, (TrashBin, WasteChute)):
-            raise ValueError(
-                "Trash Bin and Waste Chute are not acceptable location parameters for dispense commands."
-            )
-        move_to_location, well, meniscus_tracking = self._handle_dispense_target(
-            target=target
-        )
-        if self.api_version >= APIVersion(2, 11):
-            instrument.validate_takes_liquid(
-                location=move_to_location,
-                reject_module=self.api_version >= APIVersion(2, 13),
-                reject_adapter=self.api_version >= APIVersion(2, 15),
-            )
-
-        if self.api_version >= APIVersion(2, 16):
-            c_vol = self._core.get_available_volume() if volume is None else volume
-        else:
-            c_vol = self._core.get_available_volume() if not volume else volume
-        flow_rate = self._core.get_dispense_flow_rate(rate)
-
-        if (
-            self.api_version >= APIVersion(2, 20)
-            and well is not None
-            and self.liquid_presence_detection
-            and self._core.nozzle_configuration_valid_for_lld()
-            and self._core.get_current_volume() == 0
-        ):
-            self._raise_if_pressure_not_supported_by_pipette()
-            self.require_liquid_presence(well=well)
-
-        with publisher.publish_context(
-            broker=self.broker,
-            command=cmds.dispense(
-                instrument=self,
-                volume=c_vol,
-                location=move_to_location,
-                flow_rate=flow_rate,
-                rate=rate,
-            ),
-        ):
-            self._core.dispense(
-                location=move_to_location,
-                well_core=well._core if well is not None else None,
-                volume=c_vol,
-                rate=rate,
-                flow_rate=flow_rate,
-                in_place=target.in_place,
-                push_out=push_out,
-                # meniscus_tracking=meniscus_tracking,
-            )
-
-        return self
-
-    @requires_version(2, 0)
     def mix(
         self,
         repetitions: int = 1,
@@ -723,7 +590,6 @@ class InstrumentContext(publisher.CommandPublisher):
                 volume, location if location else "current position", rate
             )
         )
-        # well: Optional[labware.Well] = None
         last_location = self._get_last_location_by_api_version()
 
         try:
