@@ -2030,7 +2030,10 @@ def test_get_relative_liquid_handling_well_location(
     subject: GeometryView,
 ) -> None:
     """It should get the relative location of a well given an absolute position."""
-    result = subject.get_relative_liquid_handling_well_location(
+    (
+        result,
+        dynamic_liquid_tracking,
+    ) = subject.get_relative_liquid_handling_well_location(
         labware_id="labware-id",
         well_name="B2",
         absolute_point=Point(x=0, y=0, z=-2),

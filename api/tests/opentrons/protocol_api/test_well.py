@@ -104,7 +104,7 @@ def test_well_center(decoy: Decoy, mock_well_core: WellCore, subject: Well) -> N
 
 def test_well_meniscus(decoy: Decoy, mock_well_core: WellCore, subject: Well) -> None:
     """It should get a Location representing the meniscus of the well."""
-    result = subject.meniscus(4.2)
+    result = subject.meniscus(z=4.2, target="end")
 
     assert isinstance(result, Location)
     assert result.point == Point(0, 0, 4.2)

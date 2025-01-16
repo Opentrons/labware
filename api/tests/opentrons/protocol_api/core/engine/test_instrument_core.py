@@ -586,8 +586,11 @@ def test_aspirate_from_well(
             absolute_point=Point(1, 2, 3),
         )
     ).then_return(
-        LiquidHandlingWellLocation(
-            origin=WellOrigin.TOP, offset=WellOffset(x=3, y=2, z=1)
+        (
+            LiquidHandlingWellLocation(
+                origin=WellOrigin.TOP, offset=WellOffset(x=3, y=2, z=1)
+            ),
+            False,
         )
     )
 
@@ -687,8 +690,13 @@ def test_aspirate_from_meniscus(
             absolute_point=Point(1, 2, 3),
         )
     ).then_return(
-        LiquidHandlingWellLocation(
-            origin=WellOrigin.MENISCUS, offset=WellOffset(x=3, y=2, z=1), volumeOffset=0
+        (
+            LiquidHandlingWellLocation(
+                origin=WellOrigin.MENISCUS,
+                offset=WellOffset(x=3, y=2, z=1),
+                volumeOffset=0,
+            ),
+            False,
         )
     )
 
@@ -885,8 +893,11 @@ def test_dispense_to_well(
             absolute_point=Point(1, 2, 3),
         )
     ).then_return(
-        LiquidHandlingWellLocation(
-            origin=WellOrigin.TOP, offset=WellOffset(x=3, y=2, z=1)
+        (
+            LiquidHandlingWellLocation(
+                origin=WellOrigin.TOP, offset=WellOffset(x=3, y=2, z=1)
+            ),
+            False,
         )
     )
 

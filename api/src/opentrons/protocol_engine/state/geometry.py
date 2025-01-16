@@ -545,22 +545,28 @@ class GeometryView:
         well_name: str,
         absolute_point: Point,
         meniscus_tracking: Optional[MeniscusTracking] = None,
-    ) -> LiquidHandlingWellLocation:
+    ) -> Tuple[LiquidHandlingWellLocation, bool]:
         """Given absolute position, get relative location of a well in a labware.
 
         If is_meniscus is True, absolute_point will hold the z-offset in its z field.
         """
+        dynamic_liquid_tracking = False
         if meniscus_tracking:
-            return LiquidHandlingWellLocation(
+            location = LiquidHandlingWellLocation(
                 origin=WellOrigin.MENISCUS,
                 offset=WellOffset(x=0, y=0, z=absolute_point.z),
             )
+            if meniscus_tracking.target == "end":
+                location.volumeOffset = "operationVolume"
+            elif meniscus_tracking.target == "dynamic_meniscus":
+                dynamic_liquid_tracking = True
         else:
             well_absolute_point = self.get_well_position(labware_id, well_name)
             delta = absolute_point - well_absolute_point
-            return LiquidHandlingWellLocation(
+            location = LiquidHandlingWellLocation(
                 offset=WellOffset(x=delta.x, y=delta.y, z=delta.z)
             )
+        return location, dynamic_liquid_tracking
 
     def get_relative_pick_up_tip_well_location(
         self,

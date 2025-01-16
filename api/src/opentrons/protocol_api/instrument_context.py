@@ -1,7 +1,7 @@
 from __future__ import annotations
 import logging
 from contextlib import ExitStack
-from typing import Any, List, Optional, Sequence, Union, cast, Dict, Tuple, Literal
+from typing import Any, List, Optional, Sequence, Union, cast, Dict
 from opentrons_shared_data.errors.exceptions import (
     CommandPreconditionViolated,
     CommandParameterLimitViolated,
@@ -548,7 +548,86 @@ class InstrumentContext(publisher.CommandPublisher):
         return self
 
     @requires_version(2, 0)
-    def dispense(  # noqa: C901
+    def mix(
+        self,
+        repetitions: int = 1,
+        volume: Optional[float] = None,
+        location: Optional[Union[types.Location, labware.Well]] = None,
+        rate: float = 1.0,
+    ) -> InstrumentContext:
+        """
+        Mix a volume of liquid by repeatedly aspirating and dispensing it in a single location.
+
+        See :ref:`mix` for examples.
+
+        :param repetitions: Number of times to mix (default is 1).
+        :param volume: The volume to mix, measured in µL. If unspecified, defaults
+                       to the maximum volume for the pipette and its attached tip.
+
+                       If ``mix`` is called with a volume of precisely 0, its behavior
+                       depends on the API level of the protocol. On API levels below 2.16,
+                       it will behave the same as a volume of ``None``/unspecified: mix
+                       the full working volume of the pipette. On API levels at or above 2.16,
+                       no liquid will be mixed.
+        :param location: The :py:class:`.Well` or :py:class:`~.types.Location` where the
+                        pipette will mix. If unspecified, the pipette will mix at its
+                        current position.
+        :param rate: How quickly the pipette aspirates and dispenses liquid while
+                     mixing. The aspiration flow rate is calculated as ``rate``
+                     multiplied by :py:attr:`flow_rate.aspirate <flow_rate>`. The
+                     dispensing flow rate is calculated as ``rate`` multiplied by
+                     :py:attr:`flow_rate.dispense <flow_rate>`. See
+                     :ref:`new-plunger-flow-rates`.
+        :raises: ``UnexpectedTipRemovalError`` -- If no tip is attached to the pipette.
+        :returns: This instance.
+
+        .. note::
+
+            All the arguments of ``mix`` are optional. However, if you omit one of them,
+            all subsequent arguments must be passed as keyword arguments. For instance,
+            ``pipette.mix(1, location=wellplate['A1'])`` is a valid call, but
+            ``pipette.mix(1, wellplate['A1'])`` is not.
+
+        .. versionchanged:: 2.21
+            Does not repeatedly check for liquid presence.
+        """
+        _log.debug(
+            "mixing {}uL with {} repetitions in {} at rate={}".format(
+                volume, repetitions, location if location else "current position", rate
+            )
+        )
+        if not self._core.has_tip():
+            raise UnexpectedTipRemovalError("mix", self.name, self.mount)
+
+        if self.api_version >= APIVersion(2, 16):
+            c_vol = self._core.get_available_volume() if volume is None else volume
+        else:
+            c_vol = self._core.get_available_volume() if not volume else volume
+
+        dispense_kwargs: Dict[str, Any] = {}
+        if self.api_version >= APIVersion(2, 16):
+            dispense_kwargs["push_out"] = 0.0
+
+        with publisher.publish_context(
+            broker=self.broker,
+            command=cmds.mix(
+                instrument=self,
+                repetitions=repetitions,
+                volume=c_vol,
+                location=location,
+            ),
+        ):
+            self.aspirate(volume, location, rate)
+            with AutoProbeDisable(self):
+                while repetitions - 1 > 0:
+                    self.dispense(volume, rate=rate, **dispense_kwargs)
+                    self.aspirate(volume, rate=rate)
+                    repetitions -= 1
+                self.dispense(volume, rate=rate)
+        return self
+
+    @requires_version(2, 0)
+    def dispense(
         self,
         volume: Optional[float] = None,
         location: Optional[
@@ -723,85 +802,6 @@ class InstrumentContext(publisher.CommandPublisher):
                 meniscus_tracking=meniscus_tracking,
             )
 
-        return self
-
-    @requires_version(2, 0)
-    def mix(
-        self,
-        repetitions: int = 1,
-        volume: Optional[float] = None,
-        location: Optional[Union[types.Location, labware.Well]] = None,
-        rate: float = 1.0,
-    ) -> InstrumentContext:
-        """
-        Mix a volume of liquid by repeatedly aspirating and dispensing it in a single location.
-
-        See :ref:`mix` for examples.
-
-        :param repetitions: Number of times to mix (default is 1).
-        :param volume: The volume to mix, measured in µL. If unspecified, defaults
-                       to the maximum volume for the pipette and its attached tip.
-
-                       If ``mix`` is called with a volume of precisely 0, its behavior
-                       depends on the API level of the protocol. On API levels below 2.16,
-                       it will behave the same as a volume of ``None``/unspecified: mix
-                       the full working volume of the pipette. On API levels at or above 2.16,
-                       no liquid will be mixed.
-        :param location: The :py:class:`.Well` or :py:class:`~.types.Location` where the
-                        pipette will mix. If unspecified, the pipette will mix at its
-                        current position.
-        :param rate: How quickly the pipette aspirates and dispenses liquid while
-                     mixing. The aspiration flow rate is calculated as ``rate``
-                     multiplied by :py:attr:`flow_rate.aspirate <flow_rate>`. The
-                     dispensing flow rate is calculated as ``rate`` multiplied by
-                     :py:attr:`flow_rate.dispense <flow_rate>`. See
-                     :ref:`new-plunger-flow-rates`.
-        :raises: ``UnexpectedTipRemovalError`` -- If no tip is attached to the pipette.
-        :returns: This instance.
-
-        .. note::
-
-            All the arguments of ``mix`` are optional. However, if you omit one of them,
-            all subsequent arguments must be passed as keyword arguments. For instance,
-            ``pipette.mix(1, location=wellplate['A1'])`` is a valid call, but
-            ``pipette.mix(1, wellplate['A1'])`` is not.
-
-        .. versionchanged:: 2.21
-            Does not repeatedly check for liquid presence.
-        """
-        _log.debug(
-            "mixing {}uL with {} repetitions in {} at rate={}".format(
-                volume, repetitions, location if location else "current position", rate
-            )
-        )
-        if not self._core.has_tip():
-            raise UnexpectedTipRemovalError("mix", self.name, self.mount)
-
-        if self.api_version >= APIVersion(2, 16):
-            c_vol = self._core.get_available_volume() if volume is None else volume
-        else:
-            c_vol = self._core.get_available_volume() if not volume else volume
-
-        dispense_kwargs: Dict[str, Any] = {}
-        if self.api_version >= APIVersion(2, 16):
-            dispense_kwargs["push_out"] = 0.0
-
-        with publisher.publish_context(
-            broker=self.broker,
-            command=cmds.mix(
-                instrument=self,
-                repetitions=repetitions,
-                volume=c_vol,
-                location=location,
-            ),
-        ):
-            self.aspirate(volume, location, rate)
-            with AutoProbeDisable(self):
-                while repetitions - 1 > 0:
-                    self.dispense(volume, rate=rate, **dispense_kwargs)
-                    self.aspirate(volume, rate=rate)
-                    repetitions -= 1
-                self.dispense(volume, rate=rate)
         return self
 
     @requires_version(2, 0)

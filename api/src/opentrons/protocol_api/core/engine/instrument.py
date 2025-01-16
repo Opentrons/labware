@@ -190,19 +190,15 @@ class InstrumentCore(AbstractInstrument[WellCore, LabwareCore]):
             well_name = well_core.get_name()
             labware_id = well_core.labware_id
 
-            well_location = self._engine_client.state.geometry.get_relative_liquid_handling_well_location(
+            (
+                well_location,
+                dynamic_liquid_tracking,
+            ) = self._engine_client.state.geometry.get_relative_liquid_handling_well_location(
                 labware_id=labware_id,
                 well_name=well_name,
                 absolute_point=location.point,
                 meniscus_tracking=meniscus_tracking,
             )
-            dynamic_liquid_tracking = False
-            # caila bookmark
-            if meniscus_tracking:
-                if meniscus_tracking.target == "end":
-                    well_location.volumeOffset = "operationVolume"
-                elif meniscus_tracking.target == "dynamic_meniscus":
-                    dynamic_liquid_tracking = True
             pipette_movement_conflict.check_safe_for_pipette_movement(
                 engine_state=self._engine_client.state,
                 pipette_id=self._pipette_id,
@@ -306,18 +302,16 @@ class InstrumentCore(AbstractInstrument[WellCore, LabwareCore]):
             well_name = well_core.get_name()
             labware_id = well_core.labware_id
 
-            well_location = self._engine_client.state.geometry.get_relative_liquid_handling_well_location(
+            (
+                well_location,
+                dynamic_liquid_tracking,
+            ) = self._engine_client.state.geometry.get_relative_liquid_handling_well_location(
                 labware_id=labware_id,
                 well_name=well_name,
                 absolute_point=location.point,
                 meniscus_tracking=meniscus_tracking,
             )
-            dynamic_liquid_tracking = False
-            if meniscus_tracking:
-                if meniscus_tracking.target == "end":
-                    well_location.volumeOffset = "operationVolume"
-                elif meniscus_tracking.target == "dynamic_meniscus":
-                    dynamic_liquid_tracking = True
+
             pipette_movement_conflict.check_safe_for_pipette_movement(
                 engine_state=self._engine_client.state,
                 pipette_id=self._pipette_id,
