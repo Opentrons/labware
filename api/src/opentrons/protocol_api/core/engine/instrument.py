@@ -256,7 +256,6 @@ class InstrumentCore(AbstractInstrument[WellCore, LabwareCore]):
             push_out: The amount to push the plunger below bottom position.
             meniscus_tracking: Optional data about where to dispense from.
         """
-        # raise ValueError(f"well location = {location}")
         if self._protocol_core.api_version < _DISPENSE_VOLUME_VALIDATION_ADDED_IN:
             # In older API versions, when you try to dispense more than you can,
             # it gets clamped.
