@@ -11,7 +11,6 @@ from typing import (
     Optional,
     Protocol,
     Dict,
-    Literal,
 )
 
 from opentrons_shared_data.robot.types import RobotType
