@@ -97,18 +97,6 @@ class MeniscusTrackingTarget(enum.Enum):
         return self.name
 
 
-class MeniscusTracking:
-    def __init__(
-        self,
-        target: MeniscusTrackingTarget = MeniscusTrackingTarget.END,
-    ) -> None:
-        self._target = target
-
-    @property
-    def target(self) -> MeniscusTrackingTarget:
-        return MeniscusTrackingTarget(self._target)
-
-
 class Location:
     """Location(point: Point, labware: Union["Labware", "Well", str, "ModuleGeometry", LabwareLike, None, "ModuleContext"])
 
@@ -150,7 +138,7 @@ class Location:
             "ModuleContext",
         ],
         *,
-        _meniscus_tracking: Optional[MeniscusTracking] = None,
+        _meniscus_tracking: Optional[MeniscusTrackingTarget] = None,
     ):
         self._point = point
         self._given_labware = labware
@@ -169,7 +157,7 @@ class Location:
         return self._labware
 
     @property
-    def meniscus_tracking(self) -> Optional[MeniscusTracking]:
+    def meniscus_tracking(self) -> Optional[MeniscusTrackingTarget]:
         return self._meniscus_tracking
 
     def __iter__(self) -> Iterator[Union[Point, LabwareLike]]:

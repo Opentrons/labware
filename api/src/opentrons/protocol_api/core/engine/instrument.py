@@ -8,7 +8,7 @@ from opentrons.types import (
     Mount,
     NozzleConfigurationType,
     NozzleMapInterface,
-    MeniscusTracking,
+    MeniscusTrackingTarget,
 )
 from opentrons.hardware_control import SyncHardwareAPI
 from opentrons.hardware_control.dev_types import PipetteDict
@@ -150,8 +150,7 @@ class InstrumentCore(AbstractInstrument[WellCore, LabwareCore]):
         rate: float,
         flow_rate: float,
         in_place: bool,
-        correction_volume: Optional[float] = None,
-        meniscus_tracking: Optional[MeniscusTracking] = None,
+        meniscus_tracking: Optional[MeniscusTrackingTarget] = None,
     ) -> None:
         """Aspirate a given volume of liquid from the specified location.
         Args:
@@ -242,8 +241,7 @@ class InstrumentCore(AbstractInstrument[WellCore, LabwareCore]):
         flow_rate: float,
         in_place: bool,
         push_out: Optional[float],
-        meniscus_tracking: Optional[MeniscusTracking] = None,
-        correction_volume: Optional[float] = None,
+        meniscus_tracking: Optional[MeniscusTrackingTarget] = None,
     ) -> None:
         """Dispense a given volume of liquid into the specified location.
         Args:
@@ -310,7 +308,6 @@ class InstrumentCore(AbstractInstrument[WellCore, LabwareCore]):
                 absolute_point=location.point,
                 meniscus_tracking=meniscus_tracking,
             )
-
             pipette_movement_conflict.check_safe_for_pipette_movement(
                 engine_state=self._engine_client.state,
                 pipette_id=self._pipette_id,

@@ -12,7 +12,6 @@ from opentrons.types import (
     DeckSlotName,
     StagingSlotName,
     MountType,
-    MeniscusTracking,
     MeniscusTrackingTarget,
 )
 
@@ -544,7 +543,7 @@ class GeometryView:
         labware_id: str,
         well_name: str,
         absolute_point: Point,
-        meniscus_tracking: Optional[MeniscusTracking] = None,
+        meniscus_tracking: Optional[MeniscusTrackingTarget] = None,
     ) -> Tuple[LiquidHandlingWellLocation, bool]:
         """Given absolute position, get relative location of a well in a labware.
 
@@ -556,9 +555,9 @@ class GeometryView:
                 origin=WellOrigin.MENISCUS,
                 offset=WellOffset(x=0, y=0, z=absolute_point.z),
             )
-            if meniscus_tracking.target == MeniscusTrackingTarget.END:
+            if meniscus_tracking == MeniscusTrackingTarget.END:
                 location.volumeOffset = "operationVolume"
-            elif meniscus_tracking.target == MeniscusTrackingTarget.DYNAMIC_MENISCUS:
+            elif meniscus_tracking == MeniscusTrackingTarget.DYNAMIC_MENISCUS:
                 dynamic_liquid_tracking = True
         else:
             well_absolute_point = self.get_well_position(labware_id, well_name)
