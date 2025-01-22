@@ -89,12 +89,19 @@ LocationLabware = Union[
 ]
 
 
+class MeniscusTrackingTarget(enum.Enum):
+    BEGINNING = "beginning"
+    END = "end"
+    DYNAMIC_MENISCUS = "dynamic_meniscus"
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class MeniscusTracking:
     def __init__(
         self,
-        target: Union[
-            Literal["beginning"], Literal["end"], Literal["dynamic_meniscus"]
-        ] = "end",
+        target: MeniscusTrackingTarget = MeniscusTrackingTarget.END,
     ) -> None:
         self._target = target
 
