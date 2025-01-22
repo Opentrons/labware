@@ -13,6 +13,7 @@ from opentrons.types import (
     StagingSlotName,
     MountType,
     MeniscusTracking,
+    MeniscusTrackingTarget,
 )
 
 from opentrons_shared_data.errors.exceptions import InvalidStoredData
@@ -474,8 +475,7 @@ class GeometryView:
                 )
             else:
                 raise OperationLocationNotInWellError(
-                    # f"Specifying {well_location.origin} with an offset of {well_location.offset} and a volume offset of {well_location.volumeOffset} results in an operation location below the bottom of the well"
-                    f"well = {well_location}"
+                    f"Specifying {well_location.origin} with an offset of {well_location.offset} and a volume offset of {well_location.volumeOffset} results in an operation location below the bottom of the well"
                 )
 
     def get_well_position(
@@ -556,9 +556,9 @@ class GeometryView:
                 origin=WellOrigin.MENISCUS,
                 offset=WellOffset(x=0, y=0, z=absolute_point.z),
             )
-            if meniscus_tracking.target == "end":
+            if meniscus_tracking.target == MeniscusTrackingTarget.END:
                 location.volumeOffset = "operationVolume"
-            elif meniscus_tracking.target == "dynamic_meniscus":
+            elif meniscus_tracking.target == MeniscusTrackingTarget.DYNAMIC_MENISCUS:
                 dynamic_liquid_tracking = True
         else:
             well_absolute_point = self.get_well_position(labware_id, well_name)
@@ -1482,6 +1482,8 @@ class GeometryView:
             well_location=well_location,
             well_depth=well_depth,
         )
+        # if we're tracking a MENISCUS origin, and targeting either the beginning
+        #   position of the liquid or doing dynamic tracking, return the initial height
         if (
             well_location.origin == WellOrigin.MENISCUS
             and not well_location.volumeOffset

@@ -105,8 +105,8 @@ class MeniscusTracking:
         self._target = target
 
     @property
-    def target(self) -> str:
-        return str(self._target)
+    def target(self) -> MeniscusTrackingTarget:
+        return MeniscusTrackingTarget(self._target)
 
 
 class Location:
