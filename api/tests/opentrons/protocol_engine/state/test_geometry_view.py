@@ -4,7 +4,7 @@ import inspect
 import json
 from datetime import datetime
 from math import isclose
-from typing import cast, List, Tuple, Optional, NamedTuple, Dict
+from typing import cast, List, Tuple, Optional, NamedTuple, Dict, Union, Literal
 from unittest.mock import sentinel
 from os import listdir, path
 
@@ -2028,12 +2028,22 @@ def test_get_relative_well_location(
     )
 
 
+@pytest.mark.parametrize(
+    ("meniscus_target", "expected_volume_offset"),
+    [
+        (MeniscusTrackingTarget.BEGINNING, 0.0),
+        (MeniscusTrackingTarget.END, "operationVolume"),
+        (MeniscusTrackingTarget.DYNAMIC_MENISCUS, 0.0),
+    ],
+)
 def test_get_relative_liquid_handling_well_location(
     decoy: Decoy,
     well_plate_def: LabwareDefinition,
     mock_labware_view: LabwareView,
     mock_addressable_area_view: AddressableAreaView,
     subject: GeometryView,
+    meniscus_target: MeniscusTrackingTarget,
+    expected_volume_offset: Union[Literal["operationVolume"], float],
 ) -> None:
     """It should get the relative location of a well given an absolute position."""
     (
@@ -2043,7 +2053,7 @@ def test_get_relative_liquid_handling_well_location(
         labware_id="labware-id",
         well_name="B2",
         absolute_point=Point(x=0, y=0, z=-2),
-        meniscus_tracking=MeniscusTrackingTarget.END,
+        meniscus_tracking=meniscus_target,
     )
 
     assert result == LiquidHandlingWellLocation(
@@ -2053,7 +2063,7 @@ def test_get_relative_liquid_handling_well_location(
             y=0.0,
             z=cast(float, pytest.approx(-2)),
         ),
-        volumeOffset="operationVolume",
+        volumeOffset=expected_volume_offset,
     )
 
 

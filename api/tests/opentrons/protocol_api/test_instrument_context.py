@@ -53,7 +53,7 @@ from opentrons.protocol_api.core.legacy.legacy_instrument_core import (
 
 from opentrons.hardware_control.nozzle_manager import NozzleMap
 from opentrons.protocol_api.disposal_locations import TrashBin, WasteChute
-from opentrons.types import Location, Mount, Point
+from opentrons.types import Location, Mount, Point, MeniscusTrackingTarget
 
 from opentrons_shared_data.pipette.pipette_definition import ValidNozzleMaps
 from opentrons_shared_data.errors.exceptions import (
@@ -385,15 +385,26 @@ def test_aspirate_well_location(
     )
 
 
+@pytest.mark.parametrize(
+    "meniscus_target",
+    [
+        MeniscusTrackingTarget.BEGINNING,
+        MeniscusTrackingTarget.END,
+        MeniscusTrackingTarget.DYNAMIC_MENISCUS,
+    ],
+)
 def test_aspirate_meniscus_well_location(
     decoy: Decoy,
     mock_instrument_core: InstrumentCore,
     subject: InstrumentContext,
     mock_protocol_core: ProtocolCore,
+    meniscus_target: MeniscusTrackingTarget,
 ) -> None:
     """It should aspirate to a well."""
     mock_well = decoy.mock(cls=Well)
-    input_location = Location(point=Point(2, 2, 2), labware=mock_well)
+    input_location = Location(
+        point=Point(2, 2, 2), labware=mock_well, _meniscus_tracking=meniscus_target
+    )
     last_location = Location(point=Point(9, 9, 9), labware=None)
     decoy.when(mock_instrument_core.get_mount()).then_return(Mount.RIGHT)
 
@@ -417,7 +428,7 @@ def test_aspirate_meniscus_well_location(
             volume=42.0,
             rate=1.23,
             flow_rate=5.67,
-            meniscus_tracking=None,
+            meniscus_tracking=meniscus_target,
         ),
         times=1,
     )

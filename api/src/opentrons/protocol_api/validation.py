@@ -571,7 +571,7 @@ def validate_location(
         A `PointTarget` if the input location is an x, y, z coordinate.
 
     Raises:
-        NoLocationError: The is no input location and no cached loaction.
+        NoLocationError: The is no input location and no cached location.
         LocationTypeError: The location supplied is of unexpected type.
     """
     from .labware import Well
