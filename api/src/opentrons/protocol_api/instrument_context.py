@@ -170,8 +170,8 @@ class InstrumentContext(publisher.CommandPublisher):
         if lld_settings:
             tip_min_height = lld_settings[f"t{tip_volume}"]["minHeight"]
             return tip_min_height
-        # raise an error instead of returning 0
-        return 0.0
+        else:
+            raise ValueError("liquid-level detection settings not found.")
 
     @requires_version(2, 20)
     def _project_liquid_height_after_pipetting(

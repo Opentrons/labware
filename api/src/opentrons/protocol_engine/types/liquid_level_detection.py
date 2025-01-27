@@ -21,7 +21,6 @@ class ProbedHeightInfo(BaseModel):
     last_probed: datetime
 
 
-# TODO: make this EstimatedVolumeInfo
 class ProbedVolumeInfo(BaseModel):
     """A well's liquid volume, initialized by a LiquidProbe, updated by Aspirate and Dispense."""
 
