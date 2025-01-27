@@ -302,6 +302,7 @@ async def liquid_probe(
     p_pass_distance = float(max_p_distance - p_prep_distance)
     max_z_distance = (p_pass_distance / plunger_speed) * mount_speed
 
+    # TODO: add Z acceleration here
     lower_plunger = create_step(
         distance={tool: float64(p_prep_distance)},
         velocity={tool: float64(plunger_speed)},
@@ -313,7 +314,8 @@ async def liquid_probe(
     sensor_group = _build_pass_step(
         movers=[head_node, tool],
         distance={head_node: max_z_distance, tool: p_pass_distance},
-        speed={head_node: mount_speed, tool: plunger_speed},
+        # speed={head_node: mount_speed, tool: plunger_speed},
+        speed={head_node: 100, tool: plunger_speed},
         sensor_type=SensorType.pressure,
         sensor_id=sensor_id,
         stop_condition=MoveStopCondition.sync_line,
@@ -333,15 +335,15 @@ async def liquid_probe(
     sensor_runner = MoveGroupRunner(move_groups=[[lower_plunger], [sensor_group]])
 
     # Only raise the z a little so we don't do a huge slow travel
-    raise_z = create_step(
-        distance={head_node: float64(z_offset_for_plunger_prep)},
-        velocity={head_node: float64(-1 * mount_speed)},
-        acceleration={},
-        duration=float64(max_z_distance / mount_speed),
-        present_nodes=[head_node],
-    )
+    # raise_z = create_step(
+    #     distance={head_node: float64(z_offset_for_plunger_prep)},
+    #     velocity={head_node: float64(-1 * mount_speed)},
+    #     acceleration={},
+    #     duration=float64(max_z_distance / mount_speed),
+    #     present_nodes=[head_node],
+    # )
 
-    raise_z_runner = MoveGroupRunner(move_groups=[[raise_z]])
+    # raise_z_runner = MoveGroupRunner(move_groups=[[raise_z]])
     listeners = {
         s_id: LogListener(messenger, pressure_sensors[s_id])
         for s_id in pressure_sensors.keys()
@@ -358,7 +360,7 @@ async def liquid_probe(
             LOG.info(
                 f"Liquid found {head_node} motor_postion {positions[head_node].motor_position} encoder position {positions[head_node].encoder_position}"
             )
-            await raise_z_runner.run(can_messenger=messenger)
+            # await raise_z_runner.run(can_messenger=messenger)
         await finalize_logs(messenger, tool, listeners, pressure_sensors)
 
     # give response data to any consumer that wants it
