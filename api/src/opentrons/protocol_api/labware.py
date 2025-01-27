@@ -686,6 +686,31 @@ class Labware:
             )
         self._core.set_calibration(delta)
 
+    @requires_version(2, 21)
+    def well_liquid_state(self, well_id: str) -> Dict[str, Optional[float]]:
+        well_liquid_info = self._core.well_liquid_state(well_id)
+        probed_height = (
+            well_liquid_info.probed_height.height
+            if well_liquid_info.probed_height
+            else None
+        )
+        loaded_volume = (
+            well_liquid_info.loaded_volume.volume
+            if well_liquid_info.loaded_volume
+            else None
+        )
+        probed_volume = (
+            well_liquid_info.probed_volume.volume
+            if well_liquid_info.probed_volume
+            else None
+        )
+        well_info_dict = {
+            "probed_liquid_height": probed_height,
+            "loaded_liquid_volume": loaded_volume,
+            "estimated_liquid_volume": probed_volume,
+        }
+        return well_info_dict
+
     @requires_version(2, 12)
     def set_offset(self, x: float, y: float, z: float) -> None:
         """Set the labware's position offset.

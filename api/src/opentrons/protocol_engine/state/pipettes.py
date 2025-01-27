@@ -535,6 +535,7 @@ class PipetteView:
 
         return max(0.0, working_volume - current_volume) if current_volume else None
 
+    # get lld settings here
     def get_pipette_lld_settings(
         self, pipette_id: str
     ) -> Optional[Dict[str, Dict[str, float]]]:

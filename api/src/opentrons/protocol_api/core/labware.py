@@ -10,6 +10,7 @@ from opentrons_shared_data.labware.types import (
     LabwareParameters as LabwareParametersDict,
     LabwareDefinition as LabwareDefinitionDict,
 )
+from opentrons.protocol_engine.types import WellLiquidInfo
 
 from opentrons.types import DeckSlotName, Point, NozzleMapInterface
 from .._liquid import Liquid
@@ -142,6 +143,10 @@ class AbstractLabware(ABC, Generic[WellCoreType]):
     @abstractmethod
     def load_empty(self, wells: List[str]) -> None:
         """Mark wells of the labware as empty."""
+
+    @abstractmethod
+    def well_liquid_state(self, well_id: str) -> WellLiquidInfo:
+        """Get well liquid state."""
 
 
 LabwareCoreType = TypeVar("LabwareCoreType", bound=AbstractLabware[Any])

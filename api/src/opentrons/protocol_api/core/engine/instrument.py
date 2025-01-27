@@ -2,15 +2,7 @@
 
 from __future__ import annotations
 
-from typing import (
-    Optional,
-    TYPE_CHECKING,
-    cast,
-    Union,
-    List,
-    Tuple,
-    NamedTuple,
-)
+from typing import Optional, TYPE_CHECKING, cast, Union, List, Tuple, NamedTuple, Dict
 from opentrons.types import Location, Mount, NozzleConfigurationType, NozzleMapInterface
 from opentrons.hardware_control import SyncHardwareAPI
 from opentrons.hardware_control.dev_types import PipetteDict
@@ -962,6 +954,24 @@ class InstrumentCore(AbstractInstrument[WellCore, LabwareCore]):
             result.nextTipInfo if isinstance(result.nextTipInfo, NextTipInfo) else None
         )
 
+    def estimate_liquid_height(
+        self,
+        well_core: WellCore,
+        starting_liquid_height: float,
+        operation_volume: float,
+    ) -> float:
+        labware_id = well_core.labware_id
+        well_name = well_core.get_name()
+        projected_final_height = (
+            self._engine_client.state.geometry.get_well_height_after_volume(
+                labware_id=labware_id,
+                well_name=well_name,
+                initial_height=starting_liquid_height,
+                volume=operation_volume,
+            )
+        )
+        return projected_final_height
+
     def transfer_liquid(  # noqa: C901
         self,
         liquid_class: LiquidClass,
@@ -1364,6 +1374,11 @@ class InstrumentCore(AbstractInstrument[WellCore, LabwareCore]):
         self._protocol_core.set_last_location(location=loc, mount=self.get_mount())
 
         return result.z_position is not None
+
+    def get_lld_settings(self) -> Optional[Dict[str, Dict[str, float]]]:
+        return self._engine_client.state.pipettes.get_pipette_lld_settings(
+            pipette_id=self.pipette_id
+        )
 
     def liquid_probe_with_recovery(self, well_core: WellCore, loc: Location) -> None:
         labware_id = well_core.labware_id

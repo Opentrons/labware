@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Optional, Union, List, Tuple
+from typing import TYPE_CHECKING, Optional, Union, List, Tuple, Dict
 
 from opentrons import types
 from opentrons.hardware_control.dev_types import PipetteDict
@@ -561,3 +561,14 @@ class LegacyInstrumentCoreSimulator(
     def nozzle_configuration_valid_for_lld(self) -> bool:
         """Check if the nozzle configuration currently supports LLD."""
         return False
+
+    def get_lld_settings(self) -> Optional[Dict[str, Dict[str, float]]]:
+        return {}
+
+    def estimate_liquid_height(
+        self,
+        well_core: LegacyWellCore,
+        starting_liquid_height: float,
+        operation_volume: float,
+    ) -> float:
+        return 0.0
