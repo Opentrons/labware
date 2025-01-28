@@ -60,6 +60,19 @@ def test_check_valid_volume_parameters(
                 (17.5, (("e", "f"), (5, 6))),
             ],
         ),
+        (
+            [100, 100, 100],
+            ["dest1", "dest2", "dest3"],
+            50,
+            [
+                (50, "dest1"),
+                (50, "dest1"),
+                (50, "dest2"),
+                (50, "dest2"),
+                (50, "dest3"),
+                (50, "dest3"),
+            ],
+        ),
     ],
 )
 def test_expand_for_volume_constraints(
