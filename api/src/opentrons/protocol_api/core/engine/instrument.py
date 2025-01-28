@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Optional, TYPE_CHECKING, cast, Union, List, Tuple, NamedTuple, Dict
+from typing import Optional, TYPE_CHECKING, cast, Union, List, Tuple, NamedTuple
 from opentrons.types import Location, Mount, NozzleConfigurationType, NozzleMapInterface
 from opentrons.hardware_control import SyncHardwareAPI
 from opentrons.hardware_control.dev_types import PipetteDict
@@ -1357,10 +1357,26 @@ class InstrumentCore(AbstractInstrument[WellCore, LabwareCore]):
 
         return result.z_position is not None
 
-    def get_lld_settings(self) -> Optional[Dict[str, Dict[str, float]]]:
-        return self._engine_client.state.pipettes.get_pipette_lld_settings(
+    def get_minimum_liquid_sense_height(self) -> float:
+        attached_tip = self._engine_client.state.pipettes.get_attached_tip(
+            self._pipette_id
+        )
+        if attached_tip:
+            tip_volume = attached_tip.volume
+        else:
+            raise TipNotAttachedError(
+                "Need to have a tip attached for liquid-sense operations."
+            )
+        lld_settings = self._engine_client.state.pipettes.get_pipette_lld_settings(
             pipette_id=self.pipette_id
         )
+        if lld_settings:
+            lld_min_height_for_tip_attached = lld_settings[f"t{tip_volume}"][
+                "minHeight"
+            ]
+            return lld_min_height_for_tip_attached
+        else:
+            raise ValueError("liquid-level detection settings not found.")
 
     def liquid_probe_with_recovery(self, well_core: WellCore, loc: Location) -> None:
         labware_id = well_core.labware_id

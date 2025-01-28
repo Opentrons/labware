@@ -165,13 +165,9 @@ class InstrumentContext(publisher.CommandPublisher):
         self._core.set_default_speed(speed)
 
     @requires_version(2, 21)
-    def pipette_min_lld_height(self, tip_volume: int) -> float:
-        lld_settings = self._core.get_lld_settings()
-        if lld_settings:
-            tip_min_height = lld_settings[f"t{tip_volume}"]["minHeight"]
-            return tip_min_height
-        else:
-            raise ValueError("liquid-level detection settings not found.")
+    def get_minimum_liquid_sense_height(self) -> float:
+        """Get the minimum allowed height for liquid-level detection."""
+        return self._core.get_minimum_liquid_sense_height()
 
     @requires_version(2, 0)
     def aspirate(

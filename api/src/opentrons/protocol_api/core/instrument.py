@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod, ABC
-from typing import Any, Generic, Optional, TypeVar, Union, List, Tuple, Dict
+from typing import Any, Generic, Optional, TypeVar, Union, List, Tuple
 
 from opentrons import types
 from opentrons.hardware_control.dev_types import PipetteDict
@@ -226,7 +226,7 @@ class AbstractInstrument(ABC, Generic[WellCoreType, LabwareCoreType]):
         ...
 
     @abstractmethod
-    def get_lld_settings(self) -> Optional[Dict[str, Dict[str, float]]]:
+    def get_minimum_liquid_sense_height(self) -> float:
         ...
 
     @abstractmethod
