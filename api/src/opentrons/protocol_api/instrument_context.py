@@ -165,33 +165,13 @@ class InstrumentContext(publisher.CommandPublisher):
         self._core.set_default_speed(speed)
 
     @requires_version(2, 21)
-    def _pipette_min_lld_height(self, tip_volume: int) -> float:
+    def pipette_min_lld_height(self, tip_volume: int) -> float:
         lld_settings = self._core.get_lld_settings()
         if lld_settings:
             tip_min_height = lld_settings[f"t{tip_volume}"]["minHeight"]
             return tip_min_height
         else:
             raise ValueError("liquid-level detection settings not found.")
-
-    @requires_version(2, 20)
-    def _project_liquid_height_after_pipetting(
-        self, well: labware.Well, starting_liquid_height: float, operation_volume: float
-    ) -> float:
-        """Check the height of the liquid within a well.
-
-        :returns: The height, in mm, of the liquid from the deck.
-
-        :meta private:
-
-        This is intended for Opentrons internal use only and is not a guaranteed API.
-        """
-
-        projected_final_height = self._core.estimate_liquid_height(
-            well_core=well._core,
-            starting_liquid_height=starting_liquid_height,
-            operation_volume=operation_volume,
-        )
-        return projected_final_height
 
     @requires_version(2, 0)
     def aspirate(

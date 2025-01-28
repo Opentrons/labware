@@ -148,5 +148,18 @@ class AbstractLabware(ABC, Generic[WellCoreType]):
     def well_liquid_state(self, well_id: str) -> WellLiquidInfo:
         """Get well liquid state."""
 
+    @abstractmethod
+    def estimate_liquid_height_after_pipetting(
+        self,
+        well_core: WellCoreType,
+        starting_liquid_height: float,
+        operation_volume: float,
+    ) -> float:
+        """Estimate what the liquid height will be after pipetting, without raising an error."""
+
+    @abstractmethod
+    def current_liquid_height(self, well_core: WellCoreType) -> float:
+        """Get the current liquid height."""
+
 
 LabwareCoreType = TypeVar("LabwareCoreType", bound=AbstractLabware[Any])

@@ -1477,7 +1477,7 @@ class GeometryView:
             volume = operation_volume or 0.0
 
         if volume:
-            return self.get_well_height_after_volume(
+            return self.get_well_height_after_liquid_handling(
                 labware_id=labware_id,
                 well_name=well_name,
                 initial_height=initial_handling_height,
@@ -1552,12 +1552,31 @@ class GeometryView:
             )
         return float(handling_height)
 
-    def get_well_height_after_volume(
+    def get_well_height_after_liquid_handling(
         self, labware_id: str, well_name: str, initial_height: float, volume: float
     ) -> float:
         """Return the height of liquid in a labware well after a given volume has been handled.
 
         This is given an initial handling height, with reference to the well bottom.
+        """
+        well_geometry = self._labware.get_well_geometry(
+            labware_id=labware_id, well_name=well_name
+        )
+        initial_volume = find_volume_at_well_height(
+            target_height=initial_height, well_geometry=well_geometry
+        )
+        final_volume = initial_volume + volume
+        return find_height_at_well_volume(
+            target_volume=final_volume, well_geometry=well_geometry
+        )
+
+    def get_well_height_after_liquid_handling_no_error(
+        self, labware_id: str, well_name: str, initial_height: float, volume: float
+    ) -> float:
+        """Return what the height of liquid in a labware well after liquid handling will be.
+
+        This raises no error if the value returned is an invalid physical location, so it should never be
+        used for navigation, only for a pre-emptive estimate.
         """
         well_geometry = self._labware.get_well_geometry(
             labware_id=labware_id, well_name=well_name

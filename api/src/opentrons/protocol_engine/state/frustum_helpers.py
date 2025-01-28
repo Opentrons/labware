@@ -417,13 +417,16 @@ def _find_height_in_partial_frustum(
 
 
 def find_height_at_well_volume(
-    target_volume: float, well_geometry: InnerWellGeometry
+    target_volume: float,
+    well_geometry: InnerWellGeometry,
+    raise_error_if_result_invalid: bool = True,
 ) -> float:
     """Find the height within a well, at a known volume."""
     volumetric_capacity = get_well_volumetric_capacity(well_geometry)
     max_volume = sum(row[1] for row in volumetric_capacity)
-    if target_volume < 0 or target_volume > max_volume:
-        raise InvalidLiquidHeightFound("Invalid target volume.")
+    if raise_error_if_result_invalid:
+        if target_volume < 0 or target_volume > max_volume:
+            raise InvalidLiquidHeightFound("Invalid target volume.")
 
     sorted_well = sorted(well_geometry.sections, key=lambda section: section.topHeight)
     # find the section the target volume is in and compute the height

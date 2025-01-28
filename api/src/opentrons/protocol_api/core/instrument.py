@@ -179,15 +179,6 @@ class AbstractInstrument(ABC, Generic[WellCoreType, LabwareCoreType]):
         ...
 
     @abstractmethod
-    def estimate_liquid_height(
-        self,
-        well_core: WellCoreType,
-        starting_liquid_height: float,
-        operation_volume: float,
-    ) -> float:
-        ...
-
-    @abstractmethod
     def move_to(
         self,
         location: Union[types.Location, TrashBin, WasteChute],
