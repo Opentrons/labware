@@ -229,16 +229,3 @@ class LegacyLabwareCore(AbstractLabware[LegacyWellCore]):
     def load_empty(self, wells: List[str]) -> None:
         """Mark wells of the labware as empty."""
         assert False, "load_empty only supported in API version 2.22 & later"
-
-    def estimate_liquid_height_after_pipetting(
-        self,
-        well_core: LegacyWellCore,
-        starting_liquid_height: float,
-        operation_volume: float,
-    ) -> float:
-        """Estimate what the liquid height will be after pipetting, without raising an error."""
-        return 0.0
-
-    def current_liquid_height(self, well_core: LegacyWellCore) -> float:
-        """Get the current liquid height."""
-        return 0.0

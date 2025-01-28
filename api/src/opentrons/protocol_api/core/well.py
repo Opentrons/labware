@@ -83,5 +83,17 @@ class AbstractWellCore(ABC):
     def from_center_cartesian(self, x: float, y: float, z: float) -> Point:
         """Gets point in deck coordinates based on percentage of the radius of each axis."""
 
+    @abstractmethod
+    def estimate_liquid_height_after_pipetting(
+        self,
+        starting_liquid_height: float,
+        operation_volume: float,
+    ) -> float:
+        """Estimate what the liquid height will be after pipetting, without raising an error."""
+
+    @abstractmethod
+    def current_liquid_height(self) -> float:
+        """Get the current liquid height."""
+
 
 WellCoreType = TypeVar("WellCoreType", bound=AbstractWellCore)

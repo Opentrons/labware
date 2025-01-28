@@ -118,6 +118,18 @@ class LegacyWellCore(AbstractWellCore):
         """Gets point in deck coordinates based on percentage of the radius of each axis."""
         return self._geometry.from_center_cartesian(x, y, z)
 
+    def estimate_liquid_height_after_pipetting(
+        self,
+        starting_liquid_height: float,
+        operation_volume: float,
+    ) -> float:
+        """Estimate what the liquid height will be after pipetting, without raising an error."""
+        return 0.0
+
+    def current_liquid_height(self) -> float:
+        """Get the current liquid height."""
+        return 0.0
+
     # TODO(mc, 2022-10-28): is this used and/or necessary?
     def __repr__(self) -> str:
         """Use the well's display name as its repr."""

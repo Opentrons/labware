@@ -303,6 +303,29 @@ class Well:
             volume=volume,
         )
 
+    @requires_version(2, 21)
+    def current_liquid_height(self) -> float:
+        return self._core.current_liquid_height()
+
+    @requires_version(2, 21)
+    def estimate_liquid_height_after_pipetting(
+        self, starting_liquid_height: float, operation_volume: float
+    ) -> float:
+        """Check the height of the liquid within a well.
+
+        :returns: The height, in mm, of the liquid from the deck.
+
+        :meta private:
+
+        This is intended for Opentrons internal use only and is not a guaranteed API.
+        """
+
+        projected_final_height = self._core.estimate_liquid_height_after_pipetting(
+            starting_liquid_height=starting_liquid_height,
+            operation_volume=operation_volume,
+        )
+        return projected_final_height
+
     def _from_center_cartesian(self, x: float, y: float, z: float) -> Point:
         """
         Private version of from_center_cartesian. Present only for backward
@@ -687,30 +710,6 @@ class Labware:
                 extra_message="Try using the Opentrons App's Labware Position Check.",
             )
         self._core.set_calibration(delta)
-
-    @requires_version(2, 21)
-    def current_liquid_height(self, well: Well) -> float:
-        return self._core.current_liquid_height(well_core=well._core)
-
-    @requires_version(2, 20)
-    def estimate_liquid_height_after_pipetting(
-        self, well: Well, starting_liquid_height: float, operation_volume: float
-    ) -> float:
-        """Check the height of the liquid within a well.
-
-        :returns: The height, in mm, of the liquid from the deck.
-
-        :meta private:
-
-        This is intended for Opentrons internal use only and is not a guaranteed API.
-        """
-
-        projected_final_height = self._core.estimate_liquid_height_after_pipetting(
-            well_core=well._core,
-            starting_liquid_height=starting_liquid_height,
-            operation_volume=operation_volume,
-        )
-        return projected_final_height
 
     @requires_version(2, 12)
     def set_offset(self, x: float, y: float, z: float) -> None:
