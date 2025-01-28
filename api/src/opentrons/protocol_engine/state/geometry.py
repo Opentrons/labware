@@ -1586,7 +1586,9 @@ class GeometryView:
         )
         final_volume = initial_volume + volume
         return find_height_at_well_volume(
-            target_volume=final_volume, well_geometry=well_geometry
+            target_volume=final_volume,
+            well_geometry=well_geometry,
+            raise_error_if_result_invalid=False,
         )
 
     def get_well_height_at_volume(
