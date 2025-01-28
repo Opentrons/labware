@@ -1,4 +1,4 @@
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict
 
 from opentrons.calibration_storage import helpers
 from opentrons.protocols.geometry.labware_geometry import LabwareGeometry
@@ -229,9 +229,6 @@ class LegacyLabwareCore(AbstractLabware[LegacyWellCore]):
     def load_empty(self, wells: List[str]) -> None:
         """Mark wells of the labware as empty."""
         assert False, "load_empty only supported in API version 2.22 & later"
-
-    def well_liquid_state(self, well_id: str) -> Any:
-        return {}
 
     def estimate_liquid_height_after_pipetting(
         self,

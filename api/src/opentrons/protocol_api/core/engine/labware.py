@@ -19,7 +19,6 @@ from opentrons.protocol_engine.clients import SyncClient as ProtocolEngineClient
 from opentrons.protocol_engine.types import (
     LabwareOffsetCreate,
     LabwareOffsetVector,
-    WellLiquidInfo,
 )
 from opentrons.types import DeckSlotName, NozzleMapInterface, Point, StagingSlotName
 
@@ -216,11 +215,6 @@ class LabwareCore(AbstractLabware[WellCore]):
                 labwareId=self._labware_id, liquidId=liquid._id, volumeByWell=volumes
             )
         )
-
-    def well_liquid_state(self, well_id: str) -> WellLiquidInfo:
-        well_state = self._engine_client.state.wells
-        well_liquid_info = well_state.get_well_liquid_info(self._labware_id, well_id)
-        return well_liquid_info
 
     def load_empty(self, wells: List[str]) -> None:
         """Mark wells of the labware as empty."""
