@@ -152,7 +152,6 @@ class AspirateImplementation(AbstractCommandImpl[AspirateParams, _ExecuteReturn]
                 labware_id=labware_id,
                 well_name=well_name,
             )
-
         move_result = await move_to_well(
             movement=self._movement,
             model_utils=self._model_utils,
