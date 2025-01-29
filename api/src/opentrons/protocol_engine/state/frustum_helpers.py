@@ -241,8 +241,8 @@ def _get_segment_capacity(segment: WellSegment) -> float:
 def get_well_volumetric_capacity(
     well_geometry: InnerWellGeometry,
 ) -> List[Tuple[float, float]]:
-    """Return the total volumetric capacity of a well as a map of height borders to volume."""
-    #  [(top_height_0, total_volume_at_height_0), (top_height_1, total_volume_at_height_1), ...]
+    """Return the volumetric capacity of a well as a list of pairs relating segment heights to volumes."""
+    #  [(top_height_0, section_0_volume), (top_height_1, section_1_volume), ...]
     well_volume = []
 
     # get the well segments sorted in ascending order

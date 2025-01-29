@@ -571,4 +571,5 @@ class LegacyInstrumentCoreSimulator(
         starting_liquid_height: float,
         operation_volume: float,
     ) -> float:
-        return 0.0
+        """This will never be called because it was added in API 2.21."""
+        assert False, "estimate_liquid_height only supported in API 2.21 & later"

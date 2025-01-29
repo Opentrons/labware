@@ -1562,7 +1562,6 @@ class GeometryView:
         well_geometry = self._labware.get_well_geometry(
             labware_id=labware_id, well_name=well_name
         )
-        # figure out what initial_height is here
         initial_volume = find_volume_at_well_height(
             target_height=initial_height, well_geometry=well_geometry
         )
