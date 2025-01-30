@@ -286,7 +286,6 @@ def test_mix(
             rate=1,
             flow_rate=aspirate_flow_rate,
             in_place=True,
-            is_meniscus=None,
             correction_volume=aspirate_correction_volume,
         ),
         mock_instrument_core.delay(0.2),
