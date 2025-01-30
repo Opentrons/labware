@@ -86,7 +86,6 @@ class AbstractWellCore(ABC):
     @abstractmethod
     def estimate_liquid_height_after_pipetting(
         self,
-        starting_liquid_height: float,
         operation_volume: float,
     ) -> float:
         """Estimate what the liquid height will be after pipetting, without raising an error."""
@@ -94,6 +93,10 @@ class AbstractWellCore(ABC):
     @abstractmethod
     def current_liquid_height(self) -> float:
         """Get the current liquid height."""
+
+    @abstractmethod
+    def get_well_volume(self) -> float:
+        """Get the current volume within a well."""
 
 
 WellCoreType = TypeVar("WellCoreType", bound=AbstractWellCore)

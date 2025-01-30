@@ -1486,6 +1486,49 @@ class GeometryView:
         else:
             return initial_handling_height
 
+    def get_current_well_volume(
+        self,
+        labware_id: str,
+        well_name: str,
+    ) -> float:
+        """Returns most recently updated volume in specified well."""
+        last_updated = self._wells.get_last_liquid_update(labware_id, well_name)
+        if last_updated is None:
+            raise errors.LiquidHeightUnknownError(
+                "Must LiquidProbe or LoadLiquid before specifying WellOrigin.MENISCUS."
+            )
+
+        well_liquid = self._wells.get_well_liquid_info(
+            labware_id=labware_id, well_name=well_name
+        )
+        if (
+            well_liquid.probed_height is not None
+            and well_liquid.probed_height.height is not None
+            and well_liquid.probed_height.last_probed == last_updated
+        ):
+            return self.get_well_volume_at_height(
+                labware_id=labware_id,
+                well_name=well_name,
+                height=well_liquid.probed_height.height,
+            )
+        elif (
+            well_liquid.loaded_volume is not None
+            and well_liquid.loaded_volume.volume is not None
+            and well_liquid.loaded_volume.last_loaded == last_updated
+        ):
+            return well_liquid.loaded_volume.volume
+        elif (
+            well_liquid.probed_volume is not None
+            and well_liquid.probed_volume.volume is not None
+            and well_liquid.probed_volume.last_probed == last_updated
+        ):
+            return well_liquid.probed_volume.volume
+        else:
+            # This should not happen if there was an update but who knows
+            raise errors.LiquidVolumeUnknownError(
+                f"Unable to find liquid volume despite an update at {last_updated}."
+            )
+
     def get_meniscus_height(
         self,
         labware_id: str,

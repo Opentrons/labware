@@ -158,12 +158,12 @@ class WellCore(AbstractWellCore):
 
     def estimate_liquid_height_after_pipetting(
         self,
-        starting_liquid_height: float,
         operation_volume: float,
     ) -> float:
         """Return an estimate of liquid height after pipetting without raising an error."""
         labware_id = self.labware_id
         well_name = self._name
+        starting_liquid_height = self.current_liquid_height()
         projected_final_height = self._engine_client.state.geometry.get_well_height_after_liquid_handling_no_error(
             labware_id=labware_id,
             well_name=well_name,
@@ -177,5 +177,13 @@ class WellCore(AbstractWellCore):
         labware_id = self.labware_id
         well_name = self._name
         return self._engine_client.state.geometry.get_meniscus_height(
+            labware_id=labware_id, well_name=well_name
+        )
+
+    def get_well_volume(self) -> float:
+        """Return the current volume in a well."""
+        labware_id = self.labware_id
+        well_name = self._name
+        return self._engine_client.state.geometry.get_current_well_volume(
             labware_id=labware_id, well_name=well_name
         )

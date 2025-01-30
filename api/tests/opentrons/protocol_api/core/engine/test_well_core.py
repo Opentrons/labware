@@ -11,7 +11,10 @@ from opentrons.protocol_api import MAX_SUPPORTED_VERSION
 from opentrons.protocol_engine import WellLocation, WellOrigin, WellOffset
 from opentrons.protocol_engine import commands as cmd
 from opentrons.protocol_engine.clients import SyncClient as EngineClient
-from opentrons.protocol_engine.errors.exceptions import LiquidHeightUnknownError
+from opentrons.protocol_engine.errors.exceptions import (
+    LiquidHeightUnknownError,
+    LiquidVolumeUnknownError,
+)
 from opentrons.protocols.api_support.types import APIVersion
 from opentrons.protocols.api_support.util import UnsupportedAPIError
 from opentrons.types import Point
@@ -256,6 +259,29 @@ def test_current_liquid_height(
         subject.current_liquid_height()
 
 
+def test_current_liquid_volume(
+    decoy: Decoy, subject: WellCore, mock_engine_client: EngineClient
+) -> None:
+    """Make sure current_liquid_volume returns the correct value or raises an error."""
+    fake_volume = 2222.2
+    decoy.when(
+        mock_engine_client.state.geometry.get_current_well_volume(
+            labware_id="labware-id", well_name="well-name"
+        )
+    ).then_return(fake_volume)
+    assert subject.get_well_volume() == fake_volume
+
+    # make sure that WellCore propagates a LiquidVolumeUnknownError
+    decoy.when(
+        mock_engine_client.state.geometry.get_current_well_volume(
+            labware_id="labware-id", well_name="well-name"
+        )
+    ).then_raise(LiquidVolumeUnknownError())
+
+    with pytest.raises(LiquidVolumeUnknownError):
+        subject.get_well_volume()
+
+
 @pytest.mark.parametrize("operation_volume", [0.0, 100, -100, 2, -4, 5])
 def test_estimate_liquid_height_after_pipetting(
     decoy: Decoy,
@@ -295,6 +321,7 @@ def test_estimate_liquid_height_after_pipetting(
     ).then_return(fake_well_geometry)
     initial_liquid_height = 5.6
     fake_final_height = 10000000
+    decoy.when(subject.current_liquid_height()).then_return(initial_liquid_height)
     decoy.when(
         mock_engine_client.state.geometry.get_well_height_after_liquid_handling_no_error(
             labware_id="labware-id",
@@ -306,7 +333,6 @@ def test_estimate_liquid_height_after_pipetting(
 
     # make sure that no error was raised
     final_height = subject.estimate_liquid_height_after_pipetting(
-        starting_liquid_height=initial_liquid_height,
         operation_volume=operation_volume,
     )
     assert final_height == fake_final_height

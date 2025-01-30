@@ -120,7 +120,6 @@ class LegacyWellCore(AbstractWellCore):
 
     def estimate_liquid_height_after_pipetting(
         self,
-        starting_liquid_height: float,
         operation_volume: float,
     ) -> float:
         """Estimate what the liquid height will be after pipetting, without raising an error."""
@@ -128,6 +127,10 @@ class LegacyWellCore(AbstractWellCore):
 
     def current_liquid_height(self) -> float:
         """Get the current liquid height."""
+        return 0.0
+
+    def get_well_volume(self) -> float:
+        """Get the current well volume."""
         return 0.0
 
     # TODO(mc, 2022-10-28): is this used and/or necessary?

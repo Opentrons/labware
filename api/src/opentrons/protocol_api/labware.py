@@ -305,12 +305,16 @@ class Well:
 
     @requires_version(2, 21)
     def current_liquid_height(self) -> float:
+        """Get the current liquid height in a well."""
         return self._core.current_liquid_height()
 
     @requires_version(2, 21)
-    def estimate_liquid_height_after_pipetting(
-        self, starting_liquid_height: float, operation_volume: float
-    ) -> float:
+    def current_well_volume(self) -> float:
+        """Get the current liquid volume in a well."""
+        return self._core.get_well_volume()
+
+    @requires_version(2, 21)
+    def estimate_liquid_height_after_pipetting(self, operation_volume: float) -> float:
         """Check the height of the liquid within a well.
 
         :returns: The height, in mm, of the liquid from the deck.
@@ -321,7 +325,6 @@ class Well:
         """
 
         projected_final_height = self._core.estimate_liquid_height_after_pipetting(
-            starting_liquid_height=starting_liquid_height,
             operation_volume=operation_volume,
         )
         return projected_final_height
