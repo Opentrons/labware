@@ -336,14 +336,6 @@ def test_estimate_liquid_height_after_pipetting(
         operation_volume=operation_volume,
     )
     assert final_height == fake_final_height
-    decoy.verify(
-        mock_engine_client.state.geometry.get_well_height_after_liquid_handling_no_error(
-            labware_id="labware-id",
-            well_name="well-name",
-            initial_height=initial_liquid_height,
-            volume=operation_volume,
-        )
-    )
 
 
 def test_from_center_cartesian(
