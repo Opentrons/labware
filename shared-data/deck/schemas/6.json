@@ -1,0 +1,431 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "opentronsDeckSchemaV6",
+  "definitions": {
+    "positiveNumber": {
+      "type": "number",
+      "minimum": 0
+    },
+    "xyzArray": {
+      "type": "array",
+      "description": "Array of 3 numbers, [x, y, z]",
+      "items": { "type": "number" },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "coordinates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "z"],
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "z": {
+          "type": "number"
+        }
+      }
+    },
+    "boundingBox": {
+      "type": "object",
+      "required": ["xDimension", "yDimension", "zDimension"],
+      "properties": {
+        "xDimension": { "$ref": "#/definitions/positiveNumber" },
+        "yDimension": { "$ref": "#/definitions/positiveNumber" },
+        "zDimension": { "$ref": "#/definitions/positiveNumber" }
+      }
+    },
+    "backLeftLocatingFeature": {
+      "description": "Sets the position of the back left corner of a contained item",
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["locatingFeatureId", "offsetVector"],
+      "properties": {
+        "locatingFeatureId": {
+          "const": "backLeft",
+          "description": "The ID of the locating feature"
+        },
+        "offsetVector": {
+          "$ref": "#/definitions/xyzArray",
+          "description": "A vector from the origin of the object to the position of its locating feature"
+        }
+      }
+    },
+    "frontLeftLocatingFeature": {
+      "description": "Sets the position of the front left corner of a contained item",
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["locatingFeatureId", "offsetVector"],
+      "properties": {
+        "locatingFeatureId": {
+          "const": "frontLeft",
+          "description": "The ID of the locating feature"
+        },
+        "offsetVector": {
+          "$ref": "#/definitions/xyzArray",
+          "description": "A vector from the origin of the object to the position of its locating feature"
+        }
+      }
+    },
+    "wellLocatingFeature": {
+      "description": "Sets the position of a specific well of a contained item",
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["locatingFeatureId", "offsetVector", "wellName"],
+      "properties": {
+        "locatingFeatureId": {
+          "const": "well",
+          "description": "The ID of the locating feature"
+        },
+        "offsetVector": {
+          "$ref": "#/definitions/xyzArray",
+          "description": "A vector from the origin of the object to the position of its locating feature"
+        },
+        "wellName": {
+          "type": "string",
+          "description": "The standard well name (e.g. A1 or B2) for the well that is constrained by this locating feature"
+        }
+      }
+    },
+    "centerLocatingFeature": {
+      "description": "Sets the position of the center (halfway between the external outer faces in X and Y) of the contained item",
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["locatingFeatureId", "offsetVector"],
+      "properties": {
+        "locatingFeatureId": {
+          "const": "center",
+          "description": "The ID of the locating feature"
+        },
+        "offsetVector": {
+          "$ref": "#/definitions/xyzArray",
+          "description": "A vector from the origin of the object to the position of its locating feature"
+        }
+      }
+    },
+    "uncontrolledLocatingFeature": {
+      "description": "Sets the position of something that isn't in the schema",
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["locatingFeatureId", "offsetVector"],
+      "properties": {
+        "locatingFeatureId": {
+          "type": "string",
+          "description": "The ID of the locating feature"
+        },
+        "offsetVector": {
+          "$ref": "#/definitions/xyzArray",
+          "description": "A vector from the origin of the obejct to the position of its locating feature"
+        }
+      }
+    },
+    "locatingFeature": {
+      "anyOf": [
+        { "$ref": "#/definitions/backLeftLocatingFeature" },
+        { "$ref": "#/definitions/frontLeftLocatingFeature" },
+        { "$ref": "#/definitions/wellLocatingFeature" },
+        { "$ref": "#/definitions/centerLocatingFeature" },
+        { "$ref": "#/definitions/uncontrolledLocatingFeature" }
+      ]
+    }
+  },
+  "description": "Deck specifications, where x,y,z (0,0,0) is at front the bottom left corner.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "otId",
+    "schemaVersion",
+    "cornerOffsetFromOrigin",
+    "dimensions",
+    "metadata",
+    "robot",
+    "locations",
+    "cutoutFixtures"
+  ],
+  "properties": {
+    "otId": {
+      "description": "Unique internal ID generated using UUID",
+      "type": "string"
+    },
+    "schemaVersion": {
+      "description": "Schema version of a deck is a single integer",
+      "enum": [6]
+    },
+    "cornerOffsetFromOrigin": {
+      "$ref": "#/definitions/xyzArray",
+      "description": "Position of left-front-bottom corner of entire deck to robot coordinate system origin"
+    },
+    "dimensions": {
+      "$ref": "#/definitions/xyzArray",
+      "description": "Outer dimensions of a deck bounding box"
+    },
+    "metadata": {
+      "description": "Optional metadata about the Deck",
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "description": "A short, human-readable name for the deck",
+          "type": "string"
+        },
+        "tags": {
+          "description": "Tags to be used in searching for this deck",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "robot": {
+      "type": "object",
+      "required": ["model"],
+      "properties": {
+        "model": {
+          "description": "Model of the robot",
+          "type": "string",
+          "enum": ["OT-2 Standard", "OT-3 Standard"]
+        }
+      }
+    },
+    "locations": {
+      "type": "object",
+      "required": [
+        "addressableAreas",
+        "calibrationPoints",
+        "cutouts",
+        "legacyFixtures"
+      ],
+      "properties": {
+        "addressableAreas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "description": "An addressable area is a named area in 3D space that the robot can interact with--for example, as a place to drop tips, or hold a labware.",
+            "required": [
+              "id",
+              "areaType",
+              "offsetFromCutoutFixture",
+              "boundingBox",
+              "displayName"
+            ],
+            "properties": {
+              "id": {
+                "description": "Unique identifier for slot",
+                "type": "string"
+              },
+              "areaType": {
+                "description": "The type of addressable area, defining allowed behavior.",
+                "type": "string",
+                "enum": [
+                  "slot",
+                  "stagingSlot",
+                  "movableTrash",
+                  "fixedTrash",
+                  "wasteChute",
+                  "lidDock",
+                  "absorbanceReader",
+                  "temperatureModule",
+                  "magneticBlock",
+                  "thermocycler",
+                  "heaterShaker",
+                  "flexStacker"
+                ]
+              },
+              "offsetFromCutoutFixture": {
+                "$ref": "#/definitions/xyzArray",
+                "description": "The offset from the origin of the cutout fixture that's providing this addressable area (which is currently identical to the position of the underlying cutout), to the -x, -y, -z corner of this addressable area's bounding box."
+              },
+              "locatingFeatures": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/locatingFeature",
+                  "description": "A locating feature to which a labware can be related. The array is in order of preference."
+                }
+              },
+              "boundingBox": {
+                "description": "The active area (both pipettes can reach) of this addressable area.",
+                "$ref": "#/definitions/boundingBox"
+              },
+              "displayName": {
+                "description": "A human-readable nickname for this area e.g. \"Slot A1\" or \"Trash Bin in A1\"",
+                "type": "string"
+              },
+              "compatibleModuleTypes": {
+                "description": "OT-2 Only parameter. An array of module types that can be placed in this area. The module type names can be found in the moduleType field of a module definition.",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "ableToDropTips": {
+                "description": "Whether tips are allowed to be dropped into this area. If `true`, the top-center of the `boundingBox` should be a good location for the bottom-center of all the tips when they're dropped.",
+                "type": "boolean"
+              },
+              "ableToDropLabware": {
+                "description": "Whether labware is allowed to be dropped (different from being placed) into this area. If `true`, the top-center of the `boundingBox` should be a good location for the bottom-center of the labware when it's dropped.",
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "calibrationPoints": {
+          "type": "array",
+          "description": "Key points for deck calibration",
+          "items": {
+            "type": "object",
+            "required": ["id", "position", "displayName"],
+            "properties": {
+              "id": {
+                "description": "Unique identifier for calibration point",
+                "type": "string"
+              },
+              "position": {
+                "$ref": "#/definitions/xyzArray"
+              },
+              "displayName": {
+                "description": "An optional human-readable nickname for this point Eg \"Slot 3 Cross\" or \"Slot 1 Dot\"",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "cutouts": {
+          "type": "array",
+          "description": "The machined cutout slots on the deck surface.",
+          "items": {
+            "type": "object",
+            "required": ["id", "position", "displayName"],
+            "properties": {
+              "id": {
+                "description": "Unique identifier for the cutout",
+                "type": "string"
+              },
+              "position": {
+                "description": "Absolute position of the cutout",
+                "$ref": "#/definitions/xyzArray"
+              },
+              "displayName": {
+                "description": "An optional human-readable nickname for this cutout e.g. \"Cutout A1\"",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "legacyFixtures": {
+          "type": "array",
+          "description": "Fixed position objects on the deck and fixture-dependant Module labware Eg Plate Reader Lid.",
+          "items": {
+            "type": "object",
+            "required": ["id", "displayName"],
+            "properties": {
+              "id": {
+                "description": "Unique identifier for fixed object",
+                "type": "string"
+              },
+              "labware": {
+                "description": "Valid labware loadName for fixed object",
+                "type": "string"
+              },
+              "slot": {
+                "description": "Slot location of the fixed object",
+                "type": "string"
+              },
+              "displayName": {
+                "description": "An optional human-readable nickname for this fixture Eg \"Tall Fixed Trash\" or \"Short Fixed Trash\"",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "cutoutFixtures": {
+      "type": "array",
+      "items": {
+        "description": "A cutout fixture is a physical thing that can be mounted onto one of the deck cutouts.",
+        "type": "object",
+        "required": [
+          "id",
+          "expectOpentronsModuleSerialNumber",
+          "mayMountTo",
+          "displayName",
+          "providesAddressableAreas",
+          "fixtureGroup",
+          "height"
+        ],
+        "properties": {
+          "id": {
+            "description": "Unique identifier for the cutout fixture.",
+            "type": "string"
+          },
+          "expectOpentronsModuleSerialNumber": {
+            "description": "Determines whether or not a fixture expects a serial number for a connected Opentrons Module.",
+            "type": "boolean"
+          },
+          "mayMountTo": {
+            "description": "A list of compatible cutouts this fixture may be mounted to. These must match `id`s in `cutouts`.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "displayName": {
+            "description": "A human-readable nickname for this area e.g. \"Standard Right Slot\" or \"Slot With Movable Trash\"",
+            "type": "string"
+          },
+          "providesAddressableAreas": {
+            "description": "The addressable areas that this cutout fixture provides, when it's mounted. It can provide different addressable areas depending on where it's mounted. Keys must match values from this object's `mayMountTo`. Values must match `id`s from `addressableAreas`.",
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "fixtureGroup": {
+            "description": "The map of fixtures that must exist in the deck configuration if this fixture exists, with the mounting location acting as a key to determine the location of the rest of the group.",
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "height": {
+            "description": "The vertical distance (mm) from the cutout fixture's origin to its tallest physical feature that an instrument could collide with.",
+            "type": "number"
+          }
+        }
+      }
+    },
+    "gripperOffsets": {
+      "type": "object",
+      "description": "Offsets to be added when calculating the coordinates a gripper should go to when picking up or dropping a labware on this deck.",
+      "properties": {
+        "default": {
+          "type": "object",
+          "properties": {
+            "pickUpOffset": {
+              "$ref": "#/definitions/coordinates",
+              "description": "Offset added to calculate pick-up coordinates of a labware placed on this deck."
+            },
+            "dropOffset": {
+              "$ref": "#/definitions/coordinates",
+              "description": "Offset added to calculate drop coordinates of a labware placed on this deck."
+            }
+          },
+          "required": ["pickUpOffset", "dropOffset"]
+        }
+      },
+      "required": ["default"]
+    }
+  }
+}

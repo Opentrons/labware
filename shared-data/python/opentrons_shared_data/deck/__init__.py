@@ -1,6 +1,7 @@
 """
 opentrons_shared_data.deck: types and bindings for deck definitions
 """
+
 from typing import Dict, List, NamedTuple, cast, overload, TYPE_CHECKING
 from typing_extensions import Final
 import json
@@ -17,6 +18,8 @@ if TYPE_CHECKING:
         DeckSchemaVersion4,
         DeckDefinitionV5,
         DeckSchemaVersion5,
+        DeckDefinitionV6,
+        DeckSchemaVersion6,
     )
 
 DEFAULT_DECK_DEFINITION_VERSION: Final = 5
@@ -38,6 +41,11 @@ CALIBRATION_SQUARE_EDGES: Dict[str, Offset] = {
     "top": Offset(y=CALIBRATION_SQUARE_SIZE * 0.5),
     "bottom": Offset(y=-CALIBRATION_SQUARE_SIZE * 0.5),
 }
+
+
+@overload
+def load(name: str, version: "DeckSchemaVersion6") -> "DeckDefinitionV6":
+    ...
 
 
 @overload

@@ -8,6 +8,7 @@ from opentrons_shared_data.deck import (
 from opentrons_shared_data.deck.types import (
     DeckDefinitionV3,
     DeckDefinitionV5,
+    DeckDefinitionV6,
 )
 
 
@@ -21,3 +22,9 @@ def test_v3_defs(defname: str) -> None:
 def test_v5_defs(defname: str) -> None:
     defn = load_deck_definition(name=defname, version=5)
     typeguard.check_type(defn, DeckDefinitionV5)
+
+
+@pytest.mark.parametrize("defname", list_deck_definition_names(version=6))
+def test_v6_defs(defname: str) -> None:
+    defn = load_deck_definition(name=defname, version=6)
+    typeguard.check_type(defn, DeckDefinitionV6)

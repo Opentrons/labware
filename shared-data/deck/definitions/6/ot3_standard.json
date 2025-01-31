@@ -1,0 +1,1614 @@
+{
+  "otId": "ot3_standard",
+  "schemaVersion": 6,
+  "cornerOffsetFromOrigin": [-204.31, -76.59, 0],
+  "dimensions": [854.995, 581.74, 0],
+  "metadata": {
+    "displayName": "OT-3 Standard Deck",
+    "tags": ["ot3", "12 slots", "standard"]
+  },
+  "robot": {
+    "model": "OT-3 Standard"
+  },
+  "locations": {
+    "addressableAreas": [
+      {
+        "id": "D1",
+        "areaType": "slot",
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "backLeft",
+            "offsetVector": [0.0, 86.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "offsetFromCutoutFixture": [0.0, 0.0, 0.0],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Slot D1"
+      },
+      {
+        "id": "D2",
+        "areaType": "slot",
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "backLeft",
+            "offsetVector": [0.0, 86.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "offsetFromCutoutFixture": [0.0, 0.0, 0.0],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Slot D2"
+      },
+      {
+        "id": "D3",
+        "areaType": "slot",
+        "offsetFromCutoutFixture": [0.0, 0.0, 0.0],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "backLeft",
+            "offsetVector": [0.0, 86.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Slot D3"
+      },
+      {
+        "id": "C1",
+        "areaType": "slot",
+        "offsetFromCutoutFixture": [0.0, 0.0, 0.0],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "backLeft",
+            "offsetVector": [0.0, 86.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Slot C1"
+      },
+      {
+        "id": "C2",
+        "areaType": "slot",
+        "offsetFromCutoutFixture": [0.0, 0.0, 0.0],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "backLeft",
+            "offsetVector": [0.0, 86.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Slot C2"
+      },
+      {
+        "id": "C3",
+        "areaType": "slot",
+        "offsetFromCutoutFixture": [0.0, 0.0, 0.0],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "backLeft",
+            "offsetVector": [0.0, 86.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Slot C3"
+      },
+      {
+        "id": "B1",
+        "areaType": "slot",
+        "offsetFromCutoutFixture": [0.0, 0, 0.0],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "backLeft",
+            "offsetVector": [0.0, 86.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Slot B1"
+      },
+      {
+        "id": "B2",
+        "areaType": "slot",
+        "offsetFromCutoutFixture": [0.0, 0.0, 0.0],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "backLeft",
+            "offsetVector": [0.0, 86.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Slot B2"
+      },
+      {
+        "id": "B3",
+        "areaType": "slot",
+        "offsetFromCutoutFixture": [0.0, 0.0, 0.0],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "backLeft",
+            "offsetVector": [0.0, 86.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Slot B3"
+      },
+      {
+        "id": "A1",
+        "areaType": "slot",
+        "offsetFromCutoutFixture": [0.0, 0.0, 0.0],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "backLeft",
+            "offsetVector": [0.0, 86.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Slot A1"
+      },
+      {
+        "id": "A2",
+        "areaType": "slot",
+        "offsetFromCutoutFixture": [0.0, 0.0, 0.0],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "backLeft",
+            "offsetVector": [0.0, 86.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Slot A2",
+        "compatibleModuleTypes": []
+      },
+      {
+        "id": "A3",
+        "areaType": "slot",
+        "offsetFromCutoutFixture": [0.0, 0.0, 0.0],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "backLeft",
+            "offsetVector": [0.0, 86.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Slot A3",
+        "compatibleModuleTypes": []
+      },
+      {
+        "id": "A4",
+        "areaType": "stagingSlot",
+        "offsetFromCutoutFixture": [164.0, 0.0, 14.5],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "backLeft",
+            "offsetVector": [0.0, 86.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Slot A4",
+        "compatibleModuleTypes": []
+      },
+      {
+        "id": "B4",
+        "areaType": "stagingSlot",
+        "offsetFromCutoutFixture": [164.0, 0.0, 14.5],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "backLeft",
+            "offsetVector": [0.0, 86.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Slot B4",
+        "compatibleModuleTypes": []
+      },
+      {
+        "id": "C4",
+        "areaType": "stagingSlot",
+        "offsetFromCutoutFixture": [164.0, 0.0, 14.5],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "backLeft",
+            "offsetVector": [0.0, 86.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Slot C4",
+        "compatibleModuleTypes": []
+      },
+      {
+        "id": "D4",
+        "areaType": "stagingSlot",
+        "offsetFromCutoutFixture": [164.0, 0.0, 14.5],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "backLeft",
+            "offsetVector": [0.0, 86.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Slot D4",
+        "compatibleModuleTypes": []
+      },
+      {
+        "id": "movableTrashD1",
+        "areaType": "movableTrash",
+        "offsetFromCutoutFixture": [-90.25, 4, 0.0],
+        "boundingBox": {
+          "xDimension": 225,
+          "yDimension": 78,
+          "zDimension": 40
+        },
+        "displayName": "Trash Bin in D1",
+        "ableToDropTips": true
+      },
+      {
+        "id": "movableTrashC1",
+        "areaType": "movableTrash",
+        "offsetFromCutoutFixture": [-90.25, 4, 0.0],
+        "boundingBox": {
+          "xDimension": 225,
+          "yDimension": 78,
+          "zDimension": 40
+        },
+        "displayName": "Trash Bin in C1",
+        "ableToDropTips": true
+      },
+      {
+        "id": "movableTrashB1",
+        "areaType": "movableTrash",
+        "offsetFromCutoutFixture": [-90.25, 4, 0.0],
+        "boundingBox": {
+          "xDimension": 225,
+          "yDimension": 78,
+          "zDimension": 40
+        },
+        "displayName": "Trash Bin in B1",
+        "ableToDropTips": true
+      },
+      {
+        "id": "movableTrashA1",
+        "areaType": "movableTrash",
+        "offsetFromCutoutFixture": [-90.25, 4, 0.0],
+        "boundingBox": {
+          "xDimension": 225,
+          "yDimension": 78,
+          "zDimension": 40
+        },
+        "displayName": "Trash Bin in A1",
+        "ableToDropTips": true
+      },
+      {
+        "id": "movableTrashD3",
+        "areaType": "movableTrash",
+        "offsetFromCutoutFixture": [-6.25, 4, 0.0],
+        "boundingBox": {
+          "xDimension": 225,
+          "yDimension": 78,
+          "zDimension": 40
+        },
+        "displayName": "Trash Bin in D3",
+        "ableToDropTips": true
+      },
+      {
+        "id": "movableTrashC3",
+        "areaType": "movableTrash",
+        "offsetFromCutoutFixture": [-6.25, 4, 0.0],
+        "boundingBox": {
+          "xDimension": 225,
+          "yDimension": 78,
+          "zDimension": 40
+        },
+        "displayName": "Trash Bin in C3",
+        "ableToDropTips": true
+      },
+      {
+        "id": "movableTrashB3",
+        "areaType": "movableTrash",
+        "offsetFromCutoutFixture": [-6.25, 4, 0.0],
+        "boundingBox": {
+          "xDimension": 225,
+          "yDimension": 78,
+          "zDimension": 40
+        },
+        "displayName": "Trash Bin in B3",
+        "ableToDropTips": true
+      },
+      {
+        "id": "movableTrashA3",
+        "areaType": "movableTrash",
+        "offsetFromCutoutFixture": [-6.25, 4, 0.0],
+        "boundingBox": {
+          "xDimension": 225,
+          "yDimension": 78,
+          "zDimension": 40
+        },
+        "displayName": "Trash Bin in A3",
+        "ableToDropTips": true
+      },
+      {
+        "id": "1ChannelWasteChute",
+        "areaType": "wasteChute",
+        "offsetFromCutoutFixture": [64, 36, 114.5],
+        "boundingBox": {
+          "xDimension": 0,
+          "yDimension": 0,
+          "zDimension": 0
+        },
+        "displayName": "Waste Chute",
+        "ableToDropTips": true
+      },
+      {
+        "id": "8ChannelWasteChute",
+        "areaType": "wasteChute",
+        "offsetFromCutoutFixture": [64, -27, 114.5],
+        "boundingBox": {
+          "xDimension": 0,
+          "yDimension": 63,
+          "zDimension": 0
+        },
+        "displayName": "Waste Chute",
+        "ableToDropTips": true
+      },
+      {
+        "id": "96ChannelWasteChute",
+        "areaType": "wasteChute",
+        "offsetFromCutoutFixture": [14.445, -20.915, 114.5],
+        "boundingBox": {
+          "xDimension": 99,
+          "yDimension": 63,
+          "zDimension": 0
+        },
+        "displayName": "Waste Chute",
+        "ableToDropTips": true
+      },
+      {
+        "id": "gripperWasteChute",
+        "areaType": "wasteChute",
+        "offsetFromCutoutFixture": [64, 29, 136.5],
+        "boundingBox": {
+          "xDimension": 0,
+          "yDimension": 0,
+          "zDimension": 0
+        },
+        "displayName": "Waste Chute",
+        "ableToDropLabware": true
+      },
+      {
+        "id": "thermocyclerModuleV2",
+        "areaType": "thermocycler",
+        "offsetFromCutoutFixture": [-20.005, 67.96, 10.96],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "well",
+            "offsetVector": [23.38, 65.24, 0.0],
+            "wellName": "B2"
+          },
+          {
+            "locatingFeatureId": "well",
+            "offsetVector": [14.38, 74.24, 0.0],
+            "wellName": "A1"
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Thermocycler Module Slot"
+      },
+      {
+        "id": "heaterShakerV1D1",
+        "areaType": "heaterShaker",
+        "offsetFromCutoutFixture": [0, 0, 18.95],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "center",
+            "offsetVector": [64.0, 43.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Heater Shaker in D1"
+      },
+      {
+        "id": "heaterShakerV1C1",
+        "areaType": "heaterShaker",
+        "offsetFromCutoutFixture": [0.0, 0.0, 18.95],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "center",
+            "offsetVector": [64.0, 43.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Heater Shaker in C1"
+      },
+      {
+        "id": "heaterShakerV1B1",
+        "areaType": "heaterShaker",
+        "offsetFromCutoutFixture": [0.0, 0.0, 18.95],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "center",
+            "offsetVector": [64.0, 43.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Heater Shaker in B1"
+      },
+      {
+        "id": "heaterShakerV1A1",
+        "areaType": "heaterShaker",
+        "offsetFromCutoutFixture": [0.0, 0.0, 18.95],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "center",
+            "offsetVector": [64.0, 43.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Heater Shaker in A1"
+      },
+      {
+        "id": "heaterShakerV1D3",
+        "areaType": "heaterShaker",
+        "offsetFromCutoutFixture": [0.0, 0.0, 18.95],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "center",
+            "offsetVector": [64.0, 43.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Heater Shaker in D3"
+      },
+      {
+        "id": "heaterShakerV1C3",
+        "areaType": "heaterShaker",
+        "offsetFromCutoutFixture": [0.0, 0.0, 18.95],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "center",
+            "offsetVector": [64.0, 43.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Heater Shaker in C3"
+      },
+      {
+        "id": "heaterShakerV1B3",
+        "areaType": "heaterShaker",
+        "offsetFromCutoutFixture": [0.0, 0.0, 18.95],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "center",
+            "offsetVector": [64.0, 43.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Heater Shaker in B3"
+      },
+      {
+        "id": "heaterShakerV1A3",
+        "areaType": "heaterShaker",
+        "offsetFromCutoutFixture": [0.0, 0.0, 18.95],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "center",
+            "offsetVector": [64.0, 43.0, 0.0]
+          },
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Heater Shaker in A3"
+      },
+      {
+        "id": "temperatureModuleV2D1",
+        "areaType": "temperatureModule",
+        "offsetFromCutoutFixture": [0.0, 0.0, 9.0],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Temperature Module in D1"
+      },
+      {
+        "id": "temperatureModuleV2C1",
+        "areaType": "temperatureModule",
+        "offsetFromCutoutFixture": [0.0, 0.0, 9.0],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Temperature Module in C1"
+      },
+      {
+        "id": "temperatureModuleV2B1",
+        "areaType": "temperatureModule",
+        "offsetFromCutoutFixture": [0.0, 0.0, 9.0],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Temperature Module in B1"
+      },
+      {
+        "id": "temperatureModuleV2A1",
+        "areaType": "temperatureModule",
+        "offsetFromCutoutFixture": [0.0, 0.0, 9.0],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Temperature Module in A1"
+      },
+      {
+        "id": "temperatureModuleV2D3",
+        "areaType": "temperatureModule",
+        "offsetFromCutoutFixture": [0.0, 0.0, 9.0],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Temperature Module in D3"
+      },
+      {
+        "id": "temperatureModuleV2C3",
+        "areaType": "temperatureModule",
+        "offsetFromCutoutFixture": [0.0, 0.0, 9.0],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Temperature Module in C3"
+      },
+      {
+        "id": "temperatureModuleV2B3",
+        "areaType": "temperatureModule",
+        "offsetFromCutoutFixture": [0.0, 0.0, 9.0],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Temperature Module in B3"
+      },
+      {
+        "id": "temperatureModuleV2A3",
+        "areaType": "temperatureModule",
+        "offsetFromCutoutFixture": [0.0, 0.0, 9.0],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Temperature Module in A3"
+      },
+      {
+        "id": "magneticBlockV1D1",
+        "areaType": "magneticBlock",
+        "offsetFromCutoutFixture": [0.0, 0.0, 38],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Magnetic Block in D1"
+      },
+      {
+        "id": "magneticBlockV1C1",
+        "areaType": "magneticBlock",
+        "offsetFromCutoutFixture": [0.0, 0.0, 38],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Magnetic Block in C1"
+      },
+      {
+        "id": "magneticBlockV1B1",
+        "areaType": "magneticBlock",
+        "offsetFromCutoutFixture": [0.0, 0.0, 38],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Magnetic Block in B1"
+      },
+      {
+        "id": "magneticBlockV1A1",
+        "areaType": "magneticBlock",
+        "offsetFromCutoutFixture": [0.0, 0.0, 38],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Magnetic Block in A1"
+      },
+      {
+        "id": "magneticBlockV1D2",
+        "areaType": "magneticBlock",
+        "offsetFromCutoutFixture": [0.0, 0.0, 38],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Magnetic Block in D2"
+      },
+      {
+        "id": "magneticBlockV1C2",
+        "areaType": "magneticBlock",
+        "offsetFromCutoutFixture": [0.0, 0.0, 38],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Magnetic Block in C2"
+      },
+      {
+        "id": "magneticBlockV1B2",
+        "areaType": "magneticBlock",
+        "offsetFromCutoutFixture": [0.0, 0.0, 38],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Magnetic Block in B2"
+      },
+      {
+        "id": "magneticBlockV1A2",
+        "areaType": "magneticBlock",
+        "offsetFromCutoutFixture": [0.0, 0.0, 38],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Magnetic Block in A2"
+      },
+      {
+        "id": "magneticBlockV1D3",
+        "areaType": "magneticBlock",
+        "offsetFromCutoutFixture": [0.0, 0.0, 38],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Magnetic Block in D3"
+      },
+      {
+        "id": "magneticBlockV1C3",
+        "areaType": "magneticBlock",
+        "offsetFromCutoutFixture": [0.0, 0.0, 38],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Magnetic Block in C3"
+      },
+      {
+        "id": "magneticBlockV1B3",
+        "areaType": "magneticBlock",
+        "offsetFromCutoutFixture": [0.0, 0.0, 38],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Magnetic Block in B3"
+      },
+      {
+        "id": "magneticBlockV1A3",
+        "areaType": "magneticBlock",
+        "offsetFromCutoutFixture": [0.0, 0.0, 38],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Magnetic Block in A3"
+      },
+      {
+        "id": "absorbanceReaderV1D3",
+        "areaType": "absorbanceReader",
+        "offsetFromCutoutFixture": [2.0, 0.0, 0.65],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 127.8,
+          "yDimension": 85.5,
+          "zDimension": 0
+        },
+        "displayName": "Absorbance Reader in D3"
+      },
+      {
+        "id": "absorbanceReaderV1C3",
+        "areaType": "absorbanceReader",
+        "offsetFromCutoutFixture": [2.0, 0.0, 0.65],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 127.8,
+          "yDimension": 85.5,
+          "zDimension": 0
+        },
+        "displayName": "Absorbance Reader in C3"
+      },
+      {
+        "id": "absorbanceReaderV1B3",
+        "areaType": "absorbanceReader",
+        "offsetFromCutoutFixture": [2.0, 0.0, 0.65],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 127.8,
+          "yDimension": 85.5,
+          "zDimension": 0
+        },
+        "displayName": "Absorbance Reader in B3"
+      },
+      {
+        "id": "absorbanceReaderV1A3",
+        "areaType": "absorbanceReader",
+        "offsetFromCutoutFixture": [2.0, 0.0, 0.65],
+        "locatingFeatures": [
+          {
+            "locatingFeatureId": "frontLeft",
+            "offsetVector": [0.0, 0.0, 0.0]
+          }
+        ],
+        "boundingBox": {
+          "xDimension": 127.8,
+          "yDimension": 85.5,
+          "zDimension": 0
+        },
+        "displayName": "Absorbance Reader in A3"
+      },
+      {
+        "id": "absorbanceReaderV1LidDockD4",
+        "areaType": "lidDock",
+        "offsetFromCutoutFixture": [163.075, 0.0, 0.65],
+        "boundingBox": {
+          "xDimension": 127.8,
+          "yDimension": 85.5,
+          "zDimension": 0
+        },
+        "displayName": "Absorbance Reader Lid Dock in D4"
+      },
+      {
+        "id": "absorbanceReaderV1LidDockC4",
+        "areaType": "lidDock",
+        "offsetFromCutoutFixture": [163.075, 0.0, 0.65],
+        "boundingBox": {
+          "xDimension": 127.8,
+          "yDimension": 85.5,
+          "zDimension": 0
+        },
+        "displayName": "Absorbance Reader Lid Dock in C4"
+      },
+      {
+        "id": "absorbanceReaderV1LidDockB4",
+        "areaType": "lidDock",
+        "offsetFromCutoutFixture": [163.075, 0.0, 0.65],
+        "boundingBox": {
+          "xDimension": 127.8,
+          "yDimension": 85.5,
+          "zDimension": 0
+        },
+        "displayName": "Absorbance Reader Lid Dock in B4"
+      },
+      {
+        "id": "absorbanceReaderV1LidDockA4",
+        "areaType": "lidDock",
+        "offsetFromCutoutFixture": [163.075, 0.0, 0.65],
+        "boundingBox": {
+          "xDimension": 127.8,
+          "yDimension": 85.5,
+          "zDimension": 0
+        },
+        "displayName": "Absorbance Reader Lid Dock in A4"
+      },
+      {
+        "id": "flexStackerV1D4",
+        "areaType": "flexStacker",
+        "offsetFromCutoutFixture": [161.0, 0.0, 31.0],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Flex Stacker in D4"
+      },
+      {
+        "id": "flexStackerV1C4",
+        "areaType": "flexStacker",
+        "offsetFromCutoutFixture": [161.0, 0.0, 31.0],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Flex Stacker in C4"
+      },
+      {
+        "id": "flexStackerV1B4",
+        "areaType": "flexStacker",
+        "offsetFromCutoutFixture": [161.0, 0.0, 31.0],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Flex Stacker in B4"
+      },
+      {
+        "id": "flexStackerV1A4",
+        "areaType": "flexStacker",
+        "offsetFromCutoutFixture": [161.0, 0.0, 31.0],
+        "boundingBox": {
+          "xDimension": 128.0,
+          "yDimension": 86.0,
+          "zDimension": 0
+        },
+        "displayName": "Flex Stacker in A4"
+      }
+    ],
+    "cutouts": [
+      {
+        "id": "cutoutD1",
+        "position": [0.0, 0.0, 0.0],
+        "displayName": "Cutout D1"
+      },
+      {
+        "id": "cutoutD2",
+        "position": [164.0, 0.0, 0.0],
+        "displayName": "Cutout D2"
+      },
+      {
+        "id": "cutoutD3",
+        "position": [328.0, 0.0, 0.0],
+        "displayName": "Cutout D3"
+      },
+      {
+        "id": "cutoutC1",
+        "position": [0.0, 107, 0.0],
+        "displayName": "Cutout C1"
+      },
+      {
+        "id": "cutoutC2",
+        "position": [164.0, 107, 0.0],
+        "displayName": "Cutout C2"
+      },
+      {
+        "id": "cutoutC3",
+        "position": [328.0, 107, 0.0],
+        "displayName": "Cutout C3"
+      },
+      {
+        "id": "cutoutB1",
+        "position": [0.0, 214.0, 0.0],
+        "displayName": "Cutout B1"
+      },
+      {
+        "id": "cutoutB2",
+        "position": [164.0, 214.0, 0.0],
+        "displayName": "Cutout B2"
+      },
+      {
+        "id": "cutoutB3",
+        "position": [328.0, 214.0, 0.0],
+        "displayName": "Cutout B3"
+      },
+      {
+        "id": "cutoutA1",
+        "position": [0.0, 321.0, 0.0],
+        "displayName": "Cutout A1"
+      },
+      {
+        "id": "cutoutA2",
+        "position": [164.0, 321.0, 0.0],
+        "displayName": "Cutout A2"
+      },
+      {
+        "id": "cutoutA3",
+        "position": [328.0, 321.0, 0.0],
+        "displayName": "Cutout A3"
+      }
+    ],
+    "calibrationPoints": [],
+    "legacyFixtures": [
+      {
+        "id": "fixedTrash",
+        "slot": "A3",
+        "labware": "opentrons_1_trash_3200ml_fixed",
+        "displayName": "Fixed Trash"
+      }
+    ]
+  },
+  "cutoutFixtures": [
+    {
+      "id": "singleLeftSlot",
+      "expectOpentronsModuleSerialNumber": false,
+      "mayMountTo": ["cutoutD1", "cutoutC1", "cutoutB1", "cutoutA1"],
+      "displayName": "Standard Slot Left",
+      "providesAddressableAreas": {
+        "cutoutD1": ["D1"],
+        "cutoutC1": ["C1"],
+        "cutoutB1": ["B1"],
+        "cutoutA1": ["A1"]
+      },
+      "fixtureGroup": {},
+      "height": 0
+    },
+    {
+      "id": "singleCenterSlot",
+      "expectOpentronsModuleSerialNumber": false,
+      "mayMountTo": ["cutoutD2", "cutoutC2", "cutoutB2", "cutoutA2"],
+      "displayName": "Standard Slot Center",
+      "providesAddressableAreas": {
+        "cutoutD2": ["D2"],
+        "cutoutC2": ["C2"],
+        "cutoutB2": ["B2"],
+        "cutoutA2": ["A2"]
+      },
+      "fixtureGroup": {},
+      "height": 0
+    },
+    {
+      "id": "singleRightSlot",
+      "expectOpentronsModuleSerialNumber": false,
+      "mayMountTo": ["cutoutD3", "cutoutC3", "cutoutB3", "cutoutA3"],
+      "displayName": "Standard Slot Right",
+      "providesAddressableAreas": {
+        "cutoutD3": ["D3"],
+        "cutoutC3": ["C3"],
+        "cutoutB3": ["B3"],
+        "cutoutA3": ["A3"]
+      },
+      "fixtureGroup": {},
+      "height": 0
+    },
+    {
+      "id": "stagingAreaRightSlot",
+      "expectOpentronsModuleSerialNumber": false,
+      "mayMountTo": ["cutoutD3", "cutoutC3", "cutoutB3", "cutoutA3"],
+      "displayName": "Staging Area Slot",
+      "providesAddressableAreas": {
+        "cutoutD3": ["D3", "D4"],
+        "cutoutC3": ["C3", "C4"],
+        "cutoutB3": ["B3", "B4"],
+        "cutoutA3": ["A3", "A4"]
+      },
+      "fixtureGroup": {},
+      "height": 0
+    },
+    {
+      "id": "trashBinAdapter",
+      "expectOpentronsModuleSerialNumber": false,
+      "mayMountTo": [
+        "cutoutD1",
+        "cutoutC1",
+        "cutoutB1",
+        "cutoutA1",
+        "cutoutD3",
+        "cutoutC3",
+        "cutoutB3",
+        "cutoutA3"
+      ],
+      "displayName": "Slot With Movable Trash",
+      "providesAddressableAreas": {
+        "cutoutD1": ["movableTrashD1"],
+        "cutoutC1": ["movableTrashC1"],
+        "cutoutB1": ["movableTrashB1"],
+        "cutoutA1": ["movableTrashA1"],
+        "cutoutD3": ["movableTrashD3"],
+        "cutoutC3": ["movableTrashC3"],
+        "cutoutB3": ["movableTrashB3"],
+        "cutoutA3": ["movableTrashA3"]
+      },
+      "fixtureGroup": {},
+      "height": 40
+    },
+    {
+      "id": "wasteChuteRightAdapterCovered",
+      "expectOpentronsModuleSerialNumber": false,
+      "mayMountTo": ["cutoutD3"],
+      "displayName": "Waste Chute Adapter for 1 or 8 Channel Pipettes",
+      "providesAddressableAreas": {
+        "cutoutD3": ["1ChannelWasteChute", "8ChannelWasteChute"]
+      },
+      "fixtureGroup": {},
+      "height": 124.5
+    },
+    {
+      "id": "wasteChuteRightAdapterNoCover",
+      "expectOpentronsModuleSerialNumber": false,
+      "mayMountTo": ["cutoutD3"],
+      "displayName": "Waste Chute Adapter for 96 Channel Pipette or Gripper",
+      "providesAddressableAreas": {
+        "cutoutD3": [
+          "1ChannelWasteChute",
+          "8ChannelWasteChute",
+          "96ChannelWasteChute",
+          "gripperWasteChute"
+        ]
+      },
+      "fixtureGroup": {},
+      "height": 124.5
+    },
+    {
+      "id": "stagingAreaSlotWithWasteChuteRightAdapterCovered",
+      "expectOpentronsModuleSerialNumber": false,
+      "mayMountTo": ["cutoutD3"],
+      "displayName": "Staging Slot With Waste Chute Adapter for 96 Channel Pipette or Gripper",
+      "providesAddressableAreas": {
+        "cutoutD3": ["1ChannelWasteChute", "8ChannelWasteChute", "D4"]
+      },
+      "fixtureGroup": {},
+      "height": 124.5
+    },
+    {
+      "id": "stagingAreaSlotWithWasteChuteRightAdapterNoCover",
+      "expectOpentronsModuleSerialNumber": false,
+      "mayMountTo": ["cutoutD3"],
+      "displayName": "Staging Slot With Waste Chute Adapter and Staging Area Slot",
+      "providesAddressableAreas": {
+        "cutoutD3": [
+          "1ChannelWasteChute",
+          "8ChannelWasteChute",
+          "96ChannelWasteChute",
+          "gripperWasteChute",
+          "D4"
+        ]
+      },
+      "fixtureGroup": {},
+      "height": 124.5
+    },
+    {
+      "id": "flexStackerV1WithWasteChuteRightAdapterCovered",
+      "expectOpentronsModuleSerialNumber": true,
+      "mayMountTo": ["cutoutD3"],
+      "displayName": "Flex Stacker With Waste Chute Adapter for 96 Channel Pipette or Gripper",
+      "providesAddressableAreas": {
+        "cutoutD3": ["1ChannelWasteChute", "8ChannelWasteChute", "D4"]
+      },
+      "fixtureGroup": {},
+      "height": 124.5
+    },
+    {
+      "id": "flexStackerV1WithWasteChuteRightAdapterNoCover",
+      "expectOpentronsModuleSerialNumber": true,
+      "mayMountTo": ["cutoutD3"],
+      "displayName": "Flex Stacker With Waste Chute Adapter",
+      "providesAddressableAreas": {
+        "cutoutD3": [
+          "1ChannelWasteChute",
+          "8ChannelWasteChute",
+          "96ChannelWasteChute",
+          "gripperWasteChute",
+          "flexStackerV1D4"
+        ]
+      },
+      "fixtureGroup": {},
+      "height": 124.5
+    },
+    {
+      "id": "thermocyclerModuleV2Rear",
+      "expectOpentronsModuleSerialNumber": true,
+      "mayMountTo": ["cutoutA1"],
+      "displayName": "Rear Slot portion of the Thermocycler Moduler",
+      "providesAddressableAreas": {
+        "cutoutA1": []
+      },
+      "fixtureGroup": {
+        "cutoutA1": [
+          {
+            "cutoutA1": "thermocyclerModuleV2Rear",
+            "cutoutB1": "thermocyclerModuleV2Front"
+          }
+        ]
+      },
+      "height": 72.35
+    },
+    {
+      "id": "thermocyclerModuleV2Front",
+      "expectOpentronsModuleSerialNumber": true,
+      "mayMountTo": ["cutoutB1"],
+      "displayName": "Front Slot portion of the Thermocycler Moduler",
+      "providesAddressableAreas": {
+        "cutoutB1": ["thermocyclerModuleV2"]
+      },
+      "fixtureGroup": {
+        "cutoutB1": [
+          {
+            "cutoutA1": "thermocyclerModuleV2Rear",
+            "cutoutB1": "thermocyclerModuleV2Front"
+          }
+        ]
+      },
+      "height": 72.35
+    },
+    {
+      "id": "heaterShakerModuleV1",
+      "expectOpentronsModuleSerialNumber": true,
+      "mayMountTo": [
+        "cutoutD1",
+        "cutoutC1",
+        "cutoutB1",
+        "cutoutA1",
+        "cutoutD3",
+        "cutoutC3",
+        "cutoutB3",
+        "cutoutA3"
+      ],
+      "displayName": "Slot With a Heater Shaker",
+      "providesAddressableAreas": {
+        "cutoutD1": ["heaterShakerV1D1"],
+        "cutoutC1": ["heaterShakerV1C1"],
+        "cutoutB1": ["heaterShakerV1B1"],
+        "cutoutA1": ["heaterShakerV1A1"],
+        "cutoutD3": ["heaterShakerV1D3"],
+        "cutoutC3": ["heaterShakerV1C3"],
+        "cutoutB3": ["heaterShakerV1B3"],
+        "cutoutA3": ["heaterShakerV1A3"]
+      },
+      "fixtureGroup": {},
+      "height": 18.95
+    },
+    {
+      "id": "temperatureModuleV2",
+      "expectOpentronsModuleSerialNumber": true,
+      "mayMountTo": [
+        "cutoutD1",
+        "cutoutC1",
+        "cutoutB1",
+        "cutoutA1",
+        "cutoutD3",
+        "cutoutC3",
+        "cutoutB3",
+        "cutoutA3"
+      ],
+      "displayName": "Slot With a Temperature Module",
+      "providesAddressableAreas": {
+        "cutoutD1": ["temperatureModuleV2D1"],
+        "cutoutC1": ["temperatureModuleV2C1"],
+        "cutoutB1": ["temperatureModuleV2B1"],
+        "cutoutA1": ["temperatureModuleV2A1"],
+        "cutoutD3": ["temperatureModuleV2D3"],
+        "cutoutC3": ["temperatureModuleV2C3"],
+        "cutoutB3": ["temperatureModuleV2B3"],
+        "cutoutA3": ["temperatureModuleV2A3"]
+      },
+      "fixtureGroup": {},
+      "height": 9.0
+    },
+    {
+      "id": "magneticBlockV1",
+      "expectOpentronsModuleSerialNumber": false,
+      "mayMountTo": [
+        "cutoutD1",
+        "cutoutC1",
+        "cutoutB1",
+        "cutoutA1",
+        "cutoutD2",
+        "cutoutC2",
+        "cutoutB2",
+        "cutoutA2",
+        "cutoutD3",
+        "cutoutC3",
+        "cutoutB3",
+        "cutoutA3"
+      ],
+      "displayName": "Slot With a Magnetic Block",
+      "providesAddressableAreas": {
+        "cutoutD1": ["magneticBlockV1D1"],
+        "cutoutC1": ["magneticBlockV1C1"],
+        "cutoutB1": ["magneticBlockV1B1"],
+        "cutoutA1": ["magneticBlockV1A1"],
+        "cutoutD2": ["magneticBlockV1D2"],
+        "cutoutC2": ["magneticBlockV1C2"],
+        "cutoutB2": ["magneticBlockV1B2"],
+        "cutoutA2": ["magneticBlockV1A2"],
+        "cutoutD3": ["magneticBlockV1D3"],
+        "cutoutC3": ["magneticBlockV1C3"],
+        "cutoutB3": ["magneticBlockV1B3"],
+        "cutoutA3": ["magneticBlockV1A3"]
+      },
+      "fixtureGroup": {},
+      "height": 38.0
+    },
+    {
+      "id": "stagingAreaSlotWithMagneticBlockV1",
+      "expectOpentronsModuleSerialNumber": false,
+      "mayMountTo": ["cutoutD3", "cutoutC3", "cutoutB3", "cutoutA3"],
+      "displayName": "Fixture that provides a Magnetic Block and a Staging Area Slot",
+      "providesAddressableAreas": {
+        "cutoutD3": ["magneticBlockV1D3", "D4"],
+        "cutoutC3": ["magneticBlockV1C3", "C4"],
+        "cutoutB3": ["magneticBlockV1B3", "B4"],
+        "cutoutA3": ["magneticBlockV1A3", "A4"]
+      },
+      "fixtureGroup": {},
+      "height": 38.0
+    },
+    {
+      "id": "absorbanceReaderV1",
+      "expectOpentronsModuleSerialNumber": true,
+      "mayMountTo": ["cutoutD3", "cutoutC3", "cutoutB3", "cutoutA3"],
+      "displayName": "Slot With an Absorbance Reader and a Lid Dock",
+      "providesAddressableAreas": {
+        "cutoutD3": ["absorbanceReaderV1D3", "absorbanceReaderV1LidDockD4"],
+        "cutoutC3": ["absorbanceReaderV1C3", "absorbanceReaderV1LidDockC4"],
+        "cutoutB3": ["absorbanceReaderV1B3", "absorbanceReaderV1LidDockB4"],
+        "cutoutA3": ["absorbanceReaderV1A3", "absorbanceReaderV1LidDockA4"]
+      },
+      "fixtureGroup": {},
+      "height": 10.65
+    },
+    {
+      "id": "flexStackerV1",
+      "expectOpentronsModuleSerialNumber": true,
+      "mayMountTo": ["cutoutD3", "cutoutC3", "cutoutB3", "cutoutA3"],
+      "displayName": "Slot With a Flex Stacker",
+      "providesAddressableAreas": {
+        "cutoutD3": ["flexStackerV1D4", "D3"],
+        "cutoutC3": ["flexStackerV1C4", "C3"],
+        "cutoutB3": ["flexStackerV1B4", "B3"],
+        "cutoutA3": ["flexStackerV1A4", "A3"]
+      },
+      "fixtureGroup": {},
+      "height": 10.65
+    }
+  ],
+  "gripperOffsets": {
+    "default": {
+      "pickUpOffset": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "dropOffset": {
+        "x": 0,
+        "y": 0,
+        "z": -0.75
+      }
+    }
+  }
+}

@@ -7,7 +7,7 @@ from opentrons_shared_data.deck import (
     load as load_deck_definition,
 )
 from opentrons_shared_data.deck.types import (
-    AddressableArea,
+    AddressableAreaV4,
     Cutout,
     CutoutFixture,
     DeckDefinitionV3,
@@ -33,13 +33,13 @@ def get_v3_slot_positions(
 
 def get_v4_stacks(
     definition: DeckDefinitionV4,
-) -> Generator[Tuple[Cutout, CutoutFixture, AddressableArea], None, None]:
+) -> Generator[Tuple[Cutout, CutoutFixture, AddressableAreaV4], None, None]:
     """Yield all the (cutout, cutoutFixture, addressableArea) combinations that the def allows."""
     cutout_fixtures = definition["cutoutFixtures"]
     cutouts_by_id: Dict[str, Cutout] = {
         cutout["id"]: cutout for cutout in definition["locations"]["cutouts"]
     }
-    addressable_areas_by_id: Dict[str, AddressableArea] = {
+    addressable_areas_by_id: Dict[str, AddressableAreaV4] = {
         addressable_area["id"]: addressable_area
         for addressable_area in definition["locations"]["addressableAreas"]
     }
@@ -55,7 +55,7 @@ def get_v4_stacks(
 
 
 def compute_v4_position(
-    cutout: Cutout, addressable_area: AddressableArea
+    cutout: Cutout, addressable_area: AddressableAreaV4
 ) -> List[float]:
     return [
         a + b
