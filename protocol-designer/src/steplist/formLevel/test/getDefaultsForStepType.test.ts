@@ -34,6 +34,8 @@ describe('getDefaultsForStepType', () => {
         aspirate_mix_times: null,
         aspirate_mix_volume: null,
         aspirate_mmFromBottom: null,
+        aspirate_submerge_delay_seconds: null,
+        aspirate_submerge_speed: null,
         aspirate_touchTip_checkbox: false,
         aspirate_touchTip_mmFromTop: null,
 
@@ -46,6 +48,8 @@ describe('getDefaultsForStepType', () => {
         dispense_mix_times: null,
         dispense_mix_volume: null,
         dispense_mmFromBottom: null,
+        dispense_submerge_delay_seconds: null,
+        dispense_submerge_speed: null,
         dispense_touchTip_checkbox: false,
         dispense_touchTip_mmFromTop: null,
 

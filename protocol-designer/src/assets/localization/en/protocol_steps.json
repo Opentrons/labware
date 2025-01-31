@@ -107,6 +107,8 @@
   "speed": "Speed",
   "starting_deck": "Starting deck",
   "step_substeps": "{{stepType}} details",
+  "submerge": "Submerge",
+  "submerge_speed": "Submerge speed",
   "temperature": "Temperature",
   "temperature_module": {
     "active": "<semiBoldText>{{module}}</semiBoldText><text>set to</text><tag/>",
