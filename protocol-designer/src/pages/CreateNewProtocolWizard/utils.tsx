@@ -1,13 +1,16 @@
 import {
+  ABSORBANCE_READER_TYPE,
   ABSORBANCE_READER_V1,
   getLabwareDefURI,
   getLabwareDisplayName,
   getPipetteSpecsV2,
+  HEATERSHAKER_MODULE_TYPE,
   HEATERSHAKER_MODULE_V1,
   MAGNETIC_BLOCK_TYPE,
   MAGNETIC_BLOCK_V1,
   MAGNETIC_MODULE_V1,
   MAGNETIC_MODULE_V2,
+  TEMPERATURE_MODULE_TYPE,
   TEMPERATURE_MODULE_V1,
   TEMPERATURE_MODULE_V2,
   THERMOCYCLER_MODULE_TYPE,
@@ -32,14 +35,44 @@ import type { AdditionalEquipment, WizardFormState } from './types'
 
 const NUM_SLOTS_OUTER = 8
 const NUM_SLOTS_MIDDLE = 4
-const NUM_SLOTS_COLUMN3 = 4
-const NUM_SLOTS_MAGNETIC_BLOCK = 12
+const NUM_SLOTS_COLUMN1 = 4
+// Note (1/31/25): change the max from 12 to 11 because of a fixture(trash bin/waste chute)
+const NUM_SLOTS_MAGNETIC_BLOCK = 11
 
 export const getNumOptions = (length: number): DropdownOption[] => {
   return Array.from({ length }, (_, i) => ({
     name: `${i + 1}`,
     value: `${i + 1}`,
   }))
+}
+
+// Note (1/31/25): at this moment, users allow to set one about thermocycler and need to count 2
+interface ModuleCounts {
+  magneticBlockCount: number
+  heaterShakerCount: number
+  temperatureCount: number
+  plateReaderCount: number
+}
+
+const countModules = (modules: WizardFormState['modules']): ModuleCounts => {
+  const magneticBlockCount = Object.values(modules || {}).filter(
+    module => module.type === MAGNETIC_BLOCK_TYPE
+  ).length
+  const heaterShakerCount = Object.values(modules || {}).filter(
+    module => module.type === HEATERSHAKER_MODULE_TYPE
+  ).length
+  const temperatureCount = Object.values(modules || {}).filter(
+    module => module.type === TEMPERATURE_MODULE_TYPE
+  ).length
+  const plateReaderCount = Object.values(modules || {}).filter(
+    module => module.type === ABSORBANCE_READER_TYPE
+  ).length
+  return {
+    magneticBlockCount,
+    heaterShakerCount,
+    temperatureCount,
+    plateReaderCount,
+  }
 }
 
 export const getNumSlotsAvailable = (
@@ -115,16 +148,41 @@ export const getNumSlotsAvailable = (
     }
 
     case 'stagingArea': {
-      const modulesWithColumn3 =
-        modules !== null
-          ? Object.values(modules).filter(module => module.slot?.includes('3'))
-              .length
+      const {
+        magneticBlockCount,
+        heaterShakerCount,
+        temperatureCount,
+        plateReaderCount,
+      } = countModules(modules)
+
+      // Note (kk: 1/31/25) magnetic modules are placed in the middle slots first
+      // then it will be placed in the column 1 slots and column 3 slots
+      // the way to distribute magnetic modules like D1 -> D3 -> C1 -> C3
+      const adjustMagneticBlockCount =
+        magneticBlockCount - NUM_SLOTS_MIDDLE > 0
+          ? magneticBlockCount - NUM_SLOTS_MIDDLE
           : 0
-      const fixtureSlotsWithColumn3 =
-        additionalEquipment !== null
-          ? additionalEquipment.filter(slot => slot.includes('3')).length
-          : 0
-      return NUM_SLOTS_COLUMN3 - modulesWithColumn3 - fixtureSlotsWithColumn3
+
+      const thermocyclerModuleCount = hasTC ? 2 : 0
+
+      const totalModules =
+        adjustMagneticBlockCount +
+        heaterShakerCount +
+        temperatureCount +
+        thermocyclerModuleCount
+
+      // if the following is more than 0, pd will need to keep one slot in column 3 for trash bin/waste chute
+      const requiredSlotInColumn3 = totalModules - NUM_SLOTS_COLUMN1 > 0 ? 1 : 0
+
+      // there is two cases pd considers
+      // 1. stating area can slots in column 3 because trash bin can be a slot in column 1
+      // 2. not case 1 which is very limited
+      return totalModules <= NUM_SLOTS_COLUMN1
+        ? NUM_SLOTS_COLUMN1 - plateReaderCount - requiredSlotInColumn3
+        : NUM_SLOTS_OUTER -
+            totalModules -
+            plateReaderCount -
+            requiredSlotInColumn3
     }
 
     case 'wasteChute': {

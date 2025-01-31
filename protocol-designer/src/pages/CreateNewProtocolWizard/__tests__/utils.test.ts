@@ -237,8 +237,8 @@ describe('getNumSlotsAvailable', () => {
       mockAdditionalEquipment,
       'stagingArea'
     )
-    // Note: the return value is 2 because trashBin can be placed slot1
-    expect(result).toBe(2)
+
+    expect(result).toBe(1)
   })
 
   it('should return 1 when there are 8 modules with 2 magnetic blocks and one trash for staging area', () => {
@@ -285,14 +285,14 @@ describe('getNumSlotsAvailable', () => {
       mockAdditionalEquipment,
       'stagingArea'
     )
-    expect(result).toBe(2)
+    expect(result).toBe(1)
   })
-  it('should return 4 when there are 12 magnetic blocks for staging area', () => {
+  it('should return 4 when there are 11 magnetic blocks for staging area', () => {
     const mockModules = {
       0: {
         model: MAGNETIC_BLOCK_V1,
         type: MAGNETIC_BLOCK_TYPE,
-        slot: 'C2',
+        slot: 'D2',
       },
       1: {
         model: MAGNETIC_BLOCK_V1,
@@ -302,52 +302,47 @@ describe('getNumSlotsAvailable', () => {
       2: {
         model: MAGNETIC_BLOCK_V1,
         type: MAGNETIC_BLOCK_TYPE,
-        slot: 'C2',
+        slot: 'B2',
       },
       3: {
         model: MAGNETIC_BLOCK_V1,
         type: MAGNETIC_BLOCK_TYPE,
-        slot: 'C2',
+        slot: 'A2',
       },
       4: {
         model: MAGNETIC_BLOCK_V1,
         type: MAGNETIC_BLOCK_TYPE,
-        slot: 'C2',
+        slot: 'D3',
       },
       5: {
         model: MAGNETIC_BLOCK_V1,
         type: MAGNETIC_BLOCK_TYPE,
-        slot: 'C2',
+        slot: 'C3',
       },
       6: {
         model: MAGNETIC_BLOCK_V1,
         type: MAGNETIC_BLOCK_TYPE,
-        slot: 'D2',
+        slot: 'B3',
       },
       7: {
         model: MAGNETIC_BLOCK_V1,
         type: MAGNETIC_BLOCK_TYPE,
-        slot: 'C2',
+        slot: 'D1',
       },
       8: {
         model: MAGNETIC_BLOCK_V1,
         type: MAGNETIC_BLOCK_TYPE,
-        slot: 'C2',
+        slot: 'C1',
       },
       9: {
         model: MAGNETIC_BLOCK_V1,
         type: MAGNETIC_BLOCK_TYPE,
-        slot: 'C2',
+        slot: 'B1',
       },
       10: {
         model: MAGNETIC_BLOCK_V1,
         type: MAGNETIC_BLOCK_TYPE,
-        slot: 'C2',
-      },
-      11: {
-        model: MAGNETIC_BLOCK_V1,
-        type: MAGNETIC_BLOCK_TYPE,
-        slot: 'C2',
+        slot: 'A1',
       },
     } as any
     const mockAdditionalEquipment: AdditionalEquipment[] = []
@@ -356,9 +351,10 @@ describe('getNumSlotsAvailable', () => {
       mockAdditionalEquipment,
       'stagingArea'
     )
-    expect(result).toBe(4)
+    // Note: the return value is 0 because trashBin A3
+    expect(result).toBe(0)
   })
-  it('should return 12 when there are 4 staging area for magnetic block', () => {
+  it('should return 11 when there are 4 staging area for magnetic block', () => {
     const mockAdditionalEquipment: AdditionalEquipment[] = [
       'stagingArea',
       'stagingArea',
@@ -370,7 +366,7 @@ describe('getNumSlotsAvailable', () => {
       mockAdditionalEquipment,
       MAGNETIC_BLOCK_V1
     )
-    expect(result).toBe(12)
+    expect(result).toBe(11)
   })
   it('should return 8 when there are 4 modules, 4 staging area for magnetic block since magnetic blocks can now go on staging areas', () => {
     const mockModules = {
@@ -401,7 +397,7 @@ describe('getNumSlotsAvailable', () => {
       mockAdditionalEquipment,
       MAGNETIC_BLOCK_V1
     )
-    expect(result).toBe(8)
+    expect(result).toBe(7)
   })
 })
 
