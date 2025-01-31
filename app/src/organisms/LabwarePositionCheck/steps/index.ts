@@ -1,5 +1,5 @@
 export { BeforeBeginning } from './BeforeBeginning'
+export { HandleLabware } from './HandleLabware'
 export { AttachProbe } from './AttachProbe'
-export { CheckItem } from './CheckItem'
 export { DetachProbe } from './DetachProbe'
-export { ResultsSummary } from './ResultsSummary'
+export { LPCComplete } from './LPCComplete'

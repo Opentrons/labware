@@ -5,27 +5,23 @@ import {
   THERMOCYCLER_MODULE_TYPE,
 } from '@opentrons/shared-data'
 
-import type { CheckPositionsStep } from '/app/organisms/LabwarePositionCheck/types'
 import type {
   CompletedProtocolAnalysis,
   CreateCommand,
 } from '@opentrons/shared-data'
-import type { LegacyLabwareOffsetLocation } from '@opentrons/api-client'
+import type { OffsetLocationDetails } from '/app/redux/protocol-runs'
 
-export interface BuildModulePrepCommandsParams {
-  step: CheckPositionsStep
-}
-
-export function modulePrepCommands({
-  step,
-}: BuildModulePrepCommandsParams): CreateCommand[] {
-  const { moduleId, location } = step
+export function modulePrepCommands(
+  offsetLocationDetails: OffsetLocationDetails
+): CreateCommand[] {
+  const { moduleId, moduleModel } = offsetLocationDetails
 
   const moduleType =
     (moduleId != null &&
+      moduleModel != null &&
       'moduleModel' in location &&
       location.moduleModel != null &&
-      getModuleType(location.moduleModel)) ??
+      getModuleType(moduleModel)) ??
     null
 
   if (moduleId == null || moduleType == null) {
@@ -79,11 +75,9 @@ export const moduleInitDuringLPCCommands = (
 
 // Not all modules require cleanup after each labware LPC.
 export const moduleCleanupDuringLPCCommands = (
-  step: CheckPositionsStep
+  offsetLocationDetails: OffsetLocationDetails
 ): CreateCommand[] => {
-  const { moduleId, location } = step
-
-  return [...heaterShakerCleanupCommands(moduleId, location)]
+  return [...heaterShakerCleanupCommands(offsetLocationDetails)]
 }
 
 const heaterShakerInitCommands = (
@@ -127,14 +121,16 @@ const thermocyclerInitCommands = (
 }
 
 const heaterShakerCleanupCommands = (
-  moduleId: string | undefined,
-  location: LegacyLabwareOffsetLocation
+  offsetLocationDetails: OffsetLocationDetails
 ): CreateCommand[] => {
+  const { moduleId, moduleModel } = offsetLocationDetails
+
   const moduleType =
     (moduleId != null &&
+      moduleModel != null &&
       'moduleModel' in location &&
       location.moduleModel != null &&
-      getModuleType(location.moduleModel)) ??
+      getModuleType(moduleModel)) ??
     null
 
   return moduleId != null &&

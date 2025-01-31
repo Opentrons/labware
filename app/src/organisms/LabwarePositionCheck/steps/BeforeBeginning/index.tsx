@@ -14,15 +14,13 @@ import { TwoUpTileLayout } from './TwoUpTileLayout'
 import { ViewOffsets } from './ViewOffsets'
 import { SmallButton } from '/app/atoms/buttons'
 import { getIsOnDevice } from '/app/redux/config'
-import { selectActivePipette } from '/app/redux/protocol-runs'
+import {
+  selectActivePipette,
+  selectLabwareOffsetsForAllLw,
+} from '/app/redux/protocol-runs'
 
-import type {
-  LPCStepProps,
-  BeforeBeginningStep,
-  LabwarePositionCheckStep,
-} from '/app/organisms/LabwarePositionCheck/types'
 import type { State } from '/app/redux/types'
-import type { LPCWizardState } from '/app/redux/protocol-runs'
+import type { LPCWizardContentProps } from '/app/organisms/LabwarePositionCheck/types'
 
 // TODO(BC, 09/01/23): replace updated support article link for LPC on OT-2/Flex
 const SUPPORT_PAGE_URL = 'https://support.opentrons.com/s/ot2-calibration'
@@ -31,20 +29,15 @@ export function BeforeBeginning({
   runId,
   proceed,
   commandUtils,
-}: LPCStepProps<BeforeBeginningStep>): JSX.Element {
+}: LPCWizardContentProps): JSX.Element {
   const { t, i18n } = useTranslation(['labware_position_check', 'shared'])
   const isOnDevice = useSelector(getIsOnDevice)
-  const activePipette = useSelector((state: State) => {
-    const step = state.protocolRuns[runId]?.lpc?.steps
-      .current as LabwarePositionCheckStep
-    return selectActivePipette(step, runId, state) ?? null
-  })
-  const { protocolName, labwareDefs, existingOffsets } = useSelector(
-    (state: State) => state.protocolRuns[runId]?.lpc as LPCWizardState
-  )
-  const { createStartLPCHandler, toggleRobotMoving } = commandUtils
-
-  const handleStartLPC = createStartLPCHandler(activePipette, proceed)
+  const activePipette = useSelector(selectActivePipette(runId))
+  const existingOffsets = useSelector(selectLabwareOffsetsForAllLw(runId))
+  const { protocolName, labwareDefs } = useSelector(
+    (state: State) => state.protocolRuns[runId]?.lpc
+  ) ?? { protocolName: '', labwareDefs: [] }
+  const { handleStartLPC, toggleRobotMoving } = commandUtils
 
   const requiredEquipmentList = [
     {
@@ -59,7 +52,7 @@ export function BeforeBeginning({
 
   const handleProceed = (): void => {
     void toggleRobotMoving(true)
-      .then(() => handleStartLPC())
+      .then(() => handleStartLPC(activePipette, proceed))
       .finally(() => toggleRobotMoving(false))
   }
 

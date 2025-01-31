@@ -9,15 +9,14 @@ import type { CreateCommand, LoadedPipette } from '@opentrons/shared-data'
 import type { UseLPCCommandWithChainRunChildProps } from './types'
 
 export interface UseProbeCommandsResult {
-  createProbeAttachmentHandler: (
-    pipetteId: string,
+  handleProbeAttachment: (
     pipette: LoadedPipette | null,
     onSuccess: () => void
-  ) => () => Promise<void>
-  createProbeDetachmentHandler: (
+  ) => Promise<void>
+  handleProbeDetachment: (
     pipette: LoadedPipette | null,
     onSuccess: () => void
-  ) => () => Promise<void>
+  ) => Promise<void>
   unableToDetect: boolean
   setShowUnableToDetect: (canDetect: boolean) => void
 }
@@ -27,45 +26,42 @@ export function useHandleProbeCommands({
 }: UseLPCCommandWithChainRunChildProps): UseProbeCommandsResult {
   const [showUnableToDetect, setShowUnableToDetect] = useState<boolean>(false)
 
-  const createProbeAttachmentHandler = (
-    pipetteId: string,
+  const handleProbeAttachment = (
     pipette: LoadedPipette | null,
     onSuccess: () => void
-  ): (() => Promise<void>) => {
+  ): Promise<void> => {
     const attachmentCommands: CreateCommand[] = [
-      ...verifyProbeAttachmentAndHomeCommands(pipetteId, pipette),
+      ...verifyProbeAttachmentAndHomeCommands(pipette),
     ]
 
-    return () =>
-      chainLPCCommands(attachmentCommands, false, true)
-        .catch(() => {
-          setShowUnableToDetect(true)
-          return Promise.reject(new Error('Unable to detect probe.'))
-        })
-        .then(() => {
-          setShowUnableToDetect(false)
-          onSuccess()
-        })
-  }
-
-  const createProbeDetachmentHandler = (
-    pipette: LoadedPipette | null,
-    onSuccess: () => void
-  ): (() => Promise<void>) => {
-    const detatchmentCommands: CreateCommand[] = [
-      ...retractPipetteAxesSequentiallyCommands(pipette),
-    ]
-
-    return () =>
-      chainLPCCommands(detatchmentCommands, false).then(() => {
+    return chainLPCCommands(attachmentCommands, false, true)
+      .catch(() => {
+        setShowUnableToDetect(true)
+        return Promise.reject(new Error('Unable to detect probe.'))
+      })
+      .then(() => {
+        setShowUnableToDetect(false)
         onSuccess()
       })
   }
 
+  const handleProbeDetachment = (
+    pipette: LoadedPipette | null,
+    onSuccess: () => void
+  ): Promise<void> => {
+    const detatchmentCommands: CreateCommand[] = [
+      ...retractPipetteAxesSequentiallyCommands(pipette),
+    ]
+
+    return chainLPCCommands(detatchmentCommands, false).then(() => {
+      onSuccess()
+    })
+  }
+
   return {
-    createProbeAttachmentHandler,
+    handleProbeAttachment,
     unableToDetect: showUnableToDetect,
     setShowUnableToDetect,
-    createProbeDetachmentHandler,
+    handleProbeDetachment,
   }
 }

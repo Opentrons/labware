@@ -8,63 +8,61 @@ import {
   getLabwareDisplayLocation,
 } from '@opentrons/components'
 
-import { NAV_STEPS } from '/app/organisms/LabwarePositionCheck/constants'
 import { FLEX_ROBOT_TYPE } from '@opentrons/shared-data'
 import { UnorderedList } from '/app/molecules/UnorderedList'
 import {
+  applyOffset,
+  clearSelectedLabware,
   setFinalPosition,
   setInitialPosition,
 } from '/app/redux/protocol-runs/actions'
-import { JogToWell } from './JogToWell'
-import { PrepareSpace } from './PrepareSpace'
+import { EditOffset } from './EditOffset'
+import { PrepareLabware } from './PrepareLabware'
 import { PlaceItemInstruction } from './PlaceItemInstruction'
 import {
-  selectActiveLwInitialPosition,
+  selectSelectedLwInitialPosition,
   selectActivePipette,
-  selectIsActiveLwTipRack,
+  selectIsSelectedLwTipRack,
+  selectSelectedLabwareInfo,
 } from '/app/redux/protocol-runs'
 import { getIsOnDevice } from '/app/redux/config'
 
 import type { DisplayLocationParams } from '@opentrons/components'
-import type {
-  CheckPositionsStep,
-  LPCStepProps,
-} from '/app/organisms/LabwarePositionCheck/types'
+import type { LoadedPipette } from '@opentrons/shared-data'
 import type { State } from '/app/redux/types'
-import type { LPCWizardState } from '/app/redux/protocol-runs'
+import type {
+  LPCWizardState,
+  OffsetLocationDetails,
+  SelectedLabwareInfo,
+} from '/app/redux/protocol-runs'
+import type { LPCWizardContentProps } from '/app/organisms/LabwarePositionCheck/types'
 
-export function CheckItem(
-  props: LPCStepProps<CheckPositionsStep>
-): JSX.Element {
-  const { runId, proceed, commandUtils, step } = props
-  const { labwareId, location } = step
+export function CheckItem(props: LPCWizardContentProps): JSX.Element {
+  const { runId, commandUtils } = props
   const {
     handleJog,
-    handleCheckItemsPrepModules,
     handleConfirmLwModulePlacement,
     handleConfirmLwFinalPosition,
     handleResetLwModulesOnDeck,
-    handleValidMoveToMaintenancePosition,
     toggleRobotMoving,
   } = commandUtils
   const dispatch = useDispatch()
 
   const isOnDevice = useSelector(getIsOnDevice)
-  const { protocolData, labwareDefs, steps } = useSelector(
+  const { protocolData, labwareDefs } = useSelector(
     (state: State) => state.protocolRuns[runId]?.lpc as LPCWizardState
   )
   const { t } = useTranslation(['labware_position_check', 'shared'])
   const { t: commandTextT } = useTranslation('protocol_command_text')
 
-  const pipette = useSelector(
-    (state: State) => selectActivePipette(step, runId, state) ?? null
-  )
-  const initialPosition = useSelector((state: State) =>
-    selectActiveLwInitialPosition(step, runId, state)
-  )
-  const isLwTiprack = useSelector((state: State) =>
-    selectIsActiveLwTipRack(runId, state)
-  )
+  const pipette = useSelector(selectActivePipette(runId)) as LoadedPipette
+  const pipetteId = pipette.id
+  const initialPosition = useSelector(selectSelectedLwInitialPosition(runId))
+  const isLwTiprack = useSelector(selectIsSelectedLwTipRack(runId))
+  const selectedLwInfo = useSelector(
+    selectSelectedLabwareInfo(runId)
+  ) as SelectedLabwareInfo
+  const offsetLocationDetails = selectedLwInfo.offsetLocationDetails as OffsetLocationDetails
 
   const buildDisplayParams = (): Omit<
     DisplayLocationParams,
@@ -74,7 +72,7 @@ export function CheckItem(
     loadedModules: protocolData.modules,
     loadedLabwares: protocolData.labware,
     robotType: FLEX_ROBOT_TYPE,
-    location,
+    location: offsetLocationDetails,
   })
 
   const slotOnlyDisplayLocation = getLabwareDisplayLocation({
@@ -89,12 +87,14 @@ export function CheckItem(
 
   const handlePrepareProceed = (): void => {
     void toggleRobotMoving(true)
-      .then(() => handleConfirmLwModulePlacement({ step }))
+      .then(() =>
+        handleConfirmLwModulePlacement(offsetLocationDetails, pipetteId)
+      )
       .then(position => {
         dispatch(
           setInitialPosition(runId, {
-            labwareId,
-            location,
+            labwareUri: selectedLwInfo.uri,
+            location: offsetLocationDetails,
             position,
           })
         )
@@ -102,43 +102,37 @@ export function CheckItem(
       .finally(() => toggleRobotMoving(false))
   }
 
-  // TODO(jh, 01-14-25): Revisit next step injection after refactoring the store (after designs settle).
   const handleJogProceed = (): void => {
     void toggleRobotMoving(true)
-      .then(() =>
-        handleConfirmLwFinalPosition({
-          step,
-          onSuccess: proceed,
-          pipette,
-        })
-      )
+      .then(() => handleConfirmLwFinalPosition(offsetLocationDetails, pipette))
       .then(position => {
         dispatch(
           setFinalPosition(runId, {
-            labwareId,
-            location,
+            labwareUri: selectedLwInfo.uri,
+            location: offsetLocationDetails,
             position,
           })
         )
       })
+      // TODO(jh, 01-30-25): This entire sequence of dispatches can be reduced to one dispatch
+      //  after the API changes, but should be separate until then. See APPLY_OFFSET comment in LPC reducer.
       .then(() => {
-        if (steps.next?.section === NAV_STEPS.CHECK_POSITIONS) {
-          return handleCheckItemsPrepModules(steps.next)
-        } else {
-          return handleValidMoveToMaintenancePosition(pipette, steps.next)
-        }
+        dispatch(applyOffset(runId, selectedLwInfo.uri))
+      })
+      .then(() => {
+        dispatch(clearSelectedLabware(runId))
       })
       .finally(() => toggleRobotMoving(false))
   }
 
   const handleGoBack = (): void => {
     void toggleRobotMoving(true)
-      .then(() => handleResetLwModulesOnDeck({ step }))
+      .then(() => handleResetLwModulesOnDeck(offsetLocationDetails))
       .then(() => {
         dispatch(
           setInitialPosition(runId, {
-            labwareId,
-            location,
+            labwareUri: selectedLwInfo.uri,
+            location: offsetLocationDetails,
             position: null,
           })
         )
@@ -146,11 +140,10 @@ export function CheckItem(
       .finally(() => toggleRobotMoving(false))
   }
 
-  // TODO(jh 01-15-24): These should be separate steps, but let's wait for designs to settle.
   return (
     <Flex flexDirection={DIRECTION_COLUMN} minHeight="29.5rem">
       {initialPosition != null ? (
-        <JogToWell
+        <EditOffset
           header={t('check_item_in_location', {
             item: isLwTiprack ? t('tip_rack') : t('labware'),
             location: slotOnlyDisplayLocation,
@@ -181,7 +174,8 @@ export function CheckItem(
           {...props}
         />
       ) : (
-        <PrepareSpace
+        <PrepareLabware
+          {...props}
           header={t('prepare_item_in_location', {
             item: isLwTiprack ? t('tip_rack') : t('labware'),
             location: slotOnlyDisplayLocation,
@@ -195,13 +189,14 @@ export function CheckItem(
                   isLwTiprack={isLwTiprack}
                   slotOnlyDisplayLocation={slotOnlyDisplayLocation}
                   fullDisplayLocation={fullDisplayLocation}
+                  labwareInfo={selectedLwInfo}
                   {...props}
                 />,
               ]}
             />
           }
           confirmPlacement={handlePrepareProceed}
-          {...props}
+          selectedLwInfo={selectedLwInfo}
         />
       )}
     </Flex>

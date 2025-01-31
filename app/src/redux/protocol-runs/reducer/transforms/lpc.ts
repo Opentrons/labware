@@ -1,47 +1,65 @@
+import type {
+  LPCWizardAction,
+  LPCWizardState,
+  OffsetDetails,
+} from '../../types'
 import isEqual from 'lodash/isEqual'
+import {
+  SET_FINAL_POSITION,
+  SET_INITIAL_POSITION,
+} from '/app/redux/protocol-runs'
 
-import type { LPCWizardAction, WorkingOffset } from '../../types'
-
-export function updateWorkingOffset(
-  workingOffsets: WorkingOffset[],
+// Handle positional updates, only updating the working offset that matches the location specified in the action.
+export function updateOffsetsForURI(
+  state: LPCWizardState,
   action: Extract<
     LPCWizardAction,
     { type: 'SET_INITIAL_POSITION' | 'SET_FINAL_POSITION' }
   >
-): WorkingOffset[] {
+): OffsetDetails[] {
   const { type, payload } = action
-  const { labwareId, location, position } = payload
-  const existingRecordIndex = workingOffsets.findIndex(
-    record =>
-      record.labwareId === labwareId && isEqual(record.location, location)
+  const { labwareUri, position, location } = payload
+  const { offsetDetails } = state.labwareInfo.labware[labwareUri]
+  const relevantDetailsIdx = offsetDetails.findIndex(detail =>
+    isEqual(location, detail.locationDetails)
   )
 
-  if (existingRecordIndex < 0) {
-    return [
-      ...workingOffsets,
-      {
-        labwareId,
-        location,
-        initialPosition: type === 'SET_INITIAL_POSITION' ? position : null,
-        finalPosition: type === 'SET_FINAL_POSITION' ? position : null,
-      },
-    ]
+  if (relevantDetailsIdx < 0) {
+    console.warn(`No matching location found for ${labwareUri}`)
+    return offsetDetails
   } else {
-    const updatedOffset = {
-      ...workingOffsets[existingRecordIndex],
-      ...(type === 'SET_INITIAL_POSITION' && {
-        initialPosition: position,
-        finalPosition: null,
-      }),
-      ...(type === 'SET_FINAL_POSITION' && {
-        finalPosition: position,
-      }),
-    }
-
-    return [
-      ...workingOffsets.slice(0, existingRecordIndex),
-      updatedOffset,
-      ...workingOffsets.slice(existingRecordIndex + 1),
+    const relevantDetail = offsetDetails[relevantDetailsIdx]
+    const newOffsetDetails = [
+      ...offsetDetails.slice(0, relevantDetailsIdx),
+      ...offsetDetails.slice(relevantDetailsIdx + 1),
     ]
+
+    if (relevantDetail.workingOffset == null) {
+      const newWorkingDetail = {
+        initialPosition: type === SET_INITIAL_POSITION ? position : null,
+        finalPosition: type === SET_FINAL_POSITION ? position : null,
+      }
+
+      return [
+        ...newOffsetDetails,
+        { ...relevantDetail, workingOffset: newWorkingDetail },
+      ]
+    } else {
+      const newWorkingDetail =
+        type === SET_INITIAL_POSITION
+          ? {
+              initialPosition: position,
+              finalPosition: null,
+            }
+          : {
+              ...relevantDetail.workingOffset,
+              finalPosition: position,
+            }
+
+      return [
+        ...newOffsetDetails,
+        { ...relevantDetail, workingOffset: newWorkingDetail },
+      ]
+    }
   }
 }

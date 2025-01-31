@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
+import { getLabwareDefinitionsFromCommands } from '@opentrons/components'
 import {
   useCreateMaintenanceRunLabwareDefinitionMutation,
   useDeleteMaintenanceRunMutation,
@@ -8,14 +9,18 @@ import {
 
 import {
   useCreateTargetedMaintenanceRunMutation,
-  useNotifyRunQuery,
   useMostRecentCompletedAnalysis,
+  useNotifyRunQuery,
 } from '/app/resources/runs'
 import { useNotifyCurrentMaintenanceRun } from '/app/resources/maintenance_runs'
+import { useNotifyDeckConfigurationQuery } from '/app/resources/deck_configuration'
+import { useLPCLabwareInfo } from '/app/organisms/LabwarePositionCheck/LPCFlows/hooks'
 
 import type { RobotType } from '@opentrons/shared-data'
-import type { LPCFlowsProps } from '/app/organisms/LabwarePositionCheck/LPCFlows/LPCFlows'
-import { useNotifyDeckConfigurationQuery } from '/app/resources/deck_configuration'
+import type {
+  LegacySupportLPCFlowsProps,
+  LPCFlowsProps,
+} from '/app/organisms/LabwarePositionCheck/LPCFlows/LPCFlows'
 
 interface UseLPCFlowsBase {
   showLPC: boolean
@@ -29,7 +34,7 @@ interface UseLPCFlowsIdle extends UseLPCFlowsBase {
 }
 interface UseLPCFlowsLaunched extends UseLPCFlowsBase {
   showLPC: true
-  lpcProps: LPCFlowsProps
+  lpcProps: LegacySupportLPCFlowsProps
   isLaunchingLPC: false
 }
 export type UseLPCFlowsResult = UseLPCFlowsIdle | UseLPCFlowsLaunched
@@ -49,10 +54,20 @@ export function useLPCFlows({
   const [isLaunching, setIsLaunching] = useState(false)
   const [hasCreatedLPCRun, setHasCreatedLPCRun] = useState(false)
 
-  const { data: runRecord } = useNotifyRunQuery(runId, { staleTime: Infinity })
   const deckConfig = useNotifyDeckConfigurationQuery().data
+  const { data: runRecord } = useNotifyRunQuery(runId, { staleTime: Infinity })
   const currentOffsets = runRecord?.data?.labwareOffsets ?? []
   const mostRecentAnalysis = useMostRecentCompletedAnalysis(runId)
+
+  const labwareDefs = useMemo(
+    () => getLabwareDefinitionsFromCommands(mostRecentAnalysis?.commands ?? []),
+    [mostRecentAnalysis != null]
+  )
+  const labwareInfo = useLPCLabwareInfo({
+    currentOffsets,
+    labwareDefs,
+    protocolData: mostRecentAnalysis,
+  })
 
   useMonitorMaintenanceRunForDeletion({ maintenanceRunId, setMaintenanceRunId })
 
@@ -130,10 +145,12 @@ export function useLPCFlows({
           runId,
           robotType,
           deckConfig,
-          existingOffsets: currentOffsets,
+          labwareDefs,
+          labwareInfo,
           mostRecentAnalysis,
           protocolName,
           maintenanceRunId,
+          existingOffsets: currentOffsets,
         },
       }
     : { launchLPC, isLaunchingLPC: isLaunching, lpcProps: null, showLPC }

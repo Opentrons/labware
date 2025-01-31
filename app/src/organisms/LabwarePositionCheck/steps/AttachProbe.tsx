@@ -21,9 +21,7 @@ import attachProbe1 from '/app/assets/videos/pipette-wizard-flows/Pipette_Attach
 import attachProbe8 from '/app/assets/videos/pipette-wizard-flows/Pipette_Attach_Probe_8.webm'
 import attachProbe96 from '/app/assets/videos/pipette-wizard-flows/Pipette_Attach_Probe_96.webm'
 
-import type { AttachProbeStep, LPCStepProps } from '../types'
-import type { State } from '/app/redux/types'
-import type { LPCWizardState } from '/app/redux/protocol-runs'
+import type { LPCWizardContentProps } from '/app/organisms/LabwarePositionCheck/types'
 
 const StyledVideo = styled.video`
   padding-top: ${SPACING.spacing4};
@@ -44,33 +42,17 @@ export function AttachProbe({
   runId,
   proceed,
   commandUtils,
-  step,
-}: LPCStepProps<AttachProbeStep>): JSX.Element {
+}: LPCWizardContentProps): JSX.Element {
   const { t, i18n } = useTranslation(['labware_position_check', 'shared'])
   const isOnDevice = useSelector(getIsOnDevice)
-  const { steps } = useSelector(
-    (state: State) => state.protocolRuns[runId]?.lpc as LPCWizardState
-  )
-  const { pipetteId } = step
+  const pipette = useSelector(selectActivePipette(runId))
   const {
-    createProbeAttachmentHandler,
-    handleCheckItemsPrepModules,
+    handleProbeAttachment,
     toggleRobotMoving,
     setShowUnableToDetect,
     unableToDetect,
   } = commandUtils
-  const pipette = useSelector((state: State) =>
-    selectActivePipette(step, runId, state)
-  )
-  const channels = useSelector((state: State) =>
-    selectActivePipetteChannelCount(step, runId, state)
-  )
-
-  const handleProbeAttached = createProbeAttachmentHandler(
-    pipetteId,
-    pipette,
-    proceed
-  )
+  const channels = useSelector(selectActivePipetteChannelCount(runId))
 
   const { probeLocation, probeVideoSrc } = ((): {
     probeLocation: string
@@ -91,14 +73,13 @@ export function AttachProbe({
 
   const handleProbeCheck = (): void => {
     void toggleRobotMoving(true)
-      .then(() => handleProbeAttached())
+      .then(() => handleProbeAttachment(pipette, proceed))
       .finally(() => toggleRobotMoving(false))
   }
 
   const handleProceed = (): void => {
     void toggleRobotMoving(true)
-      .then(() => handleProbeAttached())
-      .then(() => handleCheckItemsPrepModules(steps.next))
+      .then(() => handleProbeAttachment(pipette, proceed))
       .finally(() => toggleRobotMoving(false))
   }
 

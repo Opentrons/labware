@@ -24,42 +24,46 @@ import {
 
 import { SmallButton } from '/app/atoms/buttons'
 import { NeedHelpLink } from '/app/molecules/OT2CalibrationNeedHelpLink'
-import { selectItemLabwareDef } from '/app/redux/protocol-runs'
+import { selectSelectedLabwareDef } from '/app/redux/protocol-runs'
 import { getIsOnDevice } from '/app/redux/config'
 
 import type { ReactNode } from 'react'
 import type { LabwareDefinition2 } from '@opentrons/shared-data'
-import type {
-  CheckPositionsStep,
-  LPCStepProps,
-} from '/app/organisms/LabwarePositionCheck/types'
 import type { State } from '/app/redux/types'
-import type { LPCWizardState } from '/app/redux/protocol-runs'
+import type {
+  LPCWizardState,
+  OffsetLocationDetails,
+  SelectedLabwareInfo,
+} from '/app/redux/protocol-runs'
+import type { LPCWizardContentProps } from '/app/organisms/LabwarePositionCheck/types'
 
 const LPC_HELP_LINK_URL =
   'https://support.opentrons.com/s/article/How-Labware-Offsets-work-on-the-OT-2'
 
-interface PrepareSpaceProps extends LPCStepProps<CheckPositionsStep> {
+interface PrepareSpaceProps extends LPCWizardContentProps {
   header: ReactNode
   body: ReactNode
   confirmPlacement: () => void
+  selectedLwInfo: SelectedLabwareInfo
 }
 
-export function PrepareSpace({
+export function PrepareLabware({
   runId,
   header,
   body,
   confirmPlacement,
+  selectedLwInfo,
 }: PrepareSpaceProps): JSX.Element {
   const { i18n, t } = useTranslation(['labware_position_check', 'shared'])
-  const { protocolData, deckConfig, steps } = useSelector(
+  const { protocolData, deckConfig } = useSelector(
     (state: State) => state.protocolRuns[runId]?.lpc as LPCWizardState
   )
   const isOnDevice = useSelector(getIsOnDevice)
   const labwareDef = useSelector(
-    selectItemLabwareDef(runId)
-  ) as LabwareDefinition2 // CheckItem always has lwId on step.
-  const { location } = steps.current as CheckPositionsStep // safely enforced by iface
+    selectSelectedLabwareDef(runId)
+  ) as LabwareDefinition2
+  const offsetLocationDetails = selectedLwInfo.offsetLocationDetails as OffsetLocationDetails
+  const { moduleModel } = offsetLocationDetails
 
   return (
     <Flex css={PARENT_CONTAINER_STYLE}>
@@ -74,20 +78,16 @@ export function PrepareSpace({
             modulesOnDeck={protocolData.modules.map(mod => ({
               moduleModel: mod.model,
               moduleLocation: mod.location,
-              nestedLabwareDef:
-                'moduleModel' in location && location.moduleModel != null
-                  ? labwareDef
-                  : null,
+              nestedLabwareDef: moduleModel != null ? labwareDef : null,
               innerProps:
-                'moduleModel' in location &&
-                location.moduleModel != null &&
-                getModuleType(location.moduleModel) === THERMOCYCLER_MODULE_TYPE
+                moduleModel != null &&
+                getModuleType(moduleModel) === THERMOCYCLER_MODULE_TYPE
                   ? { lidMotorState: 'open' }
                   : {},
             }))}
             labwareOnDeck={[
               {
-                labwareLocation: location,
+                labwareLocation: offsetLocationDetails,
                 definition: labwareDef,
               },
             ].filter(

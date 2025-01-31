@@ -14,20 +14,20 @@ import type {
 import type { UseLPCCommandWithChainRunChildProps } from './types'
 
 export interface UseHandleStartLPCResult {
-  createStartLPCHandler: (
+  handleStartLPC: (
     pipette: LoadedPipette | null,
     onSuccess: () => void
-  ) => () => Promise<void>
+  ) => Promise<void>
 }
 
 export function useHandleStartLPC({
   chainLPCCommands,
   mostRecentAnalysis,
 }: UseLPCCommandWithChainRunChildProps): UseHandleStartLPCResult {
-  const createStartLPCHandler = (
+  const handleStartLPC = (
     pipette: LoadedPipette | null,
     onSuccess: () => void
-  ): (() => Promise<void>) => {
+  ): Promise<void> => {
     const startCommands: CreateCommand[] = [
       ...buildInstrumentLabwarePrepCommands(mostRecentAnalysis),
       ...moduleInitBeforeAnyLPCCommands(mostRecentAnalysis),
@@ -35,13 +35,12 @@ export function useHandleStartLPC({
       ...moveToMaintenancePosition(pipette),
     ]
 
-    return () =>
-      chainLPCCommands(startCommands, false).then(() => {
-        onSuccess()
-      })
+    return chainLPCCommands(startCommands, false).then(() => {
+      onSuccess()
+    })
   }
 
-  return { createStartLPCHandler }
+  return { handleStartLPC }
 }
 
 // Load all pipettes and labware into the maintenance run by utilizing the protocol resource.

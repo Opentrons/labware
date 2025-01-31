@@ -4,6 +4,11 @@ import {
   SET_FINAL_POSITION,
   START_LPC,
   FINISH_LPC,
+  GO_BACK_STEP,
+  SET_SELECTED_LABWARE,
+  CLEAR_SELECTED_LABWARE,
+  SET_SELECTED_LABWARE_NAME,
+  APPLY_OFFSET,
 } from '../constants'
 
 import type {
@@ -14,12 +19,55 @@ import type {
   PositionParams,
   ProceedStepAction,
   FinishLPCAction,
+  GoBackStepAction,
+  SelectedLabwareAction,
+  ClearSelectedLabwareAction,
+  SelectedLabwareNameAction,
+  OffsetLocationDetails,
+  ApplyOffsetAction,
 } from '../types'
 
 export const proceedStep = (runId: string): ProceedStepAction => ({
   type: PROCEED_STEP,
   payload: { runId },
 })
+
+export const goBackStep = (runId: string): GoBackStepAction => ({
+  type: GO_BACK_STEP,
+  payload: { runId },
+})
+
+export const setSelectedLabwareName = (
+  runId: string,
+  labwareUri: string
+): SelectedLabwareNameAction => ({
+  type: SET_SELECTED_LABWARE_NAME,
+  payload: {
+    runId,
+    labwareUri,
+  },
+})
+
+export const setSelectedLabware = (
+  runId: string,
+  labwareUri: string,
+  location: OffsetLocationDetails | null
+): SelectedLabwareAction => ({
+  type: SET_SELECTED_LABWARE,
+  payload: {
+    runId,
+    labwareUri,
+    location,
+  },
+})
+
+export const clearSelectedLabware = (
+  runId: string
+): ClearSelectedLabwareAction => ({
+  type: CLEAR_SELECTED_LABWARE,
+  payload: { runId },
+})
+
 export const setInitialPosition = (
   runId: string,
   params: PositionParams
@@ -34,6 +82,14 @@ export const setFinalPosition = (
 ): FinalPositionAction => ({
   type: SET_FINAL_POSITION,
   payload: { ...params, runId },
+})
+
+export const applyOffset = (
+  runId: string,
+  labwareUri: string
+): ApplyOffsetAction => ({
+  type: APPLY_OFFSET,
+  payload: { runId, labwareUri },
 })
 
 export const startLPC = (

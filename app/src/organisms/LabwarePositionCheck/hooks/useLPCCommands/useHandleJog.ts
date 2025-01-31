@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { useCreateMaintenanceCommandMutation } from '@opentrons/react-api-client'
 
 import { moveRelativeCommand } from './commands'
+import { selectActivePipette } from '/app/redux/protocol-runs'
 
 import type { Coordinates } from '@opentrons/shared-data'
 import type {
@@ -12,7 +13,6 @@ import type {
   Sign,
   StepSize,
 } from '/app/molecules/JogControls/types'
-import type { State } from '/app/redux/types'
 import type { UseLPCCommandChildProps } from './types'
 
 const JOG_COMMAND_TIMEOUT_MS = 10000
@@ -33,11 +33,10 @@ export function useHandleJog({
   maintenanceRunId,
   setErrorMessage,
 }: UseHandleJogProps): UseHandleJogResult {
-  const { current: currentStep } =
-    useSelector((state: State) => state.protocolRuns[runId]?.lpc?.steps) ?? {}
-
   const [isJogging, setIsJogging] = useState(false)
   const [jogQueue, setJogQueue] = useState<Array<() => Promise<void>>>([])
+  const pipette = useSelector(selectActivePipette(runId))
+  const pipetteId = pipette?.id
   const {
     createMaintenanceCommand: createSilentCommand,
   } = useCreateMaintenanceCommandMutation()
@@ -50,11 +49,6 @@ export function useHandleJog({
       onSuccess?: (position: Coordinates | null) => void
     ): Promise<void> => {
       return new Promise<void>((resolve, reject) => {
-        const pipetteId =
-          currentStep != null && 'pipetteId' in currentStep
-            ? currentStep.pipetteId
-            : null
-
         if (pipetteId != null) {
           createSilentCommand({
             maintenanceRunId,
@@ -81,7 +75,7 @@ export function useHandleJog({
         }
       })
     },
-    [currentStep, maintenanceRunId, createSilentCommand, setErrorMessage]
+    [pipetteId, maintenanceRunId, createSilentCommand, setErrorMessage]
   )
 
   const processJogQueue = useCallback((): void => {

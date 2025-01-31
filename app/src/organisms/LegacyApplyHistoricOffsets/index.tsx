@@ -97,7 +97,7 @@ export function LegacyApplyHistoricOffsets(
           <Flex alignItems={ALIGN_CENTER} gridGap={SPACING.spacing4}>
             <Icon size={SIZE_1} name="reticle" />
             <LegacyStyledText as="p">
-              {t(noOffsetData ? 'no_offset_data' : 'apply_offset_data')}
+              {t(noOffsetData ? 'legacy_no_offset_data' : 'apply_offset_data')}
             </LegacyStyledText>
           </Flex>
         }

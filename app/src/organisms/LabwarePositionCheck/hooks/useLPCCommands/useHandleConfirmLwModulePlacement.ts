@@ -10,7 +10,7 @@ import type {
   CreateCommand,
 } from '@opentrons/shared-data'
 import type { UseLPCCommandWithChainRunChildProps } from './types'
-import type { CheckPositionsStep } from '/app/organisms/LabwarePositionCheck/types'
+import type { OffsetLocationDetails } from '/app/redux/protocol-runs'
 
 export interface UseHandleConfirmPlacementProps
   extends UseLPCCommandWithChainRunChildProps {
@@ -21,7 +21,8 @@ export interface UseHandleConfirmPlacementResult {
   /* Initiate commands to finalize pre-protocol run conditions for specific modules
    before moving the pipette to the initial LPC position. */
   handleConfirmLwModulePlacement: (
-    params: BuildMoveLabwareCommandParams
+    offsetLocationDetails: OffsetLocationDetails,
+    pipetteId: string
   ) => Promise<Coordinates | null>
 }
 
@@ -31,14 +32,13 @@ export function useHandleConfirmLwModulePlacement({
   setErrorMessage,
 }: UseHandleConfirmPlacementProps): UseHandleConfirmPlacementResult {
   const handleConfirmLwModulePlacement = (
-    params: BuildMoveLabwareCommandParams
+    offsetLocationDetails: OffsetLocationDetails,
+    pipetteId: string
   ): Promise<Coordinates | null> => {
-    const { pipetteId } = params.step
-
     const confirmCommands: CreateCommand[] = [
-      ...buildMoveLabwareCommand(params),
+      ...buildMoveLabwareCommand(offsetLocationDetails),
       ...moduleInitDuringLPCCommands(mostRecentAnalysis),
-      ...moveToWellCommands(params.step),
+      ...moveToWellCommands(offsetLocationDetails, pipetteId),
       ...savePositionCommands(pipetteId),
     ]
 
@@ -62,17 +62,21 @@ export function useHandleConfirmLwModulePlacement({
   return { handleConfirmLwModulePlacement }
 }
 
-interface BuildMoveLabwareCommandParams {
-  step: CheckPositionsStep
-}
+function buildMoveLabwareCommand(
+  offsetLocationDetails: OffsetLocationDetails
+): MoveLabwareCreateCommand[] {
+  const { labwareId, moduleId, adapterId, slotName } = offsetLocationDetails
 
-function buildMoveLabwareCommand({
-  step,
-}: BuildMoveLabwareCommandParams): MoveLabwareCreateCommand[] {
-  const { labwareId, moduleId, adapterId, location } = step
+  // TODO(jh, 01-29-25): Once default offsets are implemented, we'll have to load them
+  //  into a slot somehow. Talk to Design.
+  const locationSpecificSlotName = slotName as string
 
-  const newLocation =
-    moduleId != null ? { moduleId } : { slotName: location.slotName }
+  const newLocationLabware =
+    moduleId != null ? { moduleId } : { slotName: locationSpecificSlotName }
+  const newLocationAdapter =
+    adapterId != null
+      ? { labwareId: adapterId }
+      : { slotName: locationSpecificSlotName }
 
   if (adapterId != null) {
     return [
@@ -80,7 +84,7 @@ function buildMoveLabwareCommand({
         commandType: 'moveLabware' as const,
         params: {
           labwareId: adapterId,
-          newLocation,
+          newLocation: newLocationLabware,
           strategy: 'manualMoveWithoutPause',
         },
       },
@@ -88,10 +92,7 @@ function buildMoveLabwareCommand({
         commandType: 'moveLabware' as const,
         params: {
           labwareId,
-          newLocation:
-            adapterId != null
-              ? { labwareId: adapterId }
-              : { slotName: location.slotName },
+          newLocation: newLocationAdapter,
           strategy: 'manualMoveWithoutPause',
         },
       },
@@ -102,7 +103,7 @@ function buildMoveLabwareCommand({
         commandType: 'moveLabware' as const,
         params: {
           labwareId,
-          newLocation,
+          newLocation: newLocationLabware,
           strategy: 'manualMoveWithoutPause',
         },
       },

@@ -19,10 +19,7 @@ import {
 import { getIsOnDevice } from '/app/redux/config'
 
 import type { StyleProps } from '@opentrons/components'
-import type {
-  CheckPositionsStep,
-  LPCStepProps,
-} from '/app/organisms/LabwarePositionCheck/types'
+import type { LPCWizardContentProps } from '/app/organisms/LabwarePositionCheck/types'
 
 interface OffsetVectorProps extends StyleProps {
   x: number
@@ -31,7 +28,7 @@ interface OffsetVectorProps extends StyleProps {
 }
 
 export function LiveOffsetValue(
-  props: OffsetVectorProps & LPCStepProps<CheckPositionsStep>
+  props: OffsetVectorProps & LPCWizardContentProps
 ): JSX.Element {
   const { x, y, z, ...styleProps } = props
   const { i18n, t } = useTranslation('labware_position_check')

@@ -5,37 +5,32 @@ import { TYPOGRAPHY, LegacyStyledText } from '@opentrons/components'
 
 import {
   selectActiveAdapterDisplayName,
-  selectLwDisplayName,
+  selectSelectedLwDisplayName,
 } from '/app/redux/protocol-runs'
 
-import type { State } from '/app/redux/types'
-import type {
-  CheckPositionsStep,
-  LPCStepProps,
-} from '/app/organisms/LabwarePositionCheck/types'
+import type { SelectedLabwareInfo } from '/app/redux/protocol-runs'
 
-interface PlaceItemInstructionProps extends LPCStepProps<CheckPositionsStep> {
+import type { LPCWizardContentProps } from '/app/organisms/LabwarePositionCheck/types'
+
+interface PlaceItemInstructionProps extends LPCWizardContentProps {
   isLwTiprack: boolean
   slotOnlyDisplayLocation: string
   fullDisplayLocation: string
+  labwareInfo: SelectedLabwareInfo
 }
 
 export function PlaceItemInstruction({
   runId,
-  step,
   isLwTiprack,
   slotOnlyDisplayLocation,
   fullDisplayLocation,
+  labwareInfo,
 }: PlaceItemInstructionProps): JSX.Element {
   const { t } = useTranslation('labware_position_check')
-  const { adapterId } = step
 
-  const labwareDisplayName = useSelector((state: State) =>
-    selectLwDisplayName(runId, state)
-  )
-  const adapterDisplayName = useSelector((state: State) =>
-    selectActiveAdapterDisplayName(runId, state)
-  )
+  const { adapterId } = labwareInfo.offsetLocationDetails ?? { adapterId: null }
+  const labwareDisplayName = useSelector(selectSelectedLwDisplayName(runId))
+  const adapterDisplayName = useSelector(selectActiveAdapterDisplayName(runId))
 
   if (isLwTiprack) {
     return (

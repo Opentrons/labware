@@ -3,9 +3,11 @@ import { FLEX_ROBOT_TYPE, OT2_ROBOT_TYPE } from '@opentrons/shared-data'
 import { LPCWizardFlex } from './LPCWizardFlex'
 import { LegacyLabwarePositionCheck } from '/app/organisms/LegacyLabwarePositionCheck'
 
-import type { LPCFlowsProps } from '/app/organisms/LabwarePositionCheck/LPCFlows'
+import type { LegacySupportLPCFlowsProps } from '/app/organisms/LabwarePositionCheck/LPCFlows'
 
-export function LPCWizardContainer(props: LPCFlowsProps): JSX.Element {
+export function LPCWizardContainer(
+  props: LegacySupportLPCFlowsProps
+): JSX.Element {
   switch (props.robotType) {
     case FLEX_ROBOT_TYPE:
       return <LPCWizardFlex {...props} />

@@ -35,33 +35,28 @@ import { NeedHelpLink } from '/app/molecules/OT2CalibrationNeedHelpLink'
 import { JogControls } from '/app/molecules/JogControls'
 import { LiveOffsetValue } from './LiveOffsetValue'
 import {
-  selectActiveLwExistingOffset,
-  selectActiveLwInitialPosition,
+  selectSelectedLwExistingOffset,
+  selectSelectedLwInitialPosition,
   selectActivePipette,
-  selectIsActiveLwTipRack,
-  selectItemLabwareDef,
+  selectIsSelectedLwTipRack,
+  selectSelectedLabwareDef,
 } from '/app/redux/protocol-runs'
 import { getIsOnDevice } from '/app/redux/config'
+
+import levelProbeWithTip from '/app/assets/images/lpc_level_probe_with_tip.svg'
+import levelProbeWithLabware from '/app/assets/images/lpc_level_probe_with_labware.svg'
 
 import type { ReactNode } from 'react'
 import type { LabwareDefinition2 } from '@opentrons/shared-data'
 import type { VectorOffset } from '@opentrons/api-client'
 import type { Jog } from '/app/molecules/JogControls'
-import type {
-  CheckPositionsStep,
-  LPCStepProps,
-} from '/app/organisms/LabwarePositionCheck/types'
-import type { LPCWizardState } from '/app/redux/protocol-runs'
-
-import levelProbeWithTip from '/app/assets/images/lpc_level_probe_with_tip.svg'
-import levelProbeWithLabware from '/app/assets/images/lpc_level_probe_with_labware.svg'
-import type { State } from '/app/redux/types'
+import type { LPCWizardContentProps } from '/app/organisms/LabwarePositionCheck/types'
 
 const DECK_MAP_VIEWBOX = '-10 -10 150 105'
 const LPC_HELP_LINK_URL =
   'https://support.opentrons.com/s/article/How-Labware-Offsets-work-on-the-OT-2'
 
-interface JogToWellProps extends LPCStepProps<CheckPositionsStep> {
+interface JogToWellProps extends LPCWizardContentProps {
   header: ReactNode
   body: ReactNode
   handleConfirmPosition: () => void
@@ -69,7 +64,7 @@ interface JogToWellProps extends LPCStepProps<CheckPositionsStep> {
   handleJog: Jog
 }
 
-export function JogToWell(props: JogToWellProps): JSX.Element {
+export function EditOffset(props: JogToWellProps): JSX.Element {
   const {
     runId,
     header,
@@ -79,30 +74,18 @@ export function JogToWell(props: JogToWellProps): JSX.Element {
     handleJog,
   } = props
   const { t } = useTranslation(['labware_position_check', 'shared'])
-  const { steps } = useSelector(
-    (state: State) => state.protocolRuns[runId]?.lpc as LPCWizardState
-  )
-  const { current: currentStep } = steps
 
   const isOnDevice = useSelector(getIsOnDevice)
-  const initialPosition = useSelector(
-    (state: State) =>
-      selectActiveLwInitialPosition(currentStep, runId, state) ??
-      IDENTITY_VECTOR
-  )
-  const pipetteName = useSelector(
-    (state: State) =>
-      selectActivePipette(currentStep, runId, state)?.pipetteName ??
-      'p1000_single'
-  )
+  const initialPosition =
+    useSelector(selectSelectedLwInitialPosition(runId)) ?? IDENTITY_VECTOR
+  const pipetteName =
+    useSelector(selectActivePipette(runId))?.pipetteName ?? 'p1000_single'
   const itemLwDef = useSelector(
-    selectItemLabwareDef(runId)
-  ) as LabwareDefinition2 // Safe if component only used with CheckItem step.
-  const isTipRack = useSelector((state: State) =>
-    selectIsActiveLwTipRack(runId, state)
-  )
-  const activeLwExistingOffset = useSelector((state: State) =>
-    selectActiveLwExistingOffset(runId, state)
+    selectSelectedLabwareDef(runId)
+  ) as LabwareDefinition2
+  const isTipRack = useSelector(selectIsSelectedLwTipRack(runId))
+  const activeLwExistingOffset = useSelector(
+    selectSelectedLwExistingOffset(runId)
   )
 
   const [joggedPosition, setJoggedPosition] = useState<VectorOffset>(

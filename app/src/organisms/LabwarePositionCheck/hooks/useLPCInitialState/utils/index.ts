@@ -1,1 +1,1 @@
-export * from './getLPCSteps'
+export * from './getActivePipetteId'

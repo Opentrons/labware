@@ -7,10 +7,10 @@ import { ModalShell } from '@opentrons/components'
 import { getTopPortalEl } from '/app/App/portal'
 import {
   BeforeBeginning,
-  CheckItem,
+  HandleLabware,
   AttachProbe,
   DetachProbe,
-  ResultsSummary,
+  LPCComplete,
 } from '/app/organisms/LabwarePositionCheck/steps'
 import { ExitConfirmation } from './ExitConfirmation'
 import { RobotMotionLoader } from './RobotMotionLoader'
@@ -20,8 +20,12 @@ import {
   useLPCCommands,
   useLPCInitialState,
 } from '/app/organisms/LabwarePositionCheck/hooks'
-import { NAV_STEPS } from '/app/organisms/LabwarePositionCheck/constants'
-import { closeLPC, proceedStep } from '/app/redux/protocol-runs'
+import {
+  closeLPC,
+  proceedStep,
+  LPC_STEP,
+  selectCurrentStep,
+} from '/app/redux/protocol-runs'
 import { getIsOnDevice } from '/app/redux/config'
 
 import type { LPCFlowsProps } from '/app/organisms/LabwarePositionCheck/LPCFlows'
@@ -34,7 +38,6 @@ export interface LPCWizardFlexProps extends Omit<LPCFlowsProps, 'robotType'> {}
 export function LPCWizardFlex(props: LPCWizardFlexProps): JSX.Element {
   const { onCloseClick, ...rest } = props
 
-  // TODO(jh, 01-14-25): Also inject goBack functionality once designs are finalized.
   const proceed = (): void => {
     dispatch(proceedStep(props.runId))
   }
@@ -118,17 +121,12 @@ function LPCWizardHeader({
 
 function LPCWizardContent(props: LPCWizardContentProps): JSX.Element {
   const { t } = useTranslation('shared')
-  const currentStep = useSelector(
-    (state: State) =>
-      state.protocolRuns[props.runId]?.lpc?.steps.current ?? null
-  )
+  const currentStep = useSelector(selectCurrentStep(props.runId))
   const {
     isRobotMoving,
     errorMessage,
     showExitConfirmation,
   } = props.commandUtils
-
-  // TODO(jh, 01-14-25): Handle open door behavior.
 
   // Handle special cases that are shared by multiple steps first.
   if (isRobotMoving) {
@@ -146,24 +144,24 @@ function LPCWizardContent(props: LPCWizardContentProps): JSX.Element {
   }
 
   // Handle step-based routing.
-  switch (currentStep.section) {
-    case NAV_STEPS.BEFORE_BEGINNING:
-      return <BeforeBeginning step={currentStep} {...props} />
+  switch (currentStep) {
+    case LPC_STEP.BEFORE_BEGINNING:
+      return <BeforeBeginning {...props} />
 
-    case NAV_STEPS.CHECK_POSITIONS:
-      return <CheckItem step={currentStep} {...props} />
+    case LPC_STEP.ATTACH_PROBE:
+      return <AttachProbe {...props} />
 
-    case NAV_STEPS.ATTACH_PROBE:
-      return <AttachProbe step={currentStep} {...props} />
+    case LPC_STEP.HANDLE_LABWARE:
+      return <HandleLabware {...props} />
 
-    case NAV_STEPS.DETACH_PROBE:
-      return <DetachProbe step={currentStep} {...props} />
+    case LPC_STEP.DETACH_PROBE:
+      return <DetachProbe {...props} />
 
-    case NAV_STEPS.RESULTS_SUMMARY:
-      return <ResultsSummary step={currentStep} {...props} />
+    case LPC_STEP.LPC_COMPLETE:
+      return <LPCComplete {...props} />
 
     default:
       console.error('Unhandled LPC step.')
-      return <BeforeBeginning step={currentStep} {...props} />
+      return <BeforeBeginning {...props} />
   }
 }
