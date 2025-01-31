@@ -663,6 +663,8 @@ class LegacyCommandMapper:
                     labware_load_info.labware_definition
                 ),
                 offsetId=labware_load_info.offset_id,
+                # These legacy json protocols don't get location sequences because
+                # to do so we'd have to go back and look up where the module gets loaded
             ),
         )
         queue_action = pe_actions.QueueCommandAction(

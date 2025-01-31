@@ -4,7 +4,6 @@ from datetime import datetime
 from pydantic import BaseModel
 from typing import Optional, cast, Dict
 
-from opentrons_shared_data.labware.labware_definition import LabwareDefinition
 from opentrons_shared_data.pipette.types import PipetteNameType
 from opentrons.types import MountType
 from opentrons.protocol_engine import ErrorOccurrence, commands as cmd
@@ -133,39 +132,6 @@ def create_comment_command(command_id: str = "command-id") -> cmd.Comment:
 
     return cmd.Comment(
         id=command_id,
-        key="command-key",
-        status=cmd.CommandStatus.SUCCEEDED,
-        createdAt=datetime.now(),
-        params=params,
-        result=result,
-    )
-
-
-def create_load_labware_command(
-    labware_id: str,
-    location: LabwareLocation,
-    definition: LabwareDefinition,
-    offset_id: Optional[str],
-    display_name: Optional[str],
-) -> cmd.LoadLabware:
-    """Create a completed LoadLabware command."""
-    params = cmd.LoadLabwareParams(
-        loadName=definition.parameters.loadName,
-        namespace=definition.namespace,
-        version=definition.version,
-        location=location,
-        labwareId=None,
-        displayName=display_name,
-    )
-
-    result = cmd.LoadLabwareResult(
-        labwareId=labware_id,
-        definition=definition,
-        offsetId=offset_id,
-    )
-
-    return cmd.LoadLabware(
-        id="command-id",
         key="command-key",
         status=cmd.CommandStatus.SUCCEEDED,
         createdAt=datetime.now(),
