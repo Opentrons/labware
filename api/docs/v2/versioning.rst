@@ -84,6 +84,8 @@ This table lists the correspondence between Protocol API versions and robot soft
 +-------------+------------------------------+
 | API Version | Introduced in Robot Software |
 +=============+==============================+
+|     2.22    |          8.3.0               |
++-------------+------------------------------+
 |     2.21    |          8.2.0               |
 +-------------+------------------------------+
 |     2.20    |          8.0.0               |
@@ -135,6 +137,10 @@ This table lists the correspondence between Protocol API versions and robot soft
 
 Changes in API Versions
 =======================
+
+Version 2.22
+-------------
+This version includes beta features for our commercial partners. 
 
 Version 2.21
 ------------
