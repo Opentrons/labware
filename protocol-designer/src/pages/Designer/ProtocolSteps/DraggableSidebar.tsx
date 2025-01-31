@@ -10,7 +10,7 @@ import {
 } from '@opentrons/components'
 import { TimelineToolbox } from './Timeline/TimelineToolbox'
 
-const INITIAL_SIDEBAR_WIDTH = 276
+const INITIAL_SIDEBAR_WIDTH = 235
 const MIN_SIDEBAR_WIDTH = 80
 const MAX_SIDEBAR_WIDTH = 350
 

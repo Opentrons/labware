@@ -18,14 +18,14 @@ import {
 } from '../../../../file-data/selectors'
 import { getEnableHotKeysDisplay } from '../../../../feature-flags/selectors'
 import { DeckSetupContainer } from '../../DeckSetup'
-import { OffDeck } from '../../Offdeck'
+import { OffDeck } from '../../OffDeck'
 import { SubStepsToolbox } from '../Timeline'
 import { DraggableSidebar } from '../DraggableSidebar'
 import { ProtocolSteps } from '..'
 
 import type { SavedStepFormState } from '../../../../step-forms'
 
-vi.mock('../../Offdeck')
+vi.mock('../../OffDeck')
 vi.mock('../../../../step-forms/selectors')
 vi.mock('../../../../ui/steps/selectors')
 vi.mock('../../../../ui/labware/selectors')

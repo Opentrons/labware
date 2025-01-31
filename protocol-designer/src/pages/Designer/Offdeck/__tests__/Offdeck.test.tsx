@@ -5,7 +5,7 @@ import { selectors } from '../../../../labware-ingred/selectors'
 import { getCustomLabwareDefsByURI } from '../../../../labware-defs/selectors'
 import { renderWithProviders } from '../../../../__testing-utils__'
 import { OffDeckDetails } from '../OffDeckDetails'
-import { OffDeck } from '../Offdeck'
+import { OffDeck } from '..'
 import type * as Components from '@opentrons/components'
 
 vi.mock('../OffDeckDetails')

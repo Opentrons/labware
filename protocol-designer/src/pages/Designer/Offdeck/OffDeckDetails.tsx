@@ -1,20 +1,25 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
+import styled from 'styled-components'
 import {
   ALIGN_CENTER,
+  ALIGN_START,
+  // ALIGN_STRETCH,
   BORDERS,
+  Box,
   COLORS,
   DIRECTION_COLUMN,
   EmptySelectorButton,
   Flex,
   JUSTIFY_CENTER,
+  // JUSTIFY_START,
   LabwareRender,
   OVERFLOW_AUTO,
   RobotWorkSpace,
   SPACING,
   StyledText,
-  WRAP,
+  // WRAP,
 } from '@opentrons/components'
 import * as wellContentsSelectors from '../../../top-selectors/well-contents'
 import { selectors } from '../../../labware-ingred/selectors'
@@ -32,7 +37,8 @@ import { HighlightOffdeckSlot } from './HighlightOffdeckSlot'
 import type { CoordinateTuple, DeckSlotId } from '@opentrons/shared-data'
 import type { DeckSetupTabType } from '../types'
 
-const OFFDECK_MAP_WIDTH = '41.625rem'
+const OFF_DECK_MAP_WIDTH = '41.625rem'
+const OFF_DECK_MAP_HEIGHT = '45.5rem'
 const ZERO_SLOT_POSITION: CoordinateTuple = [0, 0, 0]
 interface OffDeckDetailsProps extends DeckSetupTabType {
   addLabware: () => void
@@ -53,27 +59,30 @@ export function OffDeckDetails(props: OffDeckDetailsProps): JSX.Element {
   const allWellContentsForActiveItem = useSelector(
     wellContentsSelectors.getAllWellContentsForActiveItem
   )
-  const containerWidth = tab === 'startingDeck' ? '100vw' : '75vh'
+  const containerWidth = tab === 'startingDeck' ? '100vw' : '75vw'
+  console.log('containerWidth', containerWidth)
   const paddingLeftWithHover =
     hoverSlot == null
-      ? `calc((${containerWidth} - (${SPACING.spacing24}  * 2) - ${OFFDECK_MAP_WIDTH}) / 2)`
+      ? `calc((${containerWidth} - (${SPACING.spacing24}  * 2) - ${OFF_DECK_MAP_WIDTH}) / 2)`
       : SPACING.spacing24
   const paddingLeft = tab === 'startingDeck' ? paddingLeftWithHover : undefined
   const padding =
     tab === 'protocolSteps'
       ? SPACING.spacing24
-      : `${SPACING.spacing24} ${paddingLeft}`
-  const stepDetailsContainerWidth = `calc(((${containerWidth} - ${OFFDECK_MAP_WIDTH}) / 2) - (${SPACING.spacing24}  * 3))`
+      : `${SPACING.spacing40} ${paddingLeft}`
+  const stepDetailsContainerWidth = `calc(((${containerWidth} - ${OFF_DECK_MAP_WIDTH}) / 2) - (${SPACING.spacing24}  * 3))`
 
   return (
     <Flex
       backgroundColor={COLORS.white}
       borderRadius={BORDERS.borderRadius12}
       width="100%"
-      height="65vh"
+      height="100%"
+      // height="65vh"
       padding={padding}
       gridGap={SPACING.spacing24}
       alignItems={ALIGN_CENTER}
+      id="container"
     >
       {hoverSlot != null ? (
         <Flex width={stepDetailsContainerWidth} height="6.25rem">
@@ -85,27 +94,54 @@ export function OffDeckDetails(props: OffDeckDetailsProps): JSX.Element {
         </Flex>
       ) : null}
       <Flex
-        width={OFFDECK_MAP_WIDTH}
-        height="100%"
+        flex="0 0 auto"
+        width={OFF_DECK_MAP_WIDTH}
+        // height="100%"
+        height={OFF_DECK_MAP_HEIGHT}
+        alignItems={ALIGN_CENTER}
         borderRadius={SPACING.spacing12}
         padding={`${SPACING.spacing16} ${SPACING.spacing40}`}
         backgroundColor={COLORS.grey20}
         overflowY={OVERFLOW_AUTO}
         flexDirection={DIRECTION_COLUMN}
-        flex="0 0 auto"
+        gridGap={SPACING.spacing40}
+        id="grey box"
       >
         <Flex
           justifyContent={JUSTIFY_CENTER}
           width="100%"
           color={COLORS.grey60}
-          marginBottom={SPACING.spacing40}
         >
           <StyledText desktopStyle="bodyDefaultSemiBold">
             {i18n.format(t('off_deck_labware'), 'upperCase')}
           </StyledText>
         </Flex>
 
-        <Flex flexWrap={WRAP} paddingY={SPACING.spacing32}>
+        {/* <Flex
+          flexWrap={WRAP}
+          id="wrapper"
+          columnGap={SPACING.spacing32}
+          rowGap={SPACING.spacing40}
+          // gap={`${SPACING.spacing40} ${SPACING.spacing32}`}
+          justifyContent={JUSTIFY_START}
+          alignItems={ALIGN_STRETCH}
+        > */}
+        <LabwareWrapper
+          // justifyContent={
+          //   offDeckLabware.length < 3 ? JUSTIFY_CENTER : JUSTIFY_START
+          // }
+          id="LabwareWrapper"
+        >
+          {tab === 'startingDeck' ? (
+            <Flex width="9.5625rem" height="6.375rem">
+              <EmptySelectorButton
+                onClick={addLabware}
+                text={t('add_labware')}
+                textAlignment="middle"
+                iconName="plus"
+              />
+            </Flex>
+          ) : null}
           {offDeckLabware.map(lw => {
             const wellContents = allWellContentsForActiveItem
               ? allWellContentsForActiveItem[lw.id]
@@ -123,13 +159,12 @@ export function OffDeckDetails(props: OffDeckDetailsProps): JSX.Element {
             const highlighted = hoveredDropdownItem.id === lw.id
             return (
               <Flex
+                id={lw.id}
                 flexDirection={DIRECTION_COLUMN}
                 key={lw.id}
-                paddingRight={SPACING.spacing32}
+                // paddingRight={SPACING.spacing32}
                 paddingBottom={
-                  isLabwareSelectionSelected || highlighted
-                    ? '0px'
-                    : SPACING.spacing32
+                  isLabwareSelectionSelected || highlighted ? '0px' : '0px'
                 }
               >
                 <RobotWorkSpace
@@ -188,8 +223,8 @@ export function OffDeckDetails(props: OffDeckDetailsProps): JSX.Element {
 
           <HighlightOffdeckSlot position={ZERO_SLOT_POSITION} />
 
-          {tab === 'startingDeck' ? (
-            <Flex width="9.5625rem" height="6.375rem">
+          {/* {tab === 'startingDeck' ? (
+            <Flex width="9.5625rem" height="6.375rem" id="add button">
               <EmptySelectorButton
                 onClick={addLabware}
                 text={t('add_labware')}
@@ -197,9 +232,35 @@ export function OffDeckDetails(props: OffDeckDetailsProps): JSX.Element {
                 iconName="plus"
               />
             </Flex>
-          ) : null}
-        </Flex>
+          ) : null} */}
+        </LabwareWrapper>
       </Flex>
     </Flex>
   )
 }
+
+// const LabwareWrapper = styled(Flex)`
+//   /* flex: 0 0 auto; */
+//   flex-wrap: ${WRAP};
+//   column-gap: ${SPACING.spacing32};
+//   row-gap: ${SPACING.spacing40};
+//   justify-content: ${JUSTIFY_CENTER};
+//   align-items: ${ALIGN_STRETCH};
+
+//   & > :last-child {
+//     justify-content: ${JUSTIFY_START};
+//   }
+// `
+
+const LabwareWrapper = styled(Box)`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5625rem, 1fr));
+  row-gap: ${SPACING.spacing40};
+  column-gap: ${SPACING.spacing32};
+  justify-content: ${JUSTIFY_CENTER}; /* Center the grid within the container */
+  align-items: ${ALIGN_START};
+  width: 100%;
+  // Note(kk: 1/30/2025) this padding is to add space to the right edge and the left edge of the grid
+  // this is not a perfect solution, but it works for now
+  padding: 0 ${SPACING.spacing24};
+`

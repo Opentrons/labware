@@ -27,6 +27,10 @@ import type { DeckSetupTabType } from '../types'
 
 const STANDARD_X_WIDTH = '127.76px'
 const STANDARD_Y_HEIGHT = '85.48px'
+const VIEW_BOX = `-25 -32 182.5142857143 122.1142857143`
+const OFF_DECK_CONTAINER_WIDTH = '39.4275rem'
+const OFF_DECK_CONTAINER_HEIGHT = '32.125rem'
+const SIZE_ADJUSTMENT = 0.7
 
 export function OffDeck(props: DeckSetupTabType): JSX.Element {
   const { tab } = props
@@ -47,30 +51,49 @@ export function OffDeck(props: DeckSetupTabType): JSX.Element {
   const offDeckLabware =
     selectedLabwareDefUri != null ? defs[selectedLabwareDefUri] ?? null : null
 
+  // let labware = (
+  //   <RobotWorkSpace key="emptyState" viewBox={VIEW_BOX}>
+  //     {() => (
+  //       <RobotCoordsForeignDiv>
+  //         <Box
+  //           backgroundColor={COLORS.grey40}
+  //           borderRadius={BORDERS.borderRadius8}
+  //           width={STANDARD_X_WIDTH}
+  //           height={STANDARD_Y_HEIGHT}
+  //         />
+  //       </RobotCoordsForeignDiv>
+  //     )}
+  //   </RobotWorkSpace>
+  // )
+
   let labware = (
-    <RobotWorkSpace
-      key="emptyState"
-      viewBox={`-25 -32 182.5142857143 122.1142857143`}
-    >
+    <RobotWorkSpace key="emptyState" viewBox={VIEW_BOX}>
       {() => (
-        <RobotCoordsForeignDiv>
-          <Box
-            backgroundColor={COLORS.grey40}
-            borderRadius={BORDERS.borderRadius8}
-            width={STANDARD_X_WIDTH}
-            height={STANDARD_Y_HEIGHT}
-          />
-        </RobotCoordsForeignDiv>
+        <RobotCoordsForeignDiv
+          x={-25}
+          y={-32}
+          innerDivProps={{
+            style: {
+              width: '100%',
+              height: '100%',
+              backgroundColor: COLORS.grey40,
+              borderRadius: BORDERS.borderRadius8,
+            },
+          }}
+        />
       )}
     </RobotWorkSpace>
   )
+
+  console.log(hoveredLabwareDef?.dimensions)
+
   if (hoveredLabwareDef != null && hoveredLabwareDef !== offDeckLabware) {
     labware = (
       <RobotWorkSpace
         key={hoveredLabwareDef.parameters.loadName}
-        viewBox={`-25 -32 ${hoveredLabwareDef.dimensions.xDimension / 0.7} ${
-          hoveredLabwareDef.dimensions.yDimension / 0.7
-        }`}
+        viewBox={`-25 -32 ${
+          hoveredLabwareDef.dimensions.xDimension / SIZE_ADJUSTMENT
+        } ${hoveredLabwareDef.dimensions.yDimension / SIZE_ADJUSTMENT}`}
       >
         {() => (
           <>
@@ -87,11 +110,13 @@ export function OffDeck(props: DeckSetupTabType): JSX.Element {
     )
   } else if (offDeckLabware != null) {
     const def = offDeckLabware
+
+    console.log('offDeckLabware', offDeckLabware)
     labware = (
       <RobotWorkSpace
         key={def.parameters.loadName}
-        viewBox={`-25 -32 ${def.dimensions.xDimension / 0.7} ${
-          def.dimensions.yDimension / 0.7
+        viewBox={`-25 -32 ${def.dimensions.xDimension / SIZE_ADJUSTMENT} ${
+          def.dimensions.yDimension / SIZE_ADJUSTMENT
         }`}
       >
         {() => (
@@ -110,59 +135,47 @@ export function OffDeck(props: DeckSetupTabType): JSX.Element {
     )
   }
 
+  console.log('selectedSlot', selectedSlot)
+
   return (
     <Flex width="100%">
       {selectedSlot.slot === 'offDeck' ? (
         <Flex
           alignItems={ALIGN_CENTER}
           width="100%"
-          padding={SPACING.spacing12}
-          gridGap={SPACING.spacing12}
+          gridGap={SPACING.spacing10}
         >
           <Flex justifyContent={JUSTIFY_CENTER} width="100%">
             <Flex
-              width="39.4275rem"
-              height="32.125rem"
+              width={OFF_DECK_CONTAINER_WIDTH}
+              height={OFF_DECK_CONTAINER_HEIGHT}
               justifyContent={JUSTIFY_CENTER}
               alignItems={ALIGN_CENTER}
               borderRadius={BORDERS.borderRadius8}
               backgroundColor={COLORS.white}
+              id="whiteBox"
+              padding={`${SPACING.spacing40} ${SPACING.spacing60} ${SPACING.spacing80}`}
+              flexDirection={DIRECTION_COLUMN}
+              gridGap={SPACING.spacing32}
             >
-              <Flex
-                padding={SPACING.spacing60}
-                width="100%"
-                height="100%"
-                flexDirection={DIRECTION_COLUMN}
-              >
-                <Flex
-                  justifyContent={JUSTIFY_CENTER}
-                  width="100%"
-                  color={COLORS.grey60}
-                  marginBottom={SPACING.spacing40}
-                >
-                  <StyledText desktopStyle="bodyDefaultSemiBold">
-                    {i18n.format(t('off_deck_labware'), 'upperCase')}
-                  </StyledText>
-                </Flex>
-                <Flex
-                  width="510.84px"
-                  height="342px"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  {labware}
-                </Flex>
+              <StyledText desktopStyle="bodyDefaultSemiBold">
+                {i18n.format(t('off_deck_labware'), 'upperCase')}
+              </StyledText>
+              <Flex width="100%" height="100%">
+                {labware}
               </Flex>
             </Flex>
           </Flex>
-          <DeckSetupTools
-            position={POSITION_RELATIVE}
-            onDeckProps={null}
-            setHoveredLabware={setHoveredLabware}
-            onCloseClick={() => {
-              dispatch(selectZoomedIntoSlot({ slot: null, cutout: null }))
-            }}
-          />
+          <Flex padding={SPACING.spacing12}>
+            <DeckSetupTools
+              position={POSITION_RELATIVE}
+              onDeckProps={null}
+              setHoveredLabware={setHoveredLabware}
+              onCloseClick={() => {
+                dispatch(selectZoomedIntoSlot({ slot: null, cutout: null }))
+              }}
+            />
+          </Flex>
         </Flex>
       ) : (
         <OffDeckDetails

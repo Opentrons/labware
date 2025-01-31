@@ -38,7 +38,7 @@ export function ProtocolEditor(): JSX.Element {
         id="protocol-editor"
       >
         <PortalRoot />
-        <Flex flexDirection={DIRECTION_COLUMN}>
+        <Flex flexDirection={DIRECTION_COLUMN} height="100%">
           <HashRouter>
             <ProtocolRoutes />
           </HashRouter>

@@ -36,6 +36,8 @@ export function RobotCoordinateSpaceWithRef(
     wholeDeckViewBox = `${viewBoxOriginX} ${viewBoxOriginY} ${deckXDimension} ${deckYDimension}`
   }
 
+  console.log('wholeDeckViewBox', wholeDeckViewBox)
+
   return (
     <Svg
       viewBox={zoomed ? viewBox : wholeDeckViewBox}

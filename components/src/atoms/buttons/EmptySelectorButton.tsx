@@ -62,8 +62,8 @@ interface ButtonProps {
 
 const StyledButton = styled.button<ButtonProps>`
   border: none;
-  width: ${FLEX_MAX_CONTENT};
-  height: ${FLEX_MAX_CONTENT};
+  width: 100%;
+  height: 100%;
   cursor: ${CURSOR_POINTER};
   background-color: ${COLORS.blue30};
   border-radius: ${BORDERS.borderRadius8};
