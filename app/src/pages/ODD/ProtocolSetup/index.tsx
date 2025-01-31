@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import first from 'lodash/first'
+import { css } from 'styled-components'
 
 import { RUN_STATUS_IDLE, RUN_STATUS_STOPPED } from '@opentrons/api-client'
 import {
@@ -91,6 +92,7 @@ import {
 import { useLPCFlows, LPCFlows } from '/app/organisms/LabwarePositionCheck'
 
 import type { Dispatch, SetStateAction } from 'react'
+import type { FlattenSimpleInterpolation } from 'styled-components'
 import type { Run } from '@opentrons/api-client'
 import type { CutoutFixtureId, CutoutId } from '@opentrons/shared-data'
 import type { OnDeviceRouteParams } from '/app/App/types'
@@ -902,16 +904,29 @@ export function ProtocolSetup(): JSX.Element {
           onConfirmClick={handleProceedToRunClick}
         />
       ) : null}
-      <Flex
-        flexDirection={DIRECTION_COLUMN}
-        padding={
-          setupScreen === 'prepare to run'
-            ? `0 ${SPACING.spacing32} ${SPACING.spacing40}`
-            : `${SPACING.spacing32} ${SPACING.spacing40} ${SPACING.spacing40}`
-        }
-      >
+      <Flex css={buildSetupScreenStyle(setupScreen)}>
         {setupComponentByScreen[setupScreen]}
       </Flex>
     </>
   )
+}
+
+const buildSetupScreenStyle = (
+  setupScreen: SetupScreens
+): FlattenSimpleInterpolation => {
+  const paddingStyle = (): string => {
+    switch (setupScreen) {
+      case 'prepare to run':
+        return `0 ${SPACING.spacing32} ${SPACING.spacing40}`
+      case 'offsets':
+        return ''
+      default:
+        return `${SPACING.spacing32} ${SPACING.spacing40} ${SPACING.spacing40}`
+    }
+  }
+
+  return css`
+    flex-direction: ${DIRECTION_COLUMN};
+    padding: ${paddingStyle()};
+  `
 }

@@ -18,7 +18,7 @@ import {
 import { selectLwDisplayName } from '/app/redux/protocol-runs'
 
 import type { LabwareDefinition2 } from '@opentrons/shared-data'
-import type { LabwareOffsetCreateData } from '@opentrons/api-client'
+import type { LegacyLabwareOffsetCreateData } from '@opentrons/api-client'
 import type {
   LPCStepProps,
   ResultsSummaryStep,
@@ -27,7 +27,7 @@ import type { LPCWizardState } from '/app/redux/protocol-runs'
 import type { State } from '/app/redux/types'
 
 interface OffsetTableProps extends LPCStepProps<ResultsSummaryStep> {
-  offsets: LabwareOffsetCreateData[]
+  offsets: LegacyLabwareOffsetCreateData[]
   labwareDefinitions: LabwareDefinition2[]
 }
 

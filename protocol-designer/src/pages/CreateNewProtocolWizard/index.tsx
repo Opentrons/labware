@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom'
 import {
   FLEX_ROBOT_TYPE,
   getAreSlotsAdjacent,
+  ABSORBANCE_READER_MODELS,
   HEATERSHAKER_MODULE_TYPE,
   MAGNETIC_BLOCK_TYPE,
   MAGNETIC_MODULE_TYPE,
@@ -283,11 +284,20 @@ export function CreateNewProtocolWizard(): JSX.Element | null {
     const stagingAreas = values.additionalEquipment.filter(
       equipment => equipment === 'stagingArea'
     )
+
     if (stagingAreas.length > 0) {
+      // Note: when plate reader is present, cutoutB3 is not available for StagingArea
+      const hasPlateReader = modules.some(
+        module => module.model === ABSORBANCE_READER_MODELS[0]
+      )
       stagingAreas.forEach((_, index) => {
-        return dispatch(
-          createDeckFixture('stagingArea', STAGING_AREA_CUTOUTS_ORDERED[index])
-        )
+        const stagingAreaCutout = hasPlateReader
+          ? STAGING_AREA_CUTOUTS_ORDERED.filter(
+              cutout => cutout !== 'cutoutB3'
+            )[index]
+          : STAGING_AREA_CUTOUTS_ORDERED[index]
+
+        return dispatch(createDeckFixture('stagingArea', stagingAreaCutout))
       })
     }
 

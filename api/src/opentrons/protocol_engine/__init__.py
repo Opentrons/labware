@@ -26,9 +26,10 @@ from .plugins import AbstractPlugin
 
 from .types import (
     LabwareOffset,
+    LegacyLabwareOffsetCreate,
     LabwareOffsetCreate,
     LabwareOffsetVector,
-    LabwareOffsetLocation,
+    LegacyLabwareOffsetLocation,
     LabwareMovementStrategy,
     AddressableOffsetVector,
     DeckPoint,
@@ -96,7 +97,8 @@ __all__ = [
     "LabwareOffset",
     "LabwareOffsetCreate",
     "LabwareOffsetVector",
-    "LabwareOffsetLocation",
+    "LegacyLabwareOffsetCreate",
+    "LegacyLabwareOffsetLocation",
     "LabwareMovementStrategy",
     "AddressableOffsetVector",
     "DeckSlotLocation",

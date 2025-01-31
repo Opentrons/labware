@@ -1,4 +1,5 @@
 """Basic labware data state and store."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -41,7 +42,8 @@ from ..types import (
     Dimensions,
     LabwareOffset,
     LabwareOffsetVector,
-    LabwareOffsetLocation,
+    LabwareOffsetLocationSequence,
+    LegacyLabwareOffsetLocation,
     LabwareLocation,
     LoadedLabware,
     ModuleLocation,
@@ -167,7 +169,8 @@ class LabwareStore(HasState[LabwareState], HandlesActions):
                 id=action.labware_offset_id,
                 createdAt=action.created_at,
                 definitionUri=action.request.definitionUri,
-                location=action.request.location,
+                location=action.request.legacyLocation,
+                locationSequence=action.request.locationSequence,
                 vector=action.request.vector,
             )
             self._add_labware_offset(labware_offset)
@@ -825,15 +828,32 @@ class LabwareView:
         """Get all labware offsets, in the order they were added."""
         return list(self._state.labware_offsets_by_id.values())
 
-    # TODO: Make this slightly more ergonomic for the caller by
-    # only returning the optional str ID, at the cost of baking redundant lookups
-    # into the API?
     def find_applicable_labware_offset(
+        self, definition_uri: str, location: LabwareOffsetLocationSequence
+    ) -> Optional[LabwareOffset]:
+        """Find a labware offset that applies to the given definition and location sequence.
+
+        Returns the *most recently* added matching offset, so later ones can override earlier ones.
+        Returns ``None`` if no loaded offset matches the location.
+
+        An offset matches a labware instance if the sequence of locations formed by following the
+        .location elements of the labware instance until you reach an addressable area has the same
+        definition URIs as the sequence of definition URIs stored by the offset.
+        """
+        for candidate in reversed(list(self._state.labware_offsets_by_id.values())):
+            if (
+                candidate.definitionUri == definition_uri
+                and candidate.locationSequence == location
+            ):
+                return candidate
+        return None
+
+    def find_applicable_labware_offset_by_legacy_location(
         self,
         definition_uri: str,
-        location: LabwareOffsetLocation,
+        location: LegacyLabwareOffsetLocation,
     ) -> Optional[LabwareOffset]:
-        """Find a labware offset that applies to the given definition and location.
+        """Find a labware offset that applies to the given definition and legacy location.
 
         Returns the *most recently* added matching offset,
         so later offsets can override earlier ones.

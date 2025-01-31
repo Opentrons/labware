@@ -99,9 +99,9 @@
       "aspirate_mmFromBottom": "Change where in the well the robot aspirates from.",
       "dispense_mmFromBottom": "Change where in the well the robot dispenses from.",
       "mix_mmFromBottom": "Change from where in the well the robot aspirates and dispenses during the mix.",
-      "aspirate_touchTip_mmFromBottom": "Change from where in the well the robot performs the touch tip.",
-      "dispense_touchTip_mmFromBottom": "Change from where in the well the robot performs the touch tip.",
-      "mix_touchTip_mmFromBottom": "Change from where in the well the robot performs the touch tip.",
+      "aspirate_touchTip_mmFromTop": "Change from where in the well the robot performs the touch tip.",
+      "dispense_touchTip_mmFromTop": "Change from where in the well the robot performs the touch tip.",
+      "mix_touchTip_mmFromTop": "Change from where in the well the robot performs the touch tip.",
       "aspirate_delay_mmFromBottom": "Change from where in the well the robot delays after aspirating.",
       "dispense_delay_mmFromBottom": "Change from where in the well the robot delays after dispensing."
     },

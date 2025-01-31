@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { TYPOGRAPHY, SPACING, BORDERS, COLORS } from '@opentrons/components'
 import { createSnippet } from './createSnippet'
-import type { LabwareOffsetCreateData } from '@opentrons/api-client'
+import type { LegacyLabwareOffsetCreateData } from '@opentrons/api-client'
 import type {
   LoadedLabware,
   LoadedModule,
@@ -25,7 +25,7 @@ interface PythonLabwareOffsetSnippetProps {
   commands: RunTimeCommand[]
   labware: LoadedLabware[]
   modules: LoadedModule[]
-  labwareOffsets: LabwareOffsetCreateData[] | null
+  labwareOffsets: LegacyLabwareOffsetCreateData[] | null
 }
 
 export function PythonLabwareOffsetSnippet(

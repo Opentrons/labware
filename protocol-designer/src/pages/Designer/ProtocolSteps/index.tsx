@@ -111,7 +111,10 @@ export function ProtocolSteps(): JSX.Element {
               gridGap={SPACING.spacing4}
             />
           ) : null}
-          <Flex justifyContent={JUSTIFY_SPACE_BETWEEN}>
+          <Flex
+            justifyContent={JUSTIFY_SPACE_BETWEEN}
+            alignItems={ALIGN_CENTER}
+          >
             {currentStep != null && hoveredTerminalItem == null ? (
               <StyledText desktopStyle="headingSmallBold">
                 {i18n.format(currentStep.stepName, 'capitalize')}

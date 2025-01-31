@@ -1,14 +1,16 @@
 """In-memory storage of ProtocolEngine instances."""
+
 import asyncio
 import logging
 from datetime import datetime
-from typing import List, Optional, Callable
+from typing import Optional, Callable, Sequence
 
 from opentrons.protocol_engine.errors.exceptions import EStopActivatedError
 from opentrons.protocol_engine.types import PostRunHardwareState, DeckConfigurationType
 from opentrons.protocol_engine import (
     DeckType,
     LabwareOffsetCreate,
+    LegacyLabwareOffsetCreate,
     StateSummary,
     CommandSlice,
     CommandPointer,
@@ -146,7 +148,7 @@ class MaintenanceRunOrchestratorStore:
         self,
         run_id: str,
         created_at: datetime,
-        labware_offsets: List[LabwareOffsetCreate],
+        labware_offsets: Sequence[LegacyLabwareOffsetCreate | LabwareOffsetCreate],
         notify_publishers: Callable[[], None],
         deck_configuration: Optional[DeckConfigurationType] = [],
     ) -> StateSummary:
@@ -265,7 +267,9 @@ class MaintenanceRunOrchestratorStore:
             command=request, wait_until_complete=wait_until_complete, timeout=timeout
         )
 
-    def add_labware_offset(self, request: LabwareOffsetCreate) -> LabwareOffset:
+    def add_labware_offset(
+        self, request: LegacyLabwareOffsetCreate | LabwareOffsetCreate
+    ) -> LabwareOffset:
         """Add a new labware offset to state."""
         return self.run_orchestrator.add_labware_offset(request)
 

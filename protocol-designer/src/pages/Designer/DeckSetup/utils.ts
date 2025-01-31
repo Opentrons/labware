@@ -61,7 +61,6 @@ export function getCutoutIdForAddressableArea(
 }
 
 export function getModuleModelsBySlot(
-  enableAbsorbanceReader: boolean,
   robotType: RobotType,
   slot: DeckSlotId
 ): ModuleModelExtended[] {
@@ -88,7 +87,7 @@ export function getModuleModelsBySlot(
             if (model === THERMOCYCLER_MODULE_V2) {
               return slot === 'B1'
             } else if (model === ABSORBANCE_READER_V1) {
-              return FLEX_RIGHT_SLOTS.has(slot) && enableAbsorbanceReader
+              return FLEX_RIGHT_SLOTS.has(slot)
             } else if (
               model === TEMPERATURE_MODULE_V2 ||
               model === HEATERSHAKER_MODULE_V1

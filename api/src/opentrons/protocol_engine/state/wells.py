@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 from typing import Dict, List, Union, Iterator, Optional, Tuple, overload, TypeVar
+from datetime import datetime
 
 from opentrons.protocol_engine.types import (
     ProbedHeightInfo,
@@ -176,6 +177,22 @@ class WellView:
             probed_height=probed_height_info,
             probed_volume=probed_volume_info,
         )
+
+    def get_last_liquid_update(
+        self, labware_id: str, well_name: str
+    ) -> Optional[datetime]:
+        """Return the timestamp of the last load or probe done on the well."""
+        info = self.get_well_liquid_info(labware_id, well_name)
+        update_times: List[datetime] = []
+        if info.loaded_volume is not None and info.loaded_volume.volume is not None:
+            update_times.append(info.loaded_volume.last_loaded)
+        if info.probed_height is not None and info.probed_height.height is not None:
+            update_times.append(info.probed_height.last_probed)
+        if info.probed_volume is not None and info.probed_volume.volume is not None:
+            update_times.append(info.probed_volume.last_probed)
+        if len(update_times) > 0:
+            return max(update_times)
+        return None
 
     def get_all(self) -> List[WellInfoSummary]:
         """Get all well liquid info summaries."""

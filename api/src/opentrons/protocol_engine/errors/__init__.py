@@ -82,6 +82,7 @@ from .exceptions import (
     InvalidLiquidError,
     LiquidClassDoesNotExistError,
     LiquidClassRedefinitionError,
+    OffsetLocationInvalidError,
 )
 
 from .error_occurrence import ErrorOccurrence, ProtocolCommandFailedError
@@ -160,6 +161,7 @@ __all__ = [
     "LocationIsLidDockSlotError",
     "InvalidAxisForRobotType",
     "NotSupportedOnRobotType",
+    "OffsetLocationInvalidError",
     # error occurrence models
     "ErrorOccurrence",
     "CommandNotAllowedError",

@@ -1,6 +1,5 @@
 """FastAPI endpoint functions for the `/labwareOffsets` endpoints."""
 
-
 from datetime import datetime
 import textwrap
 from typing import Annotated, Literal
@@ -10,7 +9,11 @@ from pydantic import Json
 from pydantic.json_schema import SkipJsonSchema
 from server_utils.fastapi_utils.light_router import LightRouter
 
-from opentrons.protocol_engine import LabwareOffset, LabwareOffsetCreate, ModuleModel
+from opentrons.protocol_engine import (
+    LabwareOffset,
+    LegacyLabwareOffsetCreate,
+    ModuleModel,
+)
 from opentrons.types import DeckSlotName
 
 from robot_server.labware_offsets.models import LabwareOffsetNotFound
@@ -54,7 +57,7 @@ async def post_labware_offset(  # noqa: D103
     store: Annotated[LabwareOffsetStore, fastapi.Depends(get_labware_offset_store)],
     new_offset_id: Annotated[str, fastapi.Depends(get_unique_id)],
     new_offset_created_at: Annotated[datetime, fastapi.Depends(get_current_time)],
-    request_body: Annotated[RequestModel[LabwareOffsetCreate], fastapi.Body()],
+    request_body: Annotated[RequestModel[LegacyLabwareOffsetCreate], fastapi.Body()],
 ) -> PydanticResponse[SimpleBody[LabwareOffset]]:
     new_offset = LabwareOffset.model_construct(
         id=new_offset_id,

@@ -2,7 +2,7 @@ import {
   getModuleInitialLoadInfo,
   getLabwareLocation,
 } from '/app/transformations/commands'
-import type { LabwareOffsetLocation } from '@opentrons/api-client'
+import type { LegacyLabwareOffsetLocation } from '@opentrons/api-client'
 import type {
   LoadedModule,
   LoadedLabware,
@@ -17,7 +17,7 @@ export const getLabwareOffsetLocation = (
   commands: ProtocolAnalysisOutput['commands'],
   modules: LoadedModule[],
   labware: LoadedLabware[]
-): LabwareOffsetLocation | null => {
+): LegacyLabwareOffsetLocation | null => {
   const labwareLocation = getLabwareLocation(labwareId, commands)
 
   if (labwareLocation === 'offDeck' || labwareLocation === 'systemLocation') {

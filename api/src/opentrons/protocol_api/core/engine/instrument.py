@@ -42,7 +42,7 @@ from opentrons.protocol_engine.types import (
 from opentrons.protocol_engine.errors.exceptions import TipNotAttachedError
 from opentrons.protocol_engine.clients import SyncClient as EngineClient
 from opentrons.protocols.api_support.definitions import MAX_SUPPORTED_VERSION
-from opentrons_shared_data.pipette.types import PipetteNameType, PIPETTE_API_NAMES_MAP
+from opentrons_shared_data.pipette.types import PIPETTE_API_NAMES_MAP
 from opentrons_shared_data.errors.exceptions import (
     UnsupportedHardwareCommand,
 )
@@ -61,6 +61,9 @@ if TYPE_CHECKING:
     from opentrons.protocol_api._liquid_properties import TransferProperties
 
 _DISPENSE_VOLUME_VALIDATION_ADDED_IN = APIVersion(2, 17)
+
+_FLEX_PIPETTE_NAMES_FIXED_IN = APIVersion(2, 23)
+"""The version after which InstrumentContext.name returns the correct API-specific names of Flex pipettes."""
 
 
 class InstrumentCore(AbstractInstrument[WellCore, LabwareCore]):
@@ -721,33 +724,29 @@ class InstrumentCore(AbstractInstrument[WellCore, LabwareCore]):
 
         Will match the load name of the actually loaded pipette,
         which may differ from the requested load name.
+
+        From API v2.15 to v2.22, this property returned an internal, engine-specific,
+         name for Flex pipettes (eg, "p50_multi_flex" instead of "flex_8channel_50").
+
+        From API v2.23 onwards, this behavior is fixed so that this property returns
+        the API-specific names of Flex pipettes.
         """
         # TODO (tz, 11-23-22): revert this change when merging
         # https://opentrons.atlassian.net/browse/RLIQ-251
         pipette = self._engine_client.state.pipettes.get(self._pipette_id)
-        return (
-            pipette.pipetteName.value
-            if isinstance(pipette.pipetteName, PipetteNameType)
-            else pipette.pipetteName
-        )
-
-    def get_load_name(self) -> str:
-        """Get the pipette's requested API load name.
-
-        This is the load name that is specified in the `ProtocolContext.load_instrument()`
-        method. This name might differ from the engine-specific pipette name.
-        """
-        pipette = self._engine_client.state.pipettes.get(self._pipette_id)
-        load_name = next(
-            (
-                pip_api_name
-                for pip_api_name, pip_name in PIPETTE_API_NAMES_MAP.items()
-                if pip_name == pipette.pipetteName
-            ),
-            None,
-        )
-        assert load_name, "Load name not found."
-        return load_name
+        if self._protocol_core.api_version < _FLEX_PIPETTE_NAMES_FIXED_IN:
+            return pipette.pipetteName.value
+        else:
+            name = next(
+                (
+                    pip_api_name
+                    for pip_api_name, pip_name in PIPETTE_API_NAMES_MAP.items()
+                    if pip_name == pipette.pipetteName
+                ),
+                None,
+            )
+            assert name, "Pipette name not found."
+            return name
 
     def get_model(self) -> str:
         return self._engine_client.state.pipettes.get_model_name(self._pipette_id)
@@ -932,7 +931,7 @@ class InstrumentCore(AbstractInstrument[WellCore, LabwareCore]):
         """
         liquid_class_record = LiquidClassRecord(
             liquidClassName=name,
-            pipetteModel=self.get_load_name(),
+            pipetteModel=self.get_pipette_name(),
             tiprack=tiprack_uri,
             aspirate=transfer_properties.aspirate.as_shared_data_model(),
             singleDispense=transfer_properties.dispense.as_shared_data_model(),
@@ -994,8 +993,7 @@ class InstrumentCore(AbstractInstrument[WellCore, LabwareCore]):
             )
         tiprack_uri_for_transfer_props = tip_racks[0][1].get_uri()
         transfer_props = liquid_class.get_for(
-            pipette=self.get_load_name(),
-            tiprack=tiprack_uri_for_transfer_props,
+            pipette=self.get_pipette_name(), tip_rack=tiprack_uri_for_transfer_props
         )
         # TODO: use the ID returned by load_liquid_class in command annotations
         self.load_liquid_class(
@@ -1008,7 +1006,12 @@ class InstrumentCore(AbstractInstrument[WellCore, LabwareCore]):
         source_dest_per_volume_step = tx_commons.expand_for_volume_constraints(
             volumes=[volume for _ in range(len(source))],
             targets=zip(source, dest),
-            max_volume=self.get_max_volume(),
+            max_volume=min(
+                self.get_max_volume(),
+                tip_racks[0][1]
+                .get_well_core("A1")
+                .get_max_volume(),  # Assuming all tips in tiprack are of same volume
+            ),
         )
 
         def _drop_tip() -> None:
@@ -1290,10 +1293,11 @@ class InstrumentCore(AbstractInstrument[WellCore, LabwareCore]):
         Return: List of liquid and air gap pairs in tip.
         """
         aspirate_props = transfer_properties.aspirate
+        # TODO (spp, 2025-01-30): check if check_valid_volume_parameters is necessary and is enough.
         tx_commons.check_valid_volume_parameters(
             disposal_volume=0,  # No disposal volume for 1-to-1 transfer
             air_gap=aspirate_props.retract.air_gap_by_volume.get_for_volume(volume),
-            max_volume=self.get_max_volume(),
+            max_volume=self.get_working_volume(),
         )
         source_loc, source_well = source
         aspirate_point = (

@@ -83,11 +83,16 @@ class RetrieveImpl(AbstractCommandImpl[RetrieveParams, SuccessData[RetrieveResul
         # Get the labware dimensions for the labware being retrieved,
         # which is the first one in the hopper labware id list
         lw_id = stacker_state.hopper_labware_ids[0]
-        lw_dim = self._state_view.labware.get_dimensions(labware_id=lw_id)
-
         if stacker_hw is not None:
-            # Dispense the labware from the Flex Stacker using the labware height
-            await stacker_hw.dispense_labware(labware_height=lw_dim.z)
+            labware = self._state_view.labware.get(lw_id)
+            labware_height = self._state_view.labware.get_dimensions(labware_id=lw_id).z
+            if labware.lid_id is not None:
+                lid_def = self._state_view.labware.get_definition(labware.lid_id)
+                offset = self._state_view.labware.get_labware_overlap_offsets(
+                    lid_def, labware.loadName
+                ).z
+                labware_height = labware_height + lid_def.dimensions.zDimension - offset
+            await stacker_hw.dispense_labware(labware_height=labware_height)
 
         # update the state to reflect the labware is now in the flex stacker slot
         state_update.set_labware_location(

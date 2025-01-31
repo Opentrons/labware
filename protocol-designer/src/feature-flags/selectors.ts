@@ -25,10 +25,6 @@ export const getAllowAllTipracks: Selector<boolean> = createSelector(
   getFeatureFlagData,
   flags => flags.OT_PD_ALLOW_ALL_TIPRACKS ?? false
 )
-export const getEnableAbsorbanceReader: Selector<boolean> = createSelector(
-  getFeatureFlagData,
-  flags => flags.OT_PD_ENABLE_ABSORBANCE_READER ?? false
-)
 export const getEnableComment: Selector<boolean> = createSelector(
   getFeatureFlagData,
   flags => flags.OT_PD_ENABLE_COMMENT ?? false
@@ -48,4 +44,8 @@ export const getEnableReactScan: Selector<boolean> = createSelector(
 export const getEnableLiquidClasses: Selector<boolean> = createSelector(
   getFeatureFlagData,
   flags => flags.OT_PD_ENABLE_LIQUID_CLASSES ?? false
+)
+export const getEnableTimelineScrubber: Selector<boolean> = createSelector(
+  getFeatureFlagData,
+  flags => flags.OT_PD_ENABLE_TIMELINE_SCRUBBER ?? false
 )

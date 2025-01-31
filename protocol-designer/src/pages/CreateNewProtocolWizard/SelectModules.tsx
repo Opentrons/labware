@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next'
-import { useSelector } from 'react-redux'
 import {
   ALIGN_CENTER,
   BORDERS,
@@ -25,7 +24,6 @@ import {
   TEMPERATURE_MODULE_TYPE,
 } from '@opentrons/shared-data'
 import { uuid } from '../../utils'
-import { getEnableAbsorbanceReader } from '../../feature-flags/selectors'
 import { useKitchen } from '../../organisms/Kitchen/hooks'
 import { ModuleDiagram } from './ModuleDiagram'
 import { WizardBody } from './WizardBody'
@@ -51,7 +49,6 @@ export function SelectModules(props: WizardTileProps): JSX.Element | null {
   const fields = watch('fields')
   const modules = watch('modules')
   const additionalEquipment = watch('additionalEquipment')
-  const enableAbsorbanceReader = useSelector(getEnableAbsorbanceReader)
   const robotType = fields.robotType
   const supportedModules =
     robotType === FLEX_ROBOT_TYPE
@@ -166,8 +163,7 @@ export function SelectModules(props: WizardTileProps): JSX.Element | null {
       >
         <Flex flexDirection={DIRECTION_COLUMN}>
           <Flex flexDirection={DIRECTION_COLUMN} gridGap={SPACING.spacing12}>
-            {(filteredSupportedModules.length > 0 && enableAbsorbanceReader) ||
-            // note (kk:09/26/2024) the condition for absorbanceReaderV1 will be removed when ff is removed
+            {filteredSupportedModules.length > 0 ||
             !(
               filteredSupportedModules.length === 1 &&
               filteredSupportedModules[0] === 'absorbanceReaderV1'
@@ -178,11 +174,7 @@ export function SelectModules(props: WizardTileProps): JSX.Element | null {
             ) : null}
             <Flex gridGap={SPACING.spacing4} flexWrap={WRAP}>
               {filteredSupportedModules
-                .filter(module =>
-                  enableAbsorbanceReader
-                    ? module
-                    : module !== ABSORBANCE_READER_V1
-                )
+                .sort((moduleA, moduleB) => moduleA.localeCompare(moduleB))
                 .map(moduleModel => {
                   const numSlotsAvailable = getNumSlotsAvailable(
                     modules,
@@ -219,6 +211,9 @@ export function SelectModules(props: WizardTileProps): JSX.Element | null {
                   gridGap={SPACING.spacing4}
                 >
                   {Object.entries(modules)
+                    .sort(([, moduleA], [, moduleB]) =>
+                      moduleA.model.localeCompare(moduleB.model)
+                    )
                     .reduce<Array<FormModule & { count: number; key: string }>>(
                       (acc, [key, module]) => {
                         const existingModule = acc.find(
@@ -253,7 +248,9 @@ export function SelectModules(props: WizardTileProps): JSX.Element | null {
                         },
                         dropdownType: 'neutral' as DropdownBorder,
                         filterOptions: getNumOptions(
-                          numSlotsAvailable + module.count
+                          module.model !== ABSORBANCE_READER_V1
+                            ? numSlotsAvailable + module.count
+                            : numSlotsAvailable
                         ),
                       }
                       return (

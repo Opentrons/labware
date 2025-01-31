@@ -1,4 +1,5 @@
 """Equipment command side-effect logic."""
+
 from dataclasses import dataclass
 from typing import Optional, overload, Union, List
 
@@ -42,10 +43,7 @@ from ..state.modules import HardwareModule
 from ..types import (
     LabwareLocation,
     DeckSlotLocation,
-    ModuleLocation,
-    OnLabwareLocation,
     LabwareOffset,
-    LabwareOffsetLocation,
     ModuleModel,
     ModuleDefinition,
     AddressableAreaLocation,
@@ -633,8 +631,9 @@ class EquipmentHandler:
             or None if no labware offset will apply.
         """
         labware_offset_location = (
-            self._get_labware_offset_location_from_labware_location(labware_location)
+            self._state_store.geometry.get_projected_offset_location(labware_location)
         )
+
         if labware_offset_location is None:
             # No offset for off-deck location.
             # Returning None instead of raising an exception allows loading a labware
@@ -646,72 +645,6 @@ class EquipmentHandler:
             location=labware_offset_location,
         )
         return self._get_id_from_offset(offset)
-
-    def _get_labware_offset_location_from_labware_location(
-        self, labware_location: LabwareLocation
-    ) -> Optional[LabwareOffsetLocation]:
-        if isinstance(labware_location, DeckSlotLocation):
-            return LabwareOffsetLocation(slotName=labware_location.slotName)
-        elif isinstance(labware_location, ModuleLocation):
-            module_id = labware_location.moduleId
-            # Allow ModuleNotLoadedError to propagate.
-            # Note also that we match based on the module's requested model, not its
-            # actual model, to implement robot-server's documented HTTP API semantics.
-            module_model = self._state_store.modules.get_requested_model(
-                module_id=module_id
-            )
-
-            # If `module_model is None`, it probably means that this module was added by
-            # `ProtocolEngine.use_attached_modules()`, instead of an explicit
-            # `loadModule` command.
-            #
-            # This assert should never raise in practice because:
-            #   1. `ProtocolEngine.use_attached_modules()` is only used by
-            #      robot-server's "stateless command" endpoints, under `/commands`.
-            #   2. Those endpoints don't support loading labware, so this code will
-            #      never run.
-            #
-            # Nevertheless, if it does happen somehow, we do NOT want to pass the
-            # `None` value along to `LabwareView.find_applicable_labware_offset()`.
-            # `None` means something different there, which will cause us to return
-            # wrong results.
-            assert module_model is not None, (
-                "Can't find offsets for labware"
-                " that are loaded on modules"
-                " that were loaded with ProtocolEngine.use_attached_modules()."
-            )
-
-            module_location = self._state_store.modules.get_location(
-                module_id=module_id
-            )
-            slot_name = module_location.slotName
-            return LabwareOffsetLocation(slotName=slot_name, moduleModel=module_model)
-        elif isinstance(labware_location, OnLabwareLocation):
-            parent_labware_id = labware_location.labwareId
-            parent_labware_uri = self._state_store.labware.get_definition_uri(
-                parent_labware_id
-            )
-
-            base_location = self._state_store.labware.get_parent_location(
-                parent_labware_id
-            )
-            base_labware_offset_location = (
-                self._get_labware_offset_location_from_labware_location(base_location)
-            )
-            if base_labware_offset_location is None:
-                # No offset for labware sitting on labware off-deck
-                return None
-
-            # If labware is being stacked on itself, all labware in the stack will share a labware offset due to
-            # them sharing the same definitionUri in `LabwareOffsetLocation`. This will not be true for the
-            # bottom-most labware, which will have a `DeckSlotLocation` and have its definitionUri field empty.
-            return LabwareOffsetLocation(
-                slotName=base_labware_offset_location.slotName,
-                moduleModel=base_labware_offset_location.moduleModel,
-                definitionUri=parent_labware_uri,
-            )
-        else:  # Off deck
-            return None
 
     @staticmethod
     def _get_id_from_offset(labware_offset: Optional[LabwareOffset]) -> Optional[str]:

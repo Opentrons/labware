@@ -3,11 +3,11 @@ import { useStore } from 'react-redux'
 import { selectOffsetsToApply } from '/app/redux/protocol-runs'
 
 import type { State } from '/app/redux/types'
-import type { LabwareOffsetCreateData } from '@opentrons/api-client'
+import type { LegacyLabwareOffsetCreateData } from '@opentrons/api-client'
 import type { UseLPCCommandChildProps } from '/app/organisms/LabwarePositionCheck/hooks/useLPCCommands/types'
 
 export interface UseBuildOffsetsToApplyResult {
-  buildOffsetsToApply: () => LabwareOffsetCreateData[]
+  buildOffsetsToApply: () => LegacyLabwareOffsetCreateData[]
 }
 
 export interface UseApplyLPCOffsetsProps extends UseLPCCommandChildProps {

@@ -127,7 +127,7 @@ export const DEFAULT_SLOT_MAP_FLEX: {
   [HEATERSHAKER_MODULE_V1]: 'D1',
   [MAGNETIC_BLOCK_V1]: 'D2',
   [TEMPERATURE_MODULE_V2]: 'C1',
-  [ABSORBANCE_READER_V1]: 'D3',
+  [ABSORBANCE_READER_V1]: 'B3',
 }
 
 export const DEFAULT_SLOT_MAP_OT2: { [moduleType in ModuleType]?: string } = {

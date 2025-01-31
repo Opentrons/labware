@@ -4,13 +4,13 @@ import { useHost } from '../api'
 import type {
   HostConfig,
   Run,
-  LabwareOffsetCreateData,
+  LegacyLabwareOffsetCreateData,
 } from '@opentrons/api-client'
 import type { UseMutationResult, UseMutateAsyncFunction } from 'react-query'
 
 interface CreateLabwareOffsetParams {
   runId: string
-  data: LabwareOffsetCreateData
+  data: LegacyLabwareOffsetCreateData
 }
 
 export type UseCreateLabwareOffsetMutationResult = UseMutationResult<

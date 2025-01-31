@@ -25,18 +25,19 @@ export const DEPRECATED_FLAGS = [
   'OT_PD_ENABLE_MULTI_TIP',
   'OT_PD_ENABLE_MOAM',
   'OT_PD_ENABLE_REDESIGN',
+  'OT_PD_ENABLE_ABSORBANCE_READER',
 ]
 // union of feature flag string constant IDs
 export type FlagTypes =
   | 'PRERELEASE_MODE'
   | 'OT_PD_DISABLE_MODULE_RESTRICTIONS'
   | 'OT_PD_ALLOW_ALL_TIPRACKS'
-  | 'OT_PD_ENABLE_ABSORBANCE_READER'
   | 'OT_PD_ENABLE_COMMENT'
   | 'OT_PD_ENABLE_RETURN_TIP'
   | 'OT_PD_ENABLE_HOT_KEYS_DISPLAY'
   | 'OT_PD_ENABLE_REACT_SCAN'
   | 'OT_PD_ENABLE_LIQUID_CLASSES'
+  | 'OT_PD_ENABLE_TIMELINE_SCRUBBER'
 // flags that are not in this list only show in prerelease mode
 export const userFacingFlags: FlagTypes[] = [
   'OT_PD_DISABLE_MODULE_RESTRICTIONS',
@@ -46,10 +47,10 @@ export const userFacingFlags: FlagTypes[] = [
 export const allFlags: FlagTypes[] = [
   ...userFacingFlags,
   'PRERELEASE_MODE',
-  'OT_PD_ENABLE_ABSORBANCE_READER',
   'OT_PD_ENABLE_COMMENT',
   'OT_PD_ENABLE_RETURN_TIP',
   'OT_PD_ENABLE_REACT_SCAN',
   'OT_PD_ENABLE_LIQUID_CLASSES',
+  'OT_PD_ENABLE_TIMELINE_SCRUBBER',
 ]
 export type Flags = Partial<Record<FlagTypes, boolean | null | undefined>>

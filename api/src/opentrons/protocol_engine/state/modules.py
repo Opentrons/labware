@@ -1296,6 +1296,11 @@ class ModuleView:
                 "Only readings of 96 Well labware are supported for conversion to map of values by well."
             )
 
+    def get_deck_supports_module_fixtures(self) -> bool:
+        """Check if the loaded deck supports modules as fixtures."""
+        deck_type = self._state.deck_type
+        return deck_type not in [DeckType.OT2_STANDARD, DeckType.OT2_SHORT_TRASH]
+
     def ensure_and_convert_module_fixture_location(
         self,
         deck_slot: DeckSlotName,
@@ -1307,7 +1312,7 @@ class ModuleView:
         """
         deck_type = self._state.deck_type
 
-        if deck_type == DeckType.OT2_STANDARD or deck_type == DeckType.OT2_SHORT_TRASH:
+        if not self.get_deck_supports_module_fixtures():
             raise ValueError(
                 f"Invalid Deck Type: {deck_type.name} - Does not support modules as fixtures."
             )

@@ -12,10 +12,6 @@
     "title": "Allow all tip rack options",
     "description": "Enable selection of all tip racks for each pipette."
   },
-  "OT_PD_ENABLE_ABSORBANCE_READER": {
-    "title": "Enable absorbance plate reader",
-    "description": "Enable absorbance plate reader support."
-  },
   "OT_PD_ENABLE_COMMENT": {
     "title": "Enable comment step",
     "description": "You can add comments anywhere between timeline steps."
@@ -35,5 +31,9 @@
   "OT_PD_ENABLE_LIQUID_CLASSES": {
     "title": "Enable liquid classes",
     "description": "Enable liquid classes support"
+  },
+  "OT_PD_ENABLE_TIMELINE_SCRUBBER": {
+    "title": "Enable timeline scrubber",
+    "description": "See the protocol timeline visualization in overview"
   }
 }

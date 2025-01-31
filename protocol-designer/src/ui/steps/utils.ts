@@ -42,7 +42,7 @@ const batchEditMoveLiquidAspirateLabwareDisabledFieldNames: StepFieldName[] = [
   'aspirate_delay_seconds',
   'aspirate_delay_mmFromBottom',
   'aspirate_touchTip_checkbox',
-  'aspirate_touchTip_mmFromBottom',
+  'aspirate_touchTip_mmFromTop',
 ]
 const batchEditMoveLiquidDispenseLabwareDisabledFieldNames: StepFieldName[] = [
   'dispense_mmFromBottom',
@@ -50,7 +50,7 @@ const batchEditMoveLiquidDispenseLabwareDisabledFieldNames: StepFieldName[] = [
   'dispense_delay_seconds',
   'dispense_delay_mmFromBottom',
   'dispense_touchTip_checkbox',
-  'dispense_touchTip_mmFromBottom',
+  'dispense_touchTip_mmFromTop',
 ]
 const batchEditMixLabwareDifferentDisabledFieldNames: StepFieldName[] = [
   'mix_mmFromBottom',
@@ -59,7 +59,7 @@ const batchEditMixLabwareDifferentDisabledFieldNames: StepFieldName[] = [
   'dispense_delay_checkbox',
   'dispense_delay_seconds',
   'mix_touchTip_checkbox',
-  'mix_touchTip_mmFromBottom',
+  'mix_touchTip_mmFromTop',
 ]
 const batchEditMoveLiquidMultiAspiratePathDisabledFieldNames: StepFieldName[] = [
   'aspirate_mix_checkbox',

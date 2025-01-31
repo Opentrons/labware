@@ -7,7 +7,6 @@ import {
   ListButton,
   SPACING,
   StyledText,
-  TOOLTIP_BOTTOM,
   Tooltip,
   useHoverTooltip,
 } from '@opentrons/components'
@@ -37,9 +36,7 @@ export function ToggleStepFormField(
     tooltipContent,
     isDisabled,
   } = props
-  const [targetProps, tooltipProps] = useHoverTooltip({
-    placement: TOOLTIP_BOTTOM,
-  })
+  const [targetProps, tooltipProps] = useHoverTooltip()
 
   return (
     <>
@@ -47,33 +44,39 @@ export function ToggleStepFormField(
         type="noActive"
         padding={SPACING.spacing12}
         onClick={() => {
-          toggleUpdateValue(!toggleValue)
+          if (!isDisabled) {
+            toggleUpdateValue(!toggleValue)
+          }
         }}
+        disabled={isDisabled}
       >
-        <Flex width="100%" flexDirection={DIRECTION_COLUMN}>
+        {tooltipContent != null ? (
+          <Tooltip tooltipProps={tooltipProps}>{tooltipContent}</Tooltip>
+        ) : null}
+
+        <Flex width="100%" flexDirection={DIRECTION_COLUMN} {...targetProps}>
           <Flex
             justifyContent={JUSTIFY_SPACE_BETWEEN}
             alignItems={ALIGN_CENTER}
           >
-            <StyledText desktopStyle="bodyDefaultRegular">{title}</StyledText>
+            <StyledText
+              desktopStyle="bodyDefaultRegular"
+              color={isDisabled ? COLORS.grey40 : COLORS.black90}
+            >
+              {title}
+            </StyledText>
             <Flex alignItems={ALIGN_CENTER} gridGap={SPACING.spacing4}>
-              {tooltipContent != null ? (
-                <Tooltip tooltipProps={tooltipProps}>{tooltipContent}</Tooltip>
-              ) : null}
               <StyledText
                 desktopStyle="bodyDefaultRegular"
-                color={COLORS.grey60}
-                {...targetProps}
+                color={isDisabled ? COLORS.grey40 : COLORS.grey60}
               >
                 {isSelected ? onLabel : offLabel}
               </StyledText>
-              {isDisabled ? null : (
-                <ToggleButton
-                  disabled={isDisabled}
-                  label={isSelected ? onLabel : offLabel}
-                  toggledOn={isSelected}
-                />
-              )}
+              <ToggleButton
+                disabled={isDisabled}
+                label={isSelected ? onLabel : offLabel}
+                toggledOn={isSelected}
+              />
             </Flex>
           </Flex>
         </Flex>

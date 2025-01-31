@@ -364,7 +364,7 @@ describe('generateSubstepItem', () => {
         volume: 50,
         times: 2,
         touchTip: false,
-        touchTipMmFromBottom: 5,
+        touchTipMmFromTop: -5,
         changeTip: 'always',
         blowoutLocation: null,
         blowoutFlowRateUlSec: 3,

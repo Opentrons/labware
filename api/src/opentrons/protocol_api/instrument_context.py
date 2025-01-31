@@ -8,7 +8,6 @@ from opentrons_shared_data.errors.exceptions import (
     UnexpectedTipRemovalError,
     UnsupportedHardwareCommand,
 )
-from opentrons_shared_data.robot.types import RobotTypeEnum
 
 from opentrons.legacy_broker import LegacyBroker
 from opentrons.hardware_control.dev_types import PipetteDict
@@ -38,7 +37,6 @@ from .disposal_locations import TrashBin, WasteChute
 from ._nozzle_layout import NozzleLayout
 from ._liquid import LiquidClass
 from . import labware, validation
-from ..config import feature_flags
 from ..protocols.advanced_control.transfers.common import (
     TransferTipPolicyV2,
     TransferTipPolicyV2Type,
@@ -65,6 +63,7 @@ _PARTIAL_NOZZLE_CONFIGURATION_SINGLE_ROW_PARTIAL_COLUMN_ADDED_IN = APIVersion(2,
 """The version after which partial nozzle configurations of single, row, and partial column layouts became available."""
 _AIR_GAP_TRACKING_ADDED_IN = APIVersion(2, 22)
 """The version after which air gaps should be implemented with a separate call instead of an aspirate for better liquid volume tracking."""
+
 
 AdvancedLiquidHandling = v1_transfer.AdvancedLiquidHandling
 
@@ -1509,6 +1508,7 @@ class InstrumentContext(publisher.CommandPublisher):
         for cmd in plan:
             getattr(self, cmd["method"])(*cmd["args"], **cmd["kwargs"])
 
+    @requires_version(2, 23)
     def transfer_liquid(
         self,
         liquid_class: LiquidClass,
@@ -1528,13 +1528,6 @@ class InstrumentContext(publisher.CommandPublisher):
 
         TODO: Add args description.
         """
-        if not feature_flags.allow_liquid_classes(
-            robot_type=RobotTypeEnum.robot_literal_to_enum(
-                self._protocol_core.robot_type
-            )
-        ):
-            raise NotImplementedError("This method is not implemented.")
-
         flat_sources_list = validation.ensure_valid_flat_wells_list_for_transfer_v2(
             source
         )
@@ -1604,6 +1597,7 @@ class InstrumentContext(publisher.CommandPublisher):
         )
         return self
 
+    @requires_version(2, 23)
     def distribute_liquid(
         self,
         liquid_class: LiquidClass,
@@ -1623,13 +1617,6 @@ class InstrumentContext(publisher.CommandPublisher):
 
         TODO: Add args description.
         """
-        if not feature_flags.allow_liquid_classes(
-            robot_type=RobotTypeEnum.robot_literal_to_enum(
-                self._protocol_core.robot_type
-            )
-        ):
-            raise NotImplementedError("This method is not implemented.")
-
         if not isinstance(source, labware.Well):
             raise ValueError(f"Source should be a single Well but received {source}.")
         flat_dests_list = validation.ensure_valid_flat_wells_list_for_transfer_v2(dest)
@@ -1689,6 +1676,7 @@ class InstrumentContext(publisher.CommandPublisher):
         )
         return self
 
+    @requires_version(2, 23)
     def consolidate_liquid(
         self,
         liquid_class: LiquidClass,
@@ -1708,12 +1696,6 @@ class InstrumentContext(publisher.CommandPublisher):
 
         TODO: Add args description.
         """
-        if not feature_flags.allow_liquid_classes(
-            robot_type=RobotTypeEnum.robot_literal_to_enum(
-                self._protocol_core.robot_type
-            )
-        ):
-            raise NotImplementedError("This method is not implemented.")
         if not isinstance(dest, labware.Well):
             raise ValueError(
                 f"Destination should be a single Well but received {dest}."
@@ -2023,6 +2005,10 @@ class InstrumentContext(publisher.CommandPublisher):
     def name(self) -> str:
         """
         The name string for the pipette (e.g., ``"p300_single"``).
+
+        From API v2.15 to v2.22, this property returned an internal name for Flex pipettes.
+        From API v2.23 onwards, this behavior is fixed so that this property returns
+        the Python Protocol API load names of Flex pipettes.
         """
         return self._core.get_pipette_name()
 

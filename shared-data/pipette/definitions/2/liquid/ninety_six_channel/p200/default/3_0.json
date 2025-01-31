@@ -2,20 +2,20 @@
   "$otSharedSchema": "#/pipette/schemas/2/pipetteLiquidPropertiesSchema.json",
   "supportedTips": {
     "t20": {
-      "uiMaxFlowRate": 189.1,
+      "uiMaxFlowRate": 45,
       "defaultAspirateFlowRate": {
-        "default": 6,
-        "valuesByApiLevel": { "2.14": 6 }
+        "default": 6.5,
+        "valuesByApiLevel": { "2.14": 6.5 }
       },
       "defaultDispenseFlowRate": {
-        "default": 6,
-        "valuesByApiLevel": { "2.14": 6 }
+        "default": 6.5,
+        "valuesByApiLevel": { "2.14": 6.5 }
       },
       "defaultBlowOutFlowRate": {
         "default": 10,
         "valuesByApiLevel": { "2.14": 10 }
       },
-      "defaultFlowAcceleration": 16000.0,
+      "defaultFlowAcceleration": 3160.0,
       "defaultTipLength": 52.0,
       "defaultReturnTipHeight": 0.6,
       "aspirate": {
@@ -51,20 +51,20 @@
       "defaultPushOutVolume": 2
     },
     "t50": {
-      "uiMaxFlowRate": 194,
+      "uiMaxFlowRate": 45,
       "defaultAspirateFlowRate": {
-        "default": 6,
-        "valuesByApiLevel": { "2.14": 6 }
+        "default": 6.5,
+        "valuesByApiLevel": { "2.14": 6.5 }
       },
       "defaultDispenseFlowRate": {
-        "default": 6,
-        "valuesByApiLevel": { "2.14": 6 }
+        "default": 6.5,
+        "valuesByApiLevel": { "2.14": 6.5 }
       },
       "defaultBlowOutFlowRate": {
         "default": 10,
         "valuesByApiLevel": { "2.14": 10 }
       },
-      "defaultFlowAcceleration": 16000.0,
+      "defaultFlowAcceleration": 3160.0,
       "defaultTipLength": 57.9,
       "defaultReturnTipHeight": 0.2,
       "aspirate": {
@@ -114,20 +114,20 @@
       "defaultPushOutVolume": 7
     },
     "t200": {
-      "uiMaxFlowRate": 194,
+      "uiMaxFlowRate": 45,
       "defaultAspirateFlowRate": {
-        "default": 80,
-        "valuesByApiLevel": { "2.14": 80 }
+        "default": 15,
+        "valuesByApiLevel": { "2.14": 15 }
       },
       "defaultDispenseFlowRate": {
-        "default": 80,
-        "valuesByApiLevel": { "2.14": 80 }
+        "default": 15,
+        "valuesByApiLevel": { "2.14": 15 }
       },
       "defaultBlowOutFlowRate": {
         "default": 10,
         "valuesByApiLevel": { "2.14": 10 }
       },
-      "defaultFlowAcceleration": 16000.0,
+      "defaultFlowAcceleration": 3160.0,
       "defaultTipLength": 58.35,
       "defaultReturnTipHeight": 0.2,
       "aspirate": {
@@ -170,7 +170,7 @@
     }
   },
   "maxVolume": 200,
-  "minVolume": 1,
+  "minVolume": 0.5,
   "defaultTipracks": [
     "opentrons/opentrons_flex_96_tiprack_200ul/1",
     "opentrons/opentrons_flex_96_tiprack_50ul/1",

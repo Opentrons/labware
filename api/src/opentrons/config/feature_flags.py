@@ -78,7 +78,3 @@ def enable_performance_metrics(robot_type: RobotTypeEnum) -> bool:
 
 def oem_mode_enabled() -> bool:
     return advs.get_setting_with_env_overload("enableOEMMode", RobotTypeEnum.FLEX)
-
-
-def allow_liquid_classes(robot_type: RobotTypeEnum) -> bool:
-    return advs.get_setting_with_env_overload("allowLiquidClasses", robot_type)

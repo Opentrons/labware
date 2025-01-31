@@ -36,7 +36,7 @@ import type { AttachedModule } from '@opentrons/api-client'
 const EQUIPMENT_POLL_MS = 5000
 interface ModuleFixtureOption {
   moduleModel: ModuleModel
-  usbPort?: number
+  usbPort?: number | string
   serialNumber?: string
 }
 interface ChooseModuleToConfigureModalProps {
@@ -82,11 +82,17 @@ export const ChooseModuleToConfigureModal = (
     ) ?? []
 
   const connectedOptions: ModuleFixtureOption[] = unconfiguredModuleMatches.map(
-    attachedMod => ({
-      moduleModel: attachedMod.moduleModel,
-      usbPort: attachedMod.usbPort.port,
-      serialNumber: attachedMod.serialNumber,
-    })
+    attachedMod => {
+      const portDisplay =
+        attachedMod.usbPort.hubPort != null
+          ? `${attachedMod.usbPort.port}.${attachedMod.usbPort.hubPort}`
+          : attachedMod.usbPort.port
+      return {
+        moduleModel: attachedMod.moduleModel,
+        usbPort: portDisplay,
+        serialNumber: attachedMod.serialNumber,
+      }
+    }
   )
   const passiveOptions: ModuleFixtureOption[] =
     requiredModuleModel === MAGNETIC_BLOCK_V1

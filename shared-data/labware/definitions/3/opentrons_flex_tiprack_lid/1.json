@@ -43,37 +43,37 @@
     "default": {
       "x": 0,
       "y": 0,
-      "z": 8.193
+      "z": 14
     },
     "opentrons_flex_96_filtertiprack_200ul": {
       "x": 0,
       "y": 0,
-      "z": 8.25
+      "z": 14
     },
     "opentrons_flex_96_filtertiprack_1000ul": {
       "x": 0,
       "y": 0,
-      "z": 8.25
+      "z": 14
     },
     "opentrons_flex_96_tiprack_20ul": {
       "x": 0,
       "y": 0,
-      "z": 8.25
+      "z": 14
     },
     "opentrons_flex_96_tiprack_50ul": {
       "x": 0,
       "y": 0,
-      "z": 8.25
+      "z": 14
     },
     "opentrons_flex_96_tiprack_200ul": {
       "x": 0,
       "y": 0,
-      "z": 8.25
+      "z": 14
     },
     "opentrons_flex_96_tiprack_1000ul": {
       "x": 0,
       "y": 0,
-      "z": 8.25
+      "z": 14
     }
   },
   "stackLimit": 1,
@@ -85,8 +85,8 @@
     "opentrons_flex_96_filertiprack_200ul",
     "opentrons_flex_96_filertiprack_1000ul"
   ],
-  "gripForce": 15,
-  "gripHeightFromLabwareBottom": 8,
+  "gripForce": 10,
+  "gripHeightFromLabwareBottom": 10,
   "gripperOffsets": {
     "default": {
       "pickUpOffset": {

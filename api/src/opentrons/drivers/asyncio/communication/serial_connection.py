@@ -6,7 +6,14 @@ from typing import Optional, List
 
 from opentrons.drivers.command_builder import CommandBuilder
 
-from .errors import NoResponse, AlarmResponse, ErrorResponse, UnhandledGcode, ErrorCodes
+from .errors import (
+    MotorStall,
+    NoResponse,
+    AlarmResponse,
+    ErrorResponse,
+    UnhandledGcode,
+    ErrorCodes,
+)
 from .async_serial import AsyncSerial
 
 log = logging.getLogger(__name__)
@@ -254,6 +261,9 @@ class SerialConnection:
                 raise UnhandledGcode(
                     port=self._port, response=response, command=request
                 )
+
+            elif ErrorCodes.MOTOR_STALL.value.lower() in lower:
+                raise MotorStall(port=self._port, response=response, command=request)
             else:
                 raise ErrorResponse(port=self._port, response=response)
 

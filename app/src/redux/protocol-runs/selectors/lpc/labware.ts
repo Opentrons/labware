@@ -14,7 +14,10 @@ import { getCurrentOffsetForLabwareInLocation } from '/app/transformations/analy
 import { getItemLabwareDef } from './transforms'
 
 import type { Selector } from 'reselect'
-import type { VectorOffset, LabwareOffsetLocation } from '@opentrons/api-client'
+import type {
+  VectorOffset,
+  LegacyLabwareOffsetLocation,
+} from '@opentrons/api-client'
 import type { LabwareDefinition2, Coordinates } from '@opentrons/shared-data'
 import type { State } from '../../../types'
 
@@ -88,7 +91,7 @@ export const selectActiveLwExistingOffset = (
 
 export interface SelectOffsetsToApplyResult {
   definitionUri: string
-  location: LabwareOffsetLocation
+  location: LegacyLabwareOffsetLocation
   vector: Coordinates
 }
 

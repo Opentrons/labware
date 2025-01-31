@@ -1,4 +1,5 @@
 """Router for /maintenance_runs endpoints dealing with labware offsets and definitions."""
+
 from typing import Annotated
 import logging
 
@@ -7,7 +8,11 @@ from fastapi import Depends, status
 from opentrons_shared_data.labware.labware_definition import LabwareDefinition
 from server_utils.fastapi_utils.light_router import LightRouter
 
-from opentrons.protocol_engine import LabwareOffsetCreate, LabwareOffset
+from opentrons.protocol_engine import (
+    LabwareOffsetCreate,
+    LegacyLabwareOffsetCreate,
+    LabwareOffset,
+)
 
 from robot_server.errors.error_responses import ErrorBody
 from robot_server.service.json_api import RequestModel, SimpleBody, PydanticResponse
@@ -40,7 +45,7 @@ labware_router = LightRouter()
     },
 )
 async def add_labware_offset(
-    request_body: RequestModel[LabwareOffsetCreate],
+    request_body: RequestModel[LabwareOffsetCreate | LegacyLabwareOffsetCreate],
     run_orchestrator_store: Annotated[
         MaintenanceRunOrchestratorStore, Depends(get_maintenance_run_orchestrator_store)
     ],

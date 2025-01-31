@@ -298,6 +298,11 @@ export function ModulesListItem({
   // convert slot name to cutout id
   const cutoutIdForSlotName = getCutoutIdForSlotName(slotName, deckDef)
 
+  const portDisplay =
+    attachedModuleMatch?.usbPort?.hubPort != null
+      ? `${attachedModuleMatch.usbPort.port}.${attachedModuleMatch.usbPort.hubPort}`
+      : attachedModuleMatch?.usbPort?.port
+
   return (
     <>
       {showLocationConflictModal && cutoutIdForSlotName != null ? (
@@ -369,10 +374,10 @@ export function ModulesListItem({
                   : TC_MODULE_LOCATION_OT2
                 : slotName}
             </LegacyStyledText>
-            {attachedModuleMatch?.usbPort.port != null ? (
+            {portDisplay != null ? (
               <LegacyStyledText as="p">
                 {t('usb_port_number', {
-                  port: attachedModuleMatch.usbPort.port,
+                  port: portDisplay,
                 })}
               </LegacyStyledText>
             ) : null}

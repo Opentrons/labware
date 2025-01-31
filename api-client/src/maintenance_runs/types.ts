@@ -6,7 +6,7 @@ import type {
 } from '@opentrons/shared-data'
 import type {
   RunCommandSummary,
-  LabwareOffsetCreateData,
+  LegacyLabwareOffsetCreateData,
   RunStatus,
   RunAction,
 } from '../runs'
@@ -42,7 +42,7 @@ export interface MaintenanceRunError {
 }
 
 export interface CreateMaintenanceRunData {
-  labwareOffsets?: LabwareOffsetCreateData[]
+  labwareOffsets?: LegacyLabwareOffsetCreateData[]
 }
 
 export interface LabwareDefinitionSummary {

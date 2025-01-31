@@ -5,7 +5,7 @@ from typing import Final, Literal, TypeAlias
 
 from opentrons.protocol_engine.types import (
     LabwareOffset,
-    LabwareOffsetLocation,
+    LegacyLabwareOffsetLocation,
     LabwareOffsetVector,
     ModuleModel,
 )
@@ -154,7 +154,7 @@ def _sql_to_pydantic(row: sqlalchemy.engine.Row) -> LabwareOffset:
         id=row.offset_id,
         createdAt=row.created_at,
         definitionUri=row.definition_uri,
-        location=LabwareOffsetLocation(
+        location=LegacyLabwareOffsetLocation(
             slotName=DeckSlotName(row.location_slot_name),
             moduleModel=row.location_module_model,
             definitionUri=row.location_definition_uri,

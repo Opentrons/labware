@@ -132,7 +132,7 @@ describe('Delay', () => {
     expect(vi.mocked(InputField)).toHaveBeenCalledWith(
       {
         title: 'Delay duration (seconds)',
-        error: 'Value must be between 1-9999999999',
+        error: 'Value must be between 1 to 9999999999',
         readOnly: true,
         type: 'number',
         value: 0,
@@ -158,7 +158,7 @@ describe('Delay', () => {
     expect(vi.mocked(InputField)).toHaveBeenCalledWith(
       {
         title: 'Delay position from bottom of well (mm)',
-        error: 'Value must be between 1-100',
+        error: 'Value must be between 1 to 100',
         readOnly: true,
         type: 'number',
         value: 0,
@@ -188,7 +188,7 @@ describe('Delay', () => {
     expect(vi.mocked(InputField)).toHaveBeenCalledWith(
       {
         title: 'Delay position from bottom of well (mm)',
-        error: 'Value must be between 1-400',
+        error: 'Value must be between 1 to 400',
         readOnly: true,
         type: 'number',
         value: 0,

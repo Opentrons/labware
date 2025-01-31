@@ -69,18 +69,18 @@ export function LPCWizardFlex(props: LPCWizardFlexProps): JSX.Element {
 function LPCWizardFlexComponent(props: LPCWizardContentProps): JSX.Element {
   const isOnDevice = useSelector(getIsOnDevice)
 
-  return createPortal(
-    isOnDevice ? (
-      <ModalShell fullPage>
-        <LPCWizardHeader {...props} />
-        <LPCWizardContent {...props} />
-      </ModalShell>
-    ) : (
+  return isOnDevice ? (
+    <>
+      <LPCWizardHeader {...props} />
+      <LPCWizardContent {...props} />
+    </>
+  ) : (
+    createPortal(
       <ModalShell width="47rem" header={<LPCWizardHeader {...props} />}>
         <LPCWizardContent {...props} />
-      </ModalShell>
-    ),
-    getTopPortalEl()
+      </ModalShell>,
+      getTopPortalEl()
+    )
   )
 }
 

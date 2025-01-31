@@ -433,6 +433,19 @@ class ModuleNotConnectedError(ProtocolEngineError):
         super().__init__(ErrorCodes.GENERAL_ERROR, message, details, wrapping)
 
 
+class OffsetLocationInvalidError(ProtocolEngineError):
+    """Raised when encountering an invalid labware offset location sequence."""
+
+    def __init__(
+        self,
+        message: Optional[str] = None,
+        details: Optional[Dict[str, Any]] = None,
+        wrapping: Optional[Sequence[EnumeratedError]] = None,
+    ) -> None:
+        """Build an OffsetLocationSequenceDoesNotTerminateAtAnAddressableAreaError."""
+        super().__init__(ErrorCodes.GENERAL_ERROR, message, details, wrapping)
+
+
 class SlotDoesNotExistError(ProtocolEngineError):
     """Raised when referencing a deck slot that does not exist."""
 

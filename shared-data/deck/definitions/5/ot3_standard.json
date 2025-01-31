@@ -1023,7 +1023,12 @@
       "mayMountTo": ["cutoutD3"],
       "displayName": "Flex Stacker With Waste Chute Adapter for 96 Channel Pipette or Gripper",
       "providesAddressableAreas": {
-        "cutoutD3": ["1ChannelWasteChute", "8ChannelWasteChute", "D4"]
+        "cutoutD3": [
+          "1ChannelWasteChute",
+          "8ChannelWasteChute",
+          "flexStackerModuleV1D4",
+          "D3"
+        ]
       },
       "fixtureGroup": {},
       "height": 124.5
@@ -1039,7 +1044,8 @@
           "8ChannelWasteChute",
           "96ChannelWasteChute",
           "gripperWasteChute",
-          "flexStackerModuleV1D4"
+          "flexStackerModuleV1D4",
+          "D3"
         ]
       },
       "fixtureGroup": {},

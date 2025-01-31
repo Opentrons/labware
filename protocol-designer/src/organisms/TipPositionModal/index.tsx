@@ -76,9 +76,8 @@ export function TipPositionModal(
     )
   }
 
-  const defaultMmFromBottom = utils.getDefaultMmFromBottom({
+  const defaultMmFromBottom = utils.getDefaultMmFromEdge({
     name: zSpec.name,
-    wellDepthMm,
   })
 
   const [zValue, setZValue] = useState<string | null>(

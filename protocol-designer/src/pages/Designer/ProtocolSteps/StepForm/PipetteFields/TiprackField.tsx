@@ -64,7 +64,7 @@ export function TiprackField(props: TiprackFieldProps): JSX.Element {
           <ListItem type="noActive">
             <Flex padding={SPACING.spacing12}>
               <StyledText desktopStyle="bodyDefaultRegular">
-                {tiprackOptions[0].name}
+                {tiprackOptions[0]?.name ?? t('no_tiprack')}
               </StyledText>
             </Flex>
           </ListItem>

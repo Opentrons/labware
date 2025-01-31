@@ -45,10 +45,7 @@ import {
   ConfirmDeleteModal,
   getMainPagePortalEl,
 } from '../../../../organisms'
-import {
-  getEnableAbsorbanceReader,
-  getEnableComment,
-} from '../../../../feature-flags/selectors'
+import { getEnableComment } from '../../../../feature-flags/selectors'
 import { AddStepOverflowButton } from './AddStepOverflowButton'
 
 import type { MouseEvent } from 'react'
@@ -87,7 +84,6 @@ export function AddStepButton({ hasText }: AddStepButtonProps): JSX.Element {
   const [enqueuedStepType, setEnqueuedStepType] = useState<StepType | null>(
     null
   )
-  const enableAbsorbanceReader = useSelector(getEnableAbsorbanceReader)
 
   const getSupportedSteps = (): Array<
     Exclude<StepType, 'manualIntervention'>
@@ -116,9 +112,7 @@ export function AddStepButton({ hasText }: AddStepButtonProps): JSX.Element {
     temperature: getIsModuleOnDeck(modules, TEMPERATURE_MODULE_TYPE),
     thermocycler: getIsModuleOnDeck(modules, THERMOCYCLER_MODULE_TYPE),
     heaterShaker: getIsModuleOnDeck(modules, HEATERSHAKER_MODULE_TYPE),
-    absorbanceReader:
-      getIsModuleOnDeck(modules, ABSORBANCE_READER_TYPE) &&
-      enableAbsorbanceReader,
+    absorbanceReader: getIsModuleOnDeck(modules, ABSORBANCE_READER_TYPE),
   }
 
   const addStep = (stepType: StepType): ReturnType<any> =>

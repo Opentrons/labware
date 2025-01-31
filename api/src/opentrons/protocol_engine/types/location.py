@@ -13,7 +13,7 @@ class DeckSlotLocation(BaseModel):
     slotName: DeckSlotName = Field(
         ...,
         description=(
-            # This description should be kept in sync with LabwareOffsetLocation.slotName.
+            # This description should be kept in sync with LegacyLabwareOffsetLocation.slotName.
             "A slot on the robot's deck."
             "\n\n"
             'The plain numbers like `"5"` are for the OT-2,'
@@ -33,7 +33,7 @@ class StagingSlotLocation(BaseModel):
     slotName: StagingSlotName = Field(
         ...,
         description=(
-            # This description should be kept in sync with LabwareOffsetLocation.slotName.
+            # This description should be kept in sync with LegacyLabwareOffsetLocation.slotName.
             "A slot on the robot's staging area."
             "\n\n"
             "These apply only to the Flex. The OT-2 has no staging slots."
@@ -76,6 +76,45 @@ _OffDeckLocationType = Literal["offDeck"]
 _SystemLocationType = Literal["systemLocation"]
 OFF_DECK_LOCATION: _OffDeckLocationType = "offDeck"
 SYSTEM_LOCATION: _SystemLocationType = "systemLocation"
+
+
+class OnLabwareLocationSequenceComponent(BaseModel):
+    """Labware on another labware."""
+
+    kind: Literal["onLabware"] = "onLabware"
+    labwareId: str
+    lidId: str | None
+
+
+class OnModuleLocationSequenceComponent(BaseModel):
+    """Labware on a module."""
+
+    kind: Literal["onModule"] = "onModule"
+    moduleId: str
+
+
+class OnAddressableAreaLocationSequenceComponent(BaseModel):
+    """Labware on an addressable area."""
+
+    kind: Literal["onAddressableArea"] = "onAddressableArea"
+    addressableAreaName: str
+    slotName: str | None
+
+
+class NotOnDeckLocationSequenceComponent(BaseModel):
+    """Labware on a system location."""
+
+    kind: Literal["notOnDeck"] = "notOnDeck"
+    logicalLocationName: _OffDeckLocationType | _SystemLocationType
+
+
+LabwareLocationSequence = list[
+    OnLabwareLocationSequenceComponent
+    | OnModuleLocationSequenceComponent
+    | OnAddressableAreaLocationSequenceComponent
+    | NotOnDeckLocationSequenceComponent
+]
+"""Labware location specifier."""
 
 LabwareLocation = Union[
     DeckSlotLocation,

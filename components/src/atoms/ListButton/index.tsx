@@ -2,7 +2,7 @@ import { css } from 'styled-components'
 import { Flex } from '../../primitives'
 import { SPACING } from '../../ui-style-constants'
 import { BORDERS, COLORS } from '../../helix-design-system'
-import { CURSOR_POINTER } from '../../styles'
+import { CURSOR_DEFAULT, CURSOR_POINTER } from '../../styles'
 
 import type { ReactNode } from 'react'
 import type { StyleProps } from '../../primitives'
@@ -42,13 +42,13 @@ const LISTBUTTON_PROPS_BY_TYPE: Record<
   odd stylings
 **/
 export function ListButton(props: ListButtonProps): JSX.Element {
-  const { type, children, disabled, onClick, ...styleProps } = props
+  const { type, children, disabled = false, onClick, ...styleProps } = props
   const listButtonProps = LISTBUTTON_PROPS_BY_TYPE[type]
 
   const LIST_BUTTON_STYLE = css`
-    cursor: ${CURSOR_POINTER};
+    cursor: ${disabled ? CURSOR_DEFAULT : CURSOR_POINTER};
     background-color: ${disabled
-      ? COLORS.grey35
+      ? COLORS.grey20
       : listButtonProps.backgroundColor};
     max-width: 26.875rem;
     padding: ${styleProps.padding ??
@@ -56,7 +56,9 @@ export function ListButton(props: ListButtonProps): JSX.Element {
     border-radius: ${BORDERS.borderRadius8};
 
     &:hover {
-      background-color: ${listButtonProps.hoverBackgroundColor};
+      background-color: ${disabled
+        ? COLORS.grey20
+        : listButtonProps.hoverBackgroundColor};
     }
   `
 

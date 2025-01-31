@@ -3,7 +3,6 @@ import '@testing-library/jest-dom/vitest'
 import { FLEX_ROBOT_TYPE, OT2_ROBOT_TYPE } from '@opentrons/shared-data'
 import { fireEvent, screen } from '@testing-library/react'
 import { i18n } from '../../../assets/localization'
-import { getEnableAbsorbanceReader } from '../../../feature-flags/selectors'
 import { renderWithProviders } from '../../../__testing-utils__'
 import { SelectModules } from '../SelectModules'
 
@@ -44,7 +43,6 @@ describe('SelectModules', () => {
     props = {
       ...mockWizardTileProps,
     } as WizardTileProps
-    vi.mocked(getEnableAbsorbanceReader).mockReturnValue(true)
   })
   afterEach(() => {
     vi.restoreAllMocks()

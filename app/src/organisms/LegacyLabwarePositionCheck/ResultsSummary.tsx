@@ -48,7 +48,7 @@ import type {
 } from '@opentrons/shared-data'
 import type {
   LabwareOffset,
-  LabwareOffsetCreateData,
+  LegacyLabwareOffsetCreateData,
 } from '@opentrons/api-client'
 import type { ResultsSummaryStep, WorkingOffset } from './types'
 import type { TFunction } from 'i18next'
@@ -60,7 +60,7 @@ interface ResultsSummaryProps extends ResultsSummaryStep {
   protocolData: CompletedProtocolAnalysis
   workingOffsets: WorkingOffset[]
   existingOffsets: LabwareOffset[]
-  handleApplyOffsets: (offsets: LabwareOffsetCreateData[]) => void
+  handleApplyOffsets: (offsets: LegacyLabwareOffsetCreateData[]) => void
   isApplyingOffsets: boolean
   isDeletingMaintenanceRun?: boolean
 }
@@ -86,7 +86,7 @@ export const ResultsSummary = (
   const isOnDevice = useSelector(getIsOnDevice)
 
   const offsetsToApply = useMemo(() => {
-    return workingOffsets.map<LabwareOffsetCreateData>(
+    return workingOffsets.map<LegacyLabwareOffsetCreateData>(
       ({ initialPosition, finalPosition, labwareId, location }) => {
         const definitionUri =
           protocolData.labware.find(l => l.id === labwareId)?.definitionUri ??
@@ -269,7 +269,7 @@ const ScrollContainer = styled(Flex)`
 `
 
 interface OffsetTableProps {
-  offsets: LabwareOffsetCreateData[]
+  offsets: LegacyLabwareOffsetCreateData[]
   labwareDefinitions: LabwareDefinition2[]
 }
 

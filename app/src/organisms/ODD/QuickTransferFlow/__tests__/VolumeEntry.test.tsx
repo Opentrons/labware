@@ -161,7 +161,7 @@ describe('VolumeEntry', () => {
     expect(vi.mocked(InputField)).toHaveBeenCalledWith(
       {
         title: 'Aspirate volume per well (µL)',
-        error: 'Value must be between 5-50',
+        error: 'Value must be between 5 to 50',
         readOnly: true,
         type: 'text',
         value: '90',

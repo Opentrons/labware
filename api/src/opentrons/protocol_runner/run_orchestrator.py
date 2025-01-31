@@ -32,6 +32,7 @@ from ..protocol_engine.types import (
     PostRunHardwareState,
     EngineStatus,
     LabwareOffsetCreate,
+    LegacyLabwareOffsetCreate,
     LabwareOffset,
     DeckConfigurationType,
     RunTimeParameter,
@@ -346,7 +347,9 @@ class RunOrchestrator:
         """Get whether the run has stopped."""
         return self._protocol_engine.state_view.commands.get_is_stopped()
 
-    def add_labware_offset(self, request: LabwareOffsetCreate) -> LabwareOffset:
+    def add_labware_offset(
+        self, request: LabwareOffsetCreate | LegacyLabwareOffsetCreate
+    ) -> LabwareOffset:
         """Add a new labware offset to state."""
         return self._protocol_engine.add_labware_offset(request)
 

@@ -132,7 +132,7 @@ describe('Mix', () => {
     expect(vi.mocked(InputField)).toHaveBeenCalledWith(
       {
         title: 'Mix volume (µL)',
-        error: 'Value must be between 1-200',
+        error: 'Value must be between 1 to 200',
         readOnly: true,
         type: 'number',
         value: 0,
@@ -158,7 +158,7 @@ describe('Mix', () => {
     expect(vi.mocked(InputField)).toHaveBeenCalledWith(
       {
         title: 'Mix repetitions',
-        error: 'Value must be between 1-999',
+        error: 'Value must be between 1 to 999',
         readOnly: true,
         type: 'number',
         value: 0,

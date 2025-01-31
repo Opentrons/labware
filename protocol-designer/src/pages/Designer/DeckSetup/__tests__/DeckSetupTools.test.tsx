@@ -17,7 +17,6 @@ import {
   getSavedStepForms,
 } from '../../../../step-forms/selectors'
 import { getRobotType } from '../../../../file-data/selectors'
-import { getEnableAbsorbanceReader } from '../../../../feature-flags/selectors'
 import { deleteDeckFixture } from '../../../../step-forms/actions/additionalItems'
 import { selectors } from '../../../../labware-ingred/selectors'
 import { getDismissedHints } from '../../../../tutorial/selectors'
@@ -68,7 +67,6 @@ describe('DeckSetupTools', () => {
     })
     vi.mocked(LabwareTools).mockReturnValue(<div>mock labware tools</div>)
     vi.mocked(getRobotType).mockReturnValue(FLEX_ROBOT_TYPE)
-    vi.mocked(getEnableAbsorbanceReader).mockReturnValue(true)
     vi.mocked(getDeckSetupForActiveItem).mockReturnValue({
       labware: {},
       modules: {},

@@ -40,12 +40,15 @@ import type {
   CsvFileParameterFileData,
 } from '@opentrons/shared-data'
 import type { ProtocolSetupStepStatus } from '../ProtocolSetupStep'
-import type { FileData, LabwareOffsetCreateData } from '@opentrons/api-client'
+import type {
+  FileData,
+  LegacyLabwareOffsetCreateData,
+} from '@opentrons/api-client'
 
 interface ProtocolSetupParametersProps {
   protocolId: string
   runTimeParameters: RunTimeParameter[]
-  labwareOffsets?: LabwareOffsetCreateData[]
+  labwareOffsets?: LegacyLabwareOffsetCreateData[]
   mostRecentAnalysis?: CompletedProtocolAnalysis | null
 }
 

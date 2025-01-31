@@ -6,7 +6,10 @@ import { createLabwareOffset } from '@opentrons/api-client'
 import { useHost } from '../../api'
 
 import { useCreateLabwareOffsetMutation } from '../useCreateLabwareOffsetMutation'
-import type { HostConfig, LabwareOffsetCreateData } from '@opentrons/api-client'
+import type {
+  HostConfig,
+  LegacyLabwareOffsetCreateData,
+} from '@opentrons/api-client'
 
 vi.mock('@opentrons/api-client')
 vi.mock('../../api/useHost')
@@ -19,7 +22,7 @@ const OFFSET = { x: 1, y: 2, z: 3 }
 
 describe('useCreateLabwareOffsetMutation hook', () => {
   let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
-  let labwareOffset: LabwareOffsetCreateData
+  let labwareOffset: LegacyLabwareOffsetCreateData
 
   beforeEach(() => {
     const queryClient = new QueryClient()

@@ -133,7 +133,7 @@ describe('FlowRate', () => {
     expect(vi.mocked(InputField)).toHaveBeenCalledWith(
       {
         title: 'Aspirate flow rate (µL/s)',
-        error: 'Value must be between 1-92',
+        error: 'Value must be between 1 to 92',
         readOnly: true,
         type: 'number',
         value: 0,

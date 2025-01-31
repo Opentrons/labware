@@ -68,12 +68,19 @@ class StoreImpl(AbstractCommandImpl[StoreParams, SuccessData[StoreResult]]):
                 "Cannot store labware if Flex Stacker carriage is empty"
             )
 
-        lw_dim = self._state_view.labware.get_dimensions(labware_id=lw_id)
         # TODO: check the type of the labware should match that already in the stack
         state_update = update_types.StateUpdate()
 
         if stacker_hw is not None:
-            await stacker_hw.store_labware(labware_height=lw_dim.z)
+            labware = self._state_view.labware.get(lw_id)
+            labware_height = self._state_view.labware.get_dimensions(labware_id=lw_id).z
+            if labware.lid_id is not None:
+                lid_def = self._state_view.labware.get_definition(labware.lid_id)
+                offset = self._state_view.labware.get_labware_overlap_offsets(
+                    lid_def, labware.loadName
+                ).z
+                labware_height = labware_height + lid_def.dimensions.zDimension - offset
+            await stacker_hw.store_labware(labware_height=labware_height)
 
         # update the state to reflect the labware is store in the stack
         state_update.set_labware_location(

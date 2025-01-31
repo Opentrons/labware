@@ -10,6 +10,7 @@ interface PhysicalPort {
   port: number
   hub: boolean
   portGroup: PortGroup
+  hubPort?: number
 }
 
 type ModuleOffsetSource =

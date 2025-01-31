@@ -42,6 +42,10 @@ import {
   ABSORBANCE_READER_V1,
   MODULE_FIXTURES_BY_MODEL,
   STAGING_AREA_SLOT_WITH_MAGNETIC_BLOCK_V1_FIXTURE,
+  FLEX_STACKER_MODULE_V1,
+  FLEX_STACKER_V1_FIXTURE,
+  FLEX_STACKER_WITH_WASTE_CHUTE_ADAPTER_COVERED_FIXTURE,
+  FLEX_STACKER_WTIH_WASTE_CHUTE_ADAPTER_NO_COVER_FIXTURE,
 } from './constants'
 import { getModuleDisplayName } from './modules'
 import { getCutoutIdForSlotName } from './helpers'
@@ -241,7 +245,7 @@ export function getAddressableAreaNamesFromLoadedModule(
 // note: we've decided not to translate these strings
 export function getFixtureDisplayName(
   cutoutFixtureId: CutoutFixtureId | null,
-  usbPortNumber?: number
+  usbPortNumber?: number | string
 ): string {
   switch (cutoutFixtureId) {
     case STAGING_AREA_RIGHT_SLOT_FIXTURE:
@@ -290,6 +294,26 @@ export function getFixtureDisplayName(
             ABSORBANCE_READER_V1
           )} in USB-${usbPortNumber}`
         : getModuleDisplayName(ABSORBANCE_READER_V1)
+    case FLEX_STACKER_V1_FIXTURE:
+      return usbPortNumber != null
+        ? `${getModuleDisplayName(
+            FLEX_STACKER_MODULE_V1
+          )} in USB-${usbPortNumber}`
+        : getModuleDisplayName(FLEX_STACKER_MODULE_V1)
+    case FLEX_STACKER_WITH_WASTE_CHUTE_ADAPTER_COVERED_FIXTURE:
+      return usbPortNumber != null
+        ? `${getModuleDisplayName(
+            FLEX_STACKER_MODULE_V1
+          )} in USB-${usbPortNumber} and waste chute with cover`
+        : `${getModuleDisplayName(
+            FLEX_STACKER_MODULE_V1
+          )} and waste chute with cover`
+    case FLEX_STACKER_WTIH_WASTE_CHUTE_ADAPTER_NO_COVER_FIXTURE:
+      return usbPortNumber != null
+        ? `${getModuleDisplayName(
+            FLEX_STACKER_MODULE_V1
+          )} in USB-${usbPortNumber} and waste chute`
+        : `${getModuleDisplayName(FLEX_STACKER_MODULE_V1)} and waste chute`
     default:
       return 'Slot'
   }

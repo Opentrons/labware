@@ -123,7 +123,7 @@ describe('AirGap', () => {
     expect(vi.mocked(InputField)).toHaveBeenCalledWith(
       {
         title: 'Air gap volume (µL)',
-        error: 'Value must be between 1-180',
+        error: 'Value must be between 1 to 180',
         readOnly: true,
         type: 'number',
         value: 0,
@@ -152,7 +152,7 @@ describe('AirGap', () => {
     expect(vi.mocked(InputField)).toHaveBeenCalledWith(
       {
         title: 'Air gap volume (µL)',
-        error: 'Value must be between 1-80',
+        error: 'Value must be between 1 to 80',
         readOnly: true,
         type: 'number',
         value: 0,
@@ -179,7 +179,7 @@ describe('AirGap', () => {
     expect(vi.mocked(InputField)).toHaveBeenCalledWith(
       {
         title: 'Air gap volume (µL)',
-        error: 'Value must be between 1-140',
+        error: 'Value must be between 1 to 140',
         readOnly: true,
         type: 'number',
         value: 0,
@@ -204,7 +204,7 @@ describe('AirGap', () => {
     expect(vi.mocked(InputField)).toHaveBeenCalledWith(
       {
         title: 'Air gap volume (µL)',
-        error: 'Value must be between 1-200',
+        error: 'Value must be between 1 to 200',
         readOnly: true,
         type: 'number',
         value: 0,

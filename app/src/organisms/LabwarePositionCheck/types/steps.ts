@@ -1,4 +1,4 @@
-import type { LabwareOffsetLocation } from '@opentrons/api-client'
+import type { LegacyLabwareOffsetLocation } from '@opentrons/api-client'
 import type { NAV_STEPS } from '../constants'
 import type { LPCWizardContentProps } from './content'
 
@@ -19,7 +19,7 @@ export type LPCStepProps<T extends LabwarePositionCheckStep> = Omit<
 export interface PerformLPCStep {
   pipetteId: string
   labwareId: string
-  location: LabwareOffsetLocation
+  location: LegacyLabwareOffsetLocation
   definitionUri: string
   adapterId?: string
   moduleId?: string

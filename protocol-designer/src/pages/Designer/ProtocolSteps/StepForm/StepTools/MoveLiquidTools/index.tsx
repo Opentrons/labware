@@ -499,11 +499,11 @@ export function MoveLiquidTools(props: StepFormProps): JSX.Element {
             <PositionField
               prefix={tab}
               propsForFields={propsForFields}
-              zField={`${tab}_touchTip_mmFromBottom`}
+              zField={`${tab}_touchTip_mmFromTop`}
               labwareId={
                 formData[
                   getLabwareFieldForPositioningField(
-                    addFieldNamePrefix('touchTip_mmFromBottom')
+                    addFieldNamePrefix('touchTip_mmFromTop')
                   )
                 ]
               }

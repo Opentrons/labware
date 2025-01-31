@@ -6,16 +6,16 @@
     "author": "",
     "description": "",
     "created": 1701805621086,
-    "lastModified": 1714570523087,
+    "lastModified": 1738157515738,
     "category": null,
     "subcategory": null,
     "tags": []
   },
   "designerApplication": {
     "name": "opentrons/protocol-designer",
-    "version": "8.2.2",
+    "version": "8.5.0",
     "data": {
-      "_internalAppBuildDate": "Wed, 01 May 2024 13:32:34 GMT",
+      "_internalAppBuildDate": "Wed, 29 Jan 2025 13:23:47 GMT",
       "defaultValues": {
         "aspirate_mmFromBottom": 1,
         "dispense_mmFromBottom": 1,
@@ -27,7 +27,10 @@
           "opentrons/opentrons_flex_96_tiprack_50ul/1"
         ]
       },
-      "dismissedWarnings": { "form": [], "timeline": [] },
+      "dismissedWarnings": {
+        "form": [],
+        "timeline": []
+      },
       "ingredients": {},
       "ingredLocations": {
         "9bd16b50-4ae9-4cfd-8583-3378087e6a6c:opentrons/opentrons_flex_96_tiprack_50ul/1": {}
@@ -40,126 +43,128 @@
             "fe1942b1-1b75-4d3a-9c12-d23004958a12:opentrons/biorad_96_wellplate_200ul_pcr/2": "B1",
             "9bd16b50-4ae9-4cfd-8583-3378087e6a6c:opentrons/opentrons_flex_96_tiprack_50ul/1": "D1"
           },
+          "moduleLocationUpdate": {},
           "pipetteLocationUpdate": {
             "de7da440-95ec-43e8-8723-851321fbd6f9": "left"
           },
-          "moduleLocationUpdate": {},
           "stepType": "manualIntervention",
           "id": "__INITIAL_DECK_SETUP_STEP__"
         },
         "83a095fa-b649-4105-99d4-177f1a3f363a": {
-          "pipette": "de7da440-95ec-43e8-8723-851321fbd6f9",
-          "volume": "10",
-          "tipRack": "opentrons/opentrons_flex_96_tiprack_50ul/1",
-          "changeTip": "always",
-          "path": "single",
-          "aspirate_wells_grouped": false,
-          "aspirate_flowRate": null,
-          "aspirate_labware": "fe1942b1-1b75-4d3a-9c12-d23004958a12:opentrons/biorad_96_wellplate_200ul_pcr/2",
-          "aspirate_wells": ["A1"],
-          "aspirate_wellOrder_first": "t2b",
-          "aspirate_wellOrder_second": "l2r",
-          "aspirate_mix_checkbox": false,
-          "aspirate_mix_times": null,
-          "aspirate_mix_volume": null,
-          "aspirate_mmFromBottom": null,
-          "aspirate_touchTip_checkbox": false,
-          "aspirate_touchTip_mmFromBottom": null,
-          "dispense_flowRate": null,
-          "dispense_labware": "1e553651-9e4d-44b1-a31b-92459642bfd7:trashBin",
-          "dispense_wells": [],
-          "dispense_wellOrder_first": "t2b",
-          "dispense_wellOrder_second": "l2r",
-          "dispense_mix_checkbox": false,
-          "dispense_mix_times": null,
-          "dispense_mix_volume": null,
-          "dispense_mmFromBottom": null,
-          "dispense_touchTip_checkbox": false,
-          "dispense_touchTip_mmFromBottom": null,
-          "disposalVolume_checkbox": true,
-          "disposalVolume_volume": "5",
-          "blowout_checkbox": false,
-          "blowout_location": null,
-          "preWetTip": false,
           "aspirate_airGap_checkbox": false,
           "aspirate_airGap_volume": "5",
           "aspirate_delay_checkbox": false,
           "aspirate_delay_mmFromBottom": null,
           "aspirate_delay_seconds": "1",
+          "aspirate_flowRate": null,
+          "aspirate_labware": "fe1942b1-1b75-4d3a-9c12-d23004958a12:opentrons/biorad_96_wellplate_200ul_pcr/2",
+          "aspirate_mix_checkbox": false,
+          "aspirate_mix_times": null,
+          "aspirate_mix_volume": null,
+          "aspirate_mmFromBottom": null,
+          "aspirate_touchTip_checkbox": false,
+          "aspirate_touchTip_mmFromTop": null,
+          "aspirate_wellOrder_first": "t2b",
+          "aspirate_wellOrder_second": "l2r",
+          "aspirate_wells_grouped": false,
+          "aspirate_wells": ["A1"],
+          "aspirate_x_position": 0,
+          "aspirate_y_position": 0,
+          "blowout_checkbox": false,
+          "blowout_flowRate": null,
+          "blowout_location": null,
+          "blowout_z_offset": 0,
+          "changeTip": "always",
           "dispense_airGap_checkbox": false,
           "dispense_airGap_volume": "5",
           "dispense_delay_checkbox": false,
-          "dispense_delay_seconds": "1",
           "dispense_delay_mmFromBottom": null,
+          "dispense_delay_seconds": "1",
+          "dispense_flowRate": null,
+          "dispense_labware": "1e553651-9e4d-44b1-a31b-92459642bfd7:trashBin",
+          "dispense_mix_checkbox": false,
+          "dispense_mix_times": null,
+          "dispense_mix_volume": null,
+          "dispense_mmFromBottom": null,
+          "dispense_touchTip_checkbox": false,
+          "dispense_touchTip_mmFromTop": null,
+          "dispense_wellOrder_first": "t2b",
+          "dispense_wellOrder_second": "l2r",
+          "dispense_wells": [],
+          "dispense_x_position": 0,
+          "dispense_y_position": 0,
+          "disposalVolume_checkbox": true,
+          "disposalVolume_volume": "5",
           "dropTip_location": "1e553651-9e4d-44b1-a31b-92459642bfd7:trashBin",
           "nozzles": "ALL",
-          "dispense_x_position": 0,
-          "dispense_y_position": 0,
-          "aspirate_x_position": 0,
-          "aspirate_y_position": 0,
-          "blowout_z_offset": 0,
-          "blowout_flowRate": null,
-          "id": "83a095fa-b649-4105-99d4-177f1a3f363a",
+          "path": "single",
+          "pipette": "de7da440-95ec-43e8-8723-851321fbd6f9",
+          "preWetTip": false,
+          "tipRack": "opentrons/opentrons_flex_96_tiprack_50ul/1",
+          "volume": "10",
           "stepType": "moveLiquid",
           "stepName": "transfer",
-          "stepDetails": ""
+          "stepDetails": "",
+          "id": "83a095fa-b649-4105-99d4-177f1a3f363a",
+          "dispense_touchTip_mmfromTop": null
         },
         "f5ea3139-1585-4848-9d5f-832eb88c99ca": {
-          "pipette": "de7da440-95ec-43e8-8723-851321fbd6f9",
-          "volume": "10",
-          "tipRack": "opentrons/opentrons_flex_96_tiprack_50ul/1",
-          "changeTip": "always",
-          "path": "single",
-          "aspirate_wells_grouped": false,
-          "aspirate_flowRate": null,
-          "aspirate_labware": "fe1942b1-1b75-4d3a-9c12-d23004958a12:opentrons/biorad_96_wellplate_200ul_pcr/2",
-          "aspirate_wells": ["A7"],
-          "aspirate_wellOrder_first": "t2b",
-          "aspirate_wellOrder_second": "l2r",
-          "aspirate_mix_checkbox": false,
-          "aspirate_mix_times": null,
-          "aspirate_mix_volume": null,
-          "aspirate_mmFromBottom": null,
-          "aspirate_touchTip_checkbox": false,
-          "aspirate_touchTip_mmFromBottom": null,
-          "dispense_flowRate": null,
-          "dispense_labware": "1e553651-9e4d-44b1-a31b-92459642bfd7:trashBin",
-          "dispense_wells": [],
-          "dispense_wellOrder_first": "t2b",
-          "dispense_wellOrder_second": "l2r",
-          "dispense_mix_checkbox": false,
-          "dispense_mix_times": null,
-          "dispense_mix_volume": null,
-          "dispense_mmFromBottom": null,
-          "dispense_touchTip_checkbox": false,
-          "dispense_touchTip_mmFromBottom": null,
-          "disposalVolume_checkbox": true,
-          "disposalVolume_volume": "5",
-          "blowout_checkbox": false,
-          "blowout_location": null,
-          "preWetTip": false,
           "aspirate_airGap_checkbox": false,
           "aspirate_airGap_volume": "5",
           "aspirate_delay_checkbox": false,
           "aspirate_delay_mmFromBottom": null,
           "aspirate_delay_seconds": "1",
+          "aspirate_flowRate": null,
+          "aspirate_labware": "fe1942b1-1b75-4d3a-9c12-d23004958a12:opentrons/biorad_96_wellplate_200ul_pcr/2",
+          "aspirate_mix_checkbox": false,
+          "aspirate_mix_times": null,
+          "aspirate_mix_volume": null,
+          "aspirate_mmFromBottom": null,
+          "aspirate_touchTip_checkbox": false,
+          "aspirate_touchTip_mmFromTop": null,
+          "aspirate_wellOrder_first": "t2b",
+          "aspirate_wellOrder_second": "l2r",
+          "aspirate_wells_grouped": false,
+          "aspirate_wells": ["A7"],
+          "aspirate_x_position": 0,
+          "aspirate_y_position": 0,
+          "blowout_checkbox": false,
+          "blowout_flowRate": null,
+          "blowout_location": null,
+          "blowout_z_offset": 0,
+          "changeTip": "always",
           "dispense_airGap_checkbox": false,
           "dispense_airGap_volume": "5",
           "dispense_delay_checkbox": false,
-          "dispense_delay_seconds": "1",
           "dispense_delay_mmFromBottom": null,
-          "dropTip_location": "1e553651-9e4d-44b1-a31b-92459642bfd7:trashBin",
-          "nozzles": "COLUMN",
+          "dispense_delay_seconds": "1",
+          "dispense_flowRate": null,
+          "dispense_labware": "1e553651-9e4d-44b1-a31b-92459642bfd7:trashBin",
+          "dispense_mix_checkbox": false,
+          "dispense_mix_times": null,
+          "dispense_mix_volume": null,
+          "dispense_mmFromBottom": null,
+          "dispense_touchTip_checkbox": false,
+          "dispense_touchTip_mmFromTop": null,
+          "dispense_wellOrder_first": "t2b",
+          "dispense_wellOrder_second": "l2r",
+          "dispense_wells": [],
           "dispense_x_position": 0,
           "dispense_y_position": 0,
-          "aspirate_x_position": 0,
-          "aspirate_y_position": 0,
-          "blowout_z_offset": 0,
-          "blowout_flowRate": null,
-          "id": "f5ea3139-1585-4848-9d5f-832eb88c99ca",
+          "disposalVolume_checkbox": true,
+          "disposalVolume_volume": "5",
+          "dropTip_location": "1e553651-9e4d-44b1-a31b-92459642bfd7:trashBin",
+          "nozzles": "COLUMN",
+          "path": "single",
+          "pipette": "de7da440-95ec-43e8-8723-851321fbd6f9",
+          "preWetTip": false,
+          "tipRack": "opentrons/opentrons_flex_96_tiprack_50ul/1",
+          "volume": "10",
           "stepType": "moveLiquid",
           "stepName": "transfer",
-          "stepDetails": ""
+          "stepDetails": "",
+          "id": "f5ea3139-1585-4848-9d5f-832eb88c99ca",
+          "dispense_touchTip_mmfromTop": null
         }
       },
       "orderedStepIds": [
@@ -168,7 +173,10 @@
       ]
     }
   },
-  "robot": { "model": "OT-3 Standard", "deckId": "ot3_standard" },
+  "robot": {
+    "model": "OT-3 Standard",
+    "deckId": "ot3_standard"
+  },
   "labwareDefinitionSchemaId": "opentronsLabwareSchemaV2",
   "labwareDefinitions": {
     "opentrons/opentrons_flex_96_tiprack_50ul/1": {
@@ -186,7 +194,10 @@
         ["A11", "B11", "C11", "D11", "E11", "F11", "G11", "H11"],
         ["A12", "B12", "C12", "D12", "E12", "F12", "G12", "H12"]
       ],
-      "brand": { "brand": "Opentrons", "brandId": [] },
+      "brand": {
+        "brand": "Opentrons",
+        "brandId": []
+      },
       "metadata": {
         "displayName": "Opentrons Flex 96 Tip Rack 50 µL",
         "displayCategory": "tipRack",
@@ -1181,14 +1192,25 @@
       "namespace": "opentrons",
       "version": 1,
       "schemaVersion": 2,
-      "cornerOffsetFromSlot": { "x": 0, "y": 0, "z": 0 },
+      "cornerOffsetFromSlot": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
       "stackingOffsetWithLabware": {
-        "opentrons_flex_96_tiprack_adapter": { "x": 0, "y": 0, "z": 121 }
+        "opentrons_flex_96_tiprack_adapter": {
+          "x": 0,
+          "y": 0,
+          "z": 121
+        }
       }
     },
     "opentrons/opentrons_flex_96_tiprack_adapter/1": {
       "ordering": [],
-      "brand": { "brand": "Opentrons", "brandId": [] },
+      "brand": {
+        "brand": "Opentrons",
+        "brandId": []
+      },
       "metadata": {
         "displayName": "Opentrons Flex 96 Tip Rack Adapter",
         "displayCategory": "adapter",
@@ -1201,7 +1223,12 @@
         "zDimension": 132
       },
       "wells": {},
-      "groups": [{ "metadata": {}, "wells": [] }],
+      "groups": [
+        {
+          "metadata": {},
+          "wells": []
+        }
+      ],
       "parameters": {
         "format": "96Standard",
         "quirks": ["tiprackAdapterFor96Channel"],
@@ -1213,7 +1240,11 @@
       "version": 1,
       "schemaVersion": 2,
       "allowedRoles": ["adapter"],
-      "cornerOffsetFromSlot": { "x": -14.25, "y": -3.5, "z": 0 }
+      "cornerOffsetFromSlot": {
+        "x": -14.25,
+        "y": -3.5,
+        "z": 0
+      }
     },
     "opentrons/biorad_96_wellplate_200ul_pcr/2": {
       "ordering": [
@@ -2226,17 +2257,39 @@
             "G12",
             "H12"
           ],
-          "metadata": { "wellBottomShape": "v" }
+          "metadata": {
+            "wellBottomShape": "v"
+          }
         }
       ],
-      "cornerOffsetFromSlot": { "x": 0, "y": 0, "z": 0 },
+      "cornerOffsetFromSlot": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
       "stackingOffsetWithLabware": {
-        "opentrons_96_well_aluminum_block": { "x": 0, "y": 0, "z": 15.41 },
-        "opentrons_96_pcr_adapter": { "x": 0, "y": 0, "z": 10.16 }
+        "opentrons_96_well_aluminum_block": {
+          "x": 0,
+          "y": 0,
+          "z": 15.41
+        },
+        "opentrons_96_pcr_adapter": {
+          "x": 0,
+          "y": 0,
+          "z": 10.16
+        }
       },
       "stackingOffsetWithModule": {
-        "thermocyclerModuleV2": { "x": 0, "y": 0, "z": 10.75 },
-        "magneticBlockV1": { "x": 0, "y": 0, "z": 3.87 }
+        "thermocyclerModuleV2": {
+          "x": 0,
+          "y": 0,
+          "z": 10.75
+        },
+        "magneticBlockV1": {
+          "x": 0,
+          "y": 0,
+          "z": 3.87
+        }
       }
     }
   },
@@ -2245,7 +2298,7 @@
   "commandSchemaId": "opentronsCommandSchemaV8",
   "commands": [
     {
-      "key": "1370b9a4-1e65-4203-9106-896db3db3bd3",
+      "key": "261b6dcd-ec1c-405c-bc13-bdca44557a4c",
       "commandType": "loadPipette",
       "params": {
         "pipetteName": "p1000_96",
@@ -2254,7 +2307,7 @@
       }
     },
     {
-      "key": "d65a7183-875a-443a-b26a-6a2470291dce",
+      "key": "4889f04d-e1fb-49ba-9f10-a0030c68ac7f",
       "commandType": "loadLabware",
       "params": {
         "displayName": "Opentrons Flex 96 Tip Rack Adapter",
@@ -2262,11 +2315,13 @@
         "loadName": "opentrons_flex_96_tiprack_adapter",
         "namespace": "opentrons",
         "version": 1,
-        "location": { "slotName": "C2" }
+        "location": {
+          "slotName": "C2"
+        }
       }
     },
     {
-      "key": "d05d92c6-d0d1-4886-aaef-c180b6953763",
+      "key": "60a8ced3-f7bb-44db-a492-aa2d102cc465",
       "commandType": "loadLabware",
       "params": {
         "displayName": "Opentrons Flex 96 Tip Rack 50 µL",
@@ -2280,7 +2335,7 @@
       }
     },
     {
-      "key": "bb161828-5fd9-4d84-8209-c1f5de48ba99",
+      "key": "608c4a16-9751-44c8-96f8-eec999611c79",
       "commandType": "loadLabware",
       "params": {
         "displayName": "Bio-Rad 96 Well Plate 200 µL PCR",
@@ -2288,11 +2343,13 @@
         "loadName": "biorad_96_wellplate_200ul_pcr",
         "namespace": "opentrons",
         "version": 2,
-        "location": { "slotName": "B1" }
+        "location": {
+          "slotName": "B1"
+        }
       }
     },
     {
-      "key": "8821778d-8456-4c74-8e29-da7604c012ec",
+      "key": "9905fa02-358f-4d23-b936-8711b2bf5600",
       "commandType": "loadLabware",
       "params": {
         "displayName": "Opentrons Flex 96 Tip Rack 50 µL",
@@ -2300,20 +2357,24 @@
         "loadName": "opentrons_flex_96_tiprack_50ul",
         "namespace": "opentrons",
         "version": 1,
-        "location": { "slotName": "D1" }
+        "location": {
+          "slotName": "D1"
+        }
       }
     },
     {
       "commandType": "configureNozzleLayout",
-      "key": "a2a88d61-5c01-45bf-bcb8-91c893328b53",
+      "key": "e8d646ad-3046-4186-803f-a01e329cef97",
       "params": {
         "pipetteId": "de7da440-95ec-43e8-8723-851321fbd6f9",
-        "configurationParams": { "style": "ALL" }
+        "configurationParams": {
+          "style": "ALL"
+        }
       }
     },
     {
       "commandType": "pickUpTip",
-      "key": "747ca334-8955-4069-8473-351be7666ee0",
+      "key": "ecf30773-7a3c-47c3-8c79-6b1f91bf20b2",
       "params": {
         "pipetteId": "de7da440-95ec-43e8-8723-851321fbd6f9",
         "labwareId": "75aa666f-98d8-4af9-908e-963ced428580:opentrons/opentrons_flex_96_tiprack_50ul/1",
@@ -2322,7 +2383,7 @@
     },
     {
       "commandType": "aspirate",
-      "key": "b1ffc410-ed41-4c83-bebd-145ae0ca05d8",
+      "key": "bb5f9927-b5a2-4e5e-8015-a93d808aa3ea",
       "params": {
         "pipetteId": "de7da440-95ec-43e8-8723-851321fbd6f9",
         "volume": 10,
@@ -2330,23 +2391,31 @@
         "wellName": "A1",
         "wellLocation": {
           "origin": "bottom",
-          "offset": { "z": 1, "x": 0, "y": 0 }
+          "offset": {
+            "z": 1,
+            "x": 0,
+            "y": 0
+          }
         },
         "flowRate": 6
       }
     },
     {
       "commandType": "moveToAddressableArea",
-      "key": "9100f4e2-b808-43d3-8c72-355dcce98b33",
+      "key": "efd35098-e1b1-4353-b5e9-9cc8c87e66df",
       "params": {
         "pipetteId": "de7da440-95ec-43e8-8723-851321fbd6f9",
         "addressableAreaName": "movableTrashA3",
-        "offset": { "x": 0, "y": 0, "z": 0 }
+        "offset": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
       }
     },
     {
       "commandType": "dispenseInPlace",
-      "key": "4088260b-f0e9-4d3a-852c-13b7d467cc2d",
+      "key": "b2da7fa8-1359-40fb-ab30-92e21fb879de",
       "params": {
         "pipetteId": "de7da440-95ec-43e8-8723-851321fbd6f9",
         "volume": 10,
@@ -2355,30 +2424,39 @@
     },
     {
       "commandType": "moveToAddressableAreaForDropTip",
-      "key": "8169cddb-5337-4bcf-bbfb-eb6307764b90",
+      "key": "9cdf6b7f-3fe4-455d-82db-2b0f3a8179bc",
       "params": {
         "pipetteId": "de7da440-95ec-43e8-8723-851321fbd6f9",
         "addressableAreaName": "movableTrashA3",
-        "offset": { "x": 0, "y": 0, "z": 0 },
+        "offset": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
         "alternateDropLocation": true
       }
     },
     {
       "commandType": "dropTipInPlace",
-      "key": "e0db70c1-546f-44ce-91c7-b18c37fcbcef",
-      "params": { "pipetteId": "de7da440-95ec-43e8-8723-851321fbd6f9" }
+      "key": "335acc42-668d-4159-9943-df822419adae",
+      "params": {
+        "pipetteId": "de7da440-95ec-43e8-8723-851321fbd6f9"
+      }
     },
     {
       "commandType": "configureNozzleLayout",
-      "key": "97fb0aee-ce45-427f-b3af-b9b9a1923778",
+      "key": "1950c1e6-1eb6-46c8-ba4b-c7c38c825094",
       "params": {
         "pipetteId": "de7da440-95ec-43e8-8723-851321fbd6f9",
-        "configurationParams": { "primaryNozzle": "A12", "style": "COLUMN" }
+        "configurationParams": {
+          "primaryNozzle": "A12",
+          "style": "COLUMN"
+        }
       }
     },
     {
       "commandType": "pickUpTip",
-      "key": "203d9332-ea93-4047-97e8-58516d18373b",
+      "key": "34b5dc55-8096-445d-b77c-40918b657c9f",
       "params": {
         "pipetteId": "de7da440-95ec-43e8-8723-851321fbd6f9",
         "labwareId": "9bd16b50-4ae9-4cfd-8583-3378087e6a6c:opentrons/opentrons_flex_96_tiprack_50ul/1",
@@ -2387,7 +2465,7 @@
     },
     {
       "commandType": "aspirate",
-      "key": "3b5ef144-b0a9-4136-8579-3ddef13d60d1",
+      "key": "42132ae0-4321-4251-9b12-5aec2a398617",
       "params": {
         "pipetteId": "de7da440-95ec-43e8-8723-851321fbd6f9",
         "volume": 10,
@@ -2395,23 +2473,31 @@
         "wellName": "A7",
         "wellLocation": {
           "origin": "bottom",
-          "offset": { "z": 1, "x": 0, "y": 0 }
+          "offset": {
+            "z": 1,
+            "x": 0,
+            "y": 0
+          }
         },
         "flowRate": 6
       }
     },
     {
       "commandType": "moveToAddressableArea",
-      "key": "b1b0cb96-cf8a-4c19-ad8b-7a515b720c80",
+      "key": "e6468d3a-d076-40be-bc49-da13f38c7e4e",
       "params": {
         "pipetteId": "de7da440-95ec-43e8-8723-851321fbd6f9",
         "addressableAreaName": "movableTrashA3",
-        "offset": { "x": 0, "y": 0, "z": 0 }
+        "offset": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
       }
     },
     {
       "commandType": "dispenseInPlace",
-      "key": "b49b05e6-f82a-4dd3-9288-8f5eba004b2a",
+      "key": "acbf26f8-2025-48df-85a8-8696815906f6",
       "params": {
         "pipetteId": "de7da440-95ec-43e8-8723-851321fbd6f9",
         "volume": 10,
@@ -2420,18 +2506,24 @@
     },
     {
       "commandType": "moveToAddressableAreaForDropTip",
-      "key": "6e0104da-5608-490a-ae14-e67db91331fe",
+      "key": "0e00ce33-ab8f-4600-9a4c-72677d2d4408",
       "params": {
         "pipetteId": "de7da440-95ec-43e8-8723-851321fbd6f9",
         "addressableAreaName": "movableTrashA3",
-        "offset": { "x": 0, "y": 0, "z": 0 },
+        "offset": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
         "alternateDropLocation": true
       }
     },
     {
       "commandType": "dropTipInPlace",
-      "key": "a1266ec5-4602-43e7-a5e5-6512e7560eb9",
-      "params": { "pipetteId": "de7da440-95ec-43e8-8723-851321fbd6f9" }
+      "key": "bfba211e-b4a7-475d-88ce-134c134dc7a1",
+      "params": {
+        "pipetteId": "de7da440-95ec-43e8-8723-851321fbd6f9"
+      }
     }
   ],
   "commandAnnotationSchemaId": "opentronsCommandAnnotationSchemaV1",

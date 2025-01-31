@@ -49,7 +49,6 @@ import {
   selectLabware,
   selectNestedLabware,
 } from '../../../labware-ingred/actions'
-import { getEnableAbsorbanceReader } from '../../../feature-flags/selectors'
 import {
   ALL_ORDERED_CATEGORIES,
   CUSTOM_CATEGORY,
@@ -134,8 +133,6 @@ export function LabwareTools(props: LabwareToolsProps): JSX.Element {
     robotType === OT2_ROBOT_TYPE ? isNextToHeaterShaker : false
   )
 
-  const enablePlateReader = useSelector(getEnableAbsorbanceReader)
-
   const getLabwareCompatible = useCallback(
     (def: LabwareDefinition2) => {
       // assume that custom (non-standard) labware is (potentially) compatible
@@ -171,8 +168,7 @@ export function LabwareTools(props: LabwareToolsProps): JSX.Element {
           moduleType !== HEATERSHAKER_MODULE_TYPE) ||
         (isAdapter96Channel && !has96Channel) ||
         (slot === 'offDeck' && isAdapter) ||
-        (!enablePlateReader &&
-          PLATE_READER_LOADNAME === parameters.loadName &&
+        (PLATE_READER_LOADNAME === parameters.loadName &&
           moduleType !== ABSORBANCE_READER_TYPE)
       )
     },

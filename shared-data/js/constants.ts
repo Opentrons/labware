@@ -565,6 +565,10 @@ export const ABSORBANCE_READER_V1_FIXTURE: 'absorbanceReaderV1' =
   'absorbanceReaderV1'
 export const FLEX_STACKER_V1_FIXTURE: 'flexStackerModuleV1' =
   'flexStackerModuleV1'
+export const FLEX_STACKER_WITH_WASTE_CHUTE_ADAPTER_COVERED_FIXTURE: 'flexStackerModuleV1WithWasteChuteRightAdapterCovered' =
+  'flexStackerModuleV1WithWasteChuteRightAdapterCovered'
+export const FLEX_STACKER_WTIH_WASTE_CHUTE_ADAPTER_NO_COVER_FIXTURE: 'flexStackerModuleV1WithWasteChuteRightAdapterNoCover' =
+  'flexStackerModuleV1WithWasteChuteRightAdapterNoCover'
 
 export const MODULE_FIXTURES_BY_MODEL: {
   [moduleModel in ModuleModel]?: CutoutFixtureId[]
@@ -615,6 +619,12 @@ export const WASTE_CHUTE_ONLY_FIXTURES: CutoutFixtureId[] = [
 export const WASTE_CHUTE_STAGING_AREA_FIXTURES: CutoutFixtureId[] = [
   STAGING_AREA_SLOT_WITH_WASTE_CHUTE_RIGHT_ADAPTER_COVERED_FIXTURE,
   STAGING_AREA_SLOT_WITH_WASTE_CHUTE_RIGHT_ADAPTER_NO_COVER_FIXTURE,
+]
+
+export const FLEX_STACKER_FIXTURES: CutoutFixtureId[] = [
+  FLEX_STACKER_V1_FIXTURE,
+  FLEX_STACKER_WITH_WASTE_CHUTE_ADAPTER_COVERED_FIXTURE,
+  FLEX_STACKER_WTIH_WASTE_CHUTE_ADAPTER_NO_COVER_FIXTURE,
 ]
 
 export const LOW_VOLUME_PIPETTES = ['p50_single_flex', 'p50_multi_flex']

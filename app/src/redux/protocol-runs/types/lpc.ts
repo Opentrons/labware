@@ -4,7 +4,7 @@ import type {
   CompletedProtocolAnalysis,
 } from '@opentrons/shared-data'
 import type {
-  LabwareOffsetLocation,
+  LegacyLabwareOffsetLocation,
   VectorOffset,
   LabwareOffset,
 } from '@opentrons/api-client'
@@ -15,13 +15,13 @@ import type { StepsInfo } from '/app/organisms/LabwarePositionCheck/redux/types'
 
 export interface PositionParams {
   labwareId: string
-  location: LabwareOffsetLocation
+  location: LegacyLabwareOffsetLocation
   position: VectorOffset | null
 }
 
 export interface WorkingOffset {
   labwareId: string
-  location: LabwareOffsetLocation
+  location: LegacyLabwareOffsetLocation
   initialPosition: VectorOffset | null
   finalPosition: VectorOffset | null
 }

@@ -110,11 +110,11 @@ describe('TouchTip', () => {
     fireEvent.click(continueBtn)
     expect(vi.mocked(InputField)).toHaveBeenCalledWith(
       {
-        title: 'Touch tip position from bottom of well (mm)',
+        title: 'Touch tip position from top of well (mm)',
         error: null,
         readOnly: true,
-        type: 'number',
-        value: null,
+        type: 'text',
+        value: '',
       },
       {}
     )
@@ -136,15 +136,19 @@ describe('TouchTip', () => {
     fireEvent.click(enabledBtn)
     const continueBtn = screen.getByText('Continue')
     fireEvent.click(continueBtn)
-    const numButton = screen.getByText('0')
+    const negButton = screen.getByText('-')
+    fireEvent.click(negButton)
+    const numButton = screen.getByText('9')
     fireEvent.click(numButton)
+    const secondNumButton = screen.getByText('8')
+    fireEvent.click(secondNumButton)
     expect(vi.mocked(InputField)).toHaveBeenCalledWith(
       {
-        title: 'Touch tip position from bottom of well (mm)',
-        error: 'Value must be between 25-50',
+        title: 'Touch tip position from top of well (mm)',
+        error: 'Value must be between -25 to 0',
         readOnly: true,
-        type: 'number',
-        value: 0,
+        type: 'text',
+        value: '-98',
       },
       {}
     )
@@ -162,15 +166,15 @@ describe('TouchTip', () => {
     fireEvent.click(enabledBtn)
     const continueBtn = screen.getByText('Continue')
     fireEvent.click(continueBtn)
-    const numButton = screen.getByText('0')
+    const numButton = screen.getByText('1')
     fireEvent.click(numButton)
     expect(vi.mocked(InputField)).toHaveBeenCalledWith(
       {
-        title: 'Touch tip position from bottom of well (mm)',
-        error: 'Value must be between 100-200',
+        title: 'Touch tip position from top of well (mm)',
+        error: 'Value must be between -100 to 0',
         readOnly: true,
-        type: 'number',
-        value: 0,
+        type: 'text',
+        value: '1',
       },
       {}
     )
@@ -184,7 +188,7 @@ describe('TouchTip', () => {
     fireEvent.click(enabledBtn)
     const continueBtn = screen.getByText('Continue')
     fireEvent.click(continueBtn)
-    const numButton = screen.getByText('4')
+    const numButton = screen.getByText('0')
     fireEvent.click(numButton)
     fireEvent.click(numButton)
     const saveBtn = screen.getByText('Save')
@@ -198,7 +202,7 @@ describe('TouchTip', () => {
       ...props,
       state: {
         ...props.state,
-        touchTipAspirate: 32,
+        touchTipAspirate: -25,
       },
     }
     render(props)
@@ -206,11 +210,11 @@ describe('TouchTip', () => {
     fireEvent.click(continueBtn)
     expect(vi.mocked(InputField)).toHaveBeenCalledWith(
       {
-        title: 'Touch tip position from bottom of well (mm)',
+        title: 'Touch tip position from top of well (mm)',
         error: null,
         readOnly: true,
-        type: 'number',
-        value: 32,
+        type: 'text',
+        value: '-25',
       },
       {}
     )
@@ -222,7 +226,7 @@ describe('TouchTip', () => {
       kind: 'dispense',
       state: {
         ...props.state,
-        touchTipDispense: 118,
+        touchTipDispense: -8,
       },
     }
     render(props)
@@ -230,11 +234,11 @@ describe('TouchTip', () => {
     fireEvent.click(continueBtn)
     expect(vi.mocked(InputField)).toHaveBeenCalledWith(
       {
-        title: 'Touch tip position from bottom of well (mm)',
+        title: 'Touch tip position from top of well (mm)',
         error: null,
         readOnly: true,
-        type: 'number',
-        value: 118,
+        type: 'text',
+        value: '-8',
       },
       {}
     )

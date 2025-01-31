@@ -287,7 +287,7 @@ export function getFailedCmdRelevantLabware(
   const failedLWURI = runRecord?.data.labware.find(
     labware => labware.id === recentRelevantFailedLabwareCmd?.params.labwareId
   )?.definitionUri
-  if (failedLWURI != null) {
+  if (failedLWURI != null && Object.keys(lwDefsByURI).includes(failedLWURI)) {
     return {
       name: getLabwareDisplayName(lwDefsByURI[failedLWURI]),
       nickname: labwareNickname,

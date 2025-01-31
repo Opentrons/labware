@@ -100,6 +100,8 @@ export function useCommandTextString(
 
     case 'loadLabware':
     case 'reloadLabware':
+    case 'loadLid':
+    case 'loadLidStack':
     case 'loadPipette':
     case 'loadModule':
     case 'loadLiquid':

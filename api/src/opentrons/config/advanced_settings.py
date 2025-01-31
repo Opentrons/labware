@@ -222,17 +222,6 @@ settings = [
         robot_type=[RobotTypeEnum.OT2, RobotTypeEnum.FLEX],
         internal_only=True,
     ),
-    SettingDefinition(
-        _id="allowLiquidClasses",
-        title="Allow the use of liquid classes",
-        description=(
-            "Do not enable."
-            " This is an Opentrons internal setting to allow using in-development"
-            " liquid classes."
-        ),
-        robot_type=[RobotTypeEnum.OT2, RobotTypeEnum.FLEX],
-        internal_only=True,
-    ),
 ]
 
 
@@ -736,6 +725,14 @@ def _migrate35to36(previous: SettingsMap) -> SettingsMap:
     return newmap
 
 
+def _migrate36to37(previous: SettingsMap) -> SettingsMap:
+    """Migrate to version 37 of the feature flags file.
+
+    - Removes the allowLiquidClasses flag.
+    """
+    return {k: v for k, v in previous.items() if "allowLiquidClasses" != k}
+
+
 _MIGRATIONS = [
     _migrate0to1,
     _migrate1to2,
@@ -773,6 +770,7 @@ _MIGRATIONS = [
     _migrate33to34,
     _migrate34to35,
     _migrate35to36,
+    _migrate36to37,
 ]
 """
 List of all migrations to apply, indexed by (version - 1). See _migrate below

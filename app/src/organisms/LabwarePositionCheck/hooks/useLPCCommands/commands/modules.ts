@@ -10,7 +10,7 @@ import type {
   CompletedProtocolAnalysis,
   CreateCommand,
 } from '@opentrons/shared-data'
-import type { LabwareOffsetLocation } from '@opentrons/api-client'
+import type { LegacyLabwareOffsetLocation } from '@opentrons/api-client'
 
 export interface BuildModulePrepCommandsParams {
   step: CheckPositionsStep
@@ -128,7 +128,7 @@ const thermocyclerInitCommands = (
 
 const heaterShakerCleanupCommands = (
   moduleId: string | undefined,
-  location: LabwareOffsetLocation
+  location: LegacyLabwareOffsetLocation
 ): CreateCommand[] => {
   const moduleType =
     (moduleId != null &&

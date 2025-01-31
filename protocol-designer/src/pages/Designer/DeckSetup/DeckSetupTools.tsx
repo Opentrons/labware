@@ -49,7 +49,6 @@ import {
   selectNestedLabware,
   selectZoomedIntoSlot,
 } from '../../../labware-ingred/actions'
-import { getEnableAbsorbanceReader } from '../../../feature-flags/selectors'
 import { useBlockingHint } from '../../../organisms/BlockingHintModal/useBlockingHint'
 import { selectors } from '../../../labware-ingred/selectors'
 import { useKitchen } from '../../../organisms/Kitchen/hooks'
@@ -110,7 +109,6 @@ export function DeckSetupTools(props: DeckSetupToolsProps): JSX.Element | null {
     'change_magnet_module_model'
   )
   const dispatch = useDispatch<ThunkDispatch<any>>()
-  const enableAbsorbanceReader = useSelector(getEnableAbsorbanceReader)
   const deckSetup = useSelector(getDeckSetupForActiveItem)
   const {
     selectedLabwareDefUri,
@@ -144,9 +142,7 @@ export function DeckSetupTools(props: DeckSetupToolsProps): JSX.Element | null {
   }, [selectedModuleModel, selectedFixture])
 
   const moduleModels =
-    slot != null
-      ? getModuleModelsBySlot(enableAbsorbanceReader, robotType, slot)
-      : null
+    slot != null ? getModuleModelsBySlot(robotType, slot) : null
   const [tab, setTab] = useState<'hardware' | 'labware'>(
     moduleModels?.length === 0 || slot === 'offDeck' ? 'labware' : 'hardware'
   )

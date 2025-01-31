@@ -6,6 +6,7 @@ from enum import Enum
 
 class ErrorCodes(Enum):
     UNHANDLED_GCODE = "ERR003"
+    MOTOR_STALL = "ERR403"
 
 
 class SerialException(Exception):
@@ -40,6 +41,12 @@ class ErrorResponse(FailedCommand):
 
 
 class UnhandledGcode(ErrorResponse):
+    def __init__(self, port: str, response: str, command: str) -> None:
+        self.command = command
+        super().__init__(port, response)
+
+
+class MotorStall(ErrorResponse):
     def __init__(self, port: str, response: str, command: str) -> None:
         self.command = command
         super().__init__(port, response)

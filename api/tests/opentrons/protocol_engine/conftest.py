@@ -172,6 +172,14 @@ def magdeck_well_plate_def() -> LabwareDefinition:
 
 
 @pytest.fixture(scope="session")
+def tiprack_lid_def() -> LabwareDefinition:
+    """Get the definition of the opentrons tiprack lid."""
+    return LabwareDefinition.model_validate(
+        load_definition("opentrons_flex_tiprack_lid", 1, schema=3)
+    )
+
+
+@pytest.fixture(scope="session")
 def tempdeck_v1_def() -> ModuleDefinition:
     """Get the definition of a V1 tempdeck."""
     definition = load_shared_data("module/definitions/3/temperatureModuleV1.json")

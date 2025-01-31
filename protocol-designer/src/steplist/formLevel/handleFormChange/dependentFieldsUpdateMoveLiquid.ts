@@ -190,7 +190,7 @@ const updatePatchOnLabwareChange = (
     ? {
         ...getDefaultFields(
           'aspirate_mmFromBottom',
-          'aspirate_touchTip_mmFromBottom',
+          'aspirate_touchTip_mmFromTop',
           'aspirate_touchTip_checkbox'
         ),
         aspirate_wells: getDefaultWells({
@@ -206,7 +206,7 @@ const updatePatchOnLabwareChange = (
     ? {
         ...getDefaultFields(
           'dispense_mmFromBottom',
-          'dispense_touchTip_mmFromBottom',
+          'dispense_touchTip_mmFromTop',
           'dispense_touchTip_checkbox'
         ),
         dispense_wells: getDefaultWells({

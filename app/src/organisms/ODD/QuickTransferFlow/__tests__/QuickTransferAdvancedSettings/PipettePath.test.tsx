@@ -196,7 +196,7 @@ describe('PipettePath', () => {
     expect(vi.mocked(InputField)).toHaveBeenCalledWith(
       {
         title: 'Disposal volume (µL)',
-        error: 'Value must be between 1-160',
+        error: 'Value must be between 1 to 160',
         readOnly: true,
         type: 'number',
         value: 201,

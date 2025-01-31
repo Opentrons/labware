@@ -2,6 +2,19 @@ For more details about this release, please see the full [technical change log][
 
 [technical change log]: https://github.com/Opentrons/opentrons/releases
 
+## Internal Release 2.4.0-alpha.1
+
+This internal release, pulled from the `edge` branch, contains features being developed for 8.4.0. It's for internal testing only.
+
+### New Stuff In This Release (list in progress):
+
+- Python API version bumped to 2.23
+- Added liquid classes and new transfer functions
+
+### Bug Fixes In This Release (list in progress):
+- Fixed `InstrumentContext.name` so that it returns the correct API-specific names of Flex pipettes.
+
+
 ## Internal Release 2.3.0-alpha.2
 
 This internal release, pulled from the `edge` branch, contains features being developed for 8.3.0. It's for internal testing only.

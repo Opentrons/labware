@@ -53,6 +53,7 @@ export const commandCreatorsTimeline = (
         commands: commandCreatorResult.commands,
         robotState: nextRobotStateAndWarnings.robotState,
         warnings: commandCreatorResult.warnings,
+        python: commandCreatorResult.python,
       }
       return {
         timeline: [...acc.timeline, nextResult],

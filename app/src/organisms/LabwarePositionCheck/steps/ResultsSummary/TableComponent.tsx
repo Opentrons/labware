@@ -4,7 +4,7 @@ import { TerseOffsetTable } from '/app/organisms/TerseOffsetTable'
 import { OffsetTable } from './OffsetTable'
 import { getIsOnDevice } from '/app/redux/config'
 
-import type { LabwareOffsetCreateData } from '@opentrons/api-client'
+import type { LegacyLabwareOffsetCreateData } from '@opentrons/api-client'
 import type {
   LPCStepProps,
   ResultsSummaryStep,
@@ -13,7 +13,7 @@ import type { State } from '/app/redux/types'
 import type { LPCWizardState } from '/app/redux/protocol-runs'
 
 interface TableComponentProps extends LPCStepProps<ResultsSummaryStep> {
-  offsetsToApply: LabwareOffsetCreateData[]
+  offsetsToApply: LegacyLabwareOffsetCreateData[]
 }
 
 export function TableComponent(props: TableComponentProps): JSX.Element {

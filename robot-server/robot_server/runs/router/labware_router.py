@@ -9,7 +9,11 @@ from opentrons_shared_data.labware.labware_definition import LabwareDefinition
 
 from server_utils.fastapi_utils.light_router import LightRouter
 
-from opentrons.protocol_engine import LabwareOffsetCreate, LabwareOffset
+from opentrons.protocol_engine import (
+    LabwareOffsetCreate,
+    LegacyLabwareOffsetCreate,
+    LabwareOffset,
+)
 
 from robot_server.errors.error_responses import ErrorBody
 from robot_server.service.json_api import (
@@ -47,7 +51,7 @@ labware_router = LightRouter()
     },
 )
 async def add_labware_offset(
-    request_body: RequestModel[LabwareOffsetCreate],
+    request_body: RequestModel[LegacyLabwareOffsetCreate | LabwareOffsetCreate],
     run_orchestrator_store: Annotated[
         RunOrchestratorStore, Depends(get_run_orchestrator_store)
     ],

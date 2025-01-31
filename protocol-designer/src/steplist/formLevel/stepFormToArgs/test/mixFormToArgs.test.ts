@@ -59,7 +59,7 @@ beforeEach(() => {
     times: '2',
     dispense_flowRate: 4,
     mix_touchTip_checkbox: false,
-    mix_touchTip_mmFromBottom: null,
+    mix_touchTip_mmFromTop: null,
     aspirate_delay_checkbox: false,
     aspirate_delay_seconds: null,
     dispense_delay_checkbox: false,
@@ -83,7 +83,7 @@ describe('mix step form -> command creator args', () => {
       volume: '12',
       times: '2',
       touchTip: false,
-      touchTipMmFromBottom: 9.54,
+      touchTipMmFromTop: -1,
       changeTip: 'always',
       blowoutLocation: null,
       pipette: 'pipetteId',
@@ -131,14 +131,14 @@ describe('mix step form -> command creator args', () => {
     // TOUCH TIP
     {
       checkboxField: 'mix_touchTip_checkbox',
-      formFields: { mix_touchTip_mmFromBottom: 10.5 },
+      formFields: { mix_touchTip_mmFromTop: -10.5 },
       expectedArgsUnchecked: {
         touchTip: false,
-        touchTipMmFromBottom: 10.5,
+        touchTipMmFromTop: -10.5,
       },
       expectedArgsChecked: {
         touchTip: true,
-        touchTipMmFromBottom: 10.5,
+        touchTipMmFromTop: -10.5,
       },
     },
     // Aspirate delay

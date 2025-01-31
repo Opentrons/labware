@@ -179,9 +179,9 @@ export function BatchEditMixTools(props: BatchEditMixToolsProps): JSX.Element {
                 <PositionField
                   prefix="dispense"
                   propsForFields={propsForFields}
-                  zField="mix_touchTip_mmFromBottom"
+                  zField="mix_touchTip_mmFromTop"
                   labwareId={getLabwareIdForPositioningField(
-                    'mix_touchTip_mmFromBottom'
+                    'mix_touchTip_mmFromTop'
                   )}
                 />
               ) : null}

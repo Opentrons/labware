@@ -1,11 +1,8 @@
 """Tests for the transfer APIs using liquid classes."""
 import pytest
 import mock
-from decoy import Decoy
-from opentrons_shared_data.robot.types import RobotTypeEnum
 
 from opentrons.protocol_api import ProtocolContext
-from opentrons.config import feature_flags as ff
 from opentrons.protocol_api.core.engine import InstrumentCore
 from opentrons.protocol_api.core.engine.transfer_components_executor import (
     TransferType,
@@ -15,10 +12,10 @@ from opentrons.protocol_api.core.engine.transfer_components_executor import (
 
 @pytest.mark.ot3_only
 @pytest.mark.parametrize(
-    "simulated_protocol_context", [("2.20", "Flex")], indirect=True
+    "simulated_protocol_context", [("2.23", "Flex")], indirect=True
 )
 def test_water_transfer_with_volume_more_than_tip_max(
-    decoy: Decoy, mock_feature_flags: None, simulated_protocol_context: ProtocolContext
+    simulated_protocol_context: ProtocolContext,
 ) -> None:
     """It should run the transfer steps without any errors.
 
@@ -26,13 +23,12 @@ def test_water_transfer_with_volume_more_than_tip_max(
     analyze successfully. It doesn't check whether the steps are as expected.
     That will be covered in analysis snapshot tests.
     """
-    decoy.when(ff.allow_liquid_classes(RobotTypeEnum.FLEX)).then_return(True)
     trash = simulated_protocol_context.load_trash_bin("A3")
     tiprack = simulated_protocol_context.load_labware(
         "opentrons_flex_96_tiprack_50ul", "D1"
     )
-    pipette_50 = simulated_protocol_context.load_instrument(
-        "flex_1channel_50", mount="left", tip_racks=[tiprack]
+    pipette_1k = simulated_protocol_context.load_instrument(
+        "flex_1channel_1000", mount="left", tip_racks=[tiprack]
     )
     nest_plate = simulated_protocol_context.load_labware(
         "nest_96_wellplate_200ul_flat", "C3"
@@ -51,7 +47,7 @@ def test_water_transfer_with_volume_more_than_tip_max(
         mock_manager = mock.Mock()
         mock_manager.attach_mock(patched_pick_up_tip, "pick_up_tip")
 
-        pipette_50.transfer_liquid(
+        pipette_1k.transfer_liquid(
             liquid_class=water,
             volume=60,
             source=nest_plate.rows()[0],
@@ -62,7 +58,7 @@ def test_water_transfer_with_volume_more_than_tip_max(
         assert patched_pick_up_tip.call_count == 24
         patched_pick_up_tip.reset_mock()
 
-        pipette_50.transfer_liquid(
+        pipette_1k.transfer_liquid(
             liquid_class=water,
             volume=100,
             source=nest_plate.rows()[0],
@@ -73,8 +69,8 @@ def test_water_transfer_with_volume_more_than_tip_max(
         assert patched_pick_up_tip.call_count == 12
         patched_pick_up_tip.reset_mock()
 
-        pipette_50.pick_up_tip()
-        pipette_50.transfer_liquid(
+        pipette_1k.pick_up_tip()
+        pipette_1k.transfer_liquid(
             liquid_class=water,
             volume=50,
             source=nest_plate.rows()[0],
@@ -82,16 +78,16 @@ def test_water_transfer_with_volume_more_than_tip_max(
             new_tip="never",
             trash_location=trash,
         )
-        pipette_50.drop_tip()
+        pipette_1k.drop_tip()
         assert patched_pick_up_tip.call_count == 1
 
 
 @pytest.mark.ot3_only
 @pytest.mark.parametrize(
-    "simulated_protocol_context", [("2.20", "Flex")], indirect=True
+    "simulated_protocol_context", [("2.23", "Flex")], indirect=True
 )
 def test_order_of_water_transfer_steps(
-    decoy: Decoy, mock_feature_flags: None, simulated_protocol_context: ProtocolContext
+    simulated_protocol_context: ProtocolContext,
 ) -> None:
     """It should run the transfer steps without any errors.
 
@@ -99,7 +95,6 @@ def test_order_of_water_transfer_steps(
     analyze successfully. It doesn't check whether the steps are as expected.
     That will be covered in analysis snapshot tests.
     """
-    decoy.when(ff.allow_liquid_classes(RobotTypeEnum.FLEX)).then_return(True)
     trash = simulated_protocol_context.load_trash_bin("A3")
     tiprack = simulated_protocol_context.load_labware(
         "opentrons_flex_96_tiprack_50ul", "D1"
@@ -239,10 +234,10 @@ def test_order_of_water_transfer_steps(
 
 @pytest.mark.ot3_only
 @pytest.mark.parametrize(
-    "simulated_protocol_context", [("2.20", "Flex")], indirect=True
+    "simulated_protocol_context", [("2.23", "Flex")], indirect=True
 )
 def test_order_of_water_transfer_steps_with_no_new_tips(
-    decoy: Decoy, mock_feature_flags: None, simulated_protocol_context: ProtocolContext
+    simulated_protocol_context: ProtocolContext,
 ) -> None:
     """It should run the transfer steps without any errors.
 
@@ -250,7 +245,6 @@ def test_order_of_water_transfer_steps_with_no_new_tips(
     analyze successfully. It doesn't check whether the steps are as expected.
     That will be covered in analysis snapshot tests.
     """
-    decoy.when(ff.allow_liquid_classes(RobotTypeEnum.FLEX)).then_return(True)
     trash = simulated_protocol_context.load_trash_bin("A3")
     tiprack = simulated_protocol_context.load_labware(
         "opentrons_flex_96_tiprack_50ul", "D1"

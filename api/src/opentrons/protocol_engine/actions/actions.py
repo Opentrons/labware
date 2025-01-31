@@ -23,7 +23,7 @@ from ..error_recovery_policy import ErrorRecoveryPolicy, ErrorRecoveryType
 from ..notes.notes import CommandNote
 from ..state.update_types import StateUpdate
 from ..types import (
-    LabwareOffsetCreate,
+    LabwareOffsetCreateInternal,
     ModuleDefinition,
     Liquid,
     DeckConfigurationType,
@@ -206,7 +206,7 @@ class AddLabwareOffsetAction:
 
     labware_offset_id: str
     created_at: datetime
-    request: LabwareOffsetCreate
+    request: LabwareOffsetCreateInternal
 
 
 @dataclasses.dataclass(frozen=True)

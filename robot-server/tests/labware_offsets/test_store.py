@@ -7,7 +7,7 @@ import sqlalchemy
 
 from opentrons.protocol_engine import (
     LabwareOffset,
-    LabwareOffsetLocation,
+    LegacyLabwareOffsetLocation,
     LabwareOffsetVector,
 )
 from opentrons.protocol_engine.types import ModuleModel
@@ -35,7 +35,7 @@ def test_filter_fields(subject: LabwareOffsetStore) -> None:
         id="a",
         createdAt=datetime.now(timezone.utc),
         definitionUri="definitionUri a",
-        location=LabwareOffsetLocation(
+        location=LegacyLabwareOffsetLocation(
             slotName=DeckSlotName.SLOT_A1,
             moduleModel=ModuleModel.THERMOCYCLER_MODULE_V1,
             definitionUri="location.definitionUri a",
@@ -46,7 +46,7 @@ def test_filter_fields(subject: LabwareOffsetStore) -> None:
         id="b",
         createdAt=datetime.now(timezone.utc),
         definitionUri="definitionUri b",
-        location=LabwareOffsetLocation(
+        location=LegacyLabwareOffsetLocation(
             slotName=DeckSlotName.SLOT_B1,
             moduleModel=ModuleModel.MAGNETIC_BLOCK_V1,
             definitionUri="location.definitionUri b",
@@ -100,7 +100,7 @@ def test_filter_combinations(subject: LabwareOffsetStore) -> None:
             id=id,
             createdAt=datetime.now(timezone.utc),
             definitionUri=definition_uri,
-            location=LabwareOffsetLocation(slotName=DeckSlotName.SLOT_A1),
+            location=LegacyLabwareOffsetLocation(slotName=DeckSlotName.SLOT_A1),
             vector=LabwareOffsetVector(x=1, y=2, z=3),
         )
         for (id, definition_uri) in ids_and_definition_uris
@@ -141,7 +141,7 @@ def test_delete(subject: LabwareOffsetStore) -> None:
             id=id,
             createdAt=datetime.now(timezone.utc),
             definitionUri="",
-            location=LabwareOffsetLocation(slotName=DeckSlotName.SLOT_A1),
+            location=LegacyLabwareOffsetLocation(slotName=DeckSlotName.SLOT_A1),
             vector=LabwareOffsetVector(x=1, y=2, z=3),
         )
         for id in ["id-a", "id-b", "id-c"]

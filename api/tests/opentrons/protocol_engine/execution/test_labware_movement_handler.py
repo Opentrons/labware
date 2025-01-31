@@ -18,7 +18,7 @@ from opentrons.protocol_engine.types import (
     ModuleLocation,
     OnLabwareLocation,
     LabwareOffset,
-    LabwareOffsetLocation,
+    LegacyLabwareOffsetLocation,
     LabwareOffsetVector,
     LabwareLocation,
     NonStackedLocation,
@@ -142,7 +142,7 @@ async def set_up_decoy_hardware_gripper(
             id="new-offset-id",
             createdAt=datetime(year=2022, month=10, day=20),
             definitionUri="my-labware",
-            location=LabwareOffsetLocation(
+            location=LegacyLabwareOffsetLocation(
                 slotName=DeckSlotName.SLOT_5
             ),  # this location doesn't matter for this test
             vector=LabwareOffsetVector(x=0.5, y=0.6, z=0.7),

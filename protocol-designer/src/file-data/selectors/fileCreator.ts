@@ -2,7 +2,6 @@ import { createSelector } from 'reselect'
 import flatMap from 'lodash/flatMap'
 import isEmpty from 'lodash/isEmpty'
 import mapValues from 'lodash/mapValues'
-import map from 'lodash/map'
 import reduce from 'lodash/reduce'
 import uniq from 'lodash/uniq'
 import {
@@ -10,18 +9,14 @@ import {
   OT2_STANDARD_DECKID,
   OT2_STANDARD_MODEL,
   FLEX_STANDARD_DECKID,
-  SPAN7_8_10_11_SLOT,
 } from '@opentrons/shared-data'
 
-import { COLUMN_4_SLOTS } from '@opentrons/step-generation'
 import { selectors as dismissSelectors } from '../../dismiss'
 import { selectors as labwareDefSelectors } from '../../labware-defs'
-import { uuid } from '../../utils'
 import { selectors as ingredSelectors } from '../../labware-ingred/selectors'
 import { selectors as stepFormSelectors } from '../../step-forms'
 import { selectors as uiLabwareSelectors } from '../../ui/labware'
 import { swatchColors } from '../../organisms/DefineLiquidsModal/swatchColors'
-import { getLoadLiquidCommands } from '../../load-file/migration/utils/getLoadLiquidCommands'
 import {
   DEFAULT_MM_TOUCH_TIP_OFFSET_FROM_TOP,
   DEFAULT_MM_BLOWOUT_OFFSET_FROM_TOP,
@@ -30,27 +25,21 @@ import {
 import { getStepGroups } from '../../step-forms/selectors'
 import { getFileMetadata, getRobotType } from './fileFields'
 import { getInitialRobotState, getRobotStateTimeline } from './commands'
+import { getLoadCommands } from './utils'
 
 import type {
   PipetteEntity,
   LabwareEntities,
   PipetteEntities,
-  RobotState,
 } from '@opentrons/step-generation'
 import type {
-  LabwareLocation,
-  AddressableAreaName,
   CommandAnnotationV1Mixin,
   CommandV8Mixin,
   CreateCommand,
   LabwareV2Mixin,
   LiquidV1Mixin,
-  LoadLabwareCreateCommand,
-  LoadModuleCreateCommand,
-  LoadPipetteCreateCommand,
   OT2RobotMixin,
   OT3RobotMixin,
-  PipetteName,
   ProtocolBase,
   ProtocolFile,
 } from '@opentrons/shared-data'
@@ -132,6 +121,16 @@ export const createFile: Selector<ProtocolFile> = createSelector(
   ) => {
     const { author, description, created } = fileMetadata
 
+    const loadCommands = getLoadCommands(
+      initialRobotState,
+      pipetteEntities,
+      moduleEntities,
+      labwareEntities,
+      labwareNicknamesById,
+      ingredients,
+      ingredLocations
+    )
+
     const name = fileMetadata.protocolName || 'untitled'
     const lastModified = fileMetadata.lastModified
     // TODO: Ian 2018-07-10 allow user to save steps in JSON file, even if those
@@ -167,39 +166,6 @@ export const createFile: Selector<ProtocolFile> = createSelector(
       },
     }
 
-    interface Pipettes {
-      [pipetteId: string]: { name: PipetteName }
-    }
-
-    const pipettes: Pipettes = mapValues(
-      initialRobotState.pipettes,
-      (
-        pipette: typeof initialRobotState.pipettes[keyof typeof initialRobotState.pipettes],
-        pipetteId: string
-      ) => ({
-        name: pipetteEntities[pipetteId].name,
-      })
-    )
-
-    const loadPipetteCommands = map(
-      initialRobotState.pipettes,
-      (
-        pipette: typeof initialRobotState.pipettes[keyof typeof initialRobotState.pipettes],
-        pipetteId: string
-      ): LoadPipetteCreateCommand => {
-        const loadPipetteCommand = {
-          key: uuid(),
-          commandType: 'loadPipette' as const,
-          params: {
-            pipetteName: pipettes[pipetteId].name,
-            mount: pipette.mount,
-            pipetteId: pipetteId,
-          },
-        }
-        return loadPipetteCommand
-      }
-    )
-
     const liquids: ProtocolFile['liquids'] = reduce(
       ingredients,
       (acc, liquidData, liquidId) => {
@@ -214,139 +180,12 @@ export const createFile: Selector<ProtocolFile> = createSelector(
       },
       {}
     )
-    // initiate "adapter" commands first so we can map through them to get the
-    //  labware that goes on top of it's location
-    const loadAdapterCommands = reduce<
-      RobotState['labware'],
-      LoadLabwareCreateCommand[]
-    >(
-      initialRobotState.labware,
-      (
-        acc,
-        labware: typeof initialRobotState.labware[keyof typeof initialRobotState.labware],
-        labwareId: string
-      ): LoadLabwareCreateCommand[] => {
-        const { def } = labwareEntities[labwareId]
-        const isAdapter = def.allowedRoles?.includes('adapter')
-        if (!isAdapter) return acc
-        const isOnTopOfModule = labware.slot in initialRobotState.modules
-        const namespace = def.namespace
-        const loadName = def.parameters.loadName
-        const version = def.version
-        const loadAdapterCommands = {
-          key: uuid(),
-          commandType: 'loadLabware' as const,
-          params: {
-            displayName: def.metadata.displayName,
-            labwareId,
-            loadName,
-            namespace: namespace,
-            version: version,
-            location: isOnTopOfModule
-              ? { moduleId: labware.slot }
-              : { slotName: labware.slot },
-          },
-        }
-
-        return [...acc, loadAdapterCommands]
-      },
-      []
-    )
-
-    const loadLabwareCommands = reduce<
-      RobotState['labware'],
-      LoadLabwareCreateCommand[]
-    >(
-      initialRobotState.labware,
-      (
-        acc,
-        labware: typeof initialRobotState.labware[keyof typeof initialRobotState.labware],
-        labwareId: string
-      ): LoadLabwareCreateCommand[] => {
-        const { def } = labwareEntities[labwareId]
-        const isAdapter = def.allowedRoles?.includes('adapter')
-        if (isAdapter || def.metadata.displayCategory === 'trash') return acc
-        const isOnTopOfModule = labware.slot in initialRobotState.modules
-        const isOnAdapter =
-          loadAdapterCommands.find(
-            command => command.params.labwareId === labware.slot
-          ) != null
-        const namespace = def.namespace
-        const loadName = def.parameters.loadName
-        const version = def.version
-        const isAddressableAreaName = COLUMN_4_SLOTS.includes(labware.slot)
-
-        let location: LabwareLocation = { slotName: labware.slot }
-        if (isOnTopOfModule) {
-          location = { moduleId: labware.slot }
-        } else if (isOnAdapter) {
-          location = { labwareId: labware.slot }
-        } else if (isAddressableAreaName) {
-          // TODO(bh, 2024-01-02): check slots against addressable areas via the deck definition
-          location = {
-            addressableAreaName: labware.slot as AddressableAreaName,
-          }
-        } else if (labware.slot === 'offDeck') {
-          location = 'offDeck'
-        }
-
-        const loadLabwareCommands = {
-          key: uuid(),
-          commandType: 'loadLabware' as const,
-          params: {
-            displayName:
-              labwareNicknamesById[labwareId] ?? def.metadata.displayName,
-            labwareId: labwareId,
-            loadName,
-            namespace: namespace,
-            version: version,
-            location,
-          },
-        }
-
-        return [...acc, loadLabwareCommands]
-      },
-      []
-    )
-
-    const loadLiquidCommands = getLoadLiquidCommands(
-      ingredients,
-      ingredLocations
-    )
-    const loadModuleCommands = map(
-      initialRobotState.modules,
-      (
-        module: typeof initialRobotState.modules[keyof typeof initialRobotState.modules],
-        moduleId: string
-      ): LoadModuleCreateCommand => {
-        const model = moduleEntities[moduleId].model
-        const loadModuleCommand = {
-          key: uuid(),
-          commandType: 'loadModule' as const,
-          params: {
-            model: model,
-            location: {
-              slotName: module.slot === SPAN7_8_10_11_SLOT ? '7' : module.slot,
-            },
-            moduleId: moduleId,
-          },
-        }
-        return loadModuleCommand
-      }
-    )
 
     const labwareDefinitions = getLabwareDefinitionsInUse(
       labwareEntities,
       pipetteEntities,
       labwareDefsByURI
     )
-    const loadCommands: CreateCommand[] = [
-      ...loadPipetteCommands,
-      ...loadModuleCommands,
-      ...loadAdapterCommands,
-      ...loadLabwareCommands,
-      ...loadLiquidCommands,
-    ]
 
     const nonLoadCommands: CreateCommand[] = flatMap(
       robotStateTimeline.timeline,

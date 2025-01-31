@@ -13,6 +13,7 @@ interface CCReducerAcc {
   commands: CreateCommand[]
   errors: CommandCreatorError[]
   warnings: CommandCreatorWarning[]
+  python?: string
 }
 export const reduceCommandCreators = (
   commandCreators: CurriedCommandCreator[],
@@ -36,6 +37,10 @@ export const reduceCommandCreators = (
         }
       }
       const allCommands = [...prev.commands, ...next.commands]
+      const allPython = [
+        ...(prev.python ? [prev.python] : []),
+        ...(next.python ? [next.python] : []),
+      ].join('\n')
       const updates = getNextRobotStateAndWarnings(
         next.commands,
         invariantContext,
@@ -50,6 +55,7 @@ export const reduceCommandCreators = (
           ...(next.warnings || []),
           ...updates.warnings,
         ],
+        ...(allPython && { python: allPython }),
       }
     },
     {
@@ -69,5 +75,6 @@ export const reduceCommandCreators = (
   return {
     commands: result.commands,
     warnings: result.warnings,
+    ...(result.python && { python: result.python }),
   }
 }

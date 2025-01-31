@@ -3,7 +3,7 @@
 This is its own module to fix circular imports.
 """
 
-from typing import Optional
+from typing import Optional, Literal
 
 from pydantic import BaseModel, Field
 
@@ -12,7 +12,52 @@ from opentrons.types import DeckSlotName
 from .module import ModuleModel
 
 
-class LabwareOffsetLocation(BaseModel):
+class OnLabwareOffsetLocationSequenceComponent(BaseModel):
+    """Offset location sequence component for a labware on another labware."""
+
+    kind: Literal["onLabware"] = "onLabware"
+    labwareUri: str = Field(
+        ...,
+        description="The definition URI of a labware that a labware can be loaded onto.",
+    )
+
+
+class OnModuleOffsetLocationSequenceComponent(BaseModel):
+    """Offset location sequence component for a labware on a module."""
+
+    kind: Literal["onModule"] = "onModule"
+    moduleModel: ModuleModel = Field(
+        ..., description="The model of a module that a lwbare can be loaded on to."
+    )
+
+
+class OnAddressableAreaOffsetLocationSequenceComponent(BaseModel):
+    """Offset location sequence component for a labware on an addressable area."""
+
+    kind: Literal["onAddressableArea"] = "onAddressableArea"
+    addressableAreaName: str = Field(
+        ...,
+        description=(
+            'The ID of an addressable area that a labware or module can be loaded onto, such as (on the OT-2) "2" '
+            'or (on the Flex) "C1". '
+            "\n\n"
+            "On the Flex, this field must be correct for the kind of entity it hosts. For instance, if the prior entity "
+            "in the location sequence is an `OnModuleOffsetLocationSequenceComponent(moduleModel=temperatureModuleV2)`, "
+            "this entity must be temperatureModuleV2NN where NN is the slot name in which the module resides. "
+        ),
+    )
+
+
+LabwareOffsetLocationSequenceComponents = (
+    OnLabwareOffsetLocationSequenceComponent
+    | OnModuleOffsetLocationSequenceComponent
+    | OnAddressableAreaOffsetLocationSequenceComponent
+)
+
+LabwareOffsetLocationSequence = list[LabwareOffsetLocationSequenceComponents]
+
+
+class LegacyLabwareOffsetLocation(BaseModel):
     """Parameters describing when a given offset may apply to a given labware load."""
 
     slotName: DeckSlotName = Field(

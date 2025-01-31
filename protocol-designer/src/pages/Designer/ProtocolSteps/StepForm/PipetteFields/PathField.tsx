@@ -69,7 +69,7 @@ interface PathButtonProps {
 }
 
 function PathButton(props: PathButtonProps): JSX.Element {
-  const { disabled, onClick, id, path, selected, subtitle } = props
+  const { disabled, onClick, path, selected, subtitle } = props
   const [targetProps, tooltipProps] = useHoverTooltip({
     placement: TOOLTIP_TOP_START,
   })
@@ -79,14 +79,18 @@ function PathButton(props: PathButtonProps): JSX.Element {
     <Tooltip tooltipProps={tooltipProps} maxWidth="24.5rem">
       <Flex gridGap={SPACING.spacing8} flexDirection={DIRECTION_COLUMN}>
         <Box>{t(`step_edit_form.field.path.title.${path}`)}</Box>
-        <img src={PATH_ANIMATION_IMAGES[path]} width="361px" />
+        <img
+          src={PATH_ANIMATION_IMAGES[path]}
+          width="361px"
+          alt="path animation"
+        />
         <Box>{subtitle}</Box>
       </Flex>
     </Tooltip>
   )
 
   return (
-    <Flex {...targetProps} key={id}>
+    <Flex {...targetProps} flexDirection={DIRECTION_COLUMN}>
       {tooltip}
       <RadioButton
         width="100%"

@@ -105,6 +105,9 @@ stages:
           definitionUri: opentrons/biorad_96_wellplate_200ul_pcr/1
           location:
             slotName: '1'
+          locationSequence:
+            - kind: 'onAddressableArea'
+              addressableAreaName: '1'
           vector:
             x: 1.11
             y: 2.22
@@ -264,6 +267,9 @@ stages:
               definitionUri: opentrons/biorad_96_wellplate_200ul_pcr/1
               location:
                 slotName: '1'
+              locationSequence:
+                - kind: 'onAddressableArea'
+                  addressableAreaName: '1'
               vector:
                 x: 1.11
                 y: 2.22

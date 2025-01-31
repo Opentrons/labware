@@ -38,6 +38,8 @@
   "latching_hs_latch": "Latching labware on Heater-Shaker",
   "left": "Left",
   "load_labware_to_display_location": "Load {{labware}} {{display_location}}",
+  "load_lid": "Loading lid",
+  "load_lid_stack": "Loading lid stack",
   "load_liquids_info_protocol_setup": "Load {{liquid}} into {{labware}}",
   "load_module_protocol_setup": "Load {{module}} in Slot {{slot_name}}",
   "load_pipette_protocol_setup": "Load {{pipette_name}} in {{mount_name}} Mount",

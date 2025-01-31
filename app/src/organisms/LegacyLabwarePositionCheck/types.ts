@@ -1,6 +1,9 @@
 import type { SECTIONS } from './constants'
 import type { useCreateCommandMutation } from '@opentrons/react-api-client'
-import type { LabwareOffsetLocation, VectorOffset } from '@opentrons/api-client'
+import type {
+  LegacyLabwareOffsetLocation,
+  VectorOffset,
+} from '@opentrons/api-client'
 import type { LabwareDefinition2 } from '@opentrons/shared-data'
 
 export type LabwarePositionCheckStep =
@@ -20,7 +23,7 @@ export interface CheckTipRacksStep {
   section: typeof SECTIONS.CHECK_TIP_RACKS
   pipetteId: string
   labwareId: string
-  location: LabwareOffsetLocation
+  location: LegacyLabwareOffsetLocation
   definitionUri: string
   adapterId?: string
 }
@@ -32,7 +35,7 @@ export interface PickUpTipStep {
   section: typeof SECTIONS.PICK_UP_TIP
   pipetteId: string
   labwareId: string
-  location: LabwareOffsetLocation
+  location: LegacyLabwareOffsetLocation
   definitionUri: string
   adapterId?: string
 }
@@ -40,7 +43,7 @@ export interface CheckPositionsStep {
   section: typeof SECTIONS.CHECK_POSITIONS
   pipetteId: string
   labwareId: string
-  location: LabwareOffsetLocation
+  location: LegacyLabwareOffsetLocation
   definitionUri: string
   moduleId?: string
 }
@@ -48,7 +51,7 @@ export interface CheckLabwareStep {
   section: typeof SECTIONS.CHECK_LABWARE
   pipetteId: string
   labwareId: string
-  location: LabwareOffsetLocation
+  location: LegacyLabwareOffsetLocation
   definitionUri: string
   moduleId?: string
   adapterId?: string
@@ -57,7 +60,7 @@ export interface ReturnTipStep {
   section: typeof SECTIONS.RETURN_TIP
   pipetteId: string
   labwareId: string
-  location: LabwareOffsetLocation
+  location: LegacyLabwareOffsetLocation
   definitionUri: string
   adapterId?: string
 }
@@ -80,13 +83,13 @@ export type CreateRunCommand = (
 interface InitialPositionAction {
   type: 'initialPosition'
   labwareId: string
-  location: LabwareOffsetLocation
+  location: LegacyLabwareOffsetLocation
   position: VectorOffset | null
 }
 interface FinalPositionAction {
   type: 'finalPosition'
   labwareId: string
-  location: LabwareOffsetLocation
+  location: LegacyLabwareOffsetLocation
   position: VectorOffset | null
 }
 interface TipPickUpOffsetAction {
@@ -99,7 +102,7 @@ export type RegisterPositionAction =
   | TipPickUpOffsetAction
 export interface WorkingOffset {
   labwareId: string
-  location: LabwareOffsetLocation
+  location: LegacyLabwareOffsetLocation
   initialPosition: VectorOffset | null
   finalPosition: VectorOffset | null
 }

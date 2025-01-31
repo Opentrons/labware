@@ -77,7 +77,10 @@ export function ProtocolSetupOffsets({
   return (
     <>
       {LPCWizard ?? (
-        <>
+        <Flex
+          flexDirection={DIRECTION_COLUMN}
+          padding={`${SPACING.spacing32} ${SPACING.spacing40} ${SPACING.spacing40}`}
+        >
           <Flex
             flexDirection={DIRECTION_ROW}
             justifyContent={JUSTIFY_SPACE_BETWEEN}
@@ -136,7 +139,7 @@ export function ProtocolSetupOffsets({
               }
             }}
           />
-        </>
+        </Flex>
       )}
     </>
   )

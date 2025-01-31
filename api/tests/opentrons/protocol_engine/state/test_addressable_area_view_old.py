@@ -214,7 +214,6 @@ def test_get_addressable_area_for_simulation_not_loaded(decoy: Decoy) -> None:
         deck_configuration_provider.get_addressable_area_from_name(
             "abc",
             DeckPoint(x=1, y=2, z=3),
-            DeckSlotName.SLOT_A1,
             sentinel.deck_definition,
         )
     ).then_return(addressable_area)

@@ -29,6 +29,24 @@ export interface LoadLabwareRunTimeCommand
     LoadLabwareCreateCommand {
   result?: LoadLabwareResult
 }
+export interface LoadLidCreateCommand extends CommonCommandCreateInfo {
+  commandType: 'loadLid'
+  params: LoadLidParams
+}
+export interface LoadLidRunTimeCommand
+  extends CommonCommandRunTimeInfo,
+    LoadLidCreateCommand {
+  result?: LoadLidResult
+}
+export interface LoadLidStackCreateCommand extends CommonCommandCreateInfo {
+  commandType: 'loadLidStack'
+  params: LoadLidStackParams
+}
+export interface LoadLidStackRunTimeCommand
+  extends CommonCommandRunTimeInfo,
+    LoadLidStackCreateCommand {
+  result?: LoadLidStackResult
+}
 export interface ReloadLabwareCreateCommand extends CommonCommandCreateInfo {
   commandType: 'reloadLabware'
   params: { labwareId: string }
@@ -89,6 +107,8 @@ export type SetupRunTimeCommand =
   | LoadModuleRunTimeCommand
   | LoadLiquidRunTimeCommand
   | MoveLabwareRunTimeCommand
+  | LoadLidRunTimeCommand
+  | LoadLidStackRunTimeCommand
 
 export type SetupCreateCommand =
   | ConfigureNozzleLayoutCreateCommand
@@ -98,6 +118,8 @@ export type SetupCreateCommand =
   | LoadModuleCreateCommand
   | LoadLiquidCreateCommand
   | MoveLabwareCreateCommand
+  | LoadLidCreateCommand
+  | LoadLidStackCreateCommand
 
 export type LabwareLocation =
   | 'offDeck'
@@ -163,7 +185,6 @@ export interface MoveLabwareParams {
 interface MoveLabwareResult {
   offsetId: string
 }
-
 interface LoadModuleParams {
   moduleId?: string
   location: ModuleLocation
@@ -202,4 +223,31 @@ interface NozzleConfigurationParams {
 export interface ConfigureNozzleLayoutParams {
   pipetteId: string
   configurationParams: NozzleConfigurationParams
+}
+
+interface LoadLidStackParams {
+  location: LabwareLocation
+  loadName: string
+  namespace: string
+  version: number
+  quantity: number
+}
+
+interface LoadLidStackResult {
+  stackLabwareId: string
+  labwareIds: string[]
+  definition: LabwareDefinition2
+  location: LabwareLocation
+}
+
+interface LoadLidParams {
+  location: LabwareLocation
+  loadName: string
+  namespace: string
+  version: number
+}
+
+interface LoadLidResult {
+  labwareId: string
+  definition: LabwareDefinition2
 }

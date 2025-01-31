@@ -6,16 +6,16 @@
     "author": "Hopia",
     "description": "testing a thermocycler on OT-2",
     "created": 1731356664582,
-    "lastModified": 1731356884152,
+    "lastModified": 1738157325544,
     "category": null,
     "subcategory": null,
     "tags": []
   },
   "designerApplication": {
     "name": "opentrons/protocol-designer",
-    "version": "8.2.0",
+    "version": "8.5.0",
     "data": {
-      "_internalAppBuildDate": "Mon, 11 Nov 2024 20:27:53 GMT",
+      "_internalAppBuildDate": "Wed, 29 Jan 2025 13:23:47 GMT",
       "defaultValues": {
         "aspirate_mmFromBottom": 1,
         "dispense_mmFromBottom": 1,
@@ -27,7 +27,10 @@
           "opentrons/opentrons_96_tiprack_20ul/1"
         ]
       },
-      "dismissedWarnings": { "form": [], "timeline": [] },
+      "dismissedWarnings": {
+        "form": [],
+        "timeline": []
+      },
       "ingredients": {
         "0": {
           "name": "123",
@@ -39,14 +42,46 @@
       },
       "ingredLocations": {
         "ac928a51-a248-4304-be43-e9cb19c34fa9:opentrons/nest_96_wellplate_100ul_pcr_full_skirt/2": {
-          "A1": { "0": { "volume": 55 } },
-          "B1": { "0": { "volume": 55 } },
-          "C1": { "0": { "volume": 55 } },
-          "D1": { "0": { "volume": 55 } },
-          "E1": { "0": { "volume": 55 } },
-          "F1": { "0": { "volume": 55 } },
-          "G1": { "0": { "volume": 55 } },
-          "H1": { "0": { "volume": 55 } }
+          "A1": {
+            "0": {
+              "volume": 55
+            }
+          },
+          "B1": {
+            "0": {
+              "volume": 55
+            }
+          },
+          "C1": {
+            "0": {
+              "volume": 55
+            }
+          },
+          "D1": {
+            "0": {
+              "volume": 55
+            }
+          },
+          "E1": {
+            "0": {
+              "volume": 55
+            }
+          },
+          "F1": {
+            "0": {
+              "volume": 55
+            }
+          },
+          "G1": {
+            "0": {
+              "volume": 55
+            }
+          },
+          "H1": {
+            "0": {
+              "volume": 55
+            }
+          }
         }
       },
       "savedStepForms": {
@@ -149,7 +184,10 @@
       ]
     }
   },
-  "robot": { "model": "OT-2 Standard", "deckId": "ot2_standard" },
+  "robot": {
+    "model": "OT-2 Standard",
+    "deckId": "ot2_standard"
+  },
   "labwareDefinitionSchemaId": "opentronsLabwareSchemaV2",
   "labwareDefinitions": {
     "opentrons/opentrons_96_tiprack_20ul/1": {
@@ -1165,7 +1203,11 @@
       "namespace": "opentrons",
       "version": 1,
       "schemaVersion": 2,
-      "cornerOffsetFromSlot": { "x": 0, "y": 0, "z": 0 }
+      "cornerOffsetFromSlot": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
     },
     "opentrons/nest_96_wellplate_100ul_pcr_full_skirt/2": {
       "ordering": [
@@ -2068,7 +2110,9 @@
       },
       "groups": [
         {
-          "metadata": { "wellBottomShape": "v" },
+          "metadata": {
+            "wellBottomShape": "v"
+          },
           "wells": [
             "A1",
             "B1",
@@ -2179,24 +2223,44 @@
       "namespace": "opentrons",
       "version": 2,
       "schemaVersion": 2,
-      "cornerOffsetFromSlot": { "x": 0, "y": 0, "z": 0 },
+      "cornerOffsetFromSlot": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
       "stackingOffsetWithLabware": {
-        "opentrons_96_pcr_adapter": { "x": 0, "y": 0, "z": 10.2 },
-        "opentrons_96_well_aluminum_block": { "x": 0, "y": 0, "z": 12.66 }
+        "opentrons_96_pcr_adapter": {
+          "x": 0,
+          "y": 0,
+          "z": 10.2
+        },
+        "opentrons_96_well_aluminum_block": {
+          "x": 0,
+          "y": 0,
+          "z": 12.66
+        }
       },
       "stackingOffsetWithModule": {
-        "thermocyclerModuleV2": { "x": 0, "y": 0, "z": 10.8 }
+        "thermocyclerModuleV2": {
+          "x": 0,
+          "y": 0,
+          "z": 10.8
+        }
       }
     }
   },
   "liquidSchemaId": "opentronsLiquidSchemaV1",
   "liquids": {
-    "0": { "displayName": "123", "description": "", "displayColor": "#b925ff" }
+    "0": {
+      "displayName": "123",
+      "description": "",
+      "displayColor": "#b925ff"
+    }
   },
   "commandSchemaId": "opentronsCommandSchemaV8",
   "commands": [
     {
-      "key": "b0cb75c2-d745-44fc-9132-d0614153db4f",
+      "key": "01d12a6f-a134-41ad-8a96-0f1db1caa648",
       "commandType": "loadPipette",
       "params": {
         "pipetteName": "p20_single_gen2",
@@ -2205,16 +2269,18 @@
       }
     },
     {
-      "key": "cbb3ea89-3f25-4276-9578-556605c262d8",
+      "key": "984a7baa-bf2d-4b9b-8d22-7fa864d443d5",
       "commandType": "loadModule",
       "params": {
         "model": "thermocyclerModuleV1",
-        "location": { "slotName": "7" },
+        "location": {
+          "slotName": "7"
+        },
         "moduleId": "82858229-5c25-46cc-87d4-35ab318c18ce:thermocyclerModuleType"
       }
     },
     {
-      "key": "c8492190-5605-449e-b409-a458a2dd914b",
+      "key": "70bd414e-8191-4c73-a79d-ec514a775cdd",
       "commandType": "loadLabware",
       "params": {
         "displayName": "NEST 96 Well Plate 100 µL PCR Full Skirt",
@@ -2229,7 +2295,7 @@
     },
     {
       "commandType": "loadLiquid",
-      "key": "f064269e-96fd-442b-b84c-4d0628238e14",
+      "key": "6eeecce1-bf14-4ba9-ac27-99d4a45c1352",
       "params": {
         "liquidId": "0",
         "labwareId": "ac928a51-a248-4304-be43-e9cb19c34fa9:opentrons/nest_96_wellplate_100ul_pcr_full_skirt/2",
@@ -2247,14 +2313,14 @@
     },
     {
       "commandType": "thermocycler/closeLid",
-      "key": "d5cf25be-eae8-4004-ad77-1c72ac9135ea",
+      "key": "b3f3d0ef-d186-451b-b019-92170d4c54b0",
       "params": {
         "moduleId": "82858229-5c25-46cc-87d4-35ab318c18ce:thermocyclerModuleType"
       }
     },
     {
       "commandType": "thermocycler/setTargetLidTemperature",
-      "key": "b04fb0d0-080f-48cb-9fa3-977818c42e9f",
+      "key": "a61991d4-e5ca-4828-88e1-16121263e580",
       "params": {
         "moduleId": "82858229-5c25-46cc-87d4-35ab318c18ce:thermocyclerModuleType",
         "celsius": 50
@@ -2262,14 +2328,14 @@
     },
     {
       "commandType": "thermocycler/waitForLidTemperature",
-      "key": "c0d61d1e-24ff-466b-bda2-4d33baadcb4b",
+      "key": "5433a727-f2fc-49ef-a7b2-f88e426fa310",
       "params": {
         "moduleId": "82858229-5c25-46cc-87d4-35ab318c18ce:thermocyclerModuleType"
       }
     },
     {
       "commandType": "thermocycler/setTargetLidTemperature",
-      "key": "909291ef-24d2-4a1a-83fc-9fad61cba3d1",
+      "key": "cd2d7b9e-c308-4efd-9cbd-cca366abbe2d",
       "params": {
         "moduleId": "82858229-5c25-46cc-87d4-35ab318c18ce:thermocyclerModuleType",
         "celsius": 40
@@ -2277,38 +2343,59 @@
     },
     {
       "commandType": "thermocycler/waitForLidTemperature",
-      "key": "d19932d8-cbf8-4f90-88b6-e624cce31630",
+      "key": "ea9d18cd-d9a3-461e-96c1-ac41436474d6",
       "params": {
         "moduleId": "82858229-5c25-46cc-87d4-35ab318c18ce:thermocyclerModuleType"
       }
     },
     {
       "commandType": "thermocycler/runProfile",
-      "key": "9dd3f412-2c40-49a2-aeb3-0c0b0b244efb",
+      "key": "5d773732-71d8-45af-83f7-be31f4f89689",
       "params": {
         "moduleId": "82858229-5c25-46cc-87d4-35ab318c18ce:thermocyclerModuleType",
         "profile": [
-          { "holdSeconds": 71, "celsius": 50 },
-          { "holdSeconds": 170, "celsius": 34 },
-          { "holdSeconds": 2640, "celsius": 87 },
-          { "holdSeconds": 170, "celsius": 34 },
-          { "holdSeconds": 2640, "celsius": 87 },
-          { "holdSeconds": 170, "celsius": 34 },
-          { "holdSeconds": 2640, "celsius": 87 }
+          {
+            "holdSeconds": 71,
+            "celsius": 50
+          },
+          {
+            "holdSeconds": 170,
+            "celsius": 34
+          },
+          {
+            "holdSeconds": 2640,
+            "celsius": 87
+          },
+          {
+            "holdSeconds": 170,
+            "celsius": 34
+          },
+          {
+            "holdSeconds": 2640,
+            "celsius": 87
+          },
+          {
+            "holdSeconds": 170,
+            "celsius": 34
+          },
+          {
+            "holdSeconds": 2640,
+            "celsius": 87
+          }
         ],
         "blockMaxVolumeUl": 50
       }
     },
     {
       "commandType": "thermocycler/deactivateBlock",
-      "key": "15ed7e3a-26e6-44ec-929c-883fafa37fa8",
+      "key": "49c7e428-7a42-4bc0-93a8-8c30c375fe58",
       "params": {
         "moduleId": "82858229-5c25-46cc-87d4-35ab318c18ce:thermocyclerModuleType"
       }
     },
     {
       "commandType": "thermocycler/deactivateLid",
-      "key": "453b76d8-9132-4556-95ca-e9909cdcc839",
+      "key": "3358c263-9ce4-4a02-846f-26faf626ed50",
       "params": {
         "moduleId": "82858229-5c25-46cc-87d4-35ab318c18ce:thermocyclerModuleType"
       }

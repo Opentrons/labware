@@ -85,7 +85,8 @@ export interface LabwareOffset {
   id: string
   createdAt: string
   definitionUri: string
-  location: LabwareOffsetLocation
+  location: LegacyLabwareOffsetLocation
+  locationSequence?: LabwareOffsetLocationSequence
   vector: VectorOffset
 }
 
@@ -156,14 +157,35 @@ export interface CreateRunActionData {
   actionType: RunActionType
 }
 
-export interface LabwareOffsetLocation {
+export interface OnAddressableAreaLabwareOffsetLocationSequenceComponent {
+  kind: 'onAddressableArea'
+  labware: string
+}
+
+export interface OnModuleOffsetLocationSequenceComponent {
+  kind: 'onModule'
+  moduleModel: ModuleModel
+}
+
+export interface OnLabwareOffsetLocationSequenceComponent {
+  kind: 'onLabware'
+  labwareUri: string
+}
+
+export type LabwareOffsetLocationSequenceComponent =
+  | OnAddressableAreaLabwareOffsetLocationSequenceComponent
+  | OnModuleOffsetLocationSequenceComponent
+  | OnLabwareOffsetLocationSequenceComponent
+export type LabwareOffsetLocationSequence = LabwareOffsetLocationSequenceComponent[]
+
+export interface LegacyLabwareOffsetLocation {
   slotName: string
   moduleModel?: ModuleModel
   definitionUri?: string
 }
-export interface LabwareOffsetCreateData {
+export interface LegacyLabwareOffsetCreateData {
   definitionUri: string
-  location: LabwareOffsetLocation
+  location: LegacyLabwareOffsetLocation
   vector: VectorOffset
 }
 

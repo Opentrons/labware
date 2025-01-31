@@ -36,7 +36,7 @@ def sample_transfer_props(
 ) -> TransferProperties:
     """Return a mocked out liquid class fixture."""
     return LiquidClass.create(maximal_liquid_class_def).get_for(
-        pipette="flex_1channel_50", tiprack="opentrons_flex_96_tiprack_50ul"
+        pipette="flex_1channel_50", tip_rack="opentrons_flex_96_tiprack_50ul"
     )
 
 

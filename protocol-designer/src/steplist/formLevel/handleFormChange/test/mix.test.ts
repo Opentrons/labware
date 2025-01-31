@@ -82,7 +82,7 @@ describe('well selection should update', () => {
       volume: '2',
       pipette: 'pipetteId',
       mix_mmFromBottom: 1.2,
-      mix_touchTip_mmFromBottom: 2.3,
+      mix_touchTip_mmFromTop: 2.3,
     }
   })
   it('pipette cleared', () => {
@@ -133,7 +133,7 @@ describe('well selection should update', () => {
       ...patch,
       wells: ['A1'],
       mix_mmFromBottom: DEFAULT_MM_OFFSET_FROM_BOTTOM,
-      mix_touchTip_mmFromBottom: null,
+      mix_touchTip_mmFromTop: null,
       mix_touchTip_checkbox: false,
     })
   })
@@ -146,7 +146,7 @@ describe('well selection should update', () => {
       ...patch,
       wells: [],
       mix_mmFromBottom: DEFAULT_MM_OFFSET_FROM_BOTTOM,
-      mix_touchTip_mmFromBottom: null,
+      mix_touchTip_mmFromTop: null,
       mix_touchTip_checkbox: false,
     })
   })

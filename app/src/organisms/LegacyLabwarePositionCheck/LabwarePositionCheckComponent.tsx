@@ -39,7 +39,7 @@ import type {
   RobotType,
 } from '@opentrons/shared-data'
 import type {
-  LabwareOffsetCreateData,
+  LegacyLabwareOffsetCreateData,
   LabwareOffset,
   CommandData,
 } from '@opentrons/api-client'
@@ -310,7 +310,9 @@ export const LabwarePositionCheckComponent = (
     robotType,
   }
 
-  const handleApplyOffsets = (offsets: LabwareOffsetCreateData[]): void => {
+  const handleApplyOffsets = (
+    offsets: LegacyLabwareOffsetCreateData[]
+  ): void => {
     setIsApplyingOffsets(true)
     Promise.all(offsets.map(data => createLabwareOffset({ runId, data })))
       .then(() => {
