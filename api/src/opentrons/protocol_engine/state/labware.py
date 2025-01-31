@@ -487,9 +487,13 @@ class LabwareView:
             return self.get_labware_stack(labware_stack)
         return labware_stack
 
+    def get_lid_id_by_labware_id(self, labware_id: str) -> str | None:
+        """Get the ID of a lid labware on top of a given labware, if any."""
+        return self._state.labware_by_id[labware_id].lid_id
+
     def get_lid_by_labware_id(self, labware_id: str) -> LoadedLabware | None:
         """Get the Lid Labware that is currently on top of a given labware, if there is one."""
-        lid_id = self._state.labware_by_id[labware_id].lid_id
+        lid_id = self.get_lid_id_by_labware_id(labware_id)
         if lid_id:
             return self._state.labware_by_id[lid_id]
         else:

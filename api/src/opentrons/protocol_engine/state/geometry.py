@@ -1,5 +1,6 @@
 """Geometry state getters."""
 
+from logging import getLogger
 import enum
 from numpy import array, dot, double as npdouble
 from numpy.typing import NDArray
@@ -22,6 +23,7 @@ from ..errors import (
     LabwareNotLoadedOnModuleError,
     LabwareMovementNotAllowedError,
     OperationLocationNotInWellError,
+    WrongModuleTypeError,
 )
 from ..resources import fixture_validation, labware_validation
 from ..types import (
@@ -55,7 +57,14 @@ from ..types import (
     OnModuleOffsetLocationSequenceComponent,
     OnAddressableAreaOffsetLocationSequenceComponent,
     OnLabwareOffsetLocationSequenceComponent,
+    OnLabwareLocationSequenceComponent,
     ModuleModel,
+    LabwareLocationSequence,
+    OnModuleLocationSequenceComponent,
+    OnAddressableAreaLocationSequenceComponent,
+    NotOnDeckLocationSequenceComponent,
+    labware_location_is_off_deck,
+    labware_location_is_system,
 )
 from .config import Config
 from .labware import LabwareView
@@ -70,6 +79,7 @@ from .frustum_helpers import (
 from ._well_math import wells_covered_by_pipette_configuration, nozzles_per_well
 
 
+_LOG = getLogger(__name__)
 SLOT_WIDTH = 128
 _PIPETTE_HOMED_POSITION_Z = (
     248.0  # Height of the bottom of the nozzle without the tip attached when homed
@@ -1363,6 +1373,92 @@ class GeometryView:
         return slot_based_offset or self._labware.get_child_gripper_offsets(
             labware_id=labware_id, slot_name=None
         )
+
+    def get_location_sequence(self, labware_id: str) -> LabwareLocationSequence:
+        """Provide the LocationSequence specifying the current position of the labware.
+
+        Elements in this sequence contain instance IDs of things. The chain is valid only until the
+        labware is moved.
+        """
+        return self.get_predicted_location_sequence(
+            self._labware.get_location(labware_id)
+        )
+
+    def get_predicted_location_sequence(
+        self, labware_location: LabwareLocation
+    ) -> LabwareLocationSequence:
+        """Get the location sequence for this location. Useful for a labware that hasn't been loaded."""
+        return self._recurse_labware_location(labware_location, [])
+
+    def _recurse_labware_location(
+        self,
+        labware_location: LabwareLocation,
+        building: LabwareLocationSequence,
+    ) -> LabwareLocationSequence:
+        if isinstance(labware_location, AddressableAreaLocation):
+            return building + [
+                OnAddressableAreaLocationSequenceComponent(
+                    addressableAreaName=labware_location.addressableAreaName,
+                    slotName=self._addressable_areas.get_addressable_area_base_slot(
+                        labware_location.addressableAreaName
+                    ),
+                )
+            ]
+        elif labware_location_is_off_deck(
+            labware_location
+        ) or labware_location_is_system(labware_location):
+            return building + [
+                NotOnDeckLocationSequenceComponent(logicalLocationName=labware_location)
+            ]
+
+        elif isinstance(labware_location, OnLabwareLocation):
+            return self._recurse_labware_location(
+                self._labware.get_location(labware_location.labwareId),
+                building
+                + [
+                    OnLabwareLocationSequenceComponent(
+                        labwareId=labware_location.labwareId,
+                        lidId=self._labware.get_lid_id_by_labware_id(
+                            labware_location.labwareId
+                        ),
+                    )
+                ],
+            )
+        elif isinstance(labware_location, ModuleLocation):
+            module_deck_slot = self._modules.get_location(labware_location.moduleId)
+            addressable_area = self._modules.get_provided_addressable_area(
+                labware_location.moduleId
+            )
+            try:
+                self._modules.get_flex_stacker_substate(labware_location.moduleId)
+                return building + [
+                    OnModuleLocationSequenceComponent(
+                        moduleId=labware_location.moduleId
+                    ),
+                    NotOnDeckLocationSequenceComponent(
+                        logicalLocationName=OFF_DECK_LOCATION
+                    ),
+                ]
+
+            except WrongModuleTypeError:
+                pass
+            return building + [
+                OnModuleLocationSequenceComponent(moduleId=labware_location.moduleId),
+                OnAddressableAreaLocationSequenceComponent(
+                    addressableAreaName=addressable_area,
+                    slotName=module_deck_slot.slotName,
+                ),
+            ]
+        elif isinstance(labware_location, DeckSlotLocation):
+            return building + [
+                OnAddressableAreaLocationSequenceComponent(
+                    addressableAreaName=labware_location.slotName.value,
+                    slotName=labware_location.slotName,
+                )
+            ]
+        else:
+            _LOG.warn(f"Unhandled labware location kind: {labware_location}")
+            return building
 
     def get_offset_location(
         self, labware_id: str

@@ -1,6 +1,7 @@
 """Protocol engine types to deal with locating things on the deck."""
 
-from typing import Literal, Union
+from __future__ import annotations
+from typing import Literal, Union, TypeGuard
 
 from pydantic import BaseModel, Field
 
@@ -78,6 +79,20 @@ OFF_DECK_LOCATION: _OffDeckLocationType = "offDeck"
 SYSTEM_LOCATION: _SystemLocationType = "systemLocation"
 
 
+def labware_location_is_off_deck(
+    location: LabwareLocation,
+) -> TypeGuard[_OffDeckLocationType]:
+    """Check if a location is an off deck location."""
+    return isinstance(location, str) and location == OFF_DECK_LOCATION
+
+
+def labware_location_is_system(
+    location: LabwareLocation,
+) -> TypeGuard[_SystemLocationType]:
+    """Check if a location is the system location."""
+    return isinstance(location, str) and location == SYSTEM_LOCATION
+
+
 class OnLabwareLocationSequenceComponent(BaseModel):
     """Labware on another labware."""
 
@@ -98,7 +113,7 @@ class OnAddressableAreaLocationSequenceComponent(BaseModel):
 
     kind: Literal["onAddressableArea"] = "onAddressableArea"
     addressableAreaName: str
-    slotName: str | None
+    slotName: DeckSlotName | None
 
 
 class NotOnDeckLocationSequenceComponent(BaseModel):

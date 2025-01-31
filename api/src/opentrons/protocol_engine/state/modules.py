@@ -36,7 +36,7 @@ from opentrons.protocol_engine.state.module_substates.absorbance_reader_substate
 )
 from opentrons.types import DeckSlotName, MountType, StagingSlotName
 from .update_types import AbsorbanceReaderStateUpdate, FlexStackerStateUpdate
-from ..errors import ModuleNotConnectedError
+from ..errors import ModuleNotConnectedError, AreaNotInDeckConfigurationError
 
 from ..types import (
     LoadedModule,
@@ -803,6 +803,26 @@ class ModuleView:
             )
         return location
 
+    def get_provided_addressable_area(self, module_id: str) -> str:
+        """Get the addressable area provided by this module.
+
+        If the current deck does not allow modules to provide locations (i.e., is an OT-2 deck)
+        then return the addressable area underneath the module.
+        """
+        module = self.get(module_id)
+
+        if isinstance(module.location, DeckSlotLocation):
+            location = module.location.slotName
+        elif module.model == ModuleModel.THERMOCYCLER_MODULE_V2:
+            location = DeckSlotName.SLOT_B1
+        else:
+            raise ValueError(
+                "Module location invalid for nominal module offset calculation."
+            )
+        if not self.get_deck_supports_module_fixtures():
+            return location.value
+        return self.ensure_and_convert_module_fixture_location(location, module.model)
+
     def get_requested_model(self, module_id: str) -> Optional[ModuleModel]:
         """Return the model by which this module was requested.
 
@@ -910,18 +930,7 @@ class ModuleView:
                 z=xformed[2],
             )
         else:
-            module = self.get(module_id)
-            if isinstance(module.location, DeckSlotLocation):
-                location = module.location.slotName
-            elif module.model == ModuleModel.THERMOCYCLER_MODULE_V2:
-                location = DeckSlotName.SLOT_B1
-            else:
-                raise ValueError(
-                    "Module location invalid for nominal module offset calculation."
-                )
-            module_addressable_area = self.ensure_and_convert_module_fixture_location(
-                location, module.model
-            )
+            module_addressable_area = self.get_provided_addressable_area(module_id)
             module_addressable_area_position = (
                 addressable_areas.get_addressable_area_offsets_from_cutout(
                     module_addressable_area
@@ -1313,7 +1322,7 @@ class ModuleView:
         deck_type = self._state.deck_type
 
         if not self.get_deck_supports_module_fixtures():
-            raise ValueError(
+            raise AreaNotInDeckConfigurationError(
                 f"Invalid Deck Type: {deck_type.name} - Does not support modules as fixtures."
             )
 
