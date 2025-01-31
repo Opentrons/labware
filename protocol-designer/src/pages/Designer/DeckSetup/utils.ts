@@ -290,6 +290,20 @@ export const getAdjacentLabware = (
   return adjacentLabware
 }
 
+export const getAdjacentSlots = (
+  fixture: Fixture,
+  cutout: CutoutId
+): AddressableAreaName[] | null => {
+  if (fixture === 'stagingArea' || fixture === 'wasteChuteAndStagingArea') {
+    const stagingAreaAddressableAreaNames = getStagingAreaAddressableAreas(
+      [cutout],
+      false
+    )
+    return stagingAreaAddressableAreaNames
+  }
+  return null
+}
+
 type BreakPoint = 'small' | 'medium' | 'large'
 
 export function useDeckSetupWindowBreakPoint(): BreakPoint {

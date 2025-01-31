@@ -147,19 +147,24 @@ export const getHas96Channel = (pipettes: PipetteEntities): boolean => {
 }
 
 export const getStagingAreaAddressableAreas = (
-  cutoutIds: CutoutId[]
+  cutoutIds: CutoutId[],
+  filterStandardSlots: boolean = true
 ): AddressableAreaName[] => {
   const deckDef = getDeckDefFromRobotType(FLEX_ROBOT_TYPE)
   const cutoutFixtures = deckDef.cutoutFixtures
 
-  return cutoutIds
-    .flatMap(cutoutId => {
-      const addressableAreasOnCutout = cutoutFixtures.find(
-        cutoutFixture => cutoutFixture.id === STAGING_AREA_RIGHT_SLOT_FIXTURE
-      )?.providesAddressableAreas[cutoutId]
-      return addressableAreasOnCutout ?? []
-    })
-    .filter(aa => !isAddressableAreaStandardSlot(aa, deckDef))
+  const addressableAreasRaw = cutoutIds.flatMap(cutoutId => {
+    const addressableAreasOnCutout = cutoutFixtures.find(
+      cutoutFixture => cutoutFixture.id === STAGING_AREA_RIGHT_SLOT_FIXTURE
+    )?.providesAddressableAreas[cutoutId]
+    return addressableAreasOnCutout ?? []
+  })
+  if (filterStandardSlots) {
+    return addressableAreasRaw.filter(
+      aa => !isAddressableAreaStandardSlot(aa, deckDef)
+    )
+  }
+  return addressableAreasRaw
 }
 
 export const getCutoutIdByAddressableArea = (
