@@ -12,6 +12,7 @@ from time import sleep
 from hardware_testing.data import create_run_id_and_start_time, ui, get_git_description
 from hardware_testing.protocols.gravimetric_lpc.gravimetric import (
     gravimetric_ot3_p1000_96,
+    gravimetric_ot3_p200_96,
     gravimetric_ot3_p1000_multi,
     gravimetric_ot3_p1000_single,
     gravimetric_ot3_p50_single,
@@ -26,6 +27,7 @@ from hardware_testing.protocols.gravimetric_lpc.photometric import (
     photometric_ot3_p1000_single,
     photometric_ot3_p50_multi,
     photometric_ot3_p1000_96,
+    photometric_ot3_p200_96,
     photometric_ot3_p50_single,
 )
 
@@ -56,6 +58,9 @@ GRAVIMETRIC_CFG = {
         1: gravimetric_ot3_p50_single,
         8: gravimetric_ot3_p50_multi,
     },
+    200: {
+        96: gravimetric_ot3_p200_96,
+    },
     1000: {
         1: gravimetric_ot3_p1000_single,
         8: gravimetric_ot3_p1000_multi,
@@ -67,6 +72,12 @@ GRAVIMETRIC_CFG_INCREMENT = {
     50: {
         1: {50: gravimetric_ot3_p50_single},
         8: {50: gravimetric_ot3_p50_multi_50ul_tip_increment},
+    },
+    200: {
+        96: {
+            50: gravimetric_ot3_p200_96,
+            200: gravimetric_ot3_p200_96,
+        },
     },
     1000: {
         1: {
@@ -92,6 +103,9 @@ PIPETTE_MODEL_NAME = {
         1: "p50_single_flex",
         8: "p50_multi_flex",
     },
+    200: {
+        96: "p200_96_flex",
+    },
     1000: {
         1: "p1000_single_flex",
         8: "p1000_multi_flex",
@@ -108,6 +122,9 @@ PHOTOMETRIC_CFG = {
         8: {
             50: photometric_ot3_p50_multi,
         },
+    },
+    200: {
+        96: {50: photometric_ot3_p200_96, 200: photometric_ot3_p200_96},
     },
     1000: {
         1: {
@@ -553,7 +570,7 @@ def _main(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("Pipette Testing")
     parser.add_argument("--simulate", action="store_true")
-    parser.add_argument("--pipette", type=int, choices=[50, 1000], required=True)
+    parser.add_argument("--pipette", type=int, choices=[50, 200, 1000], required=True)
     parser.add_argument("--channels", type=int, choices=[1, 8, 96], default=1)
     parser.add_argument("--tip", type=int, choices=[0, 50, 200, 1000], default=0)
     parser.add_argument("--trials", type=int, default=0)

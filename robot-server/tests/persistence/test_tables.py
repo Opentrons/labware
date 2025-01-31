@@ -1,11 +1,15 @@
 """Tests for SQL tables."""
 
 
+from pathlib import Path
 from typing import List, cast
 
 import pytest
 import sqlalchemy
 
+from robot_server.persistence.database import sql_engine_ctx
+from robot_server.persistence.file_and_directory_names import DB_FILE
+from robot_server.persistence.persistence_directory import make_migration_orchestrator
 from robot_server.persistence.tables import (
     metadata as latest_metadata,
     schema_3,
@@ -14,6 +18,7 @@ from robot_server.persistence.tables import (
     schema_5,
     schema_6,
     schema_7,
+    schema_8,
 )
 
 # The statements that we expect to emit when we create a fresh database.
@@ -105,7 +110,9 @@ EXPECTED_STATEMENTS_LATEST = [
         index_in_run INTEGER NOT NULL,
         command_id VARCHAR NOT NULL,
         command VARCHAR NOT NULL,
-        command_intent VARCHAR NOT NULL,
+        command_intent VARCHAR,
+        command_error VARCHAR,
+        command_status VARCHAR(9),
         PRIMARY KEY (row_id),
         FOREIGN KEY(run_id) REFERENCES run (id)
     )
@@ -117,13 +124,10 @@ EXPECTED_STATEMENTS_LATEST = [
     CREATE UNIQUE INDEX ix_run_run_id_index_in_run ON run_command (run_id, index_in_run)
     """,
     """
-    CREATE INDEX ix_data_files_source ON data_files (source)
+    CREATE UNIQUE INDEX ix_run_run_id_command_status_index_in_run ON run_command (run_id, command_status, index_in_run)
     """,
     """
     CREATE INDEX ix_protocol_protocol_kind ON protocol (protocol_kind)
-    """,
-    """
-    CREATE INDEX ix_run_command_command_intent ON run_command (command_intent)
     """,
     """
     CREATE TABLE data_files (
@@ -131,9 +135,8 @@ EXPECTED_STATEMENTS_LATEST = [
         name VARCHAR NOT NULL,
         file_hash VARCHAR NOT NULL,
         created_at DATETIME NOT NULL,
-        source VARCHAR(9) NOT NULL,
-        PRIMARY KEY (id),
-        CONSTRAINT datafilesourcesqlenum CHECK (source IN ('uploaded', 'generated'))
+        source VARCHAR(9),
+        PRIMARY KEY (id)
     )
     """,
     """
@@ -158,7 +161,130 @@ EXPECTED_STATEMENTS_LATEST = [
 ]
 
 
-EXPECTED_STATEMENTS_V7 = EXPECTED_STATEMENTS_LATEST
+EXPECTED_STATEMENTS_V8 = EXPECTED_STATEMENTS_LATEST
+
+
+EXPECTED_STATEMENTS_V7 = [
+    """
+    CREATE TABLE protocol (
+        id VARCHAR NOT NULL,
+        created_at DATETIME NOT NULL,
+        protocol_key VARCHAR,
+        protocol_kind VARCHAR(14) NOT NULL,
+        PRIMARY KEY (id),
+        CONSTRAINT protocolkindsqlenum CHECK (protocol_kind IN ('standard', 'quick-transfer'))
+    )
+    """,
+    """
+    CREATE TABLE analysis (
+        id VARCHAR NOT NULL,
+        protocol_id VARCHAR NOT NULL,
+        analyzer_version VARCHAR NOT NULL,
+        completed_analysis VARCHAR NOT NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY(protocol_id) REFERENCES protocol (id)
+    )
+    """,
+    """
+    CREATE TABLE analysis_primitive_rtp_table (
+        row_id INTEGER NOT NULL,
+        analysis_id VARCHAR NOT NULL,
+        parameter_variable_name VARCHAR NOT NULL,
+        parameter_type VARCHAR(5) NOT NULL,
+        parameter_value VARCHAR NOT NULL,
+        PRIMARY KEY (row_id),
+        FOREIGN KEY(analysis_id) REFERENCES analysis (id),
+        CONSTRAINT primitiveparamsqlenum CHECK (parameter_type IN ('int', 'float', 'bool', 'str'))
+    )
+    """,
+    """
+    CREATE TABLE analysis_csv_rtp_table (
+        row_id INTEGER NOT NULL,
+        analysis_id VARCHAR NOT NULL,
+        parameter_variable_name VARCHAR NOT NULL,
+        file_id VARCHAR,
+        PRIMARY KEY (row_id),
+        FOREIGN KEY(analysis_id) REFERENCES analysis (id),
+        FOREIGN KEY(file_id) REFERENCES data_files (id)
+    )
+    """,
+    """
+    CREATE INDEX ix_analysis_protocol_id ON analysis (protocol_id)
+    """,
+    """
+    CREATE TABLE run (
+        id VARCHAR NOT NULL,
+        created_at DATETIME NOT NULL,
+        protocol_id VARCHAR,
+        state_summary VARCHAR,
+        engine_status VARCHAR,
+        _updated_at DATETIME,
+        run_time_parameters VARCHAR,
+        PRIMARY KEY (id),
+        FOREIGN KEY(protocol_id) REFERENCES protocol (id)
+    )
+    """,
+    """
+    CREATE TABLE action (
+        id VARCHAR NOT NULL,
+        created_at DATETIME NOT NULL,
+        action_type VARCHAR NOT NULL,
+        run_id VARCHAR NOT NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY(run_id) REFERENCES run (id)
+    )
+    """,
+    """
+    CREATE TABLE run_command (
+        row_id INTEGER NOT NULL,
+        run_id VARCHAR NOT NULL,
+        index_in_run INTEGER NOT NULL,
+        command_id VARCHAR NOT NULL,
+        command VARCHAR NOT NULL,
+        command_intent VARCHAR,
+        PRIMARY KEY (row_id),
+        FOREIGN KEY(run_id) REFERENCES run (id)
+    )
+    """,
+    """
+    CREATE UNIQUE INDEX ix_run_run_id_command_id ON run_command (run_id, command_id)
+    """,
+    """
+    CREATE UNIQUE INDEX ix_run_run_id_index_in_run ON run_command (run_id, index_in_run)
+    """,
+    """
+    CREATE INDEX ix_protocol_protocol_kind ON protocol (protocol_kind)
+    """,
+    """
+    CREATE TABLE data_files (
+        id VARCHAR NOT NULL,
+        name VARCHAR NOT NULL,
+        file_hash VARCHAR NOT NULL,
+        created_at DATETIME NOT NULL,
+        source VARCHAR(9),
+        PRIMARY KEY (id)
+    )
+    """,
+    """
+    CREATE TABLE run_csv_rtp_table (
+        row_id INTEGER NOT NULL,
+        run_id VARCHAR NOT NULL,
+        parameter_variable_name VARCHAR NOT NULL,
+        file_id VARCHAR,
+        PRIMARY KEY (row_id),
+        FOREIGN KEY(run_id) REFERENCES run (id),
+        FOREIGN KEY(file_id) REFERENCES data_files (id)
+    )
+    """,
+    """
+    CREATE TABLE boolean_setting (
+        "key" VARCHAR(21) NOT NULL,
+        value BOOLEAN NOT NULL,
+        PRIMARY KEY ("key"),
+        CONSTRAINT booleansettingkey CHECK ("key" IN ('enable_error_recovery'))
+    )
+    """,
+]
 
 
 EXPECTED_STATEMENTS_V6 = [
@@ -538,7 +664,7 @@ EXPECTED_STATEMENTS_V2 = [
 
 
 def _normalize_statement(statement: str) -> str:
-    """Fix up the formatting of a SQL statement for easier comparison."""
+    """Fix up the internal formatting of a single SQL statement for easier comparison."""
     lines = statement.splitlines()
 
     # Remove whitespace at the beginning and end of each line.
@@ -547,13 +673,17 @@ def _normalize_statement(statement: str) -> str:
     # Filter out blank lines.
     lines = [line for line in lines if line != ""]
 
-    return "\n".join(lines)
+    # Normalize line breaks to spaces. When we ask SQLite for its schema, it appears
+    # inconsistent in whether it uses spaces or line breaks to separate tokens.
+    # That may have to do with whether `ALTER TABLE` has been used on the table.
+    return " ".join(lines)
 
 
 @pytest.mark.parametrize(
     ("metadata", "expected_statements"),
     [
         (latest_metadata, EXPECTED_STATEMENTS_LATEST),
+        (schema_8.metadata, EXPECTED_STATEMENTS_V8),
         (schema_7.metadata, EXPECTED_STATEMENTS_V7),
         (schema_6.metadata, EXPECTED_STATEMENTS_V6),
         (schema_5.metadata, EXPECTED_STATEMENTS_V5),
@@ -562,12 +692,14 @@ def _normalize_statement(statement: str) -> str:
         (schema_2.metadata, EXPECTED_STATEMENTS_V2),
     ],
 )
-def test_creating_tables_emits_expected_statements(
+def test_creating_from_metadata_emits_expected_statements(
     metadata: sqlalchemy.MetaData, expected_statements: List[str]
 ) -> None:
-    """Test that fresh databases are created with the expected statements.
+    """Test that each schema compiles down to the expected SQL statements.
 
     This is a snapshot test to help catch accidental changes to our SQL schema.
+    For example, we might refactor the way we define the schema on the Python side,
+    but we probably expect the way that it compiles down to SQL to stay stable.
 
     Based on:
     https://docs.sqlalchemy.org/en/14/faq/metadata_schema.html#faq-ddl-as-string
@@ -582,6 +714,41 @@ def test_creating_tables_emits_expected_statements(
 
     engine = sqlalchemy.create_mock_engine("sqlite://", record_statement)
     metadata.create_all(cast(sqlalchemy.engine.Engine, engine))
+
+    normalized_actual = [_normalize_statement(s) for s in actual_statements]
+    normalized_expected = [_normalize_statement(s) for s in expected_statements]
+
+    # Compare ignoring order. SQLAlchemy appears to emit CREATE INDEX statements in a
+    # nondeterministic order that varies across runs. Although statement order
+    # theoretically matters, it's unlikely to matter in practice for our purposes here.
+    assert set(normalized_actual) == set(normalized_expected)
+
+
+def test_migrated_db_matches_db_created_from_metadata(tmp_path: Path) -> None:
+    """Test that the output of migration matches `metadata.create_all()`.
+
+    In other words, constructing the database by going through our migration system
+    should have the same final result as if we created the database directly from
+    the latest schema version.
+
+    This prevents migrations from sneaking in arbitrary changes and causing the actual
+    database to not exactly match what our SQLAlchemy `metadata` object declares.
+    """
+    migration_orchestrator = make_migration_orchestrator(prepared_root=tmp_path)
+    active_subdirectory = migration_orchestrator.migrate_to_latest()
+
+    expected_statements = EXPECTED_STATEMENTS_LATEST
+
+    with sql_engine_ctx(
+        active_subdirectory / DB_FILE
+    ) as sql_engine, sql_engine.begin() as transaction:
+        actual_statements = (
+            transaction.execute(
+                sqlalchemy.text("SELECT sql FROM sqlite_schema WHERE sql IS NOT NULL")
+            )
+            .scalars()
+            .all()
+        )
 
     normalized_actual = [_normalize_statement(s) for s in actual_statements]
     normalized_expected = [_normalize_statement(s) for s in expected_statements]

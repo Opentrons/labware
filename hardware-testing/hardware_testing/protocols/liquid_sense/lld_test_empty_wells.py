@@ -14,6 +14,7 @@ from opentrons_shared_data.pipette.types import (
     PipetteChannelType,
     PipetteModelType,
     PipetteVersionType,
+    PipetteOEMType,
 )
 
 ###########################################
@@ -113,6 +114,7 @@ def _setup(
                 major=int(pip_model_list[-1][-3]),  # type: ignore[arg-type]
                 minor=int(pip_model_list[-1][-1]),  # type: ignore[arg-type]
             ),
+            oem=PipetteOEMType.get_oem_from_model_str(str(pipette.model)),
         )
         # Writes details about test run to google sheet.
         tipVolume = "t" + str(TIP_SIZE)

@@ -1,11 +1,14 @@
+import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
+
 import {
+  ALIGN_CENTER,
+  BORDERS,
   COLORS,
   DIRECTION_COLUMN,
   Flex,
-  Icon,
   InputField,
   SPACING,
   StyledText,
@@ -13,15 +16,16 @@ import {
   useHoverTooltip,
 } from '@opentrons/components'
 import { COLUMN } from '@opentrons/shared-data'
+
 import {
   actions as stepsActions,
   getSelectedStepId,
   getWellSelectionLabwareKey,
 } from '../../../../../ui/steps'
 import { selectors as stepFormSelectors } from '../../../../../step-forms'
-import { SelectWellsModal } from '../../../../../organisms'
-import { getMainPagePortalEl } from '../../../../../components/portals/MainPageModalPortal'
+import { SelectWellsModal, getMainPagePortalEl } from '../../../../../organisms'
 import { getNozzleType } from '../utils'
+
 import type { FieldProps } from '../types'
 
 export type WellSelectionFieldProps = FieldProps & {
@@ -47,18 +51,35 @@ export const WellSelectionField = (
     errorToShow,
     tooltipContent,
     hasFormError,
+    padding = `0 ${SPACING.spacing16}`,
   } = props
   const { t, i18n } = useTranslation(['form', 'tooltip'])
   const dispatch = useDispatch()
   const stepId = useSelector(getSelectedStepId)
   const pipetteEntities = useSelector(stepFormSelectors.getPipetteEntities)
   const wellSelectionLabwareKey = useSelector(getWellSelectionLabwareKey)
-  const primaryWellCount =
+
+  const calculateWellCount =
     Array.isArray(selectedWells) && selectedWells.length > 0
       ? selectedWells.length.toString()
       : null
+
+  const [primaryWellCount, setPrimaryWellCount] = useState(calculateWellCount)
   const pipette = pipetteId != null ? pipetteEntities[pipetteId] : null
   const nozzleType = getNozzleType(pipette, nozzles)
+  const previousNozzleType = useRef(nozzleType)
+
+  useEffect(() => {
+    if (previousNozzleType.current !== nozzleType) {
+      setPrimaryWellCount(null)
+      updateValue([])
+      previousNozzleType.current = nozzleType
+    }
+  }, [nozzleType, updateValue])
+
+  useEffect(() => {
+    setPrimaryWellCount(calculateWellCount)
+  }, [selectedWells])
 
   const getModalKey = (): string => {
     return `${String(stepId)}${name}${pipetteId || 'noPipette'}${
@@ -91,34 +112,42 @@ export const WellSelectionField = (
     nozzleType === '8-channel' || nozzleType === COLUMN
       ? t(`step_edit_form.wellSelectionLabel.columns_${name}`)
       : t(`step_edit_form.wellSelectionLabel.wells_${name}`)
-  const [targetProps, tooltipProps] = useHoverTooltip()
+  const [targetProps, tooltipProps] = useHoverTooltip({
+    placement: 'auto-start',
+  })
   return (
     <>
-      <Flex flexDirection={DIRECTION_COLUMN} padding={SPACING.spacing16}>
-        <Flex gridGap={SPACING.spacing8}>
-          <StyledText desktopStyle="captionRegular" color={COLORS.grey60}>
+      <Flex
+        flexDirection={DIRECTION_COLUMN}
+        padding={padding}
+        gridGap={SPACING.spacing8}
+      >
+        <Flex gridGap={SPACING.spacing8} alignItems={ALIGN_CENTER}>
+          <StyledText desktopStyle="bodyDefaultRegular" color={COLORS.grey60}>
             {i18n.format(label, 'capitalize')}
           </StyledText>
-          <Flex {...targetProps}>
-            <Icon
-              name="information"
-              size={SPACING.spacing12}
-              color={COLORS.grey60}
-            />
-          </Flex>
         </Flex>
-        <Tooltip tooltipProps={tooltipProps}>
-          {t(`tooltip:${tooltipContent}`)}
-        </Tooltip>
         <InputField
           disabled={disabled ?? labwareId != null}
           readOnly
           name={name}
-          error={errorToShow}
-          value={primaryWellCount}
+          value={
+            disabled || primaryWellCount == null
+              ? t('step_edit_form.wellSelectionLabel.choose_wells')
+              : primaryWellCount ?? errorToShow
+          }
           onClick={handleOpen}
           hasBackgroundError={hasFormError}
+          size="medium"
+          borderRadius={BORDERS.borderRadius8}
+          padding={SPACING.spacing12}
+          {...targetProps}
         />
+        {disabled ? (
+          <Tooltip tooltipProps={tooltipProps}>
+            {t(`tooltip:${tooltipContent}`)}
+          </Tooltip>
+        ) : null}
       </Flex>
       {createPortal(
         <SelectWellsModal

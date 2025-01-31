@@ -1,7 +1,10 @@
 from mock import AsyncMock
 import pytest
 
-from opentrons.drivers.asyncio.communication.serial_connection import SerialConnection
+from opentrons.drivers.asyncio.communication.serial_connection import (
+    SerialConnection,
+)
+from opentrons.drivers.asyncio.communication.errors import UnhandledGcode
 from opentrons.drivers.temp_deck.driver import (
     TempDeckDriver,
     TEMP_DECK_COMMAND_TERMINATOR,
@@ -59,15 +62,57 @@ async def test_get_temperature(driver: TempDeckDriver, connection: AsyncMock) ->
     assert response == Temperature(current=25, target=132)
 
 
-async def test_get_device_info(driver: TempDeckDriver, connection: AsyncMock) -> None:
+async def test_get_device_info_with_reset_reason(
+    driver: TempDeckDriver, connection: AsyncMock
+) -> None:
     """It should send a get device info command and parse response"""
     connection.send_command.return_value = "serial:s model:m version:v"
 
     response = await driver.get_device_info()
 
-    expected = CommandBuilder(terminator=TEMP_DECK_COMMAND_TERMINATOR).add_gcode("M115")
+    device_info = CommandBuilder(terminator=TEMP_DECK_COMMAND_TERMINATOR).add_gcode(
+        "M115"
+    )
+    reset_reason = CommandBuilder(terminator=TEMP_DECK_COMMAND_TERMINATOR).add_gcode(
+        "M114"
+    )
 
-    connection.send_command.assert_called_once_with(command=expected, retries=3)
+    connection.send_command.assert_any_call(command=device_info, retries=3)
+    connection.send_command.assert_called_with(command=reset_reason, retries=3)
+
+    assert response == {"serial": "s", "model": "m", "version": "v"}
+
+
+async def test_get_device_info_no_reset_reason(
+    driver: TempDeckDriver, connection: AsyncMock
+) -> None:
+    """It should send a get device info command and parse response"""
+
+    async def fake_send_command(
+        command: CommandBuilder, retries: int = 0, timeout: float | None = None
+    ) -> str:
+        if command.build().startswith("M114"):
+            raise UnhandledGcode(
+                port="fake port",
+                response="ERR003: Unhandled Gcode",
+                command=command.build(),
+            )
+        else:
+            return "serial:s model:m version:v"
+
+    connection.send_command.side_effect = fake_send_command
+
+    response = await driver.get_device_info()
+
+    device_info = CommandBuilder(terminator=TEMP_DECK_COMMAND_TERMINATOR).add_gcode(
+        "M115"
+    )
+    reset_reason = CommandBuilder(terminator=TEMP_DECK_COMMAND_TERMINATOR).add_gcode(
+        "M114"
+    )
+
+    connection.send_command.assert_any_call(command=device_info, retries=3)
+    connection.send_command.assert_called_with(command=reset_reason, retries=3)
 
     assert response == {"serial": "s", "model": "m", "version": "v"}
 

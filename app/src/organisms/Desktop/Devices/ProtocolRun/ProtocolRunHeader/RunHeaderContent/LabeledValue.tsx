@@ -1,5 +1,3 @@
-import type * as React from 'react'
-
 import {
   DIRECTION_COLUMN,
   COLORS,
@@ -8,9 +6,11 @@ import {
   StyledText,
 } from '@opentrons/components'
 
+import type { ReactNode } from 'react'
+
 interface LabeledValueProps {
   label: string
-  value: React.ReactNode
+  value: ReactNode
 }
 
 export function LabeledValue(props: LabeledValueProps): JSX.Element {

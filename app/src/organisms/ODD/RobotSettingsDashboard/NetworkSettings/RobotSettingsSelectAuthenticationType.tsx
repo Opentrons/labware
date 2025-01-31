@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { DIRECTION_COLUMN, Flex } from '@opentrons/components'
@@ -6,6 +5,7 @@ import { DIRECTION_COLUMN, Flex } from '@opentrons/components'
 import { ChildNavigation } from '/app/organisms/ODD/ChildNavigation'
 import { SelectAuthenticationType } from '../../NetworkSettings'
 
+import type { Dispatch, SetStateAction } from 'react'
 import type { WifiSecurityType } from '@opentrons/api-client'
 import type { SetSettingOption } from '../types'
 
@@ -13,7 +13,7 @@ interface RobotSettingsSelectAuthenticationTypeProps {
   handleWifiConnect: () => void
   selectedAuthType: WifiSecurityType
   setCurrentOption: SetSettingOption
-  setSelectedAuthType: React.Dispatch<React.SetStateAction<WifiSecurityType>>
+  setSelectedAuthType: Dispatch<SetStateAction<WifiSecurityType>>
 }
 
 /**

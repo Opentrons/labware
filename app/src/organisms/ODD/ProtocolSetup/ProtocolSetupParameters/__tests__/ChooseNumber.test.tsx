@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { it, describe, beforeEach, vi, expect } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
@@ -8,6 +7,7 @@ import { useToaster } from '/app/organisms/ToasterOven'
 import { mockRunTimeParameterData } from '../../__fixtures__'
 import { ChooseNumber } from '../ChooseNumber'
 
+import type { ComponentProps } from 'react'
 import type { NumberParameter } from '@opentrons/shared-data'
 
 vi.mock('/app/organisms/ToasterOven')
@@ -18,14 +18,14 @@ const mockFloatNumberParameterData = mockRunTimeParameterData[6] as NumberParame
 const mockSetParameter = vi.fn()
 const mockMakeSnackbar = vi.fn()
 
-const render = (props: React.ComponentProps<typeof ChooseNumber>) => {
+const render = (props: ComponentProps<typeof ChooseNumber>) => {
   return renderWithProviders(<ChooseNumber {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('ChooseNumber', () => {
-  let props: React.ComponentProps<typeof ChooseNumber>
+  let props: ComponentProps<typeof ChooseNumber>
 
   beforeEach(() => {
     props = {

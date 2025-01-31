@@ -1,24 +1,24 @@
 import * as Sessions from '../sessions'
 
-import { getViewableRobots, getRobotApiVersion } from '../discovery'
+import { FLEX_ROBOT_TYPE, OT2_ROBOT_TYPE } from '@opentrons/shared-data'
 
+import { getViewableRobots, getRobotApiVersion } from '../discovery'
 import {
   getRobotUpdateVersion,
   getRobotUpdateRobot,
   getRobotUpdateSession,
   getRobotSystemType,
 } from '../robot-update'
-
 import { getRobotSessionById } from '../sessions/selectors'
 
 import type { State } from '../types'
-
 import type {
   AnalyticsConfig,
   BuildrootAnalyticsData,
   AnalyticsSessionExitDetails,
   SessionInstrumentAnalyticsData,
 } from './types'
+import type { RobotType } from '@opentrons/shared-data'
 
 export function getBuildrootAnalyticsData(
   state: State,
@@ -40,12 +40,29 @@ export function getBuildrootAnalyticsData(
   const currentVersion = getRobotApiVersion(robot) ?? 'unknown'
   const currentSystem = getRobotSystemType(robot) ?? 'unknown'
 
+  const getRobotType = (): RobotType | undefined => {
+    switch (currentSystem) {
+      case 'flex':
+        return FLEX_ROBOT_TYPE
+      case 'ot2-buildroot':
+      case 'ot2-balena':
+        return OT2_ROBOT_TYPE
+      case 'unknown':
+        return undefined
+      default: {
+        console.error('Unexpected system type: ', currentSystem)
+        return undefined
+      }
+    }
+  }
+
   return {
     currentVersion,
     currentSystem,
     updateVersion: updateVersion ?? 'unknown',
     error: session != null && 'error' in session ? session.error : null,
     robotSerialNumber,
+    robotType: getRobotType(),
   }
 }
 

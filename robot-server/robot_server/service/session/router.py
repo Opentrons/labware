@@ -169,7 +169,7 @@ async def session_command_execute_handler(
 
     log.debug(f"Command result: {command_result}")
 
-    return CommandResponse(
+    return CommandResponse.model_construct(
         data=command_result, links=get_valid_session_links(sessionId, router)
     )
 

@@ -1,11 +1,12 @@
-import type * as React from 'react'
 import { useInstrumentsQuery } from '@opentrons/react-api-client'
 import { PrimaryButton } from '@opentrons/components'
 import { SmallButton } from '/app/atoms/buttons'
 
+import type { Dispatch, SetStateAction } from 'react'
+
 interface CheckPipetteButtonProps {
   proceedButtonText: string
-  setFetching: React.Dispatch<React.SetStateAction<boolean>>
+  setFetching: Dispatch<SetStateAction<boolean>>
   isFetching: boolean
   isOnDevice: boolean | null
   proceed?: () => void

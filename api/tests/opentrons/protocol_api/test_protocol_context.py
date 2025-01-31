@@ -742,6 +742,115 @@ def test_load_labware_on_adapter(
     decoy.verify(mock_core_map.add(mock_labware_core, result), times=1)
 
 
+@pytest.mark.parametrize("api_version", [APIVersion(2, 23)])
+def test_load_labware_with_lid(
+    decoy: Decoy,
+    mock_core: ProtocolCore,
+    mock_core_map: LoadedCoreMap,
+    api_version: APIVersion,
+    subject: ProtocolContext,
+) -> None:
+    """It should create a labware with a lid on it using its execution core."""
+    mock_labware_core = decoy.mock(cls=LabwareCore)
+    mock_lid_core = decoy.mock(cls=LabwareCore)
+
+    decoy.when(mock_validation.ensure_lowercase_name("UPPERCASE_LABWARE")).then_return(
+        "lowercase_labware"
+    )
+
+    decoy.when(mock_validation.ensure_lowercase_name("UPPERCASE_LID")).then_return(
+        "lowercase_lid"
+    )
+    decoy.when(mock_core.robot_type).then_return("OT-3 Standard")
+    decoy.when(
+        mock_validation.ensure_and_convert_deck_slot(42, api_version, "OT-3 Standard")
+    ).then_return(DeckSlotName.SLOT_C1)
+
+    decoy.when(
+        mock_core.load_labware(
+            load_name="lowercase_labware",
+            location=DeckSlotName.SLOT_C1,
+            label="some_display_name",
+            namespace="some_namespace",
+            version=1337,
+        )
+    ).then_return(mock_labware_core)
+    decoy.when(mock_lid_core.get_well_columns()).then_return([])
+
+    decoy.when(
+        mock_core.load_lid(
+            load_name="lowercase_lid",
+            location=mock_labware_core,
+            namespace="some_namespace",
+            version=None,
+        )
+    ).then_return(mock_lid_core)
+
+    decoy.when(mock_labware_core.get_name()).then_return("Full Name")
+    decoy.when(mock_labware_core.get_display_name()).then_return("Display Name")
+    decoy.when(mock_labware_core.get_well_columns()).then_return([])
+
+    result = subject.load_labware(
+        load_name="UPPERCASE_LABWARE",
+        location=42,
+        label="some_display_name",
+        namespace="some_namespace",
+        version=1337,
+        lid="UPPERCASE_LID",
+    )
+
+    assert isinstance(result, Labware)
+    assert result.name == "Full Name"
+
+    decoy.verify(mock_core_map.add(mock_labware_core, result), times=1)
+
+
+@pytest.mark.parametrize("api_version", [APIVersion(2, 23)])
+def test_load_lid_stack(
+    decoy: Decoy,
+    mock_core: ProtocolCore,
+    mock_core_map: LoadedCoreMap,
+    api_version: APIVersion,
+    subject: ProtocolContext,
+) -> None:
+    """It should create a labware with a lid on it using its execution core."""
+    mock_lid_core = decoy.mock(cls=LabwareCore)
+
+    decoy.when(mock_validation.ensure_lowercase_name("UPPERCASE_LID")).then_return(
+        "lowercase_lid"
+    )
+
+    decoy.when(mock_core.robot_type).then_return("OT-3 Standard")
+    decoy.when(
+        mock_validation.ensure_and_convert_deck_slot(42, api_version, "OT-3 Standard")
+    ).then_return(DeckSlotName.SLOT_C1)
+
+    decoy.when(
+        mock_core.load_lid_stack(
+            load_name="lowercase_lid",
+            location=DeckSlotName.SLOT_C1,
+            quantity=5,
+            namespace="some_namespace",
+            version=1337,
+        )
+    ).then_return(mock_lid_core)
+
+    decoy.when(mock_lid_core.get_name()).then_return("STACK_OBJECT")
+    decoy.when(mock_lid_core.get_display_name()).then_return("")
+    decoy.when(mock_lid_core.get_well_columns()).then_return([])
+
+    result = subject.load_lid_stack(
+        load_name="UPPERCASE_LID",
+        location=42,
+        quantity=5,
+        namespace="some_namespace",
+        version=1337,
+    )
+
+    assert isinstance(result, Labware)
+    assert result.name == "STACK_OBJECT"
+
+
 def test_loaded_labware(
     decoy: Decoy,
     mock_core_map: LoadedCoreMap,
@@ -1303,7 +1412,7 @@ def test_define_liquid_class(
 ) -> None:
     """It should create the liquid class definition."""
     expected_liquid_class = LiquidClass(
-        _name="volatile_100", _display_name="volatile 100%", _by_pipette_setting=[]
+        _name="volatile_100", _display_name="volatile 100%", _by_pipette_setting={}
     )
     decoy.when(mock_core.define_liquid_class("volatile_90")).then_return(
         expected_liquid_class

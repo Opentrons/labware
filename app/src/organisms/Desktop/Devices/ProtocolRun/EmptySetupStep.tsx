@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import {
   COLORS,
   DIRECTION_COLUMN,
@@ -10,10 +9,12 @@ import {
   JUSTIFY_SPACE_BETWEEN,
 } from '@opentrons/components'
 
+import type { ReactNode } from 'react'
+
 interface EmptySetupStepProps {
-  title: React.ReactNode
+  title: ReactNode
   description: string
-  rightElement?: React.ReactNode
+  rightElement?: ReactNode
 }
 
 export function EmptySetupStep(props: EmptySetupStepProps): JSX.Element {

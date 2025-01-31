@@ -318,8 +318,8 @@ def _reload_gripper(
         # Same config, good enough
         return attached_instr, True
     else:
-        newdict = new_config.dict()
-        olddict = attached_instr.config.dict()
+        newdict = new_config.model_dump()
+        olddict = attached_instr.config.model_dump()
         changed: Set[str] = set()
         for k in newdict.keys():
             if newdict[k] != olddict[k]:

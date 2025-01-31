@@ -1,16 +1,16 @@
-import type * as React from 'react'
 import cx from 'classnames'
 
 import { OutlineButton } from '../buttons'
 import { LabeledControl } from './LabeledControl'
 import styles from './styles.module.css'
 
+import type { ReactNode } from 'react'
 import type { ButtonProps } from '../buttons'
 
 export interface LabeledButtonProps {
   label: string
   buttonProps: ButtonProps
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export function LabeledButton(props: LabeledButtonProps): JSX.Element {

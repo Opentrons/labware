@@ -9,6 +9,9 @@ import type {
   RunTimeParameter,
   NozzleLayoutConfig,
   OnDeckLabwareLocation,
+  LabwareDefinition1,
+  LabwareDefinition2,
+  LabwareDefinition3,
 } from '@opentrons/shared-data'
 import type { ResourceLink, ErrorDetails } from '../types'
 export * from './commands/types'
@@ -84,6 +87,10 @@ export interface LabwareOffset {
   definitionUri: string
   location: LabwareOffsetLocation
   vector: VectorOffset
+}
+
+export interface RunLoadedLabwareDefinitions {
+  data: Array<LabwareDefinition1 | LabwareDefinition2 | LabwareDefinition3>
 }
 
 export interface Run {

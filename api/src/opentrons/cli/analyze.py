@@ -53,9 +53,11 @@ from opentrons.protocol_engine import (
     LoadedPipette,
     LoadedModule,
     Liquid,
+    LiquidClassRecordWithId,
     StateSummary,
 )
 from opentrons.protocol_engine.protocol_engine import code_in_error_tree
+from opentrons.protocol_engine.types import CommandAnnotation
 
 from opentrons_shared_data.robot.types import RobotType
 
@@ -333,8 +335,10 @@ async def _do_analyze(
                 wells=[],
                 hasEverEnteredErrorRecovery=False,
                 files=[],
+                liquidClasses=[],
             ),
             parameters=[],
+            command_annotations=[],
         )
         return analysis
     return await orchestrator.run(deck_configuration=[])
@@ -378,16 +382,20 @@ async def _analyze(
     else:
         result = AnalysisResult.OK
 
-    results = AnalyzeResults.construct(
+    results = AnalyzeResults.model_construct(
         createdAt=datetime.now(tz=timezone.utc),
         files=[
-            ProtocolFile.construct(name=f.path.name, role=f.role)
+            ProtocolFile.model_construct(name=f.path.name, role=f.role)
             for f in protocol_source.files
         ],
         config=(
-            JsonConfig.construct(schemaVersion=protocol_source.config.schema_version)
+            JsonConfig.model_construct(
+                schemaVersion=protocol_source.config.schema_version
+            )
             if isinstance(protocol_source.config, JsonProtocolConfig)
-            else PythonConfig.construct(apiVersion=protocol_source.config.api_version)
+            else PythonConfig.model_construct(
+                apiVersion=protocol_source.config.api_version
+            )
         ),
         result=result,
         metadata=protocol_source.metadata,
@@ -399,20 +407,22 @@ async def _analyze(
         pipettes=analysis.state_summary.pipettes,
         modules=analysis.state_summary.modules,
         liquids=analysis.state_summary.liquids,
+        commandAnnotations=analysis.command_annotations,
+        liquidClasses=analysis.state_summary.liquidClasses,
     )
 
     _call_for_output_of_kind(
         "json",
         outputs,
         lambda to_file: to_file.write(
-            results.json(exclude_none=True).encode("utf-8"),
+            results.model_dump_json(exclude_none=True).encode("utf-8"),
         ),
     )
     _call_for_output_of_kind(
         "human-json",
         outputs,
         lambda to_file: to_file.write(
-            results.json(exclude_none=True, indent=2).encode("utf-8")
+            results.model_dump_json(exclude_none=True, indent=2).encode("utf-8")
         ),
     )
     if check:
@@ -486,4 +496,6 @@ class AnalyzeResults(BaseModel):
     pipettes: List[LoadedPipette]
     modules: List[LoadedModule]
     liquids: List[Liquid]
+    liquidClasses: List[LiquidClassRecordWithId]
     errors: List[ErrorOccurrence]
+    commandAnnotations: List[CommandAnnotation]

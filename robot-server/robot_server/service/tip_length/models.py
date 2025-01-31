@@ -24,7 +24,7 @@ class TipLengthCalibration(DeprecatedResponseDataModel):
         " This is deprecated because it was prone to bugs where semantically identical"
         " definitions had different hashes."
         " Use `uri` instead.",
-        deprecated=True,
+        json_schema_extra={"deprecated": True},
     )
     pipette: str = Field(..., description="The pipette ID")
     lastModified: datetime = Field(

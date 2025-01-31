@@ -1,19 +1,20 @@
-import * as React from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { Flex, JUSTIFY_CENTER } from '@opentrons/components'
 
+import type { MouseEventHandler, ReactNode, TouchEventHandler } from 'react'
 import type { DragRect, GenericRect } from './types'
 
 interface SelectionRectProps {
   onSelectionMove?: (rect: GenericRect) => void
   onSelectionDone?: (rect: GenericRect) => void
-  children?: React.ReactNode
+  children?: ReactNode
 }
 
 export function SelectionRect(props: SelectionRectProps): JSX.Element {
   const { onSelectionMove, onSelectionDone, children } = props
 
-  const [positions, setPositions] = React.useState<DragRect | null>(null)
-  const parentRef = React.useRef<HTMLElement | SVGElement | null>(null)
+  const [positions, setPositions] = useState<DragRect | null>(null)
+  const parentRef = useRef<HTMLElement | SVGElement | null>(null)
 
   const getRect = (args: DragRect): GenericRect => {
     const { xStart, yStart, xDynamic, yDynamic } = args
@@ -25,7 +26,7 @@ export function SelectionRect(props: SelectionRectProps): JSX.Element {
     }
   }
 
-  const handleDrag = React.useCallback(
+  const handleDrag = useCallback(
     (e: TouchEvent | MouseEvent): void => {
       let xDynamic: number
       let yDynamic: number
@@ -55,7 +56,7 @@ export function SelectionRect(props: SelectionRectProps): JSX.Element {
     [onSelectionMove]
   )
 
-  const handleDragEnd = React.useCallback(
+  const handleDragEnd = useCallback(
     (e: TouchEvent | MouseEvent): void => {
       if (!(e instanceof TouchEvent) && !(e instanceof MouseEvent)) {
         return
@@ -70,7 +71,7 @@ export function SelectionRect(props: SelectionRectProps): JSX.Element {
     [onSelectionDone, positions]
   )
 
-  const handleTouchStart: React.TouchEventHandler = e => {
+  const handleTouchStart: TouchEventHandler = e => {
     const touch = e.touches[0]
     setPositions({
       xStart: touch.clientX,
@@ -80,7 +81,7 @@ export function SelectionRect(props: SelectionRectProps): JSX.Element {
     })
   }
 
-  const handleMouseDown: React.MouseEventHandler = e => {
+  const handleMouseDown: MouseEventHandler = e => {
     setPositions({
       xStart: e.clientX,
       xDynamic: e.clientX,
@@ -89,7 +90,7 @@ export function SelectionRect(props: SelectionRectProps): JSX.Element {
     })
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     document.addEventListener('touchmove', handleDrag)
     document.addEventListener('touchend', handleDragEnd)
     document.addEventListener('mousemove', handleDrag)

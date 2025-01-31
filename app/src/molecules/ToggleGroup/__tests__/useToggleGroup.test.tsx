@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import '@testing-library/jest-dom/vitest'
@@ -7,6 +6,7 @@ import { renderHook, render, fireEvent, screen } from '@testing-library/react'
 import { useTrackEvent } from '/app/redux/analytics'
 import { useToggleGroup } from '../useToggleGroup'
 
+import type { FunctionComponent, ReactNode } from 'react'
 import type { Store } from 'redux'
 import type { State } from '/app/redux/types'
 
@@ -23,7 +23,7 @@ describe('useToggleGroup', () => {
   })
 
   it('should return default selectedValue and toggle buttons', () => {
-    const wrapper: React.FunctionComponent<{ children: React.ReactNode }> = ({
+    const wrapper: FunctionComponent<{ children: ReactNode }> = ({
       children,
     }) => <Provider store={store}>{children}</Provider>
 
@@ -35,7 +35,7 @@ describe('useToggleGroup', () => {
     expect(result.current[0]).toBe('List View')
   })
   it('should record an analytics event for list view', async () => {
-    const wrapper: React.FunctionComponent<{ children: React.ReactNode }> = ({
+    const wrapper: FunctionComponent<{ children: ReactNode }> = ({
       children,
     }) => <Provider store={store}>{children}</Provider>
 
@@ -53,7 +53,7 @@ describe('useToggleGroup', () => {
     })
   })
   it('should record an analytics event for map view', () => {
-    const wrapper: React.FunctionComponent<{ children: React.ReactNode }> = ({
+    const wrapper: FunctionComponent<{ children: ReactNode }> = ({
       children,
     }) => <Provider store={store}>{children}</Provider>
 

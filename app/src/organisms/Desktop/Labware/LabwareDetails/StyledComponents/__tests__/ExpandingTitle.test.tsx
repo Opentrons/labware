@@ -1,11 +1,12 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, beforeEach } from 'vitest'
 import { getFootprintDiagram } from '@opentrons/components'
 import { renderWithProviders } from '/app/__testing-utils__'
 import { ExpandingTitle } from '../ExpandingTitle'
 
-const render = (props: React.ComponentProps<typeof ExpandingTitle>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof ExpandingTitle>) => {
   return renderWithProviders(<ExpandingTitle {...props} />)
 }
 
@@ -13,7 +14,7 @@ const diagram = getFootprintDiagram({})
 const DIAGRAM_TEST_ID = 'expanding_title_diagram'
 
 describe('ExpandingTitle', () => {
-  let props: React.ComponentProps<typeof ExpandingTitle>
+  let props: ComponentProps<typeof ExpandingTitle>
   beforeEach(() => {
     props = {
       label: 'Title',

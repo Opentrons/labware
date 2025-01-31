@@ -10,6 +10,7 @@ import {
   Flex,
   JUSTIFY_CENTER,
   LabwareRender,
+  POSITION_RELATIVE,
   RobotCoordsForeignDiv,
   RobotWorkSpace,
   SPACING,
@@ -110,9 +111,14 @@ export function OffDeck(props: DeckSetupTabType): JSX.Element {
   }
 
   return (
-    <>
+    <Flex width="100%">
       {selectedSlot.slot === 'offDeck' ? (
-        <Flex alignItems={ALIGN_CENTER}>
+        <Flex
+          alignItems={ALIGN_CENTER}
+          width="100%"
+          padding={SPACING.spacing12}
+          gridGap={SPACING.spacing12}
+        >
           <Flex justifyContent={JUSTIFY_CENTER} width="100%">
             <Flex
               width="39.4275rem"
@@ -150,6 +156,7 @@ export function OffDeck(props: DeckSetupTabType): JSX.Element {
             </Flex>
           </Flex>
           <DeckSetupTools
+            position={POSITION_RELATIVE}
             onDeckProps={null}
             setHoveredLabware={setHoveredLabware}
             onCloseClick={() => {
@@ -165,6 +172,6 @@ export function OffDeck(props: DeckSetupTabType): JSX.Element {
           }}
         />
       )}
-    </>
+    </Flex>
   )
 }

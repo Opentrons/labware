@@ -1,6 +1,9 @@
 // common types
 
-import type { ProtocolAnalysisOutput } from '@opentrons/shared-data'
+import type {
+  ProtocolAnalysisOutput,
+  RunTimeCommand,
+} from '@opentrons/shared-data'
 
 export type ProtocolSort =
   | 'alphabetical'
@@ -9,6 +12,18 @@ export type ProtocolSort =
   | 'oldest'
   | 'flex'
   | 'ot2'
+
+interface ParentNode {
+  annotationIndex: number
+  subCommands: LeafNode[]
+  isHighlighted: boolean
+}
+export interface LeafNode {
+  command: RunTimeCommand
+  isHighlighted: boolean
+}
+
+export type GroupedCommands = Array<LeafNode | ParentNode>
 
 export interface StoredProtocolDir {
   dirPath: string

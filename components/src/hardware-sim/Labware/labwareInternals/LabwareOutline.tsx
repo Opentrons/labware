@@ -1,7 +1,7 @@
-import type * as React from 'react'
 import { SLOT_RENDER_WIDTH, SLOT_RENDER_HEIGHT } from '@opentrons/shared-data'
 import { COLORS } from '../../../helix-design-system'
 
+import type { SVGProps } from 'react'
 import type { CSSProperties } from 'styled-components'
 import type { LabwareDefinition2 } from '@opentrons/shared-data'
 
@@ -105,7 +105,7 @@ export function LabwareOutline(props: LabwareOutlineProps): JSX.Element {
   )
 }
 
-interface LabwareBorderProps extends React.SVGProps<SVGRectElement> {
+interface LabwareBorderProps extends SVGProps<SVGRectElement> {
   borderThickness: number
   xDimension: number
   yDimension: number

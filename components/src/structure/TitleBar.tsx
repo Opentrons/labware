@@ -1,19 +1,18 @@
 // TitleBar component
-
-import type * as React from 'react'
 import cx from 'classnames'
 
 import { FlatButton } from '../buttons'
 import styles from './structure.module.css'
 
+import type { ReactNode } from 'react'
 import type { ButtonProps } from '../buttons'
 
 export interface TitleBarProps {
   id?: string
-  title: React.ReactNode
-  subtitle?: React.ReactNode
+  title: ReactNode
+  subtitle?: ReactNode
   back?: ButtonProps
-  rightNode?: React.ReactNode
+  rightNode?: ReactNode
   className?: string
 
   // TODO(mc, 2018-04-13): deprecate these props

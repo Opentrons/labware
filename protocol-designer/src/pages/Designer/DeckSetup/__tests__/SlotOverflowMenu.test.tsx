@@ -1,5 +1,4 @@
-import type * as React from 'react'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { fireEvent, screen } from '@testing-library/react'
 import { fixture96Plate } from '@opentrons/shared-data'
@@ -11,12 +10,15 @@ import {
   openIngredientSelector,
 } from '../../../../labware-ingred/actions'
 import { EditNickNameModal } from '../../../../organisms'
+import { useKitchen } from '../../../../organisms/Kitchen/hooks'
 import { deleteModule } from '../../../../step-forms/actions'
 import { deleteDeckFixture } from '../../../../step-forms/actions/additionalItems'
 import { getDeckSetupForActiveItem } from '../../../../top-selectors/labware-locations'
 import { selectors as labwareIngredSelectors } from '../../../../labware-ingred/selectors'
+import { getNextAvailableDeckSlot } from '../../../../labware-ingred/utils'
 import { SlotOverflowMenu } from '../SlotOverflowMenu'
 
+import type { ComponentProps } from 'react'
 import type { NavigateFunction } from 'react-router-dom'
 import type { LabwareDefinition2 } from '@opentrons/shared-data'
 
@@ -28,6 +30,9 @@ vi.mock('../../../../labware-ingred/actions')
 vi.mock('../../../../labware-ingred/selectors')
 vi.mock('../../../../step-forms/actions/additionalItems')
 vi.mock('../../../../organisms')
+vi.mock('../../../../file-data/selectors')
+vi.mock('../../../../labware-ingred/utils')
+vi.mock('../../../../organisms/Kitchen/hooks')
 vi.mock('react-router-dom', async importOriginal => {
   const actual = await importOriginal<NavigateFunction>()
   return {
@@ -36,14 +41,17 @@ vi.mock('react-router-dom', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof SlotOverflowMenu>) => {
+const render = (props: ComponentProps<typeof SlotOverflowMenu>) => {
   return renderWithProviders(<SlotOverflowMenu {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
+const MOCK_STAGING_AREA_ID = 'MOCK_STAGING_AREA_ID'
+const MOCK_MAKE_SNACKBAR = vi.fn()
+
 describe('SlotOverflowMenu', () => {
-  let props: React.ComponentProps<typeof SlotOverflowMenu>
+  let props: ComponentProps<typeof SlotOverflowMenu>
 
   beforeEach(() => {
     props = {
@@ -78,13 +86,27 @@ describe('SlotOverflowMenu', () => {
         },
       },
       additionalEquipmentOnDeck: {
-        fixture: { name: 'stagingArea', id: 'mockId', location: 'cutoutD3' },
+        fixture: {
+          name: 'stagingArea',
+          id: MOCK_STAGING_AREA_ID,
+          location: 'cutoutD3',
+        },
       },
     })
     vi.mocked(EditNickNameModal).mockReturnValue(
       <div>mockEditNickNameModal</div>
     )
     vi.mocked(labwareIngredSelectors.getLiquidsByLabwareId).mockReturnValue({})
+    vi.mocked(getNextAvailableDeckSlot).mockReturnValue('A1')
+    vi.mocked(useKitchen).mockReturnValue({
+      makeSnackbar: MOCK_MAKE_SNACKBAR,
+      eatToast: vi.fn(),
+      bakeToast: vi.fn(),
+    })
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
   })
 
   it('should renders all buttons as enabled and clicking on them calls ctas', () => {
@@ -108,7 +130,7 @@ describe('SlotOverflowMenu', () => {
     expect(vi.mocked(deleteDeckFixture)).toHaveBeenCalled()
     expect(props.setShowMenuList).toHaveBeenCalled()
   })
-  it('renders 2 buttons when there is nothing on the slot', () => {
+  it('renders 3 buttons when there is nothing on the slot', () => {
     props.location = 'A1'
     render(props)
     fireEvent.click(
@@ -116,7 +138,10 @@ describe('SlotOverflowMenu', () => {
     )
     expect(props.addEquipment).toHaveBeenCalled()
     expect(props.setShowMenuList).toHaveBeenCalled()
-    expect(screen.getAllByRole('button')).toHaveLength(2)
+    expect(screen.getAllByRole('button')).toHaveLength(3)
+    expect(screen.getByRole('button', { name: 'Add liquid' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Clear slot' })).toBeDisabled()
+    screen.getByTestId('divider')
   })
   it('renders Edit liquid button when there is liquid on the labware', () => {
     vi.mocked(labwareIngredSelectors.getLiquidsByLabwareId).mockReturnValue({
@@ -130,5 +155,33 @@ describe('SlotOverflowMenu', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Edit liquid' }))
     expect(mockNavigate).toHaveBeenCalled()
     expect(vi.mocked(openIngredientSelector)).toHaveBeenCalled()
+  })
+  it('deletes the staging area slot and all labware and modules on top of it', () => {
+    vi.mocked(labwareIngredSelectors.getLiquidsByLabwareId).mockReturnValue({
+      labId2: { well1: { '0': { volume: 10 } } },
+    })
+    render(props)
+    fireEvent.click(screen.getByRole('button', { name: 'Clear slot' }))
+
+    expect(vi.mocked(deleteDeckFixture)).toHaveBeenCalledOnce()
+    expect(vi.mocked(deleteDeckFixture)).toHaveBeenCalledWith(
+      MOCK_STAGING_AREA_ID
+    )
+    expect(vi.mocked(deleteContainer)).toHaveBeenCalledTimes(2)
+    expect(vi.mocked(deleteContainer)).toHaveBeenNthCalledWith(1, {
+      labwareId: 'labId',
+    })
+    expect(vi.mocked(deleteContainer)).toHaveBeenNthCalledWith(2, {
+      labwareId: 'labId2',
+    })
+    expect(vi.mocked(deleteModule)).toHaveBeenCalledOnce()
+    expect(vi.mocked(deleteModule)).toHaveBeenCalledWith('modId')
+  })
+
+  it('renders snackbar if duplicate is clicked and the deck is full', () => {
+    vi.mocked(getNextAvailableDeckSlot).mockReturnValue(null)
+    render(props)
+    fireEvent.click(screen.getByRole('button', { name: 'Duplicate labware' }))
+    expect(MOCK_MAKE_SNACKBAR).toHaveBeenCalled()
   })
 })

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { when } from 'vitest-when'
 import '@testing-library/jest-dom/vitest'
@@ -26,10 +25,11 @@ import { renderWithProviders } from '/app/__testing-utils__'
 import { useIsEstopNotDisengaged } from '/app/resources/devices'
 import { OverflowMenu } from '../OverflowMenu'
 
+import type { ComponentProps } from 'react'
 import type { Mount } from '@opentrons/components'
 
 const render = (
-  props: React.ComponentProps<typeof OverflowMenu>
+  props: ComponentProps<typeof OverflowMenu>
 ): ReturnType<typeof renderWithProviders> => {
   return renderWithProviders(<OverflowMenu {...props} />, {
     i18nInstance: i18n,
@@ -81,7 +81,7 @@ const RUN_STATUSES = {
 const mockUpdateRobotStatus = vi.fn()
 
 describe('OverflowMenu', () => {
-  let props: React.ComponentProps<typeof OverflowMenu>
+  let props: ComponentProps<typeof OverflowMenu>
   const mockDeleteCalibration = vi.fn()
 
   beforeEach(() => {

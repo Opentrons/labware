@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useSelector } from 'react-redux'
 import styled, { css } from 'styled-components'
 import { useTranslation } from 'react-i18next'
@@ -25,6 +24,8 @@ import {
 import { getIsOnDevice } from '/app/redux/config'
 import { NeedHelpLink } from '/app/molecules/OT2CalibrationNeedHelpLink'
 import { SmallButton, TextOnlyButton } from '/app/atoms/buttons'
+
+import type { ReactNode } from 'react'
 
 const ALIGN_BUTTONS = css`
   align-items: ${ALIGN_FLEX_END};
@@ -59,13 +60,13 @@ const TILE_CONTAINER_STYLE = css`
   }
 `
 export interface GenericWizardTileProps {
-  rightHandBody: React.ReactNode
-  bodyText: React.ReactNode
-  header: string | React.ReactNode
+  rightHandBody: ReactNode
+  bodyText: ReactNode
+  header: string | ReactNode
   getHelp?: string
   back?: () => void
   proceed?: () => void
-  proceedButtonText?: React.ReactNode
+  proceedButtonText?: ReactNode
   proceedIsDisabled?: boolean
   proceedButton?: JSX.Element
   backIsDisabled?: boolean

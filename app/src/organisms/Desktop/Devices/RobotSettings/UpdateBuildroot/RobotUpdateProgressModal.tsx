@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { css } from 'styled-components'
@@ -32,6 +32,7 @@ import {
   INIT_STATUS,
 } from '/app/resources/health/hooks'
 
+import type { ChangeEventHandler } from 'react'
 import type { State } from '/app/redux/types'
 import type { SetStatusBarCreateCommand } from '@opentrons/shared-data/protocol'
 import type { RobotUpdateSession } from '/app/redux/robot-update/types'
@@ -67,8 +68,8 @@ export function RobotUpdateProgressModal({
 }: RobotUpdateProgressModalProps): JSX.Element {
   const dispatch = useDispatch()
   const { t } = useTranslation('device_settings')
-  const [showFileSelect, setShowFileSelect] = React.useState<boolean>(false)
-  const installFromFileRef = React.useRef<HTMLInputElement>(null)
+  const [showFileSelect, setShowFileSelect] = useState<boolean>(false)
+  const installFromFileRef = useRef<HTMLInputElement>(null)
 
   const completeRobotUpdateHandler = (): void => {
     if (closeUpdateBuildroot != null) closeUpdateBuildroot()
@@ -85,14 +86,14 @@ export function RobotUpdateProgressModal({
   useStatusBarAnimation(error != null)
   useCleanupRobotUpdateSessionOnDismount()
 
-  const handleFileSelect: React.ChangeEventHandler<HTMLInputElement> = event => {
+  const handleFileSelect: ChangeEventHandler<HTMLInputElement> = event => {
     const { files } = event.target
     if (files?.length === 1) {
       dispatch(startRobotUpdate(robotName, files[0].path))
     }
     setShowFileSelect(false)
   }
-  React.useEffect(() => {
+  useEffect(() => {
     if (showFileSelect && installFromFileRef.current)
       installFromFileRef.current.click()
   }, [showFileSelect])
@@ -233,13 +234,11 @@ function useAllowExitIfUpdateStalled(
   progressPercent: number,
   robotInitStatus: RobotInitializationStatus
 ): boolean {
-  const [letUserExitUpdate, setLetUserExitUpdate] = React.useState<boolean>(
-    false
-  )
-  const prevSeenUpdateProgress = React.useRef<number | null>(null)
-  const exitTimeoutRef = React.useRef<NodeJS.Timeout | null>(null)
+  const [letUserExitUpdate, setLetUserExitUpdate] = useState<boolean>(false)
+  const prevSeenUpdateProgress = useRef<number | null>(null)
+  const exitTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (updateStep === 'initial' && prevSeenUpdateProgress.current !== null) {
       prevSeenUpdateProgress.current = null
     } else if (progressPercent !== prevSeenUpdateProgress.current) {
@@ -258,7 +257,7 @@ function useAllowExitIfUpdateStalled(
     }
   }, [progressPercent, updateStep, robotInitStatus])
 
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       if (exitTimeoutRef.current) clearTimeout(exitTimeoutRef.current)
     }
@@ -298,13 +297,13 @@ function useStatusBarAnimation(isError: boolean): void {
     }
   }
 
-  React.useEffect(startUpdatingAnimation, [])
-  React.useEffect(startIdleAnimationIfFailed, [isError])
+  useEffect(startUpdatingAnimation, [])
+  useEffect(startIdleAnimationIfFailed, [isError])
 }
 
 function useCleanupRobotUpdateSessionOnDismount(): void {
   const dispatch = useDispatch()
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       dispatch(clearRobotUpdateSession())
     }

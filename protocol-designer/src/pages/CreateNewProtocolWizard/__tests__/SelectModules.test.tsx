@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { FLEX_ROBOT_TYPE, OT2_ROBOT_TYPE } from '@opentrons/shared-data'
@@ -7,11 +6,13 @@ import { i18n } from '../../../assets/localization'
 import { getEnableAbsorbanceReader } from '../../../feature-flags/selectors'
 import { renderWithProviders } from '../../../__testing-utils__'
 import { SelectModules } from '../SelectModules'
+
+import type { ComponentProps } from 'react'
 import type { WizardFormState, WizardTileProps } from '../types'
 
 vi.mock('../../../feature-flags/selectors')
 
-const render = (props: React.ComponentProps<typeof SelectModules>) => {
+const render = (props: ComponentProps<typeof SelectModules>) => {
   return renderWithProviders(<SelectModules {...props} />, {
     i18nInstance: i18n,
   })[0]
@@ -37,7 +38,7 @@ const mockWizardTileProps: Partial<WizardTileProps> = {
 }
 
 describe('SelectModules', () => {
-  let props: React.ComponentProps<typeof SelectModules>
+  let props: ComponentProps<typeof SelectModules>
 
   beforeEach(() => {
     props = {

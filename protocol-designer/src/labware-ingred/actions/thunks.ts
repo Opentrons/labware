@@ -73,7 +73,6 @@ export const createContainer: (
     args.slot ||
     getNextAvailableDeckSlot(initialDeckSetup, robotType, labwareDef)
   const isTiprack = getIsTiprack(labwareDef)
-
   if (slot) {
     const id = `${uuid()}:${args.labwareDefURI}`
     const adapterId =

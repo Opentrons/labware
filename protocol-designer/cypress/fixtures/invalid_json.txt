@@ -1,0 +1,7 @@
+{
+    "name": "Test Protocol",
+    "version": 1.0,
+    "steps": [
+      { "step1": "initialize" },
+      { "step2": "execute" 
+    ]

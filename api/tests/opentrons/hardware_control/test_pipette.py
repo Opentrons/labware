@@ -73,7 +73,10 @@ def hardware_pipette_ot3() -> Callable[
     ) -> ot3_pipette.Pipette:
         return ot3_pipette.Pipette(
             load_pipette_data.load_definition(
-                model.pipette_type, model.pipette_channels, model.pipette_version
+                model.pipette_type,
+                model.pipette_channels,
+                model.pipette_version,
+                model.oem_type,
             ),
             calibration,
             id,

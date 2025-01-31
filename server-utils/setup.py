@@ -52,10 +52,10 @@ DESCRIPTION = "Common utilities for various Opentrons Python servers."
 PACKAGES = find_packages(where=".", exclude=["tests.*", "tests"])
 INSTALL_REQUIRES = [
     "anyio==3.7.1",
-    "fastapi==0.99.1",
+    "fastapi==0.100.0",
     "python-dotenv==1.0.1",
     "python-multipart==0.0.6",
-    "pydantic==1.10.12",
+    "pydantic>2.0.0,<3",
     "typing-extensions>=4.0.0,<5",
     "uvicorn==0.27.0.post1",
     "wsproto==1.2.0",

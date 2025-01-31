@@ -13,6 +13,10 @@ export const GRIPPER_FLOW_TYPES = {
   RECALIBRATE: 'RECALIBRATE',
 } as const
 
+// note: we will not translate these item titles to be consistent with manuals
+export const CALIBRATION_PIN_DISPLAY_NAME = 'Calibration Pin'
+export const HEX_SCREWDRIVER_DISPLAY_NAME = '2.5 mm Hex Screwdriver'
+
 // pin movements
 
 export const MOVE_PIN_TO_FRONT_JAW = 'movePinToFrontJaw' as const

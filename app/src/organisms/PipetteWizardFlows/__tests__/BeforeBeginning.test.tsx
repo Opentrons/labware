@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, waitFor, screen } from '@testing-library/react'
 import { describe, it, vi, beforeEach, expect, afterEach } from 'vitest'
 
@@ -19,19 +18,21 @@ import { BeforeBeginning } from '../BeforeBeginning'
 import { FLOWS } from '../constants'
 import { getIsGantryEmpty } from '../utils'
 
+import type { ComponentProps } from 'react'
+
 //  TODO(jr, 11/3/22): uncomment out the get help link when we have
 //  the correct URL to link it to
 vi.mock('/app/molecules/InProgressModal/InProgressModal')
 vi.mock('../utils')
 
-const render = (props: React.ComponentProps<typeof BeforeBeginning>) => {
+const render = (props: ComponentProps<typeof BeforeBeginning>) => {
   return renderWithProviders(<BeforeBeginning {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('BeforeBeginning', () => {
-  let props: React.ComponentProps<typeof BeforeBeginning>
+  let props: ComponentProps<typeof BeforeBeginning>
   beforeEach(() => {
     props = {
       selectedPipette: SINGLE_MOUNT_PIPETTES,

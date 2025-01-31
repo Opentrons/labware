@@ -11,6 +11,7 @@ import type { FlattenSimpleInterpolation } from 'styled-components'
 import type { ModuleModel } from '@opentrons/shared-data'
 
 export interface DeckLabelProps {
+  isZoomed: boolean
   text: string
   isSelected: boolean
   moduleModel?: ModuleModel
@@ -26,6 +27,7 @@ export function DeckLabel({
   moduleModel,
   maxWidth = FLEX_MAX_CONTENT,
   isLast = false,
+  isZoomed,
 }: DeckLabelProps): JSX.Element {
   const DECK_LABEL_BASE_STYLE = (
     labelBorderRadius?: string
@@ -59,7 +61,7 @@ export function DeckLabel({
 
   return (
     <Flex
-      fontSize="6px"
+      fontSize={isZoomed ? '6px' : '18px'}
       data-testid={`DeckLabel_${isSelected ? 'Selected' : 'UnSelected'}`}
       css={
         isSelected
@@ -68,7 +70,7 @@ export function DeckLabel({
       }
     >
       <Flex gridGap={SPACING.spacing2} alignItems={ALIGN_CENTER}>
-        {moduleModel != null ? (
+        {moduleModel != null && isZoomed ? (
           <ModuleIcon size="0.5rem" moduleType={getModuleType(moduleModel)} />
         ) : null}
         <StyledText color={isSelected ? COLORS.white : COLORS.blue50}>

@@ -313,6 +313,7 @@ describe('disposal volume should update...', () => {
         dispense_mix_checkbox: false,
         dispense_mix_times: null,
         dispense_mix_volume: null,
+        blowout_checkbox: false,
       })
     })
 

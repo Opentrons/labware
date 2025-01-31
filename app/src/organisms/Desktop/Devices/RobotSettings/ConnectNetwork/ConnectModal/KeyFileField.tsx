@@ -1,9 +1,9 @@
 import { useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { SelectField } from '@opentrons/components'
 import { FormRow } from './FormRow'
 import { UploadKeyInput } from './UploadKeyInput'
-import { LABEL_ADD_NEW_KEY } from '../i18n'
 import { useConnectFormField } from './form-state'
 
 import type { WifiKey } from '../types'
@@ -27,10 +27,6 @@ export interface KeyFileFieldProps {
 
 const ADD_NEW_KEY_VALUE = '__addNewKey__'
 
-const ADD_NEW_KEY_OPTION_GROUP = {
-  options: [{ value: ADD_NEW_KEY_VALUE, label: LABEL_ADD_NEW_KEY }],
-}
-
 const makeKeyOptions = (
   keys: WifiKey[]
 ): { options: Array<{ value: string; label: string }> } => ({
@@ -48,6 +44,11 @@ export const KeyFileField = (props: KeyFileFieldProps): JSX.Element => {
     field,
     fieldState,
   } = props
+  const { t } = useTranslation('device_settings')
+  const ADD_NEW_KEY_OPTION_GROUP = {
+    options: [{ value: ADD_NEW_KEY_VALUE, label: t('add_new') }],
+  }
+
   const { value, error, setValue, setTouched } = useConnectFormField(
     field,
     fieldState
@@ -81,7 +82,7 @@ export const KeyFileField = (props: KeyFileFieldProps): JSX.Element => {
       </FormRow>
       <UploadKeyInput
         ref={uploadKeyRef}
-        label={LABEL_ADD_NEW_KEY}
+        label={t('add_new')}
         robotName={robotName}
         onUpload={setValue}
       />

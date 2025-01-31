@@ -1,10 +1,12 @@
 """Test state getters for retrieving geometry views of state."""
+
 import inspect
 import json
 from datetime import datetime
 from math import isclose
 from typing import cast, List, Tuple, Optional, NamedTuple, Dict
 from unittest.mock import sentinel
+from os import listdir, path
 
 import pytest
 from decoy import Decoy
@@ -14,6 +16,7 @@ from opentrons.protocol_engine.state.update_types import (
     StateUpdate,
 )
 
+from opentrons_shared_data import get_shared_data_root, load_shared_data
 from opentrons_shared_data.deck.types import DeckDefinitionV5
 from opentrons_shared_data.deck import load as load_deck
 from opentrons_shared_data.labware.types import LabwareUri
@@ -26,8 +29,8 @@ from opentrons_shared_data.labware.labware_definition import (
     Dimensions as LabwareDimensions,
     Parameters as LabwareDefinitionParameters,
     CornerOffsetFromSlot,
+    ConicalFrustum,
 )
-from opentrons_shared_data import load_shared_data
 
 from opentrons.protocol_engine import errors
 from opentrons.protocol_engine.types import (
@@ -95,10 +98,19 @@ from opentrons.protocol_engine.state.frustum_helpers import (
     _volume_from_height_circular,
     _volume_from_height_rectangular,
 )
+from .inner_geometry_test_params import INNER_WELL_GEOMETRY_TEST_PARAMS
 from ..pipette_fixtures import get_default_nozzle_map
 from ..mock_circular_frusta import TEST_EXAMPLES as CIRCULAR_TEST_EXAMPLES
 from ..mock_rectangular_frusta import TEST_EXAMPLES as RECTANGULAR_TEST_EXAMPLES
 from ...protocol_runner.test_json_translator import _load_labware_definition_data
+
+
+@pytest.fixture
+def available_sensors() -> pipette_definition.AvailableSensorDefinition:
+    """Provide a list of sensors."""
+    return pipette_definition.AvailableSensorDefinition(
+        sensors=["pressure", "capacitive", "environment"]
+    )
 
 
 @pytest.fixture
@@ -249,7 +261,7 @@ def addressable_area_view(
 @pytest.fixture
 def nice_labware_definition() -> LabwareDefinition:
     """Load a nice labware def that won't blow up your terminal."""
-    return LabwareDefinition.parse_obj(
+    return LabwareDefinition.model_validate(
         json.loads(
             load_shared_data("labware/fixtures/2/fixture_12_trough_v2.json").decode(
                 "utf-8"
@@ -261,7 +273,7 @@ def nice_labware_definition() -> LabwareDefinition:
 @pytest.fixture
 def nice_adapter_definition() -> LabwareDefinition:
     """Load a friendly adapter definition."""
-    return LabwareDefinition.parse_obj(
+    return LabwareDefinition.model_validate(
         json.loads(
             load_shared_data(
                 "labware/definitions/2/opentrons_aluminum_flat_bottom_plate/1.json"
@@ -841,8 +853,8 @@ def test_get_all_obstacle_highest_z_with_modules(
     subject: GeometryView,
 ) -> None:
     """It should get the highest Z including modules."""
-    module_1 = LoadedModule.construct(id="module-id-1")  # type: ignore[call-arg]
-    module_2 = LoadedModule.construct(id="module-id-2")  # type: ignore[call-arg]
+    module_1 = LoadedModule.model_construct(id="module-id-1")  # type: ignore[call-arg]
+    module_2 = LoadedModule.model_construct(id="module-id-2")  # type: ignore[call-arg]
 
     decoy.when(mock_labware_view.get_all()).then_return([])
     decoy.when(mock_addressable_area_view.get_all()).then_return([])
@@ -931,7 +943,7 @@ def test_get_highest_z_in_slot_with_single_module(
 ) -> None:
     """It should get the highest Z in slot with just a single module."""
     # Case: Slot has a module that doesn't have any labware on it. Highest z is equal to module height.
-    module_in_slot = LoadedModule.construct(
+    module_in_slot = LoadedModule.model_construct(
         id="only-module",
         model=ModuleModel.THERMOCYCLER_MODULE_V2,
         location=DeckSlotLocation(slotName=DeckSlotName.SLOT_4),
@@ -1086,7 +1098,7 @@ def test_get_highest_z_in_slot_with_labware_stack_on_module(
         location=ModuleLocation(moduleId="module-id"),
         offsetId="offset-id2",
     )
-    module_on_slot = LoadedModule.construct(
+    module_on_slot = LoadedModule.model_construct(
         id="module-id",
         model=ModuleModel.THERMOCYCLER_MODULE_V2,
         location=DeckSlotLocation(slotName=DeckSlotName.SLOT_4),
@@ -1974,7 +1986,7 @@ def test_get_relative_well_location(
 
     assert result == WellLocation(
         origin=WellOrigin.TOP,
-        offset=WellOffset.construct(
+        offset=WellOffset.model_construct(
             x=cast(float, pytest.approx(7)),
             y=cast(float, pytest.approx(8)),
             z=cast(float, pytest.approx(9)),
@@ -1999,7 +2011,7 @@ def test_get_relative_liquid_handling_well_location(
 
     assert result == LiquidHandlingWellLocation(
         origin=WellOrigin.MENISCUS,
-        offset=WellOffset.construct(
+        offset=WellOffset.model_construct(
             x=0.0,
             y=0.0,
             z=cast(float, pytest.approx(-2)),
@@ -2449,8 +2461,8 @@ def test_get_slot_item(
     subject: GeometryView,
 ) -> None:
     """It should get items in certain slots."""
-    labware = LoadedLabware.construct(id="cool-labware")  # type: ignore[call-arg]
-    module = LoadedModule.construct(id="cool-module")  # type: ignore[call-arg]
+    labware = LoadedLabware.model_construct(id="cool-labware")  # type: ignore[call-arg]
+    module = LoadedModule.model_construct(id="cool-module")  # type: ignore[call-arg]
 
     decoy.when(mock_labware_view.get_by_slot(DeckSlotName.SLOT_1)).then_return(None)
     decoy.when(mock_labware_view.get_by_slot(DeckSlotName.SLOT_2)).then_return(labware)
@@ -2477,7 +2489,7 @@ def test_get_slot_item_that_is_overflowed_module(
     subject: GeometryView,
 ) -> None:
     """It should return the module that occupies the slot, even if not loaded on it."""
-    module = LoadedModule.construct(id="cool-module")  # type: ignore[call-arg]
+    module = LoadedModule.model_construct(id="cool-module")  # type: ignore[call-arg]
     decoy.when(mock_labware_view.get_by_slot(DeckSlotName.SLOT_3)).then_return(None)
     decoy.when(mock_module_view.get_by_slot(DeckSlotName.SLOT_3)).then_return(None)
     decoy.when(
@@ -2575,6 +2587,7 @@ def test_get_next_drop_tip_location(
     pipette_mount: MountType,
     expected_locations: List[DropTipWellLocation],
     supported_tip_fixture: pipette_definition.SupportedTipsDefinition,
+    available_sensors: pipette_definition.AvailableSensorDefinition,
 ) -> None:
     """It should provide the next location to drop tips into within a labware."""
     decoy.when(mock_labware_view.is_fixed_trash(labware_id="abc")).then_return(True)
@@ -2611,6 +2624,14 @@ def test_get_next_drop_tip_location(
                 back_right_corner=Point(x=40, y=20, z=60),
             ),
             lld_settings={},
+            plunger_positions={
+                "top": 0.0,
+                "bottom": 5.0,
+                "blow_out": 19.0,
+                "drop_tip": 20.0,
+            },
+            shaft_ul_per_mm=5.0,
+            available_sensors=available_sensors,
         )
     )
     decoy.when(mock_pipette_view.get_mount("pip-123")).then_return(pipette_mount)
@@ -2884,19 +2905,19 @@ def test_check_gripper_labware_tip_collision(
         )
     )
 
-    definition = LabwareDefinition.construct(  # type: ignore[call-arg]
+    definition = LabwareDefinition.model_construct(  # type: ignore[call-arg]
         namespace="hello",
-        dimensions=LabwareDimensions.construct(
+        dimensions=LabwareDimensions.model_construct(
             yDimension=1, zDimension=2, xDimension=3
         ),
         version=1,
-        parameters=LabwareDefinitionParameters.construct(
+        parameters=LabwareDefinitionParameters.model_construct(
             format="96Standard",
             loadName="labware-id",
             isTiprack=True,
             isMagneticModuleCompatible=False,
         ),
-        cornerOffsetFromSlot=CornerOffsetFromSlot.construct(x=1, y=2, z=3),
+        cornerOffsetFromSlot=CornerOffsetFromSlot.model_construct(x=1, y=2, z=3),
         ordering=[],
     )
 
@@ -3260,19 +3281,23 @@ def test_circular_frustum_math_helpers(
         nonlocal total_frustum_height, bottom_radius
         top_radius = frustum["radius"][index]
         target_height = frustum["height"][index]
-
+        segment = ConicalFrustum(
+            shape="conical",
+            bottomDiameter=bottom_radius * 2,
+            topDiameter=top_radius * 2,
+            topHeight=total_frustum_height,
+            bottomHeight=0.0,
+            xCount=1,
+            yCount=1,
+        )
         found_volume = _volume_from_height_circular(
             target_height=target_height,
-            total_frustum_height=total_frustum_height,
-            top_radius=top_radius,
-            bottom_radius=bottom_radius,
+            segment=segment,
         )
 
         found_height = _height_from_volume_circular(
-            volume=found_volume,
-            total_frustum_height=total_frustum_height,
-            top_radius=top_radius,
-            bottom_radius=bottom_radius,
+            target_volume=found_volume,
+            segment=segment,
         )
 
         assert isclose(found_height, frustum["height"][index])
@@ -3342,3 +3367,133 @@ def test_validate_dispense_volume_into_well_meniscus(
             ),
             volume=1100000.0,
         )
+
+
+@pytest.mark.parametrize(
+    [
+        "labware_id",
+        "well_name",
+        "input_volume_bottom",
+        "input_volume_top",
+        "expected_height_from_bottom_mm",
+        "expected_height_from_top_mm",
+    ],
+    INNER_WELL_GEOMETRY_TEST_PARAMS,
+)
+def test_get_well_height_at_volume(
+    decoy: Decoy,
+    subject: GeometryView,
+    labware_id: str,
+    well_name: str,
+    input_volume_bottom: float,
+    input_volume_top: float,
+    expected_height_from_bottom_mm: float,
+    expected_height_from_top_mm: float,
+    mock_labware_view: LabwareView,
+) -> None:
+    """Test getting the well height at a given volume."""
+
+    def _get_labware_def() -> LabwareDefinition:
+        def_dir = str(get_shared_data_root()) + f"/labware/definitions/3/{labware_id}"
+        version_str = max([str(version) for version in listdir(def_dir)])
+        def_path = path.join(def_dir, version_str)
+        _labware_def = LabwareDefinition.model_validate(
+            json.loads(load_shared_data(def_path).decode("utf-8"))
+        )
+        return _labware_def
+
+    labware_def = _get_labware_def()
+    assert labware_def.innerLabwareGeometry is not None
+    well_geometry = labware_def.innerLabwareGeometry.get(well_name)
+    assert well_geometry is not None
+    well_definition = [
+        well
+        for well in labware_def.wells.values()
+        if well.geometryDefinitionId == well_name
+    ][0]
+
+    decoy.when(mock_labware_view.get_well_geometry(labware_id, well_name)).then_return(
+        well_geometry
+    )
+    decoy.when(
+        mock_labware_view.get_well_definition(labware_id, well_name)
+    ).then_return(well_definition)
+
+    found_height_bottom = subject.get_well_height_at_volume(
+        labware_id=labware_id, well_name=well_name, volume=input_volume_bottom
+    )
+    found_height_top = subject.get_well_height_at_volume(
+        labware_id=labware_id, well_name=well_name, volume=input_volume_top
+    )
+    assert isclose(found_height_bottom, expected_height_from_bottom_mm, rel_tol=0.01)
+    vol_2_expected_height_from_bottom = (
+        subject.get_well_height(labware_id=labware_id, well_name=well_name)
+        - expected_height_from_top_mm
+    )
+    assert isclose(found_height_top, vol_2_expected_height_from_bottom, rel_tol=0.01)
+
+
+@pytest.mark.parametrize(
+    [
+        "labware_id",
+        "well_name",
+        "expected_volume_bottom",
+        "expected_volume_top",
+        "input_height_from_bottom_mm",
+        "input_height_from_top_mm",
+    ],
+    INNER_WELL_GEOMETRY_TEST_PARAMS,
+)
+def test_get_well_volume_at_height(
+    decoy: Decoy,
+    subject: GeometryView,
+    labware_id: str,
+    well_name: str,
+    expected_volume_bottom: float,
+    expected_volume_top: float,
+    input_height_from_bottom_mm: float,
+    input_height_from_top_mm: float,
+    mock_labware_view: LabwareView,
+) -> None:
+    """Test getting the volume at a given height."""
+
+    def _get_labware_def() -> LabwareDefinition:
+        def_dir = str(get_shared_data_root()) + f"/labware/definitions/3/{labware_id}"
+        version_str = max([str(version) for version in listdir(def_dir)])
+        def_path = path.join(def_dir, version_str)
+        _labware_def = LabwareDefinition.model_validate(
+            json.loads(load_shared_data(def_path).decode("utf-8"))
+        )
+        return _labware_def
+
+    labware_def = _get_labware_def()
+    assert labware_def.innerLabwareGeometry is not None
+    well_geometry = labware_def.innerLabwareGeometry.get(well_name)
+    assert well_geometry is not None
+    well_definition = [
+        well
+        for well in labware_def.wells.values()
+        if well.geometryDefinitionId == well_name
+    ][0]
+
+    decoy.when(mock_labware_view.get_well_geometry(labware_id, well_name)).then_return(
+        well_geometry
+    )
+    decoy.when(
+        mock_labware_view.get_well_definition(labware_id, well_name)
+    ).then_return(well_definition)
+
+    found_volume_bottom = subject.get_well_volume_at_height(
+        labware_id=labware_id, well_name=well_name, height=input_height_from_bottom_mm
+    )
+    vol_2_input_height_from_bottom = (
+        subject.get_well_height(labware_id=labware_id, well_name=well_name)
+        - input_height_from_top_mm
+    )
+    found_volume_top = subject.get_well_volume_at_height(
+        labware_id=labware_id,
+        well_name=well_name,
+        height=vol_2_input_height_from_bottom,
+    )
+    assert isclose(found_volume_bottom, expected_volume_bottom, rel_tol=0.01)
+    assert isclose(found_volume_top, expected_volume_top, rel_tol=0.01)

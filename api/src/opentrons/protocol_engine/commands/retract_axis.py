@@ -61,7 +61,7 @@ class RetractAxis(BaseCommand[RetractAxisParams, RetractAxisResult, ErrorOccurre
 
     commandType: RetractAxisCommandType = "retractAxis"
     params: RetractAxisParams
-    result: Optional[RetractAxisResult]
+    result: Optional[RetractAxisResult] = None
 
     _ImplementationCls: Type[RetractAxisImplementation] = RetractAxisImplementation
 

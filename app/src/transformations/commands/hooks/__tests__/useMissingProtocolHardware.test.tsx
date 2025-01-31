@@ -1,8 +1,7 @@
 import omitBy from 'lodash/omitBy'
 import { vi, it, describe, expect, beforeEach, afterEach } from 'vitest'
-import type { UseQueryResult } from 'react-query'
 import { renderHook } from '@testing-library/react'
-import type { Protocol } from '@opentrons/api-client'
+
 import {
   useProtocolQuery,
   useProtocolAnalysisAsDocumentQuery,
@@ -14,14 +13,19 @@ import {
   WASTE_CHUTE_RIGHT_ADAPTER_NO_COVER_FIXTURE,
   fixtureTiprack300ul,
 } from '@opentrons/shared-data'
+
+import { useNotifyDeckConfigurationQuery } from '/app/resources/deck_configuration/useNotifyDeckConfigurationQuery'
+import { useMissingProtocolHardware } from '../useMissingProtocolHardware'
+import { mockHeaterShaker } from '/app/redux/modules/__fixtures__'
+
+import type { FunctionComponent, ReactNode } from 'react'
+import type { UseQueryResult } from 'react-query'
+import type { Protocol } from '@opentrons/api-client'
 import type {
   CompletedProtocolAnalysis,
   DeckConfiguration,
   LabwareDefinition2,
 } from '@opentrons/shared-data'
-import { useNotifyDeckConfigurationQuery } from '/app/resources/deck_configuration/useNotifyDeckConfigurationQuery'
-import { useMissingProtocolHardware } from '../useMissingProtocolHardware'
-import { mockHeaterShaker } from '/app/redux/modules/__fixtures__'
 
 vi.mock('@opentrons/react-api-client')
 vi.mock('/app/resources/deck_configuration/useNotifyDeckConfigurationQuery')
@@ -161,7 +165,7 @@ const PROTOCOL_ANALYSIS = {
   runTimeParameters: mockRTPData,
 } as any
 describe.only('useMissingProtocolHardware', () => {
-  let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+  let wrapper: FunctionComponent<{ children: ReactNode }>
   beforeEach(() => {
     vi.mocked(useInstrumentsQuery).mockReturnValue({
       data: { data: [] },

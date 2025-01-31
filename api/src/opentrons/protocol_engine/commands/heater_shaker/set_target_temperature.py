@@ -76,7 +76,7 @@ class SetTargetTemperature(
 
     commandType: SetTargetTemperatureCommandType = "heaterShaker/setTargetTemperature"
     params: SetTargetTemperatureParams
-    result: Optional[SetTargetTemperatureResult]
+    result: Optional[SetTargetTemperatureResult] = None
 
     _ImplementationCls: Type[SetTargetTemperatureImpl] = SetTargetTemperatureImpl
 

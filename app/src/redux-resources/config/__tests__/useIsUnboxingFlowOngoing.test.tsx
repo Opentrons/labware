@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { renderHook } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { Provider } from 'react-redux'
@@ -7,6 +6,7 @@ import { createStore } from 'redux'
 import { getIsOnDevice, getOnDeviceDisplaySettings } from '/app/redux/config'
 import { useIsUnboxingFlowOngoing } from '../useIsUnboxingFlowOngoing'
 
+import type { FunctionComponent, ReactNode } from 'react'
 import type { Store } from 'redux'
 import type { State } from '/app/redux/types'
 
@@ -22,7 +22,7 @@ const mockDisplaySettings = {
 }
 
 describe('useIsUnboxingFlowOngoing', () => {
-  let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+  let wrapper: FunctionComponent<{ children: ReactNode }>
   beforeEach(() => {
     wrapper = ({ children }) => <Provider store={store}>{children}</Provider>
     vi.mocked(getOnDeviceDisplaySettings).mockReturnValue(mockDisplaySettings)

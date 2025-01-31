@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { FLEX_ROBOT_TYPE, OT2_ROBOT_TYPE } from '@opentrons/shared-data'
@@ -12,6 +11,7 @@ import { createCustomTiprackDef } from '../../../labware-defs/actions'
 import { SelectPipettes } from '../SelectPipettes'
 import { getTiprackOptions } from '../utils'
 
+import type { ComponentProps } from 'react'
 import type { NavigateFunction } from 'react-router-dom'
 import type { WizardFormState, WizardTileProps } from '../types'
 
@@ -21,6 +21,7 @@ vi.mock('../../../organisms')
 vi.mock('../../../labware-defs/actions')
 vi.mock('../utils')
 const mockLocation = vi.fn()
+window.HTMLElement.prototype.scrollIntoView = vi.fn()
 
 vi.mock('react-router-dom', async importOriginal => {
   const actual = await importOriginal<NavigateFunction>()
@@ -30,7 +31,7 @@ vi.mock('react-router-dom', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof SelectPipettes>) => {
+const render = (props: ComponentProps<typeof SelectPipettes>) => {
   return renderWithProviders(<SelectPipettes {...props} />, {
     i18nInstance: i18n,
   })[0]
@@ -55,7 +56,7 @@ const mockWizardTileProps: Partial<WizardTileProps> = {
 }
 
 describe('SelectPipettes', () => {
-  let props: React.ComponentProps<typeof SelectPipettes>
+  let props: ComponentProps<typeof SelectPipettes>
 
   beforeEach(() => {
     props = {
@@ -69,8 +70,8 @@ describe('SelectPipettes', () => {
     vi.mocked(getLabwareDefsByURI).mockReturnValue({})
     vi.mocked(getAllowAllTipracks).mockReturnValue(false)
     vi.mocked(getTiprackOptions).mockReturnValue({
-      'opentrons/opentrons_flex_96_tiprack_200ul/1': '200uL Flex tipracks',
-      'opentrons/opentrons_flex_96_tiprack_1000ul/1': '1000uL Flex tipracks',
+      'opentrons/opentrons_flex_96_tiprack_200ul/1': '200µL Flex tipracks',
+      'opentrons/opentrons_flex_96_tiprack_1000ul/1': '1000µL Flex tipracks',
     })
   })
 
@@ -86,11 +87,11 @@ describe('SelectPipettes', () => {
     fireEvent.click(screen.getByRole('label', { name: '1-Channel' }))
     screen.getByText('Pipette volume')
     // select pip volume
-    fireEvent.click(screen.getByRole('label', { name: '1000 uL' }))
+    fireEvent.click(screen.getByRole('label', { name: '1000 µL' }))
     // select tip
     screen.getByText('Add custom pipette tips')
-    screen.getByText('200uL Flex tipracks')
-    fireEvent.click(screen.getByText('1000uL Flex tipracks'))
+    screen.getByText('200µL Flex tipracks')
+    fireEvent.click(screen.getByText('1000µL Flex tipracks'))
 
     screen.getByRole('button', { name: 'Confirm' })
 
@@ -103,8 +104,8 @@ describe('SelectPipettes', () => {
 
   it('renders the first page of select pipettes for an ot-2', () => {
     vi.mocked(getTiprackOptions).mockReturnValue({
-      'opentrons/opentrons_96_tiprack_10ul/1': '10uL tipracks',
-      'opentrons/opentrons_96_tiprack_300ul/1': '300uL tipracks',
+      'opentrons/opentrons_96_tiprack_10ul/1': '10µL tipracks',
+      'opentrons/opentrons_96_tiprack_300ul/1': '300µL tipracks',
     })
 
     const values = {
@@ -139,11 +140,11 @@ describe('SelectPipettes', () => {
 
     screen.getByText('Pipette volume')
     // select pip volume
-    fireEvent.click(screen.getByRole('label', { name: '20 uL' }))
+    fireEvent.click(screen.getByRole('label', { name: '20 µL' }))
     // select tip
     screen.getByText('Add custom pipette tips')
-    screen.getByText('10uL tipracks')
-    fireEvent.click(screen.getByText('300uL tipracks'))
+    screen.getByText('10µL tipracks')
+    fireEvent.click(screen.getByText('300µL tipracks'))
     screen.getByText('Add custom pipette tips')
 
     //  add custom pipette tips
@@ -151,7 +152,7 @@ describe('SelectPipettes', () => {
     expect(vi.mocked(createCustomTiprackDef)).toHaveBeenCalled()
 
     //  change all tip setting
-    fireEvent.click(screen.getByText('Show all tips'))
+    fireEvent.click(screen.getByText('Show more tip types'))
     screen.getByText('mock incompatible tips modal')
   })
 })

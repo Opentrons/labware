@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, describe, expect, it, beforeEach } from 'vitest'
 import { screen, renderHook } from '@testing-library/react'
 
@@ -8,7 +7,6 @@ import {
   RUN_STATUS_RUNNING,
   RUN_STATUS_STOP_REQUESTED,
 } from '@opentrons/api-client'
-import { getLoadedLabwareDefinitionsByUri } from '@opentrons/shared-data'
 
 import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
@@ -23,7 +21,9 @@ import { useRecoveryAnalytics } from '/app/redux-resources/analytics'
 import { getIsOnDevice } from '/app/redux/config'
 import { useERWizard, ErrorRecoveryWizard } from '../ErrorRecoveryWizard'
 import { useRecoverySplash, RecoverySplash } from '../RecoverySplash'
+import { useRunLoadedLabwareDefinitionsByUri } from '/app/resources/runs'
 
+import type { ComponentProps } from 'react'
 import type { RunStatus } from '@opentrons/api-client'
 
 vi.mock('../ErrorRecoveryWizard')
@@ -33,13 +33,7 @@ vi.mock('/app/redux/config')
 vi.mock('../RecoverySplash')
 vi.mock('/app/redux-resources/analytics')
 vi.mock('@opentrons/react-api-client')
-vi.mock('@opentrons/shared-data', async () => {
-  const actual = await vi.importActual('@opentrons/shared-data')
-  return {
-    ...actual,
-    getLoadedLabwareDefinitionsByUri: vi.fn(),
-  }
-})
+vi.mock('/app/resources/runs')
 vi.mock('react-redux', async () => {
   const actual = await vi.importActual('react-redux')
   return {
@@ -51,6 +45,7 @@ vi.mock('react-redux', async () => {
 describe('useErrorRecoveryFlows', () => {
   beforeEach(() => {
     vi.mocked(useCurrentlyRecoveringFrom).mockReturnValue('mockCommand' as any)
+    vi.mocked(useRunLoadedLabwareDefinitionsByUri).mockReturnValue({})
   })
 
   it('should have initial state of isERActive as false', () => {
@@ -95,12 +90,32 @@ describe('useErrorRecoveryFlows', () => {
     expect(result.current.failedCommand).toEqual('mockCommand')
   })
 
+  it("should return the run's labware definitions", () => {
+    const { result } = renderHook(() =>
+      useErrorRecoveryFlows('MOCK_ID', RUN_STATUS_RUNNING)
+    )
+
+    expect(result.current.failedCommand).toEqual('mockCommand')
+  })
+
   it(`should return isERActive false if the run status is ${RUN_STATUS_STOP_REQUESTED} before seeing ${RUN_STATUS_AWAITING_RECOVERY}`, () => {
     const { result } = renderHook(() =>
       useErrorRecoveryFlows('MOCK_ID', RUN_STATUS_STOP_REQUESTED)
     )
 
-    expect(result.current.isERActive).toEqual(false)
+    expect(result.current.runLwDefsByUri).toEqual({})
+  })
+
+  it('should not return isERActive if the run labware defintions is null', () => {
+    vi.mocked(useRunLoadedLabwareDefinitionsByUri).mockReturnValue(null)
+
+    const { result } = renderHook(
+      runStatus => useErrorRecoveryFlows('MOCK_ID', runStatus),
+      {
+        initialProps: RUN_STATUS_AWAITING_RECOVERY,
+      }
+    )
+    expect(result.current.isERActive).toBe(false)
   })
 
   it('should set hasSeenAwaitingRecovery to true when runStatus is RUN_STATUS_AWAITING_RECOVERY', () => {
@@ -134,14 +149,14 @@ describe('useErrorRecoveryFlows', () => {
   })
 })
 
-const render = (props: React.ComponentProps<typeof ErrorRecoveryFlows>) => {
+const render = (props: ComponentProps<typeof ErrorRecoveryFlows>) => {
   return renderWithProviders(<ErrorRecoveryFlows {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('ErrorRecoveryFlows', () => {
-  let props: React.ComponentProps<typeof ErrorRecoveryFlows>
+  let props: ComponentProps<typeof ErrorRecoveryFlows>
 
   beforeEach(() => {
     props = {
@@ -149,6 +164,7 @@ describe('ErrorRecoveryFlows', () => {
       unvalidatedFailedCommand: mockFailedCommand,
       runId: 'MOCK_RUN_ID',
       protocolAnalysis: null,
+      runLwDefsByUri: {},
     }
     vi.mocked(ErrorRecoveryWizard).mockReturnValue(<div>MOCK WIZARD</div>)
     vi.mocked(RecoverySplash).mockReturnValue(<div>MOCK RUN PAUSED SPLASH</div>)
@@ -173,7 +189,6 @@ describe('ErrorRecoveryFlows', () => {
       intent: 'recovering',
       showTakeover: false,
     })
-    vi.mocked(getLoadedLabwareDefinitionsByUri).mockReturnValue({})
   })
 
   it('renders the wizard when showERWizard is true', () => {

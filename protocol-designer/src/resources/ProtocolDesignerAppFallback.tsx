@@ -4,15 +4,19 @@ import { useTranslation } from 'react-i18next'
 
 import type { FallbackProps } from 'react-error-boundary'
 
+import { actions } from '../load-file'
 import {
   AlertPrimaryButton,
   ALIGN_FLEX_END,
   DIRECTION_COLUMN,
   Flex,
   Modal,
+  SecondaryButton,
   SPACING,
   StyledText,
 } from '@opentrons/components'
+import { useDispatch } from 'react-redux'
+import type { ThunkDispatch } from '../types'
 
 export function ProtocolDesignerAppFallback({
   error,
@@ -20,8 +24,12 @@ export function ProtocolDesignerAppFallback({
 }: FallbackProps): JSX.Element {
   const { t } = useTranslation('shared')
 
+  const dispatch: ThunkDispatch<any> = useDispatch()
   const handleReloadClick = (): void => {
     resetErrorBoundary()
+  }
+  const handleDownloadProtocol = (): void => {
+    dispatch(actions.saveProtocolFile())
   }
 
   return (
@@ -35,12 +43,14 @@ export function ProtocolDesignerAppFallback({
             {error.message}
           </StyledText>
         </Flex>
-        <AlertPrimaryButton
-          alignSelf={ALIGN_FLEX_END}
-          onClick={handleReloadClick}
-        >
-          {t('reload_app')}
-        </AlertPrimaryButton>
+        <Flex alignSelf={ALIGN_FLEX_END} gridGap={SPACING.spacing8}>
+          <SecondaryButton onClick={handleDownloadProtocol}>
+            {t('download_protocol')}
+          </SecondaryButton>
+          <AlertPrimaryButton onClick={handleReloadClick}>
+            {t('reload_app')}
+          </AlertPrimaryButton>
+        </Flex>
       </Flex>
     </Modal>
   )

@@ -709,6 +709,13 @@ class Protocols:
         robot="Flex",
     )
 
+    # analyses-snapshot-testing/files/protocols/Flex_S_v2_21_P1000_96_GRIP_HS_MB_TC_TM_Smoke.py
+    Flex_S_v2_21_P1000_96_GRIP_HS_MB_TC_TM_Smoke: Protocol = Protocol(
+        file_stem="Flex_S_v2_21_P1000_96_GRIP_HS_MB_TC_TM_Smoke",
+        file_extension="py",
+        robot="Flex",
+    )
+
     OT2_X_v2_18_None_None_duplicateRTPVariableName: Protocol = Protocol(
         file_stem="OT2_X_v2_18_None_None_duplicateRTPVariableName",
         file_extension="py",

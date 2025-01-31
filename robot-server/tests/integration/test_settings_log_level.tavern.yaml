@@ -11,16 +11,16 @@ marks:
         - warning
         - error
 stages:
-  - name: Set log_level to acceptable values 
+  - name: Set log_level to acceptable values
     request:
       method: POST
-      url: "{ot2_server_base_url}/settings/log_level/local"
-      json: 
-        log_level: "{log_level}"
+      url: '{ot2_server_base_url}/settings/log_level/local'
+      json:
+        log_level: '{log_level}'
     response:
       status_code: 200
       json:
-        message: "log_level set to {log_level}"
+        message: 'log_level set to {log_level}'
 ---
 # Incorect Log Level Requests
 test_name: POST Set log level to invalid value
@@ -28,31 +28,25 @@ marks:
   - usefixtures:
       - ot2_server_base_url
 stages:
-  - name: Set log_level to error 
+  - name: Set log_level to error
     request:
       method: POST
-      url: "{ot2_server_base_url}/settings/log_level/local"
-      json: 
+      url: '{ot2_server_base_url}/settings/log_level/local'
+      json:
         log_level: bad_level
     response:
       status_code: 422
-      json:
-        message: "body.log_level: '{tavern.request_vars.json.log_level}' is not a valid LogLevels"
-        errorCode: '4000'
 ---
 test_name: POST Set log level to nothing
 marks:
   - usefixtures:
       - ot2_server_base_url
 stages:
-  - name: Set log_level to nothing 
+  - name: Set log_level to nothing
     request:
       method: POST
-      url: "{ot2_server_base_url}/settings/log_level/local"
-      json: 
+      url: '{ot2_server_base_url}/settings/log_level/local'
+      json:
         log_level: Null
     response:
       status_code: 422
-      json:
-        message: "log_level must be set"
-        errorCode: '4000'

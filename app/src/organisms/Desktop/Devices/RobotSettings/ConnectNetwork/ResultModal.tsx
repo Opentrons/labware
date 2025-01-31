@@ -1,6 +1,6 @@
+import { useTranslation } from 'react-i18next'
 import { AlertModal, SpinnerModal } from '@opentrons/components'
 
-import * as Copy from './i18n'
 import { ErrorModal } from '/app/molecules/modals'
 import { DISCONNECT } from './constants'
 import { PENDING, FAILURE } from '/app/redux/robot-api'
@@ -18,29 +18,32 @@ export interface ResultModalProps {
 
 export const ResultModal = (props: ResultModalProps): JSX.Element => {
   const { type, ssid, requestStatus, error, onClose } = props
+  const { t } = useTranslation(['device_settings', 'shared'])
   const isDisconnect = type === DISCONNECT
 
   if (requestStatus === PENDING) {
     const message = isDisconnect
-      ? Copy.DISCONNECTING_FROM_NETWORK(ssid)
-      : Copy.CONNECTING_TO_NETWORK(ssid)
+      ? t('disconnecting_from_wifi_network', { ssid: ssid })
+      : t('connecting_to_wifi_network', { ssid: ssid })
 
     return <SpinnerModal alertOverlay message={message} />
   }
 
   if (error || requestStatus === FAILURE) {
     const heading = isDisconnect
-      ? Copy.UNABLE_TO_DISCONNECT
-      : Copy.UNABLE_TO_CONNECT
+      ? t('unable_to_disconnect')
+      : t('unable_to_connect')
 
     const message = isDisconnect
-      ? Copy.YOUR_ROBOT_WAS_UNABLE_TO_DISCONNECT(ssid)
-      : Copy.YOUR_ROBOT_WAS_UNABLE_TO_CONNECT(ssid)
+      ? t('disconnect_from_wifi_network_failure', { ssid: ssid })
+      : t('connect_to_wifi_network_failure', { ssid: ssid })
 
-    const retryMessage = !isDisconnect ? ` ${Copy.CHECK_YOUR_CREDENTIALS}.` : ''
+    const retryMessage = !isDisconnect ? t('please_check_credentials') : ''
 
     const placeholderError = {
-      message: `Likely incorrect network password. ${Copy.CHECK_YOUR_CREDENTIALS}.`,
+      message: `${t('likely_incorrect_password')} ${t(
+        'please_check_credentials'
+      )}.`,
     }
 
     return (
@@ -54,12 +57,12 @@ export const ResultModal = (props: ResultModalProps): JSX.Element => {
   }
 
   const heading = isDisconnect
-    ? Copy.SUCCESSFULLY_DISCONNECTED
-    : Copy.SUCCESSFULLY_CONNECTED
+    ? t('successfully_disconnected')
+    : t('successfully_connected_to_wifi')
 
   const message = isDisconnect
-    ? Copy.YOUR_ROBOT_HAS_DISCONNECTED(ssid)
-    : Copy.YOUR_ROBOT_HAS_CONNECTED(ssid)
+    ? t('disconnect_from_wifi_network_success')
+    : t('successfully_connected_to_ssid', { ssid: ssid })
 
   return (
     <AlertModal
@@ -67,7 +70,7 @@ export const ResultModal = (props: ResultModalProps): JSX.Element => {
       iconName="wifi"
       heading={heading}
       onCloseClick={props.onClose}
-      buttons={[{ children: Copy.CLOSE, onClick: onClose }]}
+      buttons={[{ children: t('shared:close'), onClick: onClose }]}
     >
       {message}
     </AlertModal>

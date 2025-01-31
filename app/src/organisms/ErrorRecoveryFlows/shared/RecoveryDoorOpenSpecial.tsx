@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { css } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 
@@ -20,7 +20,11 @@ import { RecoverySingleColumnContentWrapper } from './RecoveryContentWrapper'
 import { RecoveryFooterButtons } from './RecoveryFooterButtons'
 import { RECOVERY_MAP } from '../constants'
 
-import type { RecoveryContentProps } from '../../ErrorRecoveryFlows/types'
+import type {
+  RecoveryContentProps,
+  RecoveryRoute,
+  RouteStep,
+} from '../../ErrorRecoveryFlows/types'
 
 // Whenever a step uses a custom "close the robot door" view, use this component.
 // Note that the allowDoorOpen metadata for the route must be set to true for this view to render.
@@ -30,9 +34,11 @@ export function RecoveryDoorOpenSpecial({
   recoveryActionMutationUtils,
   routeUpdateActions,
   doorStatusUtils,
+  recoveryCommands,
 }: RecoveryContentProps): JSX.Element {
   const { selectedRecoveryOption } = currentRecoveryOptionUtils
   const { resumeRecovery } = recoveryActionMutationUtils
+  const { proceedToRouteAndStep, handleMotionRouting } = routeUpdateActions
   const { t } = useTranslation('error_recovery')
 
   const [isLoading, setIsLoading] = useState(false)
@@ -46,6 +52,7 @@ export function RecoveryDoorOpenSpecial({
     switch (selectedRecoveryOption) {
       case RECOVERY_MAP.MANUAL_REPLACE_AND_RETRY.ROUTE:
       case RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.ROUTE:
+      case RECOVERY_MAP.HOME_AND_RETRY.ROUTE:
         return t('door_open_robot_home')
       default: {
         console.error(
@@ -56,29 +63,56 @@ export function RecoveryDoorOpenSpecial({
     }
   }
 
-  if (!doorStatusUtils.isDoorOpen) {
-    const { proceedToRouteAndStep } = routeUpdateActions
-    switch (selectedRecoveryOption) {
-      case RECOVERY_MAP.MANUAL_REPLACE_AND_RETRY.ROUTE:
-        void proceedToRouteAndStep(
-          RECOVERY_MAP.MANUAL_REPLACE_AND_RETRY.ROUTE,
-          RECOVERY_MAP.MANUAL_REPLACE_AND_RETRY.STEPS.MANUAL_REPLACE
-        )
-        break
-      case RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.ROUTE:
-        void proceedToRouteAndStep(
-          RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.ROUTE,
-          RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.STEPS.MANUAL_MOVE
-        )
-        break
-      default: {
-        console.error(
-          `Unhandled special-cased door open on route ${selectedRecoveryOption}.`
-        )
-        void proceedToRouteAndStep(RECOVERY_MAP.OPTION_SELECTION.ROUTE)
+  const handleHomeAllAndRoute = (
+    route: RecoveryRoute,
+    step?: RouteStep
+  ): void => {
+    void handleMotionRouting(true, RECOVERY_MAP.ROBOT_IN_MOTION.ROUTE)
+      .then(() => recoveryCommands.homeAll())
+      .finally(() => handleMotionRouting(false))
+      .then(() => proceedToRouteAndStep(route, step))
+  }
+
+  const handleHomeExceptPlungersAndRoute = (
+    route: RecoveryRoute,
+    step?: RouteStep
+  ): void => {
+    void handleMotionRouting(true, RECOVERY_MAP.ROBOT_IN_MOTION.ROUTE)
+      .then(() => recoveryCommands.homeExceptPlungers())
+      .finally(() => handleMotionRouting(false))
+      .then(() => proceedToRouteAndStep(route, step))
+  }
+
+  useEffect(() => {
+    if (!doorStatusUtils.isDoorOpen) {
+      switch (selectedRecoveryOption) {
+        case RECOVERY_MAP.MANUAL_REPLACE_AND_RETRY.ROUTE:
+          handleHomeExceptPlungersAndRoute(
+            RECOVERY_MAP.MANUAL_REPLACE_AND_RETRY.ROUTE,
+            RECOVERY_MAP.MANUAL_REPLACE_AND_RETRY.STEPS.MANUAL_REPLACE
+          )
+          break
+        case RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.ROUTE:
+          handleHomeExceptPlungersAndRoute(
+            RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.ROUTE,
+            RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.STEPS.MANUAL_MOVE
+          )
+          break
+        case RECOVERY_MAP.HOME_AND_RETRY.ROUTE:
+          handleHomeAllAndRoute(
+            RECOVERY_MAP.HOME_AND_RETRY.ROUTE,
+            RECOVERY_MAP.HOME_AND_RETRY.STEPS.CONFIRM_RETRY
+          )
+          break
+        default: {
+          console.error(
+            `Unhandled special-cased door open on route ${selectedRecoveryOption}.`
+          )
+          void proceedToRouteAndStep(RECOVERY_MAP.OPTION_SELECTION.ROUTE)
+        }
       }
     }
-  }
+  }, [doorStatusUtils.isDoorOpen])
 
   return (
     <RecoverySingleColumnContentWrapper>

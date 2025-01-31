@@ -1,9 +1,9 @@
-import type * as React from 'react'
-
 import styles from './styles.module.css'
 
+import type { ReactNode } from 'react'
+
 export interface ControlInfoProps {
-  children: React.ReactNode
+  children: ReactNode
   className?: string
 }
 

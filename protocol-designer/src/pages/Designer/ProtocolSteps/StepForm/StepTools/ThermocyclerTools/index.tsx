@@ -8,7 +8,6 @@ import {
   RadioButton,
   SPACING,
 } from '@opentrons/components'
-
 import { ProfileSettings } from './ProfileSettings'
 import { ProfileStepsSummary } from './ProfileStepsSummary'
 import { ThermocyclerState } from './ThermocyclerState'
@@ -25,13 +24,11 @@ export function ThermocyclerTools(props: StepFormProps): JSX.Element {
     showFormErrors = true,
     visibleFormErrors,
     focusedField,
-    setShowFormErrorsAndWarnings,
+    setShowFormErrors,
   } = props
-  const { t } = useTranslation('form')
-
+  const { t } = useTranslation(['form', 'application'])
   const [contentType, setContentType] = useState<ThermocyclerContentType>(
-    (formData.thermocyclerFormType as ThermocyclerContentType) ??
-      'thermocyclerState'
+    formData.thermocyclerFormType as ThermocyclerContentType
   )
 
   if (toolboxStep === 0) {
@@ -50,7 +47,7 @@ export function ThermocyclerTools(props: StepFormProps): JSX.Element {
           onChange={() => {
             setContentType('thermocyclerState')
             propsForFields.thermocyclerFormType.updateValue('thermocyclerState')
-            setShowFormErrorsAndWarnings?.(false)
+            setShowFormErrors?.(false)
           }}
           isSelected={contentType === 'thermocyclerState'}
         />
@@ -65,7 +62,7 @@ export function ThermocyclerTools(props: StepFormProps): JSX.Element {
             propsForFields.thermocyclerFormType.updateValue(
               'thermocyclerProfile'
             )
-            setShowFormErrorsAndWarnings?.(false)
+            setShowFormErrors?.(false)
           }}
           isSelected={contentType === 'thermocyclerProfile'}
         />
@@ -84,7 +81,11 @@ export function ThermocyclerTools(props: StepFormProps): JSX.Element {
     )
   } else {
     return (
-      <Flex flexDirection={DIRECTION_COLUMN}>
+      <Flex
+        flexDirection={DIRECTION_COLUMN}
+        gridGap={SPACING.spacing12}
+        paddingY={SPACING.spacing16}
+      >
         <ProfileSettings
           propsForFields={propsForFields}
           showFormErrors={showFormErrors}

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -14,9 +13,11 @@ import {
 
 import { TertiaryButton } from '/app/atoms/buttons'
 
+import type { Dispatch, SetStateAction } from 'react'
+
 interface FactoryModeProps {
   isRobotBusy: boolean
-  setShowFactoryModeSlideout: React.Dispatch<React.SetStateAction<boolean>>
+  setShowFactoryModeSlideout: Dispatch<SetStateAction<boolean>>
   sn: string | null
 }
 

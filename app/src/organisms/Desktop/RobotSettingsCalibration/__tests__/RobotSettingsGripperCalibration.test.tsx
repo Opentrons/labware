@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -10,6 +9,7 @@ import { formatLastCalibrated } from '../CalibrationDetails/utils'
 import { useIsEstopNotDisengaged } from '/app/resources/devices/hooks/useIsEstopNotDisengaged'
 import { RobotSettingsGripperCalibration } from '../RobotSettingsGripperCalibration'
 
+import type { ComponentProps } from 'react'
 import type { GripperData } from '@opentrons/api-client'
 
 vi.mock('/app/organisms/GripperWizardFlows')
@@ -35,7 +35,7 @@ const mockNotCalibratedGripper = {
 const ROBOT_NAME = 'mockRobot'
 
 const render = (
-  props: React.ComponentProps<typeof RobotSettingsGripperCalibration>
+  props: ComponentProps<typeof RobotSettingsGripperCalibration>
 ) => {
   return renderWithProviders(<RobotSettingsGripperCalibration {...props} />, {
     i18nInstance: i18n,
@@ -43,7 +43,7 @@ const render = (
 }
 
 describe('RobotSettingsGripperCalibration', () => {
-  let props: React.ComponentProps<typeof RobotSettingsGripperCalibration>
+  let props: ComponentProps<typeof RobotSettingsGripperCalibration>
   beforeEach(() => {
     vi.mocked(formatLastCalibrated).mockReturnValue('last calibrated 1/2/3')
     vi.mocked(GripperWizardFlows).mockReturnValue(<>Mock Wizard Flow</>)

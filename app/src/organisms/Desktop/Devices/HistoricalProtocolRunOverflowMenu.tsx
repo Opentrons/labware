@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, useNavigate } from 'react-router-dom'
 
@@ -38,6 +37,7 @@ import { useIsEstopNotDisengaged } from '/app/resources/devices'
 import { useTrackProtocolRunEvent } from '/app/redux-resources/analytics'
 import { useRobot } from '/app/redux-resources/robots'
 
+import type { MouseEventHandler } from 'react'
 import type { Run } from '@opentrons/api-client'
 
 export interface HistoricalProtocolRunOverflowMenuProps {
@@ -99,7 +99,7 @@ export function HistoricalProtocolRunOverflowMenu(
 }
 
 interface MenuDropdownProps extends HistoricalProtocolRunOverflowMenuProps {
-  closeOverflowMenu: React.MouseEventHandler<HTMLButtonElement>
+  closeOverflowMenu: MouseEventHandler<HTMLButtonElement>
   downloadRunLog: () => void
   isRunLogLoading: boolean
 }
@@ -126,7 +126,7 @@ function MenuDropdown(props: MenuDropdownProps): JSX.Element {
       `/devices/${robotName}/protocol-runs/${createRunResponse.data.id}/run-preview`
     )
   }
-  const onDownloadClick: React.MouseEventHandler<HTMLButtonElement> = e => {
+  const onDownloadClick: MouseEventHandler<HTMLButtonElement> = e => {
     e.preventDefault()
     e.stopPropagation()
     downloadRunLog()
@@ -143,9 +143,7 @@ function MenuDropdown(props: MenuDropdownProps): JSX.Element {
   const robotSerialNumber =
     robot?.health?.robot_serial ?? robot?.serverHealth?.serialNumber ?? null
 
-  const handleResetClick: React.MouseEventHandler<HTMLButtonElement> = (
-    e
-  ): void => {
+  const handleResetClick: MouseEventHandler<HTMLButtonElement> = (e): void => {
     e.preventDefault()
     e.stopPropagation()
 
@@ -160,7 +158,7 @@ function MenuDropdown(props: MenuDropdownProps): JSX.Element {
     trackProtocolRunEvent({ name: ANALYTICS_PROTOCOL_RUN_ACTION.AGAIN })
   }
 
-  const handleDeleteClick: React.MouseEventHandler<HTMLButtonElement> = e => {
+  const handleDeleteClick: MouseEventHandler<HTMLButtonElement> = e => {
     e.preventDefault()
     e.stopPropagation()
     deleteRun(runId)

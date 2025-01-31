@@ -1,0 +1,205 @@
+{
+  "ordering": [
+    ["A1", "B1", "C1"],
+    ["A2", "B2", "C2"],
+    ["A3", "B3", "C3"],
+    ["A4", "B4", "C4"]
+  ],
+  "brand": {
+    "brand": "Corning",
+    "brandId": ["3336", "3512", "3513"],
+    "links": [
+      "https://ecatalog.corning.com/life-sciences/b2c/US/en/Microplates/Assay-Microplates/96-Well-Microplates/Costar%C2%AE-Multiple-Well-Cell-Culture-Plates/p/3513?clear=true"
+    ]
+  },
+  "schemaVersion": 3,
+  "version": 3,
+  "namespace": "opentrons",
+  "metadata": {
+    "displayName": "Corning 12 Well Plate 6.9 mL Flat",
+    "displayVolumeUnits": "mL",
+    "displayCategory": "wellPlate",
+    "tags": []
+  },
+  "dimensions": {
+    "xDimension": 127.89,
+    "yDimension": 85.6,
+    "zDimension": 20.02
+  },
+  "gripForce": 16,
+  "gripHeightFromLabwareBottom": 18.3,
+  "wells": {
+    "C1": {
+      "shape": "circular",
+      "depth": 17.399,
+      "diameter": 22.73,
+      "totalLiquidVolume": 6900,
+      "x": 24.94,
+      "y": 16.79,
+      "z": 2.49,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B1": {
+      "shape": "circular",
+      "depth": 17.399,
+      "diameter": 22.73,
+      "totalLiquidVolume": 6900,
+      "x": 24.94,
+      "y": 42.8,
+      "z": 2.49,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A1": {
+      "shape": "circular",
+      "depth": 17.399,
+      "diameter": 22.73,
+      "totalLiquidVolume": 6900,
+      "x": 24.94,
+      "y": 68.81,
+      "z": 2.49,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "C2": {
+      "shape": "circular",
+      "depth": 17.399,
+      "diameter": 22.73,
+      "totalLiquidVolume": 6900,
+      "x": 50.95,
+      "y": 16.79,
+      "z": 2.49,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B2": {
+      "shape": "circular",
+      "depth": 17.399,
+      "diameter": 22.73,
+      "totalLiquidVolume": 6900,
+      "x": 50.95,
+      "y": 42.8,
+      "z": 2.49,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A2": {
+      "shape": "circular",
+      "depth": 17.399,
+      "diameter": 22.73,
+      "totalLiquidVolume": 6900,
+      "x": 50.95,
+      "y": 68.81,
+      "z": 2.49,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "C3": {
+      "shape": "circular",
+      "depth": 17.399,
+      "diameter": 22.73,
+      "totalLiquidVolume": 6900,
+      "x": 76.96,
+      "y": 16.79,
+      "z": 2.49,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B3": {
+      "shape": "circular",
+      "depth": 17.399,
+      "diameter": 22.73,
+      "totalLiquidVolume": 6900,
+      "x": 76.96,
+      "y": 42.8,
+      "z": 2.49,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A3": {
+      "shape": "circular",
+      "depth": 17.399,
+      "diameter": 22.73,
+      "totalLiquidVolume": 6900,
+      "x": 76.96,
+      "y": 68.81,
+      "z": 2.49,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "C4": {
+      "shape": "circular",
+      "depth": 17.399,
+      "diameter": 22.73,
+      "totalLiquidVolume": 6900,
+      "x": 102.97,
+      "y": 16.79,
+      "z": 2.49,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B4": {
+      "shape": "circular",
+      "depth": 17.399,
+      "diameter": 22.73,
+      "totalLiquidVolume": 6900,
+      "x": 102.97,
+      "y": 42.8,
+      "z": 2.49,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A4": {
+      "shape": "circular",
+      "depth": 17.399,
+      "diameter": 22.73,
+      "totalLiquidVolume": 6900,
+      "x": 102.97,
+      "y": 68.81,
+      "z": 2.49,
+      "geometryDefinitionId": "conicalWell"
+    }
+  },
+  "parameters": {
+    "format": "irregular",
+    "isTiprack": false,
+    "isMagneticModuleCompatible": false,
+    "loadName": "corning_12_wellplate_6.9ml_flat"
+  },
+  "groups": [
+    {
+      "wells": [
+        "A1",
+        "B1",
+        "C1",
+        "A2",
+        "B2",
+        "C2",
+        "A3",
+        "B3",
+        "C3",
+        "A4",
+        "B4",
+        "C4"
+      ],
+      "metadata": {
+        "wellBottomShape": "flat"
+      }
+    }
+  ],
+  "cornerOffsetFromSlot": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "stackingOffsetWithLabware": {
+    "opentrons_aluminum_flat_bottom_plate": {
+      "x": 0,
+      "y": 0,
+      "z": 4.5
+    }
+  },
+  "innerLabwareGeometry": {
+    "conicalWell": {
+      "sections": [
+        {
+          "shape": "conical",
+          "topDiameter": 22.733,
+          "bottomDiameter": 22.098,
+          "topHeight": 17.399,
+          "bottomHeight": 0.0
+        }
+      ]
+    }
+  }
+}

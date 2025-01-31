@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { describe, it, vi, beforeEach } from 'vitest'
 
@@ -17,6 +16,7 @@ import { renderWithProviders } from '/app/__testing-utils__'
 
 import { RobotSettingsDeckCalibration } from '../RobotSettingsDeckCalibration'
 
+import type { ComponentProps } from 'react'
 import type { AttachedPipettesByMount } from '/app/redux/pipettes/types'
 
 vi.mock('../..//CalibrationStatusCard')
@@ -31,7 +31,7 @@ const mockAttachedPipettes: AttachedPipettesByMount = {
 } as any
 
 const render = (
-  props?: Partial<React.ComponentProps<typeof RobotSettingsDeckCalibration>>
+  props?: Partial<ComponentProps<typeof RobotSettingsDeckCalibration>>
 ) => {
   return renderWithProviders(
     <RobotSettingsDeckCalibration robotName="otie" {...props} />,

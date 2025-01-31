@@ -1,4 +1,5 @@
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { useResetFormOnSecurityChange } from './form-state'
 import {
@@ -10,6 +11,7 @@ import {
 import { FormModal } from './FormModal'
 
 import type { Control, Resolver } from 'react-hook-form'
+import type { TFunction } from 'i18next'
 import type {
   ConnectFormValues,
   WifiConfigureRequest,
@@ -35,6 +37,7 @@ interface ConnectModalComponentProps extends ConnectModalProps {
 }
 
 export const ConnectModal = (props: ConnectModalProps): JSX.Element => {
+  const { t } = useTranslation(['device_settings', 'shared'])
   const { network, eapOptions, onConnect } = props
 
   const onSubmit = (values: ConnectFormValues): void => {
@@ -45,7 +48,13 @@ export const ConnectModal = (props: ConnectModalProps): JSX.Element => {
   const handleValidate: Resolver<ConnectFormValues> = values => {
     let errors = {}
 
-    errors = validateConnectFormFields(network, eapOptions, values, errors)
+    errors = validateConnectFormFields(
+      network,
+      eapOptions,
+      values,
+      errors,
+      t as TFunction
+    )
     return { values, errors }
   }
 
@@ -78,6 +87,7 @@ export const ConnectModal = (props: ConnectModalProps): JSX.Element => {
 export const ConnectModalComponent = (
   props: ConnectModalComponentProps
 ): JSX.Element => {
+  const { t } = useTranslation(['device_settings', 'shared'])
   const {
     robotName,
     network,
@@ -95,7 +105,8 @@ export const ConnectModalComponent = (
     robotName,
     eapOptions,
     wifiKeys,
-    values
+    values,
+    t as TFunction
   )
 
   useResetFormOnSecurityChange()

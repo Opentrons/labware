@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import ConfigDict, BaseModel, Field
 from typing import List
 
 from ..helper_classes import AttachedPipette, RequiredLabware
@@ -15,9 +15,8 @@ class DeckCalibrationSessionStatus(BaseModel):
     supportedCommands: List[str] = Field(
         ..., description="A list of supported commands for this user flow"
     )
-
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": [
                 {
                     "instrument": {
@@ -41,3 +40,4 @@ class DeckCalibrationSessionStatus(BaseModel):
                 }
             ]
         }
+    )

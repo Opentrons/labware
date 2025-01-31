@@ -1,0 +1,145 @@
+{
+  "ordering": [
+    ["A1", "B1"],
+    ["A2", "B2"],
+    ["A3", "B3"]
+  ],
+  "brand": {
+    "brand": "Opentrons",
+    "brandId": [],
+    "links": [
+      "https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1"
+    ]
+  },
+  "metadata": {
+    "tags": [],
+    "displayName": "Opentrons 6 Tube Rack with Falcon 50 mL Conical",
+    "displayCategory": "tubeRack",
+    "displayVolumeUnits": "mL"
+  },
+  "dimensions": {
+    "xDimension": 127.76,
+    "yDimension": 85.48,
+    "zDimension": 120.3
+  },
+  "schemaVersion": 3,
+  "version": 2,
+  "namespace": "opentrons",
+  "wells": {
+    "B1": {
+      "depth": 113,
+      "diameter": 27.81,
+      "shape": "circular",
+      "totalLiquidVolume": 50000,
+      "x": 35.5,
+      "y": 25.24,
+      "z": 7.3,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A1": {
+      "depth": 113,
+      "diameter": 27.81,
+      "shape": "circular",
+      "totalLiquidVolume": 50000,
+      "x": 35.5,
+      "y": 60.24,
+      "z": 7.3,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B2": {
+      "depth": 113,
+      "diameter": 27.81,
+      "shape": "circular",
+      "totalLiquidVolume": 50000,
+      "x": 70.5,
+      "y": 25.24,
+      "z": 7.3,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A2": {
+      "depth": 113,
+      "diameter": 27.81,
+      "shape": "circular",
+      "totalLiquidVolume": 50000,
+      "x": 70.5,
+      "y": 60.24,
+      "z": 7.3,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B3": {
+      "depth": 113,
+      "diameter": 27.81,
+      "shape": "circular",
+      "totalLiquidVolume": 50000,
+      "x": 105.5,
+      "y": 25.24,
+      "z": 7.3,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A3": {
+      "depth": 113,
+      "diameter": 27.81,
+      "shape": "circular",
+      "totalLiquidVolume": 50000,
+      "x": 105.5,
+      "y": 60.24,
+      "z": 7.3,
+      "geometryDefinitionId": "conicalWell"
+    }
+  },
+  "parameters": {
+    "format": "irregular",
+    "isTiprack": false,
+    "isMagneticModuleCompatible": false,
+    "loadName": "opentrons_6_tuberack_falcon_50ml_conical"
+  },
+  "groups": [
+    {
+      "wells": ["A1", "B1", "A2", "B2", "A3", "B3"],
+      "metadata": {
+        "displayName": "Falcon 6x50 mL Conical",
+        "displayCategory": "tubeRack",
+        "wellBottomShape": "v"
+      },
+      "brand": {
+        "brand": "Falcon",
+        "brandId": ["352070", "352098"],
+        "links": [
+          "https://ecatalog.corning.com/life-sciences/b2c/US/en/Liquid-Handling/Tubes,-Liquid-Handling/Centrifuge-Tubes/Falcon%C2%AE-Conical-Centrifuge-Tubes/p/falconConicalTubes"
+        ]
+      }
+    }
+  ],
+  "cornerOffsetFromSlot": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "innerLabwareGeometry": {
+    "conicalWell": {
+      "sections": [
+        {
+          "shape": "conical",
+          "bottomDiameter": 6.15,
+          "topDiameter": 26.18,
+          "topHeight": 14.3,
+          "bottomHeight": 0.0
+        },
+        {
+          "shape": "conical",
+          "bottomDiameter": 26.18,
+          "topDiameter": 27.52,
+          "topHeight": 100.65,
+          "bottomHeight": 14.3
+        },
+        {
+          "shape": "conical",
+          "bottomDiameter": 27.52,
+          "topDiameter": 27.81,
+          "topHeight": 112.85,
+          "bottomHeight": 100.65
+        }
+      ]
+    }
+  }
+}

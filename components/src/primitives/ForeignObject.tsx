@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 import { styleProps, isntStyleProp } from './style-props'
 
+import type { ComponentProps } from 'react'
 import type { StyleProps, PrimitiveComponent } from './types'
 
 export interface ForeignObjectProps extends StyleProps {
@@ -46,9 +47,7 @@ export const ForeignObject: PrimitiveComponent<
     },
   })
   .attrs(
-    (
-      props: ForeignObjectProps
-    ): React.ComponentProps<PrimitiveComponent<'svg'>> => ({
+    (props: ForeignObjectProps): ComponentProps<PrimitiveComponent<'svg'>> => ({
       // map the explicit svgWidth/Height props to width/height attrs
       width: props.svgWidth,
       height: props.svgHeight,

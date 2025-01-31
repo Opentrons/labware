@@ -52,9 +52,9 @@ class PublisherNotifier:
                             f'PublisherNotifier: exception in callback {getattr(callback, "__name__", "<unknown>")}'
                         )
         except asyncio.exceptions.CancelledError:
-            LOG.warning("PublisherNotifuer task cancelled.")
+            LOG.warning("PublisherNotifier task cancelled.")
         except BaseException:
-            LOG.exception("PublisherNotifer notify task failed")
+            LOG.exception("PublisherNotifier notify task failed")
 
 
 _pe_publisher_notifier_accessor: AppStateAccessor[PublisherNotifier] = AppStateAccessor[

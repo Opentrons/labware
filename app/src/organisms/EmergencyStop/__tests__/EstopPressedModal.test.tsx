@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
 import { describe, it, vi, beforeEach, expect } from 'vitest'
@@ -10,18 +9,20 @@ import { getIsOnDevice } from '/app/redux/config'
 import { EstopPressedModal } from '../EstopPressedModal'
 import { usePlacePlateReaderLid } from '/app/resources/modules'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('@opentrons/react-api-client')
 vi.mock('/app/redux/config')
 vi.mock('/app/resources/modules')
 
-const render = (props: React.ComponentProps<typeof EstopPressedModal>) => {
+const render = (props: ComponentProps<typeof EstopPressedModal>) => {
   return renderWithProviders(<EstopPressedModal {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('EstopPressedModal - Touchscreen', () => {
-  let props: React.ComponentProps<typeof EstopPressedModal>
+  let props: ComponentProps<typeof EstopPressedModal>
 
   beforeEach(() => {
     props = {
@@ -85,7 +86,7 @@ describe('EstopPressedModal - Touchscreen', () => {
 })
 
 describe('EstopPressedModal - Desktop', () => {
-  let props: React.ComponentProps<typeof EstopPressedModal>
+  let props: ComponentProps<typeof EstopPressedModal>
 
   beforeEach(() => {
     props = {

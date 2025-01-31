@@ -38,6 +38,7 @@ def run() -> MaintenanceRun:
         modules=[],
         labwareOffsets=[],
         liquids=[],
+        liquidClasses=[],
         hasEverEnteredErrorRecovery=False,
     )
 
@@ -45,7 +46,7 @@ def run() -> MaintenanceRun:
 @pytest.fixture()
 def labware_definition(minimal_labware_def: LabwareDefDict) -> LabwareDefinition:
     """Create a labware definition fixture."""
-    return LabwareDefinition.parse_obj(minimal_labware_def)
+    return LabwareDefinition.model_validate(minimal_labware_def)
 
 
 async def test_add_labware_offset(

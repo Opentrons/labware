@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { css } from 'styled-components'
 import {
   ALIGN_CENTER,
@@ -19,6 +18,7 @@ import {
   Link,
 } from '@opentrons/components'
 
+import type { MouseEventHandler } from 'react'
 import type { IconProps, StyleProps } from '@opentrons/components'
 
 type InlineNotificationType = 'alert' | 'error' | 'neutral' | 'success'
@@ -32,9 +32,9 @@ export interface InlineNotificationProps extends StyleProps {
   /** Optional dynamic width based on contents */
   hug?: boolean
   /** optional handler to show close button/clear alert  */
-  onCloseClick?: (() => void) | React.MouseEventHandler<HTMLButtonElement>
+  onCloseClick?: (() => void) | MouseEventHandler<HTMLButtonElement>
   linkText?: string
-  onLinkClick?: (() => void) | React.MouseEventHandler<HTMLButtonElement>
+  onLinkClick?: (() => void) | MouseEventHandler<HTMLButtonElement>
 }
 
 const INLINE_NOTIFICATION_PROPS_BY_TYPE: Record<

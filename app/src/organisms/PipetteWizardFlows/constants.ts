@@ -18,6 +18,8 @@ export const FLOWS = {
   DETACH: 'DETACH',
   CALIBRATE: 'CALIBRATE',
 }
+
+// note: we will not be translating these item titles to be consistent with manuals
 export const CALIBRATION_PROBE_DISPLAY_NAME = 'Calibration Probe'
 export const HEX_SCREWDRIVER_DISPLAY_NAME = '2.5 mm Hex Screwdriver'
 export const PIPETTE_DISPLAY_NAME = '1- or 8-Channel Pipette'
@@ -33,9 +35,6 @@ export const CALIBRATION_PROBE = {
 export const HEX_SCREWDRIVER = {
   loadName: 'hex_screwdriver',
   displayName: HEX_SCREWDRIVER_DISPLAY_NAME,
-  //  TODO(jr, 4/3/23): add this subtitle to i18n
-  subtitle:
-    'Provided with the robot. Using another size can strip the instruments’s screws.',
 }
 export const PIPETTE = {
   loadName: 'flex_pipette',

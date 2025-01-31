@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
@@ -35,6 +34,7 @@ import {
 import { getNetworkInterfaces, fetchStatus } from '/app/redux/networking'
 import { useNotifyRunQuery, useCurrentRunId } from '/app/resources/runs'
 
+import type { MouseEvent } from 'react'
 import type { IconName, StyleProps } from '@opentrons/components'
 import type { DiscoveredRobot } from '/app/redux/discovery/types'
 import type { Dispatch, State } from '/app/redux/types'
@@ -79,7 +79,7 @@ export function RobotStatusHeader(props: RobotStatusHeaderProps): JSX.Element {
     currentRunId != null && currentRunStatus != null && displayName != null ? (
       <Flex
         alignItems={ALIGN_CENTER}
-        onClick={(e: React.MouseEvent) => {
+        onClick={(e: MouseEvent) => {
           e.stopPropagation()
         }}
       >

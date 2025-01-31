@@ -14,11 +14,11 @@ async def _main(cfg: TestConfig) -> None:
     # BUILD REPORT
     test_name = Path(__file__).parent.name
     ui.print_title(test_name.replace("_", " ").upper())
-
+    pipette_string = "p1000_96_v3.4" if cfg.pipette == 1000 else "p200_96_v3.0"
     # BUILD API
     api = await helpers_ot3.build_async_ot3_hardware_api(
         is_simulating=cfg.simulate,
-        pipette_left="p1000_96_v3.4",
+        pipette_left=pipette_string,
     )
 
     # CSV REPORT
@@ -49,7 +49,7 @@ async def _main(cfg: TestConfig) -> None:
     # RUN TESTS
     for section, test_run in cfg.tests.items():
         ui.print_title(section.value)
-        await test_run(api, report, section.value)
+        await test_run(api, report, section.value, cfg.pipette)
 
     # RELOAD PIPETTE
     ui.print_title("DONE")
@@ -71,6 +71,7 @@ if __name__ == "__main__":
         parser.add_argument(
             f"--only-{s.value.lower()}".replace("_", "-"), action="store_true"
         )
+    parser.add_argument("--pipette", type=int, choices=[200, 1000], default=1000)
     args = parser.parse_args()
     _t_sections = {
         s: f
@@ -87,5 +88,7 @@ if __name__ == "__main__":
             for s, f in TESTS
             if not getattr(args, f"skip_{s.value.lower().replace('-', '_')}")
         }
-    _config = TestConfig(simulate=args.simulate, tests=_t_sections)
+    _config = TestConfig(
+        simulate=args.simulate, tests=_t_sections, pipette=args.pipette
+    )
     asyncio.run(_main(_config))

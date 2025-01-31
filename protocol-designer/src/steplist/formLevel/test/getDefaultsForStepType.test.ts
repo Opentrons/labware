@@ -115,9 +115,6 @@ describe('getDefaultsForStepType', () => {
     it('should get the correct defaults', () => {
       expect(getDefaultsForStepType('pause')).toEqual({
         pauseAction: null,
-        pauseHour: null,
-        pauseMinute: null,
-        pauseSecond: null,
         pauseTime: null,
         pauseMessage: '',
         moduleId: null,
@@ -162,8 +159,6 @@ describe('getDefaultsForStepType', () => {
         targetSpeed: null,
         latchOpen: false,
         heaterShakerSetTimer: null,
-        heaterShakerTimerMinutes: null,
-        heaterShakerTimerSeconds: null,
         heaterShakerTimer: null,
       })
     })
@@ -171,7 +166,7 @@ describe('getDefaultsForStepType', () => {
   describe('thermocycler step', () => {
     it('should get the correct defaults', () => {
       expect(getDefaultsForStepType('thermocycler')).toEqual({
-        thermocyclerFormType: null,
+        thermocyclerFormType: 'thermocyclerState',
         moduleId: null,
         blockIsActive: false,
         blockTargetTemp: null,

@@ -13,10 +13,9 @@ from opentrons.protocol_engine import (
 )
 
 from robot_server.errors.error_responses import ApiError
-from robot_server.service.json_api import MultiBodyMeta
+from robot_server.service.json_api import MultiBodyMeta, RequestModel
 
 from robot_server.runs.command_models import (
-    RequestModelWithCommandCreate,
     CommandCollectionLinks,
     CommandLink,
     CommandLinkMeta,
@@ -129,7 +128,7 @@ async def test_create_run_command(
 
     result = await create_run_command(
         run_id="run-id",
-        request_body=RequestModelWithCommandCreate(data=command_request),
+        request_body=RequestModel(data=command_request),
         waitUntilComplete=False,
         run_orchestrator_store=mock_run_orchestrator_store,
         failedCommandId=None,
@@ -163,7 +162,7 @@ async def test_create_command_with_failed_command_raises(
     with pytest.raises(ApiError):
         await create_run_command(
             run_id="run-id",
-            request_body=RequestModelWithCommandCreate(data=command_create),
+            request_body=RequestModel(data=command_create),
             run_orchestrator_store=mock_run_orchestrator_store,
             failedCommandId="123",
             check_estop=True,
@@ -204,7 +203,7 @@ async def test_create_run_command_blocking_completion(
 
     result = await create_run_command(
         run_id="run-id",
-        request_body=RequestModelWithCommandCreate(data=command_request),
+        request_body=RequestModel(data=command_request),
         waitUntilComplete=True,
         timeout=999,
         run_orchestrator_store=mock_run_orchestrator_store,
@@ -238,7 +237,7 @@ async def test_add_conflicting_setup_command(
     with pytest.raises(ApiError) as exc_info:
         await create_run_command(
             run_id="run-id",
-            request_body=RequestModelWithCommandCreate(data=command_request),
+            request_body=RequestModel(data=command_request),
             run_orchestrator_store=mock_run_orchestrator_store,
             failedCommandId=None,
             check_estop=True,
@@ -273,7 +272,7 @@ async def test_add_command_to_stopped_engine(
     with pytest.raises(ApiError) as exc_info:
         await create_run_command(
             run_id="run-id",
-            request_body=RequestModelWithCommandCreate(data=command_request),
+            request_body=RequestModel(data=command_request),
             run_orchestrator_store=mock_run_orchestrator_store,
             failedCommandId=None,
             check_estop=True,

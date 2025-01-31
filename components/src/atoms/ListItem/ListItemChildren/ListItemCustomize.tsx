@@ -18,6 +18,8 @@ interface ListItemCustomizeProps {
   label?: string
   dropdown?: DropdownMenuProps
   tag?: TagProps
+  /** optional placement of the menu */
+  menuPlacement?: 'auto' | 'top' | 'bottom'
 }
 
 export function ListItemCustomize(props: ListItemCustomizeProps): JSX.Element {
@@ -29,6 +31,7 @@ export function ListItemCustomize(props: ListItemCustomizeProps): JSX.Element {
     linkText,
     dropdown,
     tag,
+    menuPlacement = 'auto',
   } = props
   return (
     <Flex width="100%" alignItems={ALIGN_CENTER} padding={SPACING.spacing12}>
@@ -49,7 +52,9 @@ export function ListItemCustomize(props: ListItemCustomizeProps): JSX.Element {
             {label}
           </StyledText>
         ) : null}
-        {dropdown != null ? <DropdownMenu {...dropdown} /> : null}
+        {dropdown != null ? (
+          <DropdownMenu {...dropdown} menuPlacement={menuPlacement} />
+        ) : null}
         {tag != null ? <Tag {...tag} /> : null}
       </Flex>
       {onClick != null && linkText != null ? (

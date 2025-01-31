@@ -1,0 +1,379 @@
+{
+  "ordering": [
+    ["A1", "B1", "C1", "D1"],
+    ["A2", "B2", "C2", "D2"],
+    ["A3", "B3", "C3", "D3"],
+    ["A4", "B4", "C4", "D4"],
+    ["A5", "B5", "C5", "D5"],
+    ["A6", "B6", "C6", "D6"]
+  ],
+  "brand": {
+    "brand": "Opentrons",
+    "brandId": [],
+    "links": ["https://shop.opentrons.com/aluminum-block-set/"]
+  },
+  "metadata": {
+    "displayName": "Opentrons 24 Well Aluminum Block with NEST 2 mL Snapcap",
+    "displayCategory": "aluminumBlock",
+    "displayVolumeUnits": "mL",
+    "tags": []
+  },
+  "dimensions": {
+    "xDimension": 127.75,
+    "yDimension": 85.5,
+    "zDimension": 43.6
+  },
+  "wells": {
+    "A1": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 20.75,
+      "y": 68.62,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B1": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 20.75,
+      "y": 51.37,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "C1": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 20.75,
+      "y": 34.12,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "D1": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 20.75,
+      "y": 16.87,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A2": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 38,
+      "y": 68.62,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B2": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 38,
+      "y": 51.37,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "C2": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 38,
+      "y": 34.12,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "D2": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 38,
+      "y": 16.87,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A3": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 55.25,
+      "y": 68.62,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B3": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 55.25,
+      "y": 51.37,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "C3": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 55.25,
+      "y": 34.12,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "D3": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 55.25,
+      "y": 16.87,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A4": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 72.5,
+      "y": 68.62,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B4": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 72.5,
+      "y": 51.37,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "C4": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 72.5,
+      "y": 34.12,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "D4": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 72.5,
+      "y": 16.87,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A5": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 89.75,
+      "y": 68.62,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B5": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 89.75,
+      "y": 51.37,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "C5": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 89.75,
+      "y": 34.12,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "D5": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 89.75,
+      "y": 16.87,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A6": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 107,
+      "y": 68.62,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B6": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 107,
+      "y": 51.37,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "C6": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 107,
+      "y": 34.12,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "D6": {
+      "depth": 39.28,
+      "shape": "circular",
+      "diameter": 10.18,
+      "totalLiquidVolume": 2000,
+      "x": 107,
+      "y": 16.87,
+      "z": 4.32,
+      "geometryDefinitionId": "conicalWell"
+    }
+  },
+  "groups": [
+    {
+      "metadata": {
+        "displayName": "NEST 24x2 mL Snapcap",
+        "displayCategory": "tubeRack",
+        "wellBottomShape": "u"
+      },
+      "brand": {
+        "brand": "NEST",
+        "brandId": ["620611", "620011"],
+        "links": [
+          "https://www.nest-biotech.com/micro-centrifuge-tube/59201045.html"
+        ]
+      },
+      "wells": [
+        "A1",
+        "B1",
+        "C1",
+        "D1",
+        "A2",
+        "B2",
+        "C2",
+        "D2",
+        "A3",
+        "B3",
+        "C3",
+        "D3",
+        "A4",
+        "B4",
+        "C4",
+        "D4",
+        "A5",
+        "B5",
+        "C5",
+        "D5",
+        "A6",
+        "B6",
+        "C6",
+        "D6"
+      ]
+    }
+  ],
+  "parameters": {
+    "format": "irregular",
+    "quirks": ["gripperIncompatible"],
+    "isTiprack": false,
+    "isMagneticModuleCompatible": false,
+    "loadName": "opentrons_24_aluminumblock_nest_2ml_snapcap"
+  },
+  "namespace": "opentrons",
+  "version": 2,
+  "schemaVersion": 3,
+  "cornerOffsetFromSlot": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "innerLabwareGeometry": {
+    "conicalWell": {
+      "sections": [
+        {
+          "shape": "spherical",
+          "radiusOfCurvature": 3.19,
+          "topHeight": 1.21,
+          "bottomHeight": 0.0
+        },
+        {
+          "shape": "conical",
+          "bottomDiameter": 5,
+          "topDiameter": 6,
+          "topHeight": 1.83,
+          "bottomHeight": 1.21
+        },
+        {
+          "shape": "conical",
+          "bottomDiameter": 6,
+          "topDiameter": 7,
+          "topHeight": 2.59,
+          "bottomHeight": 1.83
+        },
+        {
+          "shape": "conical",
+          "bottomDiameter": 7,
+          "topDiameter": 7.2,
+          "topHeight": 2.74,
+          "bottomHeight": 2.59
+        },
+        {
+          "shape": "conical",
+          "bottomDiameter": 7.2,
+          "topDiameter": 8,
+          "topHeight": 3.89,
+          "bottomHeight": 2.74
+        },
+        {
+          "shape": "conical",
+          "bottomDiameter": 8,
+          "topDiameter": 8.9,
+          "topHeight": 15.05,
+          "bottomHeight": 3.89
+        },
+        {
+          "shape": "conical",
+          "bottomDiameter": 8.9,
+          "topDiameter": 9.28,
+          "topHeight": 39.28,
+          "bottomHeight": 15.04
+        }
+      ]
+    }
+  }
+}

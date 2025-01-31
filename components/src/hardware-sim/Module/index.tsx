@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import {
   ABSORBANCE_READER_TYPE,
   getModuleType,
@@ -28,6 +27,7 @@ import { MagneticBlock } from './MagneticBlock'
 import { MagneticModule } from './MagneticModule'
 import { PlateReader } from './PlateReader'
 
+import type { ComponentProps, ReactNode } from 'react'
 import type {
   ModuleDefinition,
   ThermocyclerModuleModel,
@@ -43,12 +43,12 @@ interface Props {
   def: ModuleDefinition
   orientation?: 'left' | 'right'
   innerProps?:
-    | React.ComponentProps<typeof Thermocycler>
-    | React.ComponentProps<typeof HeaterShaker>
-    | React.ComponentProps<typeof Temperature>
+    | ComponentProps<typeof Thermocycler>
+    | ComponentProps<typeof HeaterShaker>
+    | ComponentProps<typeof Temperature>
     | {}
-  statusInfo?: React.ReactNode // contents of small status rectangle, not displayed if absent
-  children?: React.ReactNode // contents to be rendered on top of the labware mating surface of the module
+  statusInfo?: ReactNode // contents of small status rectangle, not displayed if absent
+  children?: ReactNode // contents to be rendered on top of the labware mating surface of the module
   targetSlotId?: string
   targetDeckId?: string
 }
@@ -198,15 +198,11 @@ export const Module = (props: Props): JSX.Element => {
     moduleViz = <Thermocycler {...thermocyclerProps} />
   } else if (moduleType === HEATERSHAKER_MODULE_TYPE) {
     moduleViz = (
-      <HeaterShaker
-        {...(innerProps as React.ComponentProps<typeof HeaterShaker>)}
-      />
+      <HeaterShaker {...(innerProps as ComponentProps<typeof HeaterShaker>)} />
     )
   } else if (moduleType === TEMPERATURE_MODULE_TYPE) {
     moduleViz = (
-      <Temperature
-        {...(innerProps as React.ComponentProps<typeof Temperature>)}
-      />
+      <Temperature {...(innerProps as ComponentProps<typeof Temperature>)} />
     )
   } else if (moduleType === ABSORBANCE_READER_TYPE) {
     moduleViz = <PlateReader />

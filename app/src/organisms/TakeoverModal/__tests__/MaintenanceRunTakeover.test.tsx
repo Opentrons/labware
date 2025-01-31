@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
@@ -8,6 +7,7 @@ import { useMaintenanceRunTakeover } from '../useMaintenanceRunTakeover'
 import { MaintenanceRunTakeover } from '../MaintenanceRunTakeover'
 import { useNotifyCurrentMaintenanceRun } from '/app/resources/maintenance_runs'
 
+import type { ComponentProps } from 'react'
 import type { MaintenanceRunStatus } from '../MaintenanceRunStatusProvider'
 
 vi.mock('../useMaintenanceRunTakeover')
@@ -21,14 +21,14 @@ const MOCK_MAINTENANCE_RUN: MaintenanceRunStatus = {
   setOddRunIds: () => null,
 }
 
-const render = (props: React.ComponentProps<typeof MaintenanceRunTakeover>) => {
+const render = (props: ComponentProps<typeof MaintenanceRunTakeover>) => {
   return renderWithProviders(<MaintenanceRunTakeover {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('MaintenanceRunTakeover', () => {
-  let props: React.ComponentProps<typeof MaintenanceRunTakeover>
+  let props: ComponentProps<typeof MaintenanceRunTakeover>
   const testComponent = <div>{'Test Component'}</div>
 
   beforeEach(() => {

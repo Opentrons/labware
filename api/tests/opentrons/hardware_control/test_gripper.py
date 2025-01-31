@@ -104,8 +104,13 @@ def test_reload_instrument_cal_ot3_conf_changed(
         "fakeid123",
         jaw_max_offset=15,
     )
-    new_conf = fake_gripper_conf.copy(
-        update={"grip_force_profile": {"default_grip_force": 1}}
+    new_conf = fake_gripper_conf.model_copy(
+        update={
+            "grip_force_profile": fake_gripper_conf.grip_force_profile.model_copy(
+                update={"default_grip_force": 1}
+            )
+        },
+        deep=True,
     )
     assert new_conf != old_gripper.config
 

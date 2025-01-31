@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { saveAs } from 'file-saver'
 import { useTranslation, Trans } from 'react-i18next'
 
@@ -17,6 +16,8 @@ import {
   useInstrumentsQuery,
   useModulesQuery,
 } from '@opentrons/react-api-client'
+import { FLEX_ROBOT_TYPE, OT2_ROBOT_TYPE } from '@opentrons/shared-data'
+
 import { TertiaryButton } from '/app/atoms/buttons'
 import {
   useDeckCalibrationData,
@@ -29,6 +30,8 @@ import {
 } from '/app/redux/analytics'
 import { useRobot, useIsFlex } from '/app/redux-resources/robots'
 import { useIsEstopNotDisengaged } from '/app/resources/devices/hooks/useIsEstopNotDisengaged'
+
+import type { MouseEventHandler } from 'react'
 
 // TODO(bc, 2022-02-08): replace with support article when available
 const FLEX_CALIBRATION_SUPPORT_URL = 'https://support.opentrons.com'
@@ -68,11 +71,13 @@ export function CalibrationDataDownload({
     tipLengthCalibrations != null &&
     tipLengthCalibrations.length > 0
 
-  const onClickSaveAs: React.MouseEventHandler = e => {
+  const onClickSaveAs: MouseEventHandler = e => {
     e.preventDefault()
     doTrackEvent({
       name: ANALYTICS_CALIBRATION_DATA_DOWNLOADED,
-      properties: {},
+      properties: {
+        robotType: isFlex ? FLEX_ROBOT_TYPE : OT2_ROBOT_TYPE,
+      },
     })
     saveAs(
       new Blob([

@@ -1,7 +1,8 @@
-import * as React from 'react'
+import { useEffect } from 'react'
+import type { RefObject } from 'react'
 
 export function useCloseOnOutsideClick(
-  ref: React.RefObject<HTMLInputElement>,
+  ref: RefObject<HTMLInputElement>,
   onClose: () => void
 ): void {
   const handleClick = (e: MouseEvent): void => {
@@ -11,7 +12,7 @@ export function useCloseOnOutsideClick(
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     document.addEventListener('click', handleClick)
     return () => {
       document.removeEventListener('click', handleClick)

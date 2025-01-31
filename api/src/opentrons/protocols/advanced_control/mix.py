@@ -1,6 +1,6 @@
 from typing import Any, Dict, Tuple
 
-from opentrons.protocols.advanced_control.transfers import MixStrategy, Mix
+from .common import MixStrategy, Mix
 
 
 def mix_from_kwargs(top_kwargs: Dict[str, Any]) -> Tuple[MixStrategy, Mix]:

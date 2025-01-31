@@ -52,10 +52,7 @@ class UnsafeEngageAxesImplementation(
         """Enable exes."""
         ot3_hardware_api = ensure_ot3_hardware(self._hardware_api)
         await ot3_hardware_api.engage_axes(
-            [
-                self._gantry_mover.motor_axis_to_hardware_axis(axis)
-                for axis in params.axes
-            ]
+            self._gantry_mover.motor_axes_to_present_hardware_axes(params.axes)
         )
         return SuccessData(
             public=UnsafeEngageAxesResult(),
@@ -69,7 +66,7 @@ class UnsafeEngageAxes(
 
     commandType: UnsafeEngageAxesCommandType = "unsafe/engageAxes"
     params: UnsafeEngageAxesParams
-    result: Optional[UnsafeEngageAxesResult]
+    result: Optional[UnsafeEngageAxesResult] = None
 
     _ImplementationCls: Type[
         UnsafeEngageAxesImplementation

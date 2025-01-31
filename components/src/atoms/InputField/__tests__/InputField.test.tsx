@@ -1,15 +1,16 @@
-import type * as React from 'react'
 import { describe, it, vi, beforeEach, expect } from 'vitest'
 import { screen, fireEvent } from '@testing-library/react'
 import { renderWithProviders } from '../../../testing/utils'
 import { InputField } from '..'
 
-const render = (props: React.ComponentProps<typeof InputField>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof InputField>) => {
   return renderWithProviders(<InputField {...props} />)[0]
 }
 
 describe('HeaterShakerSlideout', () => {
-  let props: React.ComponentProps<typeof InputField>
+  let props: ComponentProps<typeof InputField>
   beforeEach(() => {
     props = {
       type: 'number',

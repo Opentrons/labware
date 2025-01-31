@@ -3,7 +3,7 @@ import { Text } from '../../primitives'
 import { TYPOGRAPHY, RESPONSIVENESS } from '../../ui-style-constants'
 import { TYPOGRAPHY as HELIX_TYPOGRAPHY } from '../../helix-design-system/product'
 
-import type * as React from 'react'
+import type { ComponentProps, ReactNode } from 'react'
 import type { FlattenSimpleInterpolation } from 'styled-components'
 
 const helixProductStyleMap = {
@@ -290,10 +290,10 @@ const ODDStyleMap = {
   },
 } as const
 
-export interface Props extends React.ComponentProps<typeof Text> {
+export interface Props extends ComponentProps<typeof Text> {
   oddStyle?: ODDStyles
   desktopStyle?: HelixStyles
-  children?: React.ReactNode
+  children?: ReactNode
 }
 export const ODD_STYLES = Object.keys(ODDStyleMap)
 export const HELIX_STYLES = Object.keys(helixProductStyleMap)

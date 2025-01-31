@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import {
   WellLabels,
   StyledWells,
@@ -17,6 +16,8 @@ import type {
   WellStroke,
   WellGroup,
 } from './labwareInternals/types'
+
+import type { RefObject } from 'react'
 import type { LabwareAdapterLoadName } from './LabwareAdapter'
 
 export const WELL_LABEL_OPTIONS = {
@@ -57,7 +58,7 @@ export interface LabwareRenderProps {
   onMouseEnterWell?: (e: WellMouseEvent) => unknown
   /** Optional callback, called with WellMouseEvent args onMouseLeave */
   onMouseLeaveWell?: (e: WellMouseEvent) => unknown
-  gRef?: React.RefObject<SVGGElement>
+  gRef?: RefObject<SVGGElement>
   onLabwareClick?: () => void
   showBorder?: boolean
   strokeColor?: string

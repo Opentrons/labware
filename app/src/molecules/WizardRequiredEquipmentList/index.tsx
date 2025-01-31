@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { css } from 'styled-components'
@@ -23,9 +22,10 @@ import { Divider } from '/app/atoms/structure'
 import { labwareImages } from '/app/local-resources/labware'
 import { equipmentImages } from './equipmentImages'
 
+import type { ComponentProps } from 'react'
 import type { StyleProps } from '@opentrons/components'
 interface WizardRequiredEquipmentListProps extends StyleProps {
-  equipmentList: Array<React.ComponentProps<typeof RequiredEquipmentCard>>
+  equipmentList: Array<ComponentProps<typeof RequiredEquipmentCard>>
   footer?: string
 }
 export function WizardRequiredEquipmentList(

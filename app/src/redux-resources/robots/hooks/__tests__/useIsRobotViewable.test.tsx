@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, expect, describe, beforeEach, afterEach } from 'vitest'
 import { when } from 'vitest-when'
 import { Provider } from 'react-redux'
@@ -13,6 +12,8 @@ import {
   mockUnreachableRobot,
 } from '/app/redux/discovery/__fixtures__'
 import { useIsRobotViewable } from '../useIsRobotViewable'
+
+import type { FunctionComponent, ReactNode } from 'react'
 import type { Store } from 'redux'
 
 vi.mock('/app/redux/discovery')
@@ -20,7 +21,7 @@ vi.mock('/app/redux/discovery')
 const store: Store<any> = createStore(vi.fn(), {})
 
 describe('useIsRobotViewable hook', () => {
-  let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+  let wrapper: FunctionComponent<{ children: ReactNode }>
   beforeEach(() => {
     const queryClient = new QueryClient()
     wrapper = ({ children }) => (

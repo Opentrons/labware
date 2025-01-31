@@ -1,8 +1,8 @@
-import type * as React from 'react'
-
 import { COLORS } from '../../helix-design-system'
 
-export function SlotClip(props: React.SVGProps<SVGPathElement>): JSX.Element {
+import type { SVGProps } from 'react'
+
+export function SlotClip(props: SVGProps<SVGPathElement>): JSX.Element {
   return (
     <path
       fill="none"

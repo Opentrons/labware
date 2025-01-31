@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -31,6 +31,7 @@ import { useCurrentRunId } from '/app/resources/runs'
 import { ConnectionTroubleshootingModal } from './ConnectionTroubleshootingModal'
 import { useIsRobotBusy } from '/app/redux-resources/robots'
 
+import type { MouseEventHandler, MouseEvent, ReactNode } from 'react'
 import type { StyleProps } from '@opentrons/components'
 import type { DiscoveredRobot } from '/app/redux/discovery/types'
 import type { Dispatch } from '/app/redux/types'
@@ -54,11 +55,11 @@ export function RobotOverflowMenu(props: RobotOverflowMenuProps): JSX.Element {
   const [
     showChooseProtocolSlideout,
     setShowChooseProtocolSlideout,
-  ] = React.useState<boolean>(false)
+  ] = useState<boolean>(false)
   const [
     showConnectionTroubleshootingModal,
     setShowConnectionTroubleshootingModal,
-  ] = React.useState<boolean>(false)
+  ] = useState<boolean>(false)
 
   const isRobotOnWrongVersionOfSoftware = useIsRobotOnWrongVersionOfSoftware(
     robot.name
@@ -66,20 +67,20 @@ export function RobotOverflowMenu(props: RobotOverflowMenuProps): JSX.Element {
 
   const isRobotBusy = useIsRobotBusy({ poll: true })
 
-  const handleClickRun: React.MouseEventHandler<HTMLButtonElement> = e => {
+  const handleClickRun: MouseEventHandler<HTMLButtonElement> = e => {
     e.preventDefault()
     e.stopPropagation()
     setShowChooseProtocolSlideout(true)
     setShowOverflowMenu(false)
   }
-  const handleClickConnectionTroubleshooting: React.MouseEventHandler<HTMLButtonElement> = e => {
+  const handleClickConnectionTroubleshooting: MouseEventHandler<HTMLButtonElement> = e => {
     e.preventDefault()
     e.stopPropagation()
     setShowConnectionTroubleshootingModal(true)
     setShowOverflowMenu(false)
   }
 
-  let menuItems: React.ReactNode
+  let menuItems: ReactNode
   if (robot.status === CONNECTABLE && runId == null) {
     menuItems = (
       <>
@@ -161,7 +162,7 @@ export function RobotOverflowMenu(props: RobotOverflowMenuProps): JSX.Element {
       data-testid={`RobotCard_${String(robot.name)}_overflowMenu`}
       flexDirection={DIRECTION_COLUMN}
       position={POSITION_RELATIVE}
-      onClick={(e: React.MouseEvent) => {
+      onClick={(e: MouseEvent) => {
         e.stopPropagation()
       }}
       {...styleProps}

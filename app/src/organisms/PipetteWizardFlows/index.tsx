@@ -281,15 +281,19 @@ export const PipetteWizardFlows = (
     />
   )
 
-  let onExit
-  if (currentStep == null) return null
-  let modalContent: JSX.Element = <div>UNASSIGNED STEP</div>
-  // These flows often have custom error messaging, so this fallback modal is shown only in specific circumstances.
-  if (
+  if (currentStep == null) {
+    return null
+  }
+
+  const isFatalError =
     (isExiting && errorMessage != null) ||
     maintenanceRunData?.data.status === RUN_STATUS_FAILED ||
     (errorMessage != null && createdMaintenanceRunId == null)
-  ) {
+
+  let onExit: () => void
+  let modalContent: JSX.Element = <div>UNASSIGNED STEP</div>
+  // These flows often have custom error messaging, so this fallback modal is shown only in specific circumstances.
+  if (isFatalError) {
     modalContent = (
       <SimpleWizardBody
         isSuccess={false}
@@ -401,16 +405,12 @@ export const PipetteWizardFlows = (
     )
   }
 
-  let exitWizardButton = onExit
-  if (isCommandMutationLoading || isDeleteLoading) {
-    exitWizardButton = undefined
-  } else if (
-    (errorMessage != null && isExiting) ||
-    maintenanceRunData?.data.status === RUN_STATUS_FAILED
-  ) {
-    exitWizardButton = handleClose
-  } else if (showConfirmExit) {
-    exitWizardButton = handleCleanUpAndClose
+  const buildWizardOnExit = (): (() => void) => {
+    if (isFatalError || showConfirmExit) {
+      return handleCleanUpAndClose
+    } else {
+      return onExit
+    }
   }
 
   const progressBarForCalError =
@@ -418,13 +418,13 @@ export const PipetteWizardFlows = (
 
   const wizardHeader = (
     <WizardHeader
-      exitDisabled={isCommandMutationLoading || isFetchingPipettes}
       title={memoizedWizardTitle}
       currentStep={
         progressBarForCalError ? currentStepIndex - 1 : currentStepIndex
       }
       totalSteps={totalStepCount}
-      onExit={exitWizardButton}
+      onExit={buildWizardOnExit()}
+      exitDisabled={isCommandMutationLoading || isFetchingPipettes}
     />
   )
 

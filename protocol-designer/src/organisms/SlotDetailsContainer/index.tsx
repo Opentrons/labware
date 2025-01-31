@@ -1,14 +1,11 @@
-import { useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { getModuleDisplayName } from '@opentrons/shared-data'
-import { RobotCoordsForeignObject } from '@opentrons/components'
 import * as wellContentsSelectors from '../../top-selectors/well-contents'
 import { selectors } from '../../labware-ingred/selectors'
 import { selectors as uiLabwareSelectors } from '../../ui/labware'
 import { getDeckSetupForActiveItem } from '../../top-selectors/labware-locations'
 import { SlotInformation } from '../../organisms/SlotInformation'
-import { getYPosition } from './utils'
 
 import type { DeckSlotId, RobotType } from '@opentrons/shared-data'
 import type { ContentsByWell } from '../../labware-ingred/types'
@@ -24,7 +21,6 @@ export function SlotDetailsContainer(
 ): JSX.Element | null {
   const { robotType, slot, offDeckLabwareId } = props
   const { t } = useTranslation('shared')
-  const location = useLocation()
   const deckSetup = useSelector(getDeckSetupForActiveItem)
   const allWellContentsForActiveItem = useSelector(
     wellContentsSelectors.getAllWellContentsForActiveItem
@@ -102,24 +98,7 @@ export function SlotDetailsContainer(
     }
   }
 
-  return location.pathname === '/designer' && slot !== 'offDeck' ? (
-    <RobotCoordsForeignObject
-      width="15.8125rem"
-      height="26.75rem"
-      x="-400"
-      y={getYPosition({ robotType, slot })}
-    >
-      <SlotInformation
-        location={slot}
-        robotType={robotType}
-        modules={moduleDisplayName != null ? [moduleDisplayName] : []}
-        labwares={labwares}
-        fixtures={fixtureDisplayNames}
-        liquids={liquidNamesOnLabware}
-        adapters={adapters}
-      />
-    </RobotCoordsForeignObject>
-  ) : (
+  return (
     <SlotInformation
       location={slot}
       robotType={robotType}

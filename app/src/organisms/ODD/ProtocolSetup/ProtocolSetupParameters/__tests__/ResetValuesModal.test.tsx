@@ -1,23 +1,24 @@
-import type * as React from 'react'
 import { describe, it, vi, beforeEach, expect } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 
 import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { ResetValuesModal } from '../ResetValuesModal'
+
+import type { ComponentProps } from 'react'
 import type { RunTimeParameter } from '@opentrons/shared-data'
 
 const mockGoBack = vi.fn()
 const mockSetRunTimeParametersOverrides = vi.fn()
 
-const render = (props: React.ComponentProps<typeof ResetValuesModal>) => {
+const render = (props: ComponentProps<typeof ResetValuesModal>) => {
   return renderWithProviders(<ResetValuesModal {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('ResetValuesModal', () => {
-  let props: React.ComponentProps<typeof ResetValuesModal>
+  let props: ComponentProps<typeof ResetValuesModal>
 
   beforeEach(() => {
     props = {

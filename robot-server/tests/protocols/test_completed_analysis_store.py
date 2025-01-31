@@ -209,8 +209,10 @@ async def test_get_by_analysis_id_as_document(
         "errors": [],
         "labware": [],
         "liquids": [],
+        "liquidClasses": [],
         "modules": [],
         "pipettes": [],
+        "commandAnnotations": [],
     }
 
 

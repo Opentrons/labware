@@ -2,8 +2,9 @@
 import typing
 from functools import lru_cache
 
-from pydantic import BaseSettings, Field
+from pydantic import Field
 from dotenv import load_dotenv, set_key
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 @lru_cache(maxsize=1)
@@ -23,11 +24,7 @@ class Environment(BaseSettings):
         default=None,
         description="Path to a .env file to define system server settings.",
     )
-
-    class Config:
-        """Prefix configuration for environment variables."""
-
-        env_prefix = "OT_SYSTEM_SERVER_"
+    model_config = SettingsConfigDict(env_prefix="OT_SYSTEM_SERVER_")
 
 
 # If you update this, also update the generated settings_schema.json.
@@ -69,21 +66,18 @@ class SystemServerSettings(BaseSettings):
             " the splash screen changes when the flag is enabled/disabled."
         ),
     )
-
-    class Config:
-        """Prefix configuration for environment variables."""
-
-        env_file = Environment().dot_env_path
-        env_prefix = "OT_SYSTEM_SERVER_"
+    model_config = SettingsConfigDict(
+        env_file=Environment().dot_env_path, env_prefix="OT_SYSTEM_SERVER_"
+    )
 
 
 def save_settings(settings: SystemServerSettings) -> bool:
     """Save the settings to the dotenv file."""
     env_path = Environment().dot_env_path
     env_path = env_path or f"{settings.persistence_directory}/system.env"
-    prefix = settings.Config.env_prefix
+    prefix = settings.model_config.get("env_prefix")
     try:
-        for key, val in settings.dict().items():
+        for key, val in settings.model_dump().items():
             name = f"{prefix}{key}"
             value = str(val) if val is not None else ""
             set_key(env_path, name, value)

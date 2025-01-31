@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { act, waitFor, screen } from '@testing-library/react'
 import { when } from 'vitest-when'
@@ -16,6 +15,7 @@ import {
 import { useRobot } from '/app/redux-resources/robots'
 import { Troubleshooting } from '../Troubleshooting'
 
+import type { ComponentProps } from 'react'
 import type { HostConfig } from '@opentrons/api-client'
 import type { ToasterContextType } from '/app/organisms/ToasterOven/ToasterContext'
 
@@ -29,7 +29,7 @@ const HOST_CONFIG: HostConfig = { hostname: 'localhost' }
 const MOCK_MAKE_TOAST = vi.fn()
 const MOCK_EAT_TOAST = vi.fn()
 
-const render = (props: React.ComponentProps<typeof Troubleshooting>) => {
+const render = (props: ComponentProps<typeof Troubleshooting>) => {
   return renderWithProviders(
     <MemoryRouter>
       <Troubleshooting {...props} />
@@ -39,7 +39,7 @@ const render = (props: React.ComponentProps<typeof Troubleshooting>) => {
 }
 
 describe('RobotSettings Troubleshooting', () => {
-  let props: React.ComponentProps<typeof Troubleshooting>
+  let props: ComponentProps<typeof Troubleshooting>
   beforeEach(() => {
     props = {
       robotName: ROBOT_NAME,

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { css } from 'styled-components'
 
@@ -30,8 +30,10 @@ import { RunHeaderContent } from './RunHeaderContent'
 import { EQUIPMENT_POLL_MS } from './constants'
 import { isCancellableStatus } from './utils'
 
+import type { RefObject } from 'react'
+
 export interface ProtocolRunHeaderProps {
-  protocolRunHeaderRef: React.RefObject<HTMLDivElement> | null
+  protocolRunHeaderRef: RefObject<HTMLDivElement> | null
   robotName: string
   runId: string
   makeHandleJumpToStep: (index: number) => () => void
@@ -70,7 +72,7 @@ export function ProtocolRunHeader(
     runErrors,
   })
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (protocolData != null && !isRobotViewable) {
       navigate('/devices')
     }
@@ -78,7 +80,7 @@ export function ProtocolRunHeader(
 
   // To persist "run again" loading conditions into a new run, we need a scalar that persists longer than
   // the runControl isResetRunLoading, which completes before we want to change user-facing copy/CTAs.
-  const isResetRunLoadingRef = React.useRef(false)
+  const isResetRunLoadingRef = useRef(false)
   if (runStatus === RUN_STATUS_IDLE || runStatus === RUN_STATUS_RUNNING) {
     isResetRunLoadingRef.current = false
   }

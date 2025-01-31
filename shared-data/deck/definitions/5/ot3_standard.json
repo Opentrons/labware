@@ -149,6 +149,7 @@
         "id": "A3",
         "areaType": "slot",
         "offsetFromCutoutFixture": [0.0, 0.0, 0.0],
+        "matingSurfaceUnitVector": [-1, 1, -1],
         "boundingBox": {
           "xDimension": 128.0,
           "yDimension": 86.0,

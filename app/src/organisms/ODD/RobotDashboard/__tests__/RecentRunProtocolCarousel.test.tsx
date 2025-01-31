@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { beforeEach, describe, it, vi } from 'vitest'
 
@@ -6,6 +5,7 @@ import { renderWithProviders } from '/app/__testing-utils__'
 import { useNotifyAllRunsQuery } from '/app/resources/runs'
 import { RecentRunProtocolCard, RecentRunProtocolCarousel } from '..'
 
+import type { ComponentProps } from 'react'
 import type { RunData } from '@opentrons/api-client'
 
 vi.mock('@opentrons/react-api-client')
@@ -30,14 +30,12 @@ const mockRun = {
   runTimeParameters: [],
 }
 
-const render = (
-  props: React.ComponentProps<typeof RecentRunProtocolCarousel>
-) => {
+const render = (props: ComponentProps<typeof RecentRunProtocolCarousel>) => {
   return renderWithProviders(<RecentRunProtocolCarousel {...props} />)
 }
 
 describe('RecentRunProtocolCarousel', () => {
-  let props: React.ComponentProps<typeof RecentRunProtocolCarousel>
+  let props: ComponentProps<typeof RecentRunProtocolCarousel>
 
   beforeEach(() => {
     props = {

@@ -1,14 +1,15 @@
-import type * as React from 'react'
 import { Box } from '../../primitives'
+
+import type { ComponentProps, ReactNode } from 'react'
 
 export interface RobotCoordsForeignDivProps {
   width?: string | number
   height?: string | number
   x?: string | number
   y?: string | number
-  children?: React.ReactNode
+  children?: ReactNode
   outerProps?: any
-  innerDivProps?: React.ComponentProps<typeof Box>
+  innerDivProps?: ComponentProps<typeof Box>
   transformWithSVG?: boolean
   extraTransform?: string
 }

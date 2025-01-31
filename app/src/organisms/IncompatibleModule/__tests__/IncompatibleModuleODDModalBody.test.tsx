@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { describe, it, beforeEach, expect } from 'vitest'
 import '@testing-library/jest-dom/vitest'
@@ -7,8 +6,10 @@ import { i18n } from '/app/i18n'
 import { IncompatibleModuleODDModalBody } from '../IncompatibleModuleODDModalBody'
 import * as Fixtures from '../__fixtures__'
 
+import type { ComponentProps } from 'react'
+
 const render = (
-  props: React.ComponentProps<typeof IncompatibleModuleODDModalBody>
+  props: ComponentProps<typeof IncompatibleModuleODDModalBody>
 ) => {
   return renderWithProviders(<IncompatibleModuleODDModalBody {...props} />, {
     i18nInstance: i18n,
@@ -16,7 +17,7 @@ const render = (
 }
 
 describe('IncompatibleModuleODDModalBody', () => {
-  let props: React.ComponentProps<typeof IncompatibleModuleODDModalBody>
+  let props: ComponentProps<typeof IncompatibleModuleODDModalBody>
   beforeEach(() => {
     props = {
       modules: [],

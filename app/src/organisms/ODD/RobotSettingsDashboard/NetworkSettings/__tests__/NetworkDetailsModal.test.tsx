@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
@@ -7,16 +6,18 @@ import { i18n } from '/app/i18n'
 import { renderWithProviders } from '/app/__testing-utils__'
 import { NetworkDetailsModal } from '../NetworkDetailsModal'
 
+import type { ComponentProps } from 'react'
+
 const mockFn = vi.fn()
 
-const render = (props: React.ComponentProps<typeof NetworkDetailsModal>) => {
+const render = (props: ComponentProps<typeof NetworkDetailsModal>) => {
   return renderWithProviders(<NetworkDetailsModal {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('NetworkDetailsModal', () => {
-  let props: React.ComponentProps<typeof NetworkDetailsModal>
+  let props: ComponentProps<typeof NetworkDetailsModal>
 
   beforeEach(() => {
     props = {

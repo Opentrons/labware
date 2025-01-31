@@ -99,7 +99,7 @@ async def test_get_modules_maps_data_and_id(
             hubPort=None,
             path="/dev/null",
         ),
-        moduleOffset=ModuleCalibrationData.construct(
+        moduleOffset=ModuleCalibrationData.model_construct(
             offset=Vec3f(x=0, y=0, z=0),
         ),
         data=MagneticModuleData(
@@ -171,7 +171,7 @@ async def test_get_modules_maps_data_and_id(
                 port_group=PortGroup.UNKNOWN,
                 hub_port=None,
             ),
-            module_offset=ModuleCalibrationData.construct(
+            module_offset=ModuleCalibrationData.model_construct(
                 offset=Vec3f(
                     x=calibration_offset.offset.x,
                     y=calibration_offset.offset.y,

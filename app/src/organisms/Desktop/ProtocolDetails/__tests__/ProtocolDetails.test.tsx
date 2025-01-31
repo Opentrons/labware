@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { act, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { describe, it, beforeEach, vi, expect, afterEach } from 'vitest'
@@ -26,6 +25,7 @@ import {
 import { storedProtocolData } from '/app/redux/protocol-storage/__fixtures__'
 import { ProtocolDetails } from '..'
 
+import type { ComponentProps } from 'react'
 import type { Mock } from 'vitest'
 import type { ProtocolAnalysisOutput } from '@opentrons/shared-data'
 
@@ -37,11 +37,13 @@ vi.mock('/app/organisms/Desktop/ChooseRobotToRunProtocolSlideout')
 vi.mock('/app/organisms/Desktop/SendProtocolToFlexSlideout')
 
 const render = (
-  props: Partial<React.ComponentProps<typeof ProtocolDetails>> = {}
+  props: Partial<ComponentProps<typeof ProtocolDetails>> = {}
 ) => {
   return renderWithProviders(
     <MemoryRouter>
-      <ProtocolDetails {...{ ...storedProtocolData, ...props }} />
+      <ProtocolDetails
+        {...{ ...storedProtocolData, ...props, groupedCommands: null }}
+      />
     </MemoryRouter>,
     {
       i18nInstance: i18n,

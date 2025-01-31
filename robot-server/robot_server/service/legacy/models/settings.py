@@ -3,7 +3,7 @@ import logging
 
 from typing import Optional, List, Dict, Any, Union
 
-from pydantic import BaseModel, Field, create_model, validator
+from pydantic import field_validator, BaseModel, Field, create_model
 
 from opentrons_shared_data.pipette import model_constants
 from opentrons.config.reset import ResetOptionId
@@ -17,7 +17,7 @@ class AdvancedSetting(BaseModel):
         ...,
         description="The ID by which the property used to be known; not"
         " useful now and may contain spaces or hyphens",
-        deprecated=True,
+        json_schema_extra={"deprecated": True},
     )
     title: str = Field(
         ...,
@@ -99,7 +99,8 @@ class LogLevel(BaseModel):
         None, description="The value to set (conforming to Python log levels)"
     )
 
-    @validator("log_level", pre=True)
+    @field_validator("log_level", mode="before")
+    @classmethod
     def lower_case_log_keys(cls, value):
         return value if value is None else LogLevels(value.lower(), None)
 
@@ -136,7 +137,7 @@ class PipetteSettingsField(BaseModel):
     units: Optional[str] = Field(
         None, description="The physical units this value is in (e.g. mm, uL)"
     )
-    type: Optional[PipetteSettingsFieldType]
+    type: Optional[PipetteSettingsFieldType] = None
     min: float = Field(..., description="The minimum acceptable value of the property")
     max: float = Field(..., description="The maximum acceptable value of the property")
     default: float = Field(..., description="The default value of the property")
@@ -184,11 +185,9 @@ PipetteSettingsFields.__doc__ = "The fields of the pipette settings"
 
 
 class PipetteSettings(BaseModel):
-    info: PipetteSettingsInfo
-    setting_fields: PipetteSettingsFields  # type: ignore
 
-    class Config:
-        fields = {"setting_fields": "fields"}
+    info: PipetteSettingsInfo
+    setting_fields: PipetteSettingsFields = Field(..., alias="fields")  # type: ignore
 
 
 MultiPipetteSettings = Dict[str, PipetteSettings]
@@ -208,7 +207,8 @@ class PipetteSettingsUpdate(BaseModel):
         None, alias="fields"
     )
 
-    @validator("setting_fields")
+    @field_validator("setting_fields")
+    @classmethod
     def validate_fields(cls, v):
         """A validator to ensure that values for mutable configs are
         floats and booleans for quirks."""

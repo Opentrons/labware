@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, beforeEach, vi, expect, afterEach } from 'vitest'
 
@@ -16,6 +15,7 @@ import { i18n } from '/app/i18n'
 import { AddFixtureModal } from '../AddFixtureModal'
 import { useNotifyDeckConfigurationQuery } from '/app/resources/deck_configuration'
 
+import type { ComponentProps } from 'react'
 import type { UseQueryResult } from 'react-query'
 import type { DeckConfiguration } from '@opentrons/shared-data'
 import type { Modules } from '@opentrons/api-client'
@@ -26,14 +26,14 @@ vi.mock('/app/resources/deck_configuration')
 const mockCloseModal = vi.fn()
 const mockUpdateDeckConfiguration = vi.fn()
 
-const render = (props: React.ComponentProps<typeof AddFixtureModal>) => {
+const render = (props: ComponentProps<typeof AddFixtureModal>) => {
   return renderWithProviders(<AddFixtureModal {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('Touchscreen AddFixtureModal', () => {
-  let props: React.ComponentProps<typeof AddFixtureModal>
+  let props: ComponentProps<typeof AddFixtureModal>
 
   beforeEach(() => {
     props = {
@@ -88,7 +88,7 @@ describe('Touchscreen AddFixtureModal', () => {
 })
 
 describe('Desktop AddFixtureModal', () => {
-  let props: React.ComponentProps<typeof AddFixtureModal>
+  let props: ComponentProps<typeof AddFixtureModal>
 
   beforeEach(() => {
     props = {

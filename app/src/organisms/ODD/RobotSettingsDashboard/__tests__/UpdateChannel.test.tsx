@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
@@ -13,6 +12,8 @@ import { renderWithProviders } from '/app/__testing-utils__'
 
 import { UpdateChannel } from '../UpdateChannel'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/redux/config')
 
 const mockChannelOptions = [
@@ -26,14 +27,14 @@ const mockChannelOptions = [
 
 const mockhandleBackPress = vi.fn()
 
-const render = (props: React.ComponentProps<typeof UpdateChannel>) => {
+const render = (props: ComponentProps<typeof UpdateChannel>) => {
   return renderWithProviders(<UpdateChannel {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('UpdateChannel', () => {
-  let props: React.ComponentProps<typeof UpdateChannel>
+  let props: ComponentProps<typeof UpdateChannel>
   beforeEach(() => {
     props = {
       handleBackPress: mockhandleBackPress,

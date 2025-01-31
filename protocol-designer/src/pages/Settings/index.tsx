@@ -12,11 +12,12 @@ import {
   Icon,
   JUSTIFY_SPACE_BETWEEN,
   Link as LinkComponent,
+  ListItem,
   SPACING,
   StyledText,
   TYPOGRAPHY,
 } from '@opentrons/components'
-import { AnnouncementModal } from '../../organisms'
+import { AnnouncementModal, DOC_URL } from '../../organisms'
 import {
   actions as analyticsActions,
   selectors as analyticsSelectors,
@@ -26,7 +27,7 @@ import {
   selectors as tutorialSelectors,
 } from '../../tutorial'
 import { ToggleButton } from '../../atoms/ToggleButton'
-import { BUTTON_LINK_STYLE } from '../../atoms'
+import { LINK_BUTTON_STYLE } from '../../atoms'
 import { actions as featureFlagActions } from '../../feature-flags'
 import { getFeatureFlagData } from '../../feature-flags/selectors'
 import type { FlagTypes } from '../../feature-flags'
@@ -41,14 +42,13 @@ export function Settings(): JSX.Element {
   const [showAnnouncementModal, setShowAnnouncementModal] = useState<boolean>(
     false
   )
-  const hasOptedIn = useSelector(analyticsSelectors.getHasOptedIn)
+  const { hasOptedIn } = useSelector(analyticsSelectors.getHasOptedIn)
   const flags = useSelector(getFeatureFlagData)
   const canClearHintDismissals = useSelector(
     tutorialSelectors.getCanClearHintDismissals
   )
-  const _toggleOptedIn = hasOptedIn
-    ? analyticsActions.optOut
-    : analyticsActions.optIn
+
+  const pdVersion = process.env.OT_PD_VERSION
 
   const prereleaseModeEnabled = flags.PRERELEASE_MODE === true
 
@@ -125,46 +125,58 @@ export function Settings(): JSX.Element {
           <Flex flexDirection={DIRECTION_COLUMN} gridGap={SPACING.spacing24}>
             <Flex flexDirection={DIRECTION_COLUMN} gridGap={SPACING.spacing8}>
               <StyledText desktopStyle="bodyLargeSemiBold">
-                {t('shared:app_settings')}
+                {t('shared:app_info')}
               </StyledText>
-              <Flex
-                borderRadius={BORDERS.borderRadius4}
-                backgroundColor={COLORS.grey10}
-                padding={`${SPACING.spacing16} ${SPACING.spacing24}`}
+              <ListItem
+                padding={SPACING.spacing16}
                 justifyContent={JUSTIFY_SPACE_BETWEEN}
+                type="noActive"
               >
-                <StyledText desktopStyle="bodyDefaultSemiBold">
-                  {t('shared:pd_version')}
-                </StyledText>
-                <Flex gridGap={SPACING.spacing12}>
-                  <StyledText desktopStyle="bodyDefaultRegular">
-                    {process.env.OT_PD_VERSION}
+                <Flex flexDirection={DIRECTION_COLUMN}>
+                  <StyledText desktopStyle="bodyDefaultSemiBold">
+                    {t('shared:pd_version')}
                   </StyledText>
+                  <StyledText desktopStyle="bodyDefaultRegular">
+                    {pdVersion}
+                  </StyledText>
+                </Flex>
+                <Flex gridGap={SPACING.spacing16} alignItems={ALIGN_CENTER}>
+                  <LinkComponent
+                    css={LINK_BUTTON_STYLE}
+                    textDecoration={TYPOGRAPHY.textDecorationUnderline}
+                    href={DOC_URL}
+                    external
+                    padding={SPACING.spacing4}
+                  >
+                    <StyledText desktopStyle="bodyDefaultRegular">
+                      {t('shared:software_manual')}
+                    </StyledText>
+                  </LinkComponent>
+
                   <Btn
-                    css={BUTTON_LINK_STYLE}
+                    css={LINK_BUTTON_STYLE}
                     textDecoration={TYPOGRAPHY.textDecorationUnderline}
                     onClick={() => {
                       setShowAnnouncementModal(true)
                     }}
                     data-testid="AnnouncementModal_viewReleaseNotesButton"
+                    padding={SPACING.spacing4}
                   >
                     <StyledText desktopStyle="bodyDefaultRegular">
-                      {t('shared:view_release_notes')}
+                      {t('shared:release_notes')}
                     </StyledText>
                   </Btn>
                 </Flex>
-              </Flex>
+              </ListItem>
             </Flex>
             <Flex flexDirection={DIRECTION_COLUMN} gridGap={SPACING.spacing8}>
               <StyledText desktopStyle="bodyLargeSemiBold">
                 {t('shared:user_settings')}
               </StyledText>
-              <Flex
-                borderRadius={BORDERS.borderRadius4}
-                backgroundColor={COLORS.grey10}
-                padding={`${SPACING.spacing16} ${SPACING.spacing24}`}
+              <ListItem
+                padding={SPACING.spacing16}
                 justifyContent={JUSTIFY_SPACE_BETWEEN}
-                alignItems={ALIGN_CENTER}
+                type="noActive"
               >
                 <Flex flexDirection={DIRECTION_COLUMN}>
                   <StyledText desktopStyle="bodyDefaultSemiBold">
@@ -172,7 +184,7 @@ export function Settings(): JSX.Element {
                   </StyledText>
                   <Flex color={COLORS.grey60}>
                     <StyledText desktopStyle="bodyDefaultRegular">
-                      {t('shared:reset_hints_and_tips')}
+                      {t('shared:show_hints_and_tips')}
                     </StyledText>
                   </Flex>
                 </Flex>
@@ -189,17 +201,15 @@ export function Settings(): JSX.Element {
                 >
                   <StyledText desktopStyle="bodyDefaultRegular">
                     {canClearHintDismissals
-                      ? t('shared:reset_hints')
+                      ? t('shared:reset')
                       : t('shared:no_hints_to_restore')}
                   </StyledText>
                 </Btn>
-              </Flex>
-              <Flex
-                borderRadius={BORDERS.borderRadius4}
-                backgroundColor={COLORS.grey10}
-                padding={`${SPACING.spacing16} ${SPACING.spacing24}`}
+              </ListItem>
+              <ListItem
+                padding={SPACING.spacing16}
                 justifyContent={JUSTIFY_SPACE_BETWEEN}
-                alignItems={ALIGN_CENTER}
+                type="noActive"
               >
                 <Flex flexDirection={DIRECTION_COLUMN}>
                   <StyledText desktopStyle="bodyDefaultSemiBold">
@@ -220,23 +230,21 @@ export function Settings(): JSX.Element {
                     })
                   }}
                 />
-              </Flex>
+              </ListItem>
             </Flex>
             <Flex flexDirection={DIRECTION_COLUMN} gridGap={SPACING.spacing8}>
               <StyledText desktopStyle="bodyLargeSemiBold">
                 {t('shared:privacy')}
               </StyledText>
-              <Flex
-                borderRadius={BORDERS.borderRadius4}
-                backgroundColor={COLORS.grey10}
-                padding={`${SPACING.spacing16} ${SPACING.spacing24}`}
+              <ListItem
+                padding={SPACING.spacing16}
                 justifyContent={JUSTIFY_SPACE_BETWEEN}
-                alignItems={ALIGN_CENTER}
-                gridGap={SPACING.spacing80}
+                type="noActive"
+                gridGap={SPACING.spacing40}
               >
                 <Flex flexDirection={DIRECTION_COLUMN}>
                   <StyledText desktopStyle="bodyDefaultSemiBold">
-                    {t('shared:shared_sessions')}
+                    {t('shared:shared_analytics')}
                   </StyledText>
                   <StyledText desktopStyle="bodyDefaultRegular">
                     <Trans
@@ -270,7 +278,13 @@ export function Settings(): JSX.Element {
                       ? TOGGLE_ENABLED_STYLES
                       : TOGGLE_DISABLED_STYLES
                   }
-                  onClick={() => dispatch(_toggleOptedIn())}
+                  onClick={() =>
+                    dispatch(
+                      hasOptedIn
+                        ? analyticsActions.optOut()
+                        : analyticsActions.optIn()
+                    )
+                  }
                 >
                   <Icon
                     name={
@@ -279,7 +293,7 @@ export function Settings(): JSX.Element {
                     height="1rem"
                   />
                 </Btn>
-              </Flex>
+              </ListItem>
             </Flex>
           </Flex>
           {prereleaseModeEnabled ? (
@@ -287,16 +301,15 @@ export function Settings(): JSX.Element {
               <StyledText desktopStyle="bodyLargeSemiBold">
                 {t('shared:developer_ff')}
               </StyledText>
-              <Flex
-                borderRadius={BORDERS.borderRadius4}
-                backgroundColor={COLORS.grey10}
-                padding={`${SPACING.spacing16} ${SPACING.spacing24}`}
+              <ListItem
+                type="noActive"
+                padding={SPACING.spacing16}
                 justifyContent={JUSTIFY_SPACE_BETWEEN}
                 flexDirection={DIRECTION_COLUMN}
                 gridGap={SPACING.spacing16}
               >
                 {prereleaseFlagRows}
-              </Flex>
+              </ListItem>
             </Flex>
           ) : null}
         </Flex>

@@ -22,8 +22,15 @@ from opentrons.protocol_engine.commands.configure_for_volume import (
     ConfigureForVolumeImplementation,
 )
 from opentrons_shared_data.pipette.types import PipetteNameType
+from opentrons_shared_data.pipette.pipette_definition import AvailableSensorDefinition
 from ..pipette_fixtures import get_default_nozzle_map
 from opentrons.types import Point
+
+
+@pytest.fixture
+def available_sensors() -> AvailableSensorDefinition:
+    """Provide a list of sensors."""
+    return AvailableSensorDefinition(sensors=["pressure", "capacitive", "environment"])
 
 
 @pytest.mark.parametrize(
@@ -41,7 +48,10 @@ from opentrons.types import Point
     ],
 )
 async def test_configure_for_volume_implementation(
-    decoy: Decoy, equipment: EquipmentHandler, data: ConfigureForVolumeParams
+    decoy: Decoy,
+    equipment: EquipmentHandler,
+    data: ConfigureForVolumeParams,
+    available_sensors: AvailableSensorDefinition,
 ) -> None:
     """A ConfigureForVolume command should have an execution implementation."""
     subject = ConfigureForVolumeImplementation(equipment=equipment)
@@ -63,6 +73,14 @@ async def test_configure_for_volume_implementation(
         back_left_corner_offset=Point(10, 20, 30),
         front_right_corner_offset=Point(40, 50, 60),
         pipette_lld_settings={},
+        plunger_positions={
+            "top": 0.0,
+            "bottom": 5.0,
+            "blow_out": 19.0,
+            "drop_tip": 20.0,
+        },
+        shaft_ul_per_mm=5.0,
+        available_sensors=available_sensors,
     )
 
     decoy.when(

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { css } from 'styled-components'
 
 import {
@@ -18,19 +17,21 @@ import {
   TYPOGRAPHY,
 } from '@opentrons/components'
 
+import type { ReactNode } from 'react'
+
 interface SetupStepProps {
   /** whether or not to show the full contents of the step */
   expanded: boolean
   /** always shown text name of the step */
-  title: React.ReactNode
+  title: ReactNode
   /** always shown text that provides a one sentence explanation of the contents */
   description: string
   /** callback that should toggle the expanded state (managed by parent) */
   toggleExpanded: () => void
   /** contents to be shown only when expanded */
-  children: React.ReactNode
+  children: ReactNode
   /** element to be shown (right aligned) regardless of expanded state */
-  rightElement: React.ReactNode
+  rightElement: ReactNode
 }
 
 const EXPANDED_STYLE = css`

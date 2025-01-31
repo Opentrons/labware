@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { fireEvent, screen } from '@testing-library/react'
@@ -7,11 +6,13 @@ import { COLORS } from '../../../helix-design-system'
 
 import { ListButton } from '..'
 
-const render = (props: React.ComponentProps<typeof ListButton>) =>
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof ListButton>) =>
   renderWithProviders(<ListButton {...props} />)
 
 describe('ListButton', () => {
-  let props: React.ComponentProps<typeof ListButton>
+  let props: ComponentProps<typeof ListButton>
 
   beforeEach(() => {
     props = {

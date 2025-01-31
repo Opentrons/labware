@@ -4,15 +4,15 @@
   "attached_instruments": {
     "right": {
       "model": "p1000_single_3.4",
-      "id": "321"
+      "id": "321_flex"
     },
     "left": {
       "model": "p50_single_3.4",
-      "id": "123"
+      "id": "123_flex"
     },
     "gripper":{
       "model": "gripper_1.3",
-      "id": "1234"
+      "id": "1234_flex_gripper"
     }
   },
   "attached_modules": {

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, describe, beforeEach } from 'vitest'
 import { screen } from '@testing-library/react'
 
@@ -7,16 +6,18 @@ import { i18n } from '/app/i18n'
 import { RenderResult } from '../RenderResult'
 import { CalibrationResult } from '../CalibrationResult'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('../RenderResult')
 
-const render = (props: React.ComponentProps<typeof CalibrationResult>) => {
+const render = (props: ComponentProps<typeof CalibrationResult>) => {
   return renderWithProviders(<CalibrationResult {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('PipetteCalibrationResult', () => {
-  let props: React.ComponentProps<typeof CalibrationResult>
+  let props: ComponentProps<typeof CalibrationResult>
 
   beforeEach(() => {
     props = {

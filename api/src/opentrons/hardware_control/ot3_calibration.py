@@ -968,7 +968,7 @@ def load_attitude_matrix(to_default: bool = True) -> DeckCalibration:
         return DeckCalibration(
             attitude=apply_machine_transform(calibration_data.attitude),
             source=calibration_data.source,
-            status=types.CalibrationStatus(**calibration_data.status.dict()),
+            status=types.CalibrationStatus(**calibration_data.status.model_dump()),
             belt_attitude=calibration_data.attitude,
             last_modified=calibration_data.lastModified,
             pipette_calibrated_with=calibration_data.pipetteCalibratedWith,

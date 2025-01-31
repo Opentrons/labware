@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, beforeEach, expect, vi } from 'vitest'
 import { screen } from '@testing-library/react'
 import { FLEX_ROBOT_TYPE } from '@opentrons/shared-data'
@@ -7,6 +6,7 @@ import { i18n } from '../../../assets/localization'
 
 import { SlotInformation } from '..'
 
+import type { ComponentProps } from 'react'
 import type { NavigateFunction } from 'react-router-dom'
 
 const mockLiquids = ['Mastermix', 'Ethanol', 'Water']
@@ -24,14 +24,14 @@ vi.mock('react-router-dom', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof SlotInformation>) => {
+const render = (props: ComponentProps<typeof SlotInformation>) => {
   return renderWithProviders(<SlotInformation {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('SlotInformation', () => {
-  let props: React.ComponentProps<typeof SlotInformation>
+  let props: ComponentProps<typeof SlotInformation>
 
   beforeEach(() => {
     props = {

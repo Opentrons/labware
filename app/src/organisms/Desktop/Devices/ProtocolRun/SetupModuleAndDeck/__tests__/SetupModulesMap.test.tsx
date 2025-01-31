@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { MemoryRouter } from 'react-router-dom'
 import { describe, it, beforeEach, vi, afterEach, expect } from 'vitest'
@@ -18,6 +16,8 @@ import { useMostRecentCompletedAnalysis } from '/app/resources/runs'
 import { ModuleInfo } from '/app/molecules/ModuleInfo'
 import { SetupModulesMap } from '../SetupModulesMap'
 import { getAttachedProtocolModuleMatches } from '/app/transformations/analysis'
+
+import type { ComponentProps } from 'react'
 import type {
   CompletedProtocolAnalysis,
   ModuleModel,
@@ -47,7 +47,7 @@ vi.mock('/app/transformations/analysis')
 vi.mock('/app/molecules/ModuleInfo')
 vi.mock('/app/resources/modules')
 
-const render = (props: React.ComponentProps<typeof SetupModulesMap>) => {
+const render = (props: ComponentProps<typeof SetupModulesMap>) => {
   return renderWithProviders(
     <MemoryRouter>
       <SetupModulesMap {...props} />
@@ -98,7 +98,7 @@ const mockTCModule = {
 }
 
 describe('SetupModulesMap', () => {
-  let props: React.ComponentProps<typeof SetupModulesMap>
+  let props: ComponentProps<typeof SetupModulesMap>
   beforeEach(() => {
     props = {
       runId: MOCK_RUN_ID,

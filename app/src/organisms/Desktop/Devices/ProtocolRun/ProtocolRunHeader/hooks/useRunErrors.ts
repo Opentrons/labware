@@ -1,7 +1,6 @@
 import { useRunCommandErrors } from '@opentrons/react-api-client'
 
 import { isTerminalRunStatus } from '../utils'
-import { useMostRecentRunId } from '/app/resources/runs'
 import { getHighestPriorityError } from '/app/transformations/runs'
 
 import type { RunStatus, Run } from '@opentrons/api-client'
@@ -27,14 +26,11 @@ export function useRunErrors({
   runRecord,
   runStatus,
 }: UseRunErrorsProps): UseRunErrorsResult {
-  const mostRecentRunId = useMostRecentRunId()
-  const isMostRecentRun = mostRecentRunId === runId
-
   const { data: commandErrorList } = useRunCommandErrors(
     runId,
     { cursor: 0, pageLength: ALL_COMMANDS_PAGE_LENGTH },
     {
-      enabled: isTerminalRunStatus(runStatus) && isMostRecentRun,
+      enabled: isTerminalRunStatus(runStatus),
     }
   )
 

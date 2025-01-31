@@ -1,0 +1,143 @@
+{
+  "ordering": [
+    ["A1", "B1"],
+    ["A2", "B2"],
+    ["A3", "B3"]
+  ],
+  "brand": {
+    "brand": "Opentrons",
+    "brandId": [],
+    "links": [
+      "https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1"
+    ]
+  },
+  "metadata": {
+    "displayName": "Opentrons 6 Tube Rack with NEST 50 mL Conical",
+    "displayCategory": "tubeRack",
+    "displayVolumeUnits": "mL",
+    "tags": []
+  },
+  "dimensions": {
+    "xDimension": 127.76,
+    "yDimension": 85.48,
+    "zDimension": 120.35
+  },
+  "wells": {
+    "A1": {
+      "depth": 113.05,
+      "shape": "circular",
+      "diameter": 27.95,
+      "totalLiquidVolume": 50000,
+      "x": 35.5,
+      "y": 60.24,
+      "z": 7.3,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B1": {
+      "depth": 113.05,
+      "shape": "circular",
+      "diameter": 27.95,
+      "totalLiquidVolume": 50000,
+      "x": 35.5,
+      "y": 25.24,
+      "z": 7.3,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A2": {
+      "depth": 113.05,
+      "shape": "circular",
+      "diameter": 27.95,
+      "totalLiquidVolume": 50000,
+      "x": 70.5,
+      "y": 60.24,
+      "z": 7.3,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B2": {
+      "depth": 113.05,
+      "shape": "circular",
+      "diameter": 27.95,
+      "totalLiquidVolume": 50000,
+      "x": 70.5,
+      "y": 25.24,
+      "z": 7.3,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A3": {
+      "depth": 113.05,
+      "shape": "circular",
+      "diameter": 27.95,
+      "totalLiquidVolume": 50000,
+      "x": 105.5,
+      "y": 60.24,
+      "z": 7.3,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B3": {
+      "depth": 113.05,
+      "shape": "circular",
+      "diameter": 27.95,
+      "totalLiquidVolume": 50000,
+      "x": 105.5,
+      "y": 25.24,
+      "z": 7.3,
+      "geometryDefinitionId": "conicalWell"
+    }
+  },
+  "groups": [
+    {
+      "metadata": {
+        "displayName": "NEST 6x50 mL Conical",
+        "displayCategory": "tubeRack",
+        "wellBottomShape": "v"
+      },
+      "brand": {
+        "brand": "NEST",
+        "brandId": ["602052"],
+        "links": ["https://www.nest-biotech.com/centrifuge-tube/59282837.html"]
+      },
+      "wells": ["A1", "B1", "A2", "B2", "A3", "B3"]
+    }
+  ],
+  "parameters": {
+    "format": "irregular",
+    "isTiprack": false,
+    "isMagneticModuleCompatible": false,
+    "loadName": "opentrons_6_tuberack_nest_50ml_conical"
+  },
+  "namespace": "opentrons",
+  "version": 2,
+  "schemaVersion": 3,
+  "cornerOffsetFromSlot": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "innerLabwareGeometry": {
+    "conicalWell": {
+      "sections": [
+        {
+          "shape": "conical",
+          "topDiameter": 26.0,
+          "bottomDiameter": 6.0,
+          "topHeight": 14.28,
+          "bottomHeight": 0.0
+        },
+        {
+          "shape": "conical",
+          "topDiameter": 27.0,
+          "bottomDiameter": 26.0,
+          "topHeight": 109.0,
+          "bottomHeight": 14.28
+        },
+        {
+          "shape": "conical",
+          "topDiameter": 27.45,
+          "bottomDiameter": 27.0,
+          "topHeight": 113.3,
+          "bottomHeight": 109.0
+        }
+      ]
+    }
+  }
+}

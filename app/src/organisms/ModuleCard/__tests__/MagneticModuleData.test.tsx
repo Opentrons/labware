@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, it, vi } from 'vitest'
 
@@ -8,16 +7,18 @@ import { StatusLabel } from '/app/atoms/StatusLabel'
 import { MagneticModuleData } from '../MagneticModuleData'
 import { mockMagneticModule } from '/app/redux/modules/__fixtures__'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/atoms/StatusLabel')
 
-const render = (props: React.ComponentProps<typeof MagneticModuleData>) => {
+const render = (props: ComponentProps<typeof MagneticModuleData>) => {
   return renderWithProviders(<MagneticModuleData {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('MagneticModuleData', () => {
-  let props: React.ComponentProps<typeof MagneticModuleData>
+  let props: ComponentProps<typeof MagneticModuleData>
   beforeEach(() => {
     props = {
       moduleHeight: mockMagneticModule.data.height,

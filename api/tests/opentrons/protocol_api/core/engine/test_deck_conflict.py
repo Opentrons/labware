@@ -7,7 +7,6 @@ from opentrons_shared_data.labware.types import LabwareUri
 from opentrons_shared_data.robot.types import RobotType
 
 from opentrons.hardware_control import CriticalPoint
-from opentrons.hardware_control.nozzle_manager import NozzleConfigurationType
 from opentrons.motion_planning import deck_conflict as wrapped_deck_conflict
 from opentrons.motion_planning import adjacent_slots_getters
 from opentrons.motion_planning.adjacent_slots_getters import _MixedTypeSlots
@@ -31,7 +30,13 @@ from opentrons.protocol_engine.state.pipettes import PipetteBoundingBoxOffsets
 
 from opentrons.protocol_engine.clients import SyncClient
 from opentrons.protocol_engine.errors import LabwareNotLoadedOnModuleError
-from opentrons.types import DeckSlotName, Point, StagingSlotName, MountType
+from opentrons.types import (
+    DeckSlotName,
+    Point,
+    StagingSlotName,
+    MountType,
+    NozzleConfigurationType,
+)
 
 from opentrons.protocol_engine.types import (
     DeckType,

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, vi, beforeEach, expect } from 'vitest'
 import { renderWithProviders } from '/app/__testing-utils__'
@@ -8,22 +7,23 @@ import { PipetteWizardFlows } from '/app/organisms/PipetteWizardFlows'
 import { GripperWizardFlows } from '/app/organisms/GripperWizardFlows'
 import { InstrumentInfo } from '..'
 
+import type { ComponentProps } from 'react'
+import type * as ReactRouterDom from 'react-router-dom'
 import type { GripperData } from '@opentrons/api-client'
-import type * as Dom from 'react-router-dom'
 
 const mockNavigate = vi.fn()
 
 vi.mock('/app/organisms/PipetteWizardFlows')
 vi.mock('/app/organisms/GripperWizardFlows')
 vi.mock('react-router-dom', async importOriginal => {
-  const reactRouterDom = await importOriginal<typeof Dom>()
+  const reactRouterDom = await importOriginal<typeof ReactRouterDom>()
   return {
     ...reactRouterDom,
     useNavigate: () => mockNavigate,
   }
 })
 
-const render = (props: React.ComponentProps<typeof InstrumentInfo>) => {
+const render = (props: ComponentProps<typeof InstrumentInfo>) => {
   return renderWithProviders(<InstrumentInfo {...props} />, {
     i18nInstance: i18n,
   })[0]
@@ -65,7 +65,7 @@ const mockGripperDataWithCalData: GripperData = {
 }
 
 describe('InstrumentInfo', () => {
-  let props: React.ComponentProps<typeof InstrumentInfo>
+  let props: ComponentProps<typeof InstrumentInfo>
   beforeEach(() => {
     vi.mocked(PipetteWizardFlows).mockReturnValue(
       <div>mock PipetteWizardFlows</div>

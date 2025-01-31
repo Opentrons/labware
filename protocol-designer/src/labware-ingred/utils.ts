@@ -1,5 +1,6 @@
 import {
   FIXED_TRASH_ID,
+  FLEX_MODULE_ADDRESSABLE_AREAS,
   getAreSlotsAdjacent,
   getDeckDefFromRobotType,
   getIsLabwareAboveHeight,
@@ -7,6 +8,7 @@ import {
   MAX_LABWARE_HEIGHT_EAST_WEST_HEATER_SHAKER_MM,
   MOVABLE_TRASH_ADDRESSABLE_AREAS,
   OT2_ROBOT_TYPE,
+  THERMOCYCLER_MODULE_TYPE,
   WASTE_CHUTE_ADDRESSABLE_AREAS,
 } from '@opentrons/shared-data'
 import { COLUMN_4_SLOTS } from '@opentrons/step-generation'
@@ -30,6 +32,16 @@ export function getNextAvailableDeckSlot(
     module => module.type === HEATERSHAKER_MODULE_TYPE
   )?.slot
 
+  const hasTC = Object.values(initialDeckSetup.modules).find(
+    module => module.type === THERMOCYCLER_MODULE_TYPE
+  )
+  let moduleSlots = Object.values(initialDeckSetup.modules)
+    .filter(module => module.slot)
+    .map(mod => mod.slot)
+  if (hasTC) {
+    moduleSlots = [...moduleSlots, '8', '10', '11']
+  }
+
   return deckDef.locations.addressableAreas.find(slot => {
     const cutoutIds = Object.values(initialDeckSetup.additionalEquipmentOnDeck)
       .filter(ae => ae.name === 'stagingArea')
@@ -49,10 +61,15 @@ export function getNextAvailableDeckSlot(
       slot.id === FIXED_TRASH_ID
     ) {
       isSlotEmpty = false
+    } else if (
+      moduleSlots.includes(slot.id) ||
+      FLEX_MODULE_ADDRESSABLE_AREAS.includes(slot.id)
+    ) {
+      isSlotEmpty = false
       //  return slot as full if slot is adjacent to heater-shaker for ot-2 and taller than 53mm
     } else if (
       heaterShakerSlot != null &&
-      deckDef.robot.model === OT2_ROBOT_TYPE &&
+      robotType === OT2_ROBOT_TYPE &&
       isSlotEmpty &&
       labwareDefinition != null
     ) {

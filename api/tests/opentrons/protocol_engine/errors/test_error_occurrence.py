@@ -1,4 +1,5 @@
 """Test ErrorOccurrence module."""
+
 import datetime
 from typing import List
 
@@ -11,7 +12,7 @@ def test_error_occurrence_schema() -> None:
     This is explicitly tested because we are overriding the schema
     due to a default value for errorCode.
     """
-    required_items: List[str] = ErrorOccurrence.schema()["definitions"][
+    required_items: List[str] = ErrorOccurrence.model_json_schema()["$defs"][
         "ErrorOccurrence"
     ]["required"]
     assert "errorCode" in required_items
@@ -24,7 +25,7 @@ def test_parse_error_occurrence() -> None:
     """
     input = '{"id": "abcdefg","errorType": "a bad one","createdAt": "2023-06-12 15:08:54.730451","detail": "This is a bad error"}'
 
-    result = ErrorOccurrence.parse_raw(input)
+    result = ErrorOccurrence.model_validate_json(input)
 
     expected = ErrorOccurrence(
         id="abcdefg",

@@ -4,7 +4,7 @@
 
 1. Follow the instructions in [DEV_SETUP.md](../DEV_SETUP.md)
 1. `cd analyses-snapshot-testing`
-1. use pyenv to install python 3.12 and set it as the local python version for this directory
+1. use pyenv to install python 3.13 and set it as the local python version for this directory
 1. `make setup`
 1. Have docker installed and ready
 
@@ -18,7 +18,10 @@
 
 > This ALWAYS gets the remote code pushed to Opentrons/opentrons for the specified ANALYSIS_REF
 
-`make build-opentrons-analysis ANALYSIS_REF=chore_release-8.0.0`
+- build the base image
+  - `make build-base-image`
+- build the opentrons-analysis image
+  - `make build-opentrons-analysis ANALYSIS_REF=release`
 
 ## Running the tests locally
 
@@ -51,10 +54,35 @@
 
 ```shell
 cd analyses-snapshot-testing \
-&& make build-rs OPENTRONS_VERSION=chore_release-8.0.0 \
-&& make run-rs OPENTRONS_VERSION=chore_release-8.0.0`
+&& make build-base-image \
+&& make build-rs OPENTRONS_VERSION=release \
+&& make run-rs OPENTRONS_VERSION=release`
 ```
 
 ### Default OPENTRONS_VERSION=edge in the Makefile so you can omit it if you want latest edge
 
-`cd analyses-snapshot-testing && make build-rs && make run-rs`
+```shell
+cd analyses-snapshot-testing \
+&& make build-base-image \
+&& make build-rs \
+&& make run-rs
+```
+
+## Running the Analyses Battery against your local code
+
+> This copies in your local code to the container and runs the analyses battery against it.
+
+`cd PYENV_ROOT && git pull` - make sure pyenv is up to date so you may install python 3.13.0
+`pyenv install 3.13.0` - install python 3.13.0
+`cd <OPENTRONS_REPO_ROOT>/analyses-snapshot-testing` - navigate to the analyses-snapshot-testing directory
+`pyenv local 3.13.0` - set the local python version to 3.13.0
+`make setup` - install the requirements
+`make snapshot-test-local` - this target builds the base image, builds the local code into the base image, then runs the analyses battery against the image you just created
+
+You have the option to specify one or many protocols to run the analyses on. This is also described above [Running the tests against specific protocols](#running-the-tests-against-specific-protocols)
+
+- `make snapshot-test-local PROTOCOL_NAMES=Flex_S_v2_19_Illumina_DNA_PCR_Free OVERRIDE_PROTOCOL_NAMES=none`
+
+### Updating the snapshots locally
+
+- `make snapshot-test-update-local` - this target builds the base image, builds the local code into the base image, then runs the analyses battery against the image you just created, updating the snapshots by passing the `--update-snapshots` flag to the test

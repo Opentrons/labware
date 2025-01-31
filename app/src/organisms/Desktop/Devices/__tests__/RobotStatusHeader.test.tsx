@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { RUN_STATUS_RUNNING } from '@opentrons/api-client'
 import { when } from 'vitest-when'
@@ -20,6 +19,7 @@ import { useIsFlex } from '/app/redux-resources/robots'
 import { RobotStatusHeader } from '../RobotStatusHeader'
 import { useNotifyRunQuery, useCurrentRunId } from '/app/resources/runs'
 
+import type { ComponentProps } from 'react'
 import type { DiscoveryClientRobotAddress } from '/app/redux/discovery/types'
 import type { SimpleInterfaceStatus } from '/app/redux/networking/types'
 import type { State } from '/app/redux/types'
@@ -45,7 +45,7 @@ const MOCK_BUZZ = {
 const WIFI_IP = 'wifi-ip'
 const ETHERNET_IP = 'ethernet-ip'
 
-const render = (props: React.ComponentProps<typeof RobotStatusHeader>) => {
+const render = (props: ComponentProps<typeof RobotStatusHeader>) => {
   return renderWithProviders(
     <MemoryRouter>
       <RobotStatusHeader {...props} />
@@ -56,7 +56,7 @@ const render = (props: React.ComponentProps<typeof RobotStatusHeader>) => {
   )
 }
 describe('RobotStatusHeader', () => {
-  let props: React.ComponentProps<typeof RobotStatusHeader>
+  let props: ComponentProps<typeof RobotStatusHeader>
 
   beforeEach(() => {
     props = MOCK_OTIE

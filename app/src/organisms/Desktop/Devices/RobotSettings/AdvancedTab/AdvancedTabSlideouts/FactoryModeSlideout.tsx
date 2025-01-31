@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useForm, Controller } from 'react-hook-form'
 import { Trans, useTranslation } from 'react-i18next'
@@ -28,6 +28,7 @@ import { FileUpload } from '/app/molecules/FileUpload'
 import { UploadInput } from '/app/molecules/UploadInput'
 import { restartRobot } from '/app/redux/robot-admin'
 
+import type { ChangeEvent, MouseEventHandler } from 'react'
 import type { FieldError, Resolver } from 'react-hook-form'
 import type { RobotSettingsField } from '@opentrons/api-client'
 import type { Dispatch } from '/app/redux/types'
@@ -63,11 +64,11 @@ export function FactoryModeSlideout({
 
   const last = sn?.substring(sn.length - 4)
 
-  const [currentStep, setCurrentStep] = React.useState<number>(1)
-  const [toggleValue, setToggleValue] = React.useState<boolean>(false)
-  const [file, setFile] = React.useState<File | null>(null)
-  const [fileError, setFileError] = React.useState<string | null>(null)
-  const [isUploading, setIsUploading] = React.useState<boolean>(false)
+  const [currentStep, setCurrentStep] = useState<number>(1)
+  const [toggleValue, setToggleValue] = useState<boolean>(false)
+  const [file, setFile] = useState<File | null>(null)
+  const [fileError, setFileError] = useState<string | null>(null)
+  const [isUploading, setIsUploading] = useState<boolean>(false)
 
   const onFinishCompleteClick = (): void => {
     dispatch(restartRobot(robotName))
@@ -142,11 +143,11 @@ export function FactoryModeSlideout({
     void handleSubmit(onSubmit)()
   }
 
-  const handleToggleClick: React.MouseEventHandler<Element> = () => {
+  const handleToggleClick: MouseEventHandler<Element> = () => {
     setToggleValue(toggleValue => !toggleValue)
   }
 
-  const handleCompleteClick: React.MouseEventHandler<Element> = () => {
+  const handleCompleteClick: MouseEventHandler<Element> = () => {
     setIsUploading(true)
     updateRobotSetting({ id: 'enableOEMMode', value: toggleValue })
   }
@@ -173,7 +174,7 @@ export function FactoryModeSlideout({
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     // initialize local state to OEM mode value
     if (isOEMMode != null) {
       setToggleValue(isOEMMode)
@@ -229,7 +230,7 @@ export function FactoryModeSlideout({
                 id="factoryModeInput"
                 name="factoryModeInput"
                 type="text"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
                   field.onChange(e)
                   clearErrors()
                 }}

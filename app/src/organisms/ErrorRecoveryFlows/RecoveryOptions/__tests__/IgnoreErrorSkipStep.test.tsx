@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, expect, beforeEach } from 'vitest'
 import { screen, fireEvent, waitFor } from '@testing-library/react'
 
@@ -15,6 +14,7 @@ import { SelectRecoveryOption } from '../SelectRecoveryOption'
 import { clickButtonLabeled } from '../../__tests__/util'
 import { SkipStepInfo } from '/app/organisms/ErrorRecoveryFlows/shared'
 
+import type { ComponentProps } from 'react'
 import type { Mock } from 'vitest'
 
 vi.mock('/app/organisms/ErrorRecoveryFlows/shared', async () => {
@@ -31,14 +31,14 @@ vi.mock('/app/organisms/ErrorRecoveryFlows/shared', async () => {
 })
 vi.mock('../SelectRecoveryOption')
 
-const render = (props: React.ComponentProps<typeof IgnoreErrorSkipStep>) => {
+const render = (props: ComponentProps<typeof IgnoreErrorSkipStep>) => {
   return renderWithProviders(<IgnoreErrorSkipStep {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 const renderIgnoreErrorStepHome = (
-  props: React.ComponentProps<typeof IgnoreErrorStepHome>
+  props: ComponentProps<typeof IgnoreErrorStepHome>
 ) => {
   return renderWithProviders(<IgnoreErrorStepHome {...props} />, {
     i18nInstance: i18n,
@@ -46,7 +46,7 @@ const renderIgnoreErrorStepHome = (
 }
 
 describe('IgnoreErrorSkipStep', () => {
-  let props: React.ComponentProps<typeof IgnoreErrorSkipStep>
+  let props: ComponentProps<typeof IgnoreErrorSkipStep>
 
   beforeEach(() => {
     props = {
@@ -98,7 +98,7 @@ describe('IgnoreErrorSkipStep', () => {
 })
 
 describe('IgnoreErrorStepHome', () => {
-  let props: React.ComponentProps<typeof IgnoreErrorStepHome>
+  let props: ComponentProps<typeof IgnoreErrorStepHome>
   let mockIgnoreErrorKindThisRun: Mock
   let mockProceedToRouteAndStep: Mock
   let mockGoBackPrevStep: Mock
@@ -184,7 +184,7 @@ describe('IgnoreErrorStepHome', () => {
 })
 
 describe('IgnoreOptions', () => {
-  let props: React.ComponentProps<typeof IgnoreOptions>
+  let props: ComponentProps<typeof IgnoreOptions>
 
   beforeEach(() => {
     props = {

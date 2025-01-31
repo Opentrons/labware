@@ -23,6 +23,7 @@ import {
   TYPOGRAPHY,
 } from '@opentrons/components'
 import { useUpdateRobotNameMutation } from '@opentrons/react-api-client'
+import { FLEX_ROBOT_TYPE } from '@opentrons/shared-data'
 
 import {
   removeRobot,
@@ -166,6 +167,7 @@ export function NameRobot(): JSX.Element {
       properties: {
         previousRobotName: previousName,
         newRobotName: newRobotName,
+        robotType: FLEX_ROBOT_TYPE,
       },
     })
     handleSubmit(onSubmit)()

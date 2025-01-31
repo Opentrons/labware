@@ -1,16 +1,15 @@
 // Card component with drop shadow
-
-import type * as React from 'react'
 import styled, { css } from 'styled-components'
 import { isntStyleProp, styleProps } from '../primitives'
 import * as styles from '../styles'
 
+import type { ReactNode } from 'react'
 import type { StyleProps, PrimitiveComponent } from '../primitives'
 export interface CardProps extends StyleProps {
   /** Title for card, all cards should receive a title. */
-  title?: React.ReactNode
+  title?: ReactNode
   /** Card contents */
-  children?: React.ReactNode
+  children?: ReactNode
   /** If card can not be used, gray it out and remove pointer events */
   disabled?: boolean
   /** Additional class names */

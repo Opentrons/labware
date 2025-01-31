@@ -12,7 +12,7 @@ import {
   TYPOGRAPHY,
 } from '@opentrons/components'
 import { getPipetteSpecsV2 } from '@opentrons/shared-data'
-import { BUTTON_LINK_STYLE } from '../../atoms'
+import { LINK_BUTTON_STYLE } from '../../atoms'
 import { getLabwareDefsByURI } from '../../labware-defs/selectors'
 import type { PipetteMount, PipetteName } from '@opentrons/shared-data'
 
@@ -40,7 +40,7 @@ export function PipetteInfoItem(props: PipetteInfoItemProps): JSX.Element {
         <Flex gridGap={SPACING.spacing4} flexDirection={DIRECTION_COLUMN}>
           <StyledText desktopStyle="bodyDefaultSemiBold">
             {i18n.format(
-              t('pip', {
+              t('pipette', {
                 mount: is96Channel ? t('left_right') : mount,
               }),
               'titleCase'
@@ -68,7 +68,7 @@ export function PipetteInfoItem(props: PipetteInfoItemProps): JSX.Element {
           <Btn
             onClick={editClick}
             textDecoration={TYPOGRAPHY.textDecorationUnderline}
-            css={BUTTON_LINK_STYLE}
+            css={LINK_BUTTON_STYLE}
             padding={SPACING.spacing4}
           >
             <StyledText desktopStyle="bodyDefaultRegular">
@@ -80,7 +80,7 @@ export function PipetteInfoItem(props: PipetteInfoItemProps): JSX.Element {
               cleanForm()
             }}
             textDecoration={TYPOGRAPHY.textDecorationUnderline}
-            css={BUTTON_LINK_STYLE}
+            css={LINK_BUTTON_STYLE}
             padding={SPACING.spacing4}
           >
             <StyledText desktopStyle="bodyDefaultRegular">

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, expect, describe, beforeEach, afterEach } from 'vitest'
 import { when } from 'vitest-when'
 import { QueryClient, QueryClientProvider } from 'react-query'
@@ -11,12 +10,14 @@ import {
 } from '/app/redux/calibration/tip-length/__fixtures__'
 import { useTipLengthCalibrations } from '..'
 
+import type { FunctionComponent, ReactNode } from 'react'
+
 vi.mock('@opentrons/react-api-client')
 
 const CALIBRATIONS_FETCH_MS = 5000
 
 describe('useTipLengthCalibrations hook', () => {
-  let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+  let wrapper: FunctionComponent<{ children: ReactNode }>
   beforeEach(() => {
     const queryClient = new QueryClient()
     wrapper = ({ children }) => (

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { css } from 'styled-components'
 
 import {
@@ -15,9 +14,10 @@ import {
   StyledText,
 } from '@opentrons/components'
 
+import type { ComponentProps } from 'react'
 import type { IconName } from '@opentrons/components'
 
-interface FloatingActionButtonProps extends React.ComponentProps<typeof Btn> {
+interface FloatingActionButtonProps extends ComponentProps<typeof Btn> {
   buttonText: string
   disabled?: boolean
   iconName?: IconName

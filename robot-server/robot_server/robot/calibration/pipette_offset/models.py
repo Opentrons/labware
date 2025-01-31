@@ -1,5 +1,5 @@
 from typing import Optional, List
-from pydantic import BaseModel, Field
+from pydantic import ConfigDict, BaseModel, Field
 
 from ..helper_classes import AttachedPipette, RequiredLabware, NextSteps
 
@@ -23,9 +23,8 @@ class PipetteOffsetCalibrationSessionStatus(BaseModel):
     nextSteps: Optional[NextSteps] = Field(
         None, description="Next Available Steps in Session"
     )
-
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "examples": [
                 {
                     "instrument": {
@@ -51,3 +50,4 @@ class PipetteOffsetCalibrationSessionStatus(BaseModel):
                 }
             ]
         }
+    )

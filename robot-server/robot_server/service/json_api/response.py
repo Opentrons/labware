@@ -11,9 +11,8 @@ from typing import (
     ParamSpec,
     Callable,
 )
+from typing_extensions import get_args, override
 from pydantic import Field, BaseModel
-from pydantic.generics import GenericModel
-from pydantic.typing import get_args
 from fastapi.responses import JSONResponse
 from fastapi.dependencies.utils import get_typed_return_annotation
 from .resource_links import ResourceLinks as DeprecatedResourceLinks
@@ -41,29 +40,50 @@ class BaseResponseBody(BaseModel):
     JSON responses adhere to the server's generated OpenAPI Spec.
     """
 
-    def dict(self, *args: Any, **kwargs: Any) -> Dict[str, Any]:
+    @override
+    def model_dump(self, *args: Any, **kwargs: Any) -> Dict[str, Any]:
         """Always exclude `None` when serializing to an object.
 
-        The OpenAPI spec marks `Optional` BaseModel fields as omittable, but
-        not nullable. This `dict` method override ensures that `null` is never
-        returned in a response, which would violate the spec.
+        With Pydantic v1, the OpenAPI spec described `Optional`(i.e., possibly
+        `None`-valued) fields as omittable, but not nullable. This did not match
+        Pydantic's actual serialization behavior, which serialized Python `None` to
+        JSON `null` by default. This method override fixed the mismatch by making
+        Pydantic omit the field from serialization instead.
+
+        With Pydantic v2, the OpenAPI spec does describe `Optional` fields as nullable,
+        matching Pydantic's serialization behavior. We therefore no longer need this
+        override to make them match. However, removing this override and changing
+        serialization behavior at this point would risk breaking things on the client.
         """
+        kwargs["exclude_none"] = True
+        return super().model_dump(*args, **kwargs)
+
+    @override
+    def dict(self, *args: Any, **kwargs: Any) -> Dict[str, Any]:
+        """See notes in `model_dump()`."""
         kwargs["exclude_none"] = True
         return super().dict(*args, **kwargs)
 
-    def json(self, *args: Any, **kwargs: Any) -> str:
-        """See notes in `.dict()`."""
+    @override
+    def model_dump_json(self, *args: Any, **kwargs: Any) -> str:
+        """See notes in `.model_dump()`."""
         kwargs["exclude_none"] = True
-        return super().json(*args, **kwargs)
+        return super().model_dump_json(*args, **kwargs)
+
+    @override
+    def json(self, *args: Any, **kwargs: Any) -> str:
+        """See notes in `.model_dump()`."""
+        kwargs["exclude_none"] = True
+        return super().model_dump_json(*args, **kwargs)
 
 
-class SimpleBody(BaseResponseBody, GenericModel, Generic[ResponseDataT]):
+class SimpleBody(BaseResponseBody, Generic[ResponseDataT]):
     """A response that returns a single resource."""
 
     data: ResponseDataT = Field(..., description=DESCRIPTION_DATA)
 
 
-class Body(BaseResponseBody, GenericModel, Generic[ResponseDataT, ResponseLinksT]):
+class Body(BaseResponseBody, Generic[ResponseDataT, ResponseLinksT]):
     """A response that returns a single resource and stateful links."""
 
     data: ResponseDataT = Field(..., description=DESCRIPTION_DATA)
@@ -74,7 +94,7 @@ class SimpleEmptyBody(BaseResponseBody):
     """A response that returns no data and no links."""
 
 
-class EmptyBody(BaseResponseBody, GenericModel, Generic[ResponseLinksT]):
+class EmptyBody(BaseResponseBody, Generic[ResponseLinksT]):
     """A response that returns no data except stateful links."""
 
     links: ResponseLinksT = Field(..., description=DESCRIPTION_LINKS)
@@ -94,7 +114,7 @@ class MultiBodyMeta(BaseModel):
     )
 
 
-class SimpleMultiBody(BaseResponseBody, GenericModel, Generic[ResponseDataT]):
+class SimpleMultiBody(BaseResponseBody, Generic[ResponseDataT]):
     """A response that returns multiple resources."""
 
     data: Sequence[ResponseDataT] = Field(..., description=DESCRIPTION_DATA)
@@ -104,8 +124,8 @@ class SimpleMultiBody(BaseResponseBody, GenericModel, Generic[ResponseDataT]):
     # non-validating classmethod is taken from the type of this member, and there we really
     # want the arguments to be Sequence so they can accept narrower subtypes. For instance,
     # if you define a function as returning SimpleMultiBody[Union[A, B]], you should really
-    # be able to do return SimpleMultiBody.construct([A(), A(), A()]) or even
-    # SimpleMultiBody[Union[A, B]].construct([A(), A(), A()]). However, because construct's
+    # be able to do return SimpleMultiBody.model_construct([A(), A(), A()]) or even
+    # SimpleMultiBody[Union[A, B]].model_construct([A(), A(), A()]). However, because construct's
     # params are defined based on the dataclass fields, the only way to get the arguments
     # to be covariant is to make data the covariant Sequence protocol.
     meta: MultiBodyMeta = Field(
@@ -114,11 +134,7 @@ class SimpleMultiBody(BaseResponseBody, GenericModel, Generic[ResponseDataT]):
     )
 
 
-class MultiBody(
-    BaseResponseBody,
-    GenericModel,
-    Generic[ResponseDataT, ResponseLinksT],
-):
+class MultiBody(BaseResponseBody, Generic[ResponseDataT, ResponseLinksT]):
     """A response that returns multiple resources and stateful links."""
 
     data: List[ResponseDataT] = Field(..., description=DESCRIPTION_DATA)
@@ -225,7 +241,7 @@ class PydanticResponse(JSONResponse, Generic[ResponseBodyT]):
 
     def render(self, content: ResponseBodyT) -> bytes:
         """Render the response body to JSON bytes."""
-        return content.json().encode(self.charset)
+        return content.model_dump_json().encode(self.charset)
 
 
 # TODO(mc, 2021-12-09): remove this model
@@ -240,7 +256,7 @@ class DeprecatedResponseDataModel(BaseModel):
 
 
 # TODO(mc, 2021-12-09): remove this model
-class DeprecatedResponseModel(GenericModel, Generic[ResponseDataT]):
+class DeprecatedResponseModel(BaseModel, Generic[ResponseDataT]):
     """A response that returns a single resource and stateful links.
 
     This deprecated response model may serialize `Optional` fields to `null`,
@@ -259,7 +275,7 @@ class DeprecatedResponseModel(GenericModel, Generic[ResponseDataT]):
 
 # TODO(mc, 2021-12-09): remove this model
 class DeprecatedMultiResponseModel(
-    GenericModel,
+    BaseModel,
     Generic[ResponseDataT],
 ):
     """A response that returns multiple resources and stateful links.

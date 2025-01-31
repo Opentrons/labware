@@ -1,0 +1,338 @@
+{
+  "ordering": [
+    ["A1", "B1", "C1", "D1"],
+    ["A2", "B2", "C2", "D2"],
+    ["A3", "B3", "C3", "D3"],
+    ["A4", "B4", "C4", "D4"],
+    ["A5", "B5", "C5", "D5"],
+    ["A6", "B6", "C6", "D6"]
+  ],
+  "brand": {
+    "brand": "Opentrons",
+    "brandId": [],
+    "links": []
+  },
+  "metadata": {
+    "displayName": "Opentrons 24 Tube Rack (Acrylic) with Eppendorf 2 mL Safe-Lock Snapcap",
+    "displayCategory": "tubeRack",
+    "displayVolumeUnits": "mL",
+    "tags": []
+  },
+  "dimensions": {
+    "xDimension": 127.76,
+    "yDimension": 85.48,
+    "zDimension": 52
+  },
+  "wells": {
+    "D1": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 15.28,
+      "y": 13.9,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "C1": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 15.28,
+      "y": 33.4,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B1": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 15.28,
+      "y": 52.9,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A1": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 15.28,
+      "y": 72.4,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "D2": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 34.78,
+      "y": 13.9,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "C2": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 34.78,
+      "y": 33.4,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B2": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 34.78,
+      "y": 52.9,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A2": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 34.78,
+      "y": 72.4,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "D3": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 54.28,
+      "y": 13.9,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "C3": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 54.28,
+      "y": 33.4,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B3": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 54.28,
+      "y": 52.9,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A3": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 54.28,
+      "y": 72.4,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "D4": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 73.78,
+      "y": 13.9,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "C4": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 73.78,
+      "y": 33.4,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B4": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 73.78,
+      "y": 52.9,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A4": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 73.78,
+      "y": 72.4,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "D5": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 93.28,
+      "y": 13.9,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "C5": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 93.28,
+      "y": 33.4,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B5": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 93.28,
+      "y": 52.9,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A5": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 93.28,
+      "y": 72.4,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "D6": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 112.78,
+      "y": 13.9,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "C6": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 112.78,
+      "y": 33.4,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B6": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 112.78,
+      "y": 52.9,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A6": {
+      "depth": 38.58,
+      "shape": "circular",
+      "diameter": 9.9,
+      "totalLiquidVolume": 2000,
+      "x": 112.78,
+      "y": 72.4,
+      "z": 13.42,
+      "geometryDefinitionId": "conicalWell"
+    }
+  },
+  "parameters": {
+    "format": "irregular",
+    "isTiprack": false,
+    "isMagneticModuleCompatible": false,
+    "loadName": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap_acrylic"
+  },
+  "groups": [
+    {
+      "wells": [
+        "A1",
+        "B1",
+        "C1",
+        "D1",
+        "A2",
+        "B2",
+        "C2",
+        "D2",
+        "A3",
+        "B3",
+        "C3",
+        "D3",
+        "A4",
+        "B4",
+        "C4",
+        "D4",
+        "A5",
+        "B5",
+        "C5",
+        "D5",
+        "A6",
+        "B6",
+        "C6",
+        "D6"
+      ],
+      "metadata": {
+        "displayName": "Eppendorf 24x2 mL Safelock Snapcap",
+        "displayCategory": "tubeRack",
+        "wellBottomShape": "u"
+      },
+      "brand": {
+        "brand": "Eppendorf",
+        "brandId": [
+          "022363344",
+          "022363352",
+          "022363379",
+          "022363395",
+          "022363417",
+          "022363433",
+          "022363450",
+          "022363476"
+        ],
+        "links": [
+          "https://online-shop.eppendorf.us/US-en/Laboratory-Consumables-44512/Tubes-44515/Eppendorf-Safe-Lock-Tubes-PF-8863.html"
+        ]
+      }
+    }
+  ],
+  "namespace": "opentrons",
+  "version": 2,
+  "schemaVersion": 3,
+  "cornerOffsetFromSlot": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "innerLabwareGeometry": {
+    "conicalWell": {
+      "sections": []
+    }
+  }
+}

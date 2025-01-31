@@ -13,7 +13,7 @@ import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { useLPCSuccessToast } from '../../../hooks/useLPCSuccessToast'
 import { getModuleTypesThatRequireExtraAttention } from '../../utils/getModuleTypesThatRequireExtraAttention'
-import { useLaunchLPC } from '/app/organisms/LabwarePositionCheck/useLaunchLPC'
+import { useLaunchLegacyLPC } from '/app/organisms/LegacyLabwarePositionCheck/useLaunchLegacyLPC'
 import { getIsLabwareOffsetCodeSnippetsOn } from '/app/redux/config'
 import { SetupLabwarePositionCheck } from '..'
 import {
@@ -27,7 +27,7 @@ import { useRobotType } from '/app/redux-resources/robots'
 
 import type { Mock } from 'vitest'
 
-vi.mock('/app/organisms/LabwarePositionCheck/useLaunchLPC')
+vi.mock('/app/organisms/LegacyLabwarePositionCheck/useLaunchLegacyLPC')
 vi.mock('../../utils/getModuleTypesThatRequireExtraAttention')
 vi.mock('/app/redux-resources/robots')
 vi.mock('/app/redux/config')
@@ -51,6 +51,7 @@ const render = () => {
         setOffsetsConfirmed={confirmOffsets}
         robotName={ROBOT_NAME}
         runId={RUN_ID}
+        isNewLpc={false}
       />
     </MemoryRouter>,
     {
@@ -90,12 +91,10 @@ describe('SetupLabwarePositionCheck', () => {
     when(vi.mocked(useRobotType))
       .calledWith(ROBOT_NAME)
       .thenReturn(FLEX_ROBOT_TYPE)
-    when(vi.mocked(useLaunchLPC))
-      .calledWith(RUN_ID, FLEX_ROBOT_TYPE, 'test protocol')
-      .thenReturn({
-        launchLPC: mockLaunchLPC,
-        LPCWizard: <div>mock LPC Wizard</div>,
-      })
+    vi.mocked(useLaunchLegacyLPC).mockReturnValue({
+      launchLegacyLPC: mockLaunchLPC,
+      LegacyLPCWizard: <div>mock LPC Wizard</div>,
+    })
     vi.mocked(useNotifyRunQuery).mockReturnValue({
       data: {
         data: { protocolId: 'fakeProtocolId' },

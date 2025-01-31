@@ -1,4 +1,5 @@
-import type * as React from 'react'
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { renderHook } from '@testing-library/react'
 import { vi, it, expect, describe, beforeEach, afterEach } from 'vitest'
@@ -10,15 +11,13 @@ import { useIsFlex } from '/app/redux-resources/robots'
 
 import { mockMagneticModuleGen2 } from '/app/redux/modules/__fixtures__'
 
+import type { FunctionComponent, ReactNode } from 'react'
 import type { ModuleModel, ModuleType } from '@opentrons/shared-data'
-
-import { Provider } from 'react-redux'
-import { createStore } from 'redux'
 
 vi.mock('/app/redux-resources/robots')
 vi.mock('../useModuleRenderInfoForProtocolById')
 
-let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+let wrapper: FunctionComponent<{ children: ReactNode }>
 
 const mockMagneticModuleDefinition = {
   moduleId: 'someMagneticModule',

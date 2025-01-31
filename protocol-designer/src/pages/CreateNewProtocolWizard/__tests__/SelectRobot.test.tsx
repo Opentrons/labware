@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { FLEX_ROBOT_TYPE } from '@opentrons/shared-data'
@@ -6,9 +5,11 @@ import { fireEvent, screen } from '@testing-library/react'
 import { i18n } from '../../../assets/localization'
 import { renderWithProviders } from '../../../__testing-utils__'
 import { SelectRobot } from '../SelectRobot'
+
+import type { ComponentProps } from 'react'
 import type { WizardFormState, WizardTileProps } from '../types'
 
-const render = (props: React.ComponentProps<typeof SelectRobot>) => {
+const render = (props: ComponentProps<typeof SelectRobot>) => {
   return renderWithProviders(<SelectRobot {...props} />, {
     i18nInstance: i18n,
   })[0]
@@ -32,7 +33,7 @@ const mockWizardTileProps: Partial<WizardTileProps> = {
 }
 
 describe('SelectRobot', () => {
-  let props: React.ComponentProps<typeof SelectRobot>
+  let props: ComponentProps<typeof SelectRobot>
 
   beforeEach(() => {
     props = {

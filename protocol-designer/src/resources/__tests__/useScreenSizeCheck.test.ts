@@ -18,9 +18,25 @@ describe('useScreenSizeCheck', () => {
     expect(result.current).toBe(false)
   })
 
-  it('should return false if the window width is less than 600px', () => {
-    vi.stubGlobal('innerWidth', 599)
+  it('should return true if the window width is 768px', () => {
+    vi.stubGlobal('innerWidth', 768)
     vi.stubGlobal('innerHeight', 900)
+    window.dispatchEvent(new Event('resize'))
+    const { result } = renderHook(() => useScreenSizeCheck())
+    expect(result.current).toBe(false)
+  })
+
+  it('should return false if the window width is less than 768px', () => {
+    vi.stubGlobal('innerWidth', 767)
+    vi.stubGlobal('innerHeight', 900)
+    window.dispatchEvent(new Event('resize'))
+    const { result } = renderHook(() => useScreenSizeCheck())
+    expect(result.current).toBe(false)
+  })
+
+  it('should return false if the window width is less than 768px and height is less than 650px', () => {
+    vi.stubGlobal('innerWidth', 767)
+    vi.stubGlobal('innerHeight', 649)
     window.dispatchEvent(new Event('resize'))
     const { result } = renderHook(() => useScreenSizeCheck())
     expect(result.current).toBe(false)

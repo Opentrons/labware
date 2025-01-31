@@ -1,6 +1,57 @@
 {
   "$otSharedSchema": "#/pipette/schemas/2/pipetteLiquidPropertiesSchema.json",
   "supportedTips": {
+    "t20": {
+      "uiMaxFlowRate": 57,
+      "defaultAspirateFlowRate": {
+        "default": 35,
+        "valuesByApiLevel": { "2.14": 35 }
+      },
+      "defaultDispenseFlowRate": {
+        "default": 57,
+        "valuesByApiLevel": { "2.14": 57 }
+      },
+      "defaultBlowOutFlowRate": {
+        "default": 57,
+        "valuesByApiLevel": { "2.14": 57 }
+      },
+      "defaultFlowAcceleration": 1200.0,
+      "defaultTipLength": 52.0,
+      "defaultReturnTipHeight": 0.71,
+      "aspirate": {
+        "default": {
+          "1": [
+            [1.933333, 2.844459, 4.750159],
+            [2.833333, 1.12901, 8.066694],
+            [3.603333, 0.254744, 10.543779],
+            [4.836667, 1.101839, 7.491414],
+            [5.755, 0.277649, 11.47775],
+            [6.643333, 0.14813, 12.223126],
+            [7.548333, 0.145635, 12.239705],
+            [8.475, 0.15097, 12.199433],
+            [13.02, 0.071736, 12.870946],
+            [22.318333, 0.042305, 13.254131]
+          ]
+        }
+      },
+      "dispense": {
+        "default": {
+          "1": [
+            [1.933333, 2.844459, 4.750159],
+            [2.833333, 1.12901, 8.066694],
+            [3.603333, 0.254744, 10.543779],
+            [4.836667, 1.101839, 7.491414],
+            [5.755, 0.277649, 11.47775],
+            [6.643333, 0.14813, 12.223126],
+            [7.548333, 0.145635, 12.239705],
+            [8.475, 0.15097, 12.199433],
+            [13.02, 0.071736, 12.870946],
+            [22.318333, 0.042305, 13.254131]
+          ]
+        }
+      },
+      "defaultPushOutVolume": 2
+    },
     "t50": {
       "uiMaxFlowRate": 785.2,
       "defaultAspirateFlowRate": {
@@ -197,8 +248,10 @@
     "opentrons/opentrons_flex_96_tiprack_1000ul/1",
     "opentrons/opentrons_flex_96_tiprack_200ul/1",
     "opentrons/opentrons_flex_96_tiprack_50ul/1",
+    "opentrons/opentrons_flex_96_tiprack_20ul/1",
     "opentrons/opentrons_flex_96_filtertiprack_1000ul/1",
     "opentrons/opentrons_flex_96_filtertiprack_200ul/1",
-    "opentrons/opentrons_flex_96_filtertiprack_50ul/1"
+    "opentrons/opentrons_flex_96_filtertiprack_50ul/1",
+    "opentrons/opentrons_flex_96_filtertiprack_20ul/1"
   ]
 }

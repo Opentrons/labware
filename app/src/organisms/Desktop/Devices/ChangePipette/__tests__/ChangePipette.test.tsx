@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, describe, expect, beforeEach } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 
@@ -21,6 +20,7 @@ import { ExitModal } from '../ExitModal'
 import { ConfirmPipette } from '../ConfirmPipette'
 import { ChangePipette } from '..'
 
+import type { ComponentProps } from 'react'
 import type { NavigateFunction } from 'react-router-dom'
 import type { PipetteNameSpecs } from '@opentrons/shared-data'
 import type { AttachedPipette } from '/app/redux/pipettes/types'
@@ -54,7 +54,7 @@ vi.mock('../ConfirmPipette')
 vi.mock('/app/resources/instruments')
 vi.mock('/app/assets/images')
 
-const render = (props: React.ComponentProps<typeof ChangePipette>) => {
+const render = (props: ComponentProps<typeof ChangePipette>) => {
   return renderWithProviders(<ChangePipette {...props} />, {
     i18nInstance: i18n,
   })[0]
@@ -78,7 +78,7 @@ const mockAttachedPipettes = {
 }
 
 describe('ChangePipette', () => {
-  let props: React.ComponentProps<typeof ChangePipette>
+  let props: ComponentProps<typeof ChangePipette>
   let dispatchApiRequest: DispatchApiRequestType
 
   beforeEach(() => {

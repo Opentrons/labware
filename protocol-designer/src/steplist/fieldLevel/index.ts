@@ -307,9 +307,6 @@ const stepFieldHelperMap: Record<StepFieldName, StepFieldHelpers> = {
     maskValue: composeMaskers(maskToFloat, trimDecimals(1)),
     castValue: Number,
   },
-  setTemperature: {
-    getErrors: composeErrors(requiredField),
-  },
   targetTemperature: {
     getErrors: composeErrors(
       minFieldValue(MIN_TEMP_MODULE_TEMP),

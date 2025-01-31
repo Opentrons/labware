@@ -1,0 +1,72 @@
+{
+  "ordering": [["A1"]],
+  "brand": {
+    "brand": "Axygen",
+    "brandId": ["RES-SW1-LP"],
+    "links": [
+      "https://ecatalog.corning.com/life-sciences/b2c/US/en/Genomics-%26-Molecular-Biology/Automation-Consumables/Automation-Reservoirs/Axygen%C2%AE-Reagent-Reservoirs/p/RES-SW1-LP?clear=true"
+    ]
+  },
+  "metadata": {
+    "displayName": "Axygen 1 Well Reservoir 90 mL",
+    "displayCategory": "reservoir",
+    "displayVolumeUnits": "mL",
+    "tags": []
+  },
+  "dimensions": {
+    "xDimension": 127.76,
+    "yDimension": 85.47,
+    "zDimension": 19.05
+  },
+  "wells": {
+    "A1": {
+      "depth": 12.42,
+      "shape": "rectangular",
+      "xDimension": 106.76,
+      "yDimension": 70.52,
+      "totalLiquidVolume": 90000,
+      "x": 63.88,
+      "y": 42.735,
+      "z": 6.63,
+      "geometryDefinitionId": "cuboidalWell"
+    }
+  },
+  "groups": [
+    {
+      "wells": ["A1"],
+      "metadata": {
+        "wellBottomShape": "flat"
+      }
+    }
+  ],
+  "parameters": {
+    "format": "trough",
+    "isTiprack": false,
+    "isMagneticModuleCompatible": false,
+    "loadName": "axygen_1_reservoir_90ml",
+    "quirks": ["centerMultichannelOnWells", "touchTipDisabled"]
+  },
+  "namespace": "opentrons",
+  "version": 2,
+  "schemaVersion": 3,
+  "cornerOffsetFromSlot": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "innerLabwareGeometry": {
+    "cuboidalWell": {
+      "sections": [
+        {
+          "shape": "cuboidal",
+          "topXDimension": 106.8,
+          "topYDimension": 70.5,
+          "bottomXDimension": 106.4,
+          "bottomYDimension": 70,
+          "topHeight": 12.42,
+          "bottomHeight": 0.0
+        }
+      ]
+    }
+  }
+}

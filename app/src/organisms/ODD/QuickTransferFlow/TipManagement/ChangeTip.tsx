@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { createPortal } from 'react-dom'
 
@@ -16,6 +16,7 @@ import { getTopPortalEl } from '/app/App/portal'
 import { useTrackEventWithRobotSerial } from '/app/redux-resources/analytics'
 import { ChildNavigation } from '/app/organisms/ODD/ChildNavigation'
 
+import type { Dispatch } from 'react'
 import type {
   ChangeTipOptions,
   QuickTransferSummaryState,
@@ -25,7 +26,7 @@ import type {
 interface ChangeTipProps {
   onBack: () => void
   state: QuickTransferSummaryState
-  dispatch: React.Dispatch<QuickTransferSummaryAction>
+  dispatch: Dispatch<QuickTransferSummaryAction>
 }
 
 export function ChangeTip(props: ChangeTipProps): JSX.Element {
@@ -53,7 +54,7 @@ export function ChangeTip(props: ChangeTipProps): JSX.Element {
   const [
     selectedChangeTipOption,
     setSelectedChangeTipOption,
-  ] = React.useState<ChangeTipOptions>(state.changeTip)
+  ] = useState<ChangeTipOptions>(state.changeTip)
 
   const handleClickSave = (): void => {
     if (selectedChangeTipOption !== state.changeTip) {

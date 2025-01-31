@@ -117,7 +117,7 @@ def test_map_after_command() -> None:
 
     assert result == [
         pe_actions.SucceedCommandAction(
-            command=pe_commands.Comment.construct(
+            command=pe_commands.Comment.model_construct(
                 id="command.COMMENT-0",
                 key="command.COMMENT-0",
                 status=pe_commands.CommandStatus.SUCCEEDED,
@@ -240,7 +240,7 @@ def test_command_stack() -> None:
             command_id="command.COMMENT-1", started_at=matchers.IsA(datetime)
         ),
         pe_actions.SucceedCommandAction(
-            command=pe_commands.Comment.construct(
+            command=pe_commands.Comment.model_construct(
                 id="command.COMMENT-0",
                 key="command.COMMENT-0",
                 status=pe_commands.CommandStatus.SUCCEEDED,
@@ -302,7 +302,7 @@ def test_map_labware_load(minimal_labware_def: LabwareDefinition) -> None:
         started_at=matchers.IsA(datetime),
     )
     expected_succeed = pe_actions.SucceedCommandAction(
-        command=pe_commands.LoadLabware.construct(
+        command=pe_commands.LoadLabware.model_construct(
             id=expected_id_and_key,
             key=expected_id_and_key,
             params=expected_params,
@@ -310,7 +310,7 @@ def test_map_labware_load(minimal_labware_def: LabwareDefinition) -> None:
             createdAt=matchers.IsA(datetime),
             startedAt=matchers.IsA(datetime),
             completedAt=matchers.IsA(datetime),
-            result=pe_commands.LoadLabwareResult.construct(
+            result=pe_commands.LoadLabwareResult.model_construct(
                 labwareId=matchers.IsA(str),
                 # Trusting that the exact fields within in the labware definition
                 # get passed through correctly.
@@ -352,7 +352,7 @@ def test_map_instrument_load(decoy: Decoy) -> None:
     ).then_return(pipette_config)
 
     expected_id_and_key = "commands.LOAD_PIPETTE-0"
-    expected_params = pe_commands.LoadPipetteParams.construct(
+    expected_params = pe_commands.LoadPipetteParams.model_construct(
         pipetteName=PipetteNameType.P1000_SINGLE_GEN2, mount=MountType.LEFT
     )
     expected_queue = pe_actions.QueueCommandAction(
@@ -367,7 +367,7 @@ def test_map_instrument_load(decoy: Decoy) -> None:
         command_id=expected_id_and_key, started_at=matchers.IsA(datetime)
     )
     expected_succeed = pe_actions.SucceedCommandAction(
-        command=pe_commands.LoadPipette.construct(
+        command=pe_commands.LoadPipette.model_construct(
             id=expected_id_and_key,
             key=expected_id_and_key,
             status=pe_commands.CommandStatus.SUCCEEDED,
@@ -410,7 +410,7 @@ def test_map_module_load(
     module_data_provider: ModuleDataProvider,
 ) -> None:
     """It should correctly map a module load."""
-    test_definition = ModuleDefinition.parse_obj(minimal_module_def)
+    test_definition = ModuleDefinition.model_validate(minimal_module_def)
     input = LegacyModuleLoadInfo(
         requested_model=TemperatureModuleModel.TEMPERATURE_V1,
         loaded_model=TemperatureModuleModel.TEMPERATURE_V2,
@@ -423,7 +423,7 @@ def test_map_module_load(
     ).then_return(test_definition)
 
     expected_id_and_key = "commands.LOAD_MODULE-0"
-    expected_params = pe_commands.LoadModuleParams.construct(
+    expected_params = pe_commands.LoadModuleParams.model_construct(
         model=ModuleModel.TEMPERATURE_MODULE_V1,
         location=DeckSlotLocation(slotName=DeckSlotName.SLOT_1),
         moduleId=matchers.IsA(str),
@@ -440,7 +440,7 @@ def test_map_module_load(
         command_id=expected_id_and_key, started_at=matchers.IsA(datetime)
     )
     expected_succeed = pe_actions.SucceedCommandAction(
-        command=pe_commands.LoadModule.construct(
+        command=pe_commands.LoadModule.model_construct(
             id=expected_id_and_key,
             key=expected_id_and_key,
             status=pe_commands.CommandStatus.SUCCEEDED,
@@ -448,7 +448,7 @@ def test_map_module_load(
             startedAt=matchers.IsA(datetime),
             completedAt=matchers.IsA(datetime),
             params=expected_params,
-            result=pe_commands.LoadModuleResult.construct(
+            result=pe_commands.LoadModuleResult.model_construct(
                 moduleId=matchers.IsA(str),
                 serialNumber="module-serial",
                 definition=test_definition,
@@ -481,7 +481,7 @@ def test_map_module_labware_load(minimal_labware_def: LabwareDefinition) -> None
     )
 
     expected_id_and_key = "commands.LOAD_LABWARE-0"
-    expected_params = pe_commands.LoadLabwareParams.construct(
+    expected_params = pe_commands.LoadLabwareParams.model_construct(
         location=ModuleLocation(moduleId="module-123"),
         namespace="some_namespace",
         loadName="some_load_name",
@@ -503,7 +503,7 @@ def test_map_module_labware_load(minimal_labware_def: LabwareDefinition) -> None
         started_at=matchers.IsA(datetime),
     )
     expected_succeed = pe_actions.SucceedCommandAction(
-        command=pe_commands.LoadLabware.construct(
+        command=pe_commands.LoadLabware.model_construct(
             id=expected_id_and_key,
             key=expected_id_and_key,
             params=expected_params,
@@ -511,7 +511,7 @@ def test_map_module_labware_load(minimal_labware_def: LabwareDefinition) -> None
             createdAt=matchers.IsA(datetime),
             startedAt=matchers.IsA(datetime),
             completedAt=matchers.IsA(datetime),
-            result=pe_commands.LoadLabwareResult.construct(
+            result=pe_commands.LoadLabwareResult.model_construct(
                 labwareId=matchers.IsA(str),
                 # Trusting that the exact fields within in the labware definition
                 # get passed through correctly.
@@ -578,7 +578,7 @@ def test_map_pause() -> None:
             started_at=matchers.IsA(datetime),
         ),
         pe_actions.SucceedCommandAction(
-            command=pe_commands.WaitForResume.construct(
+            command=pe_commands.WaitForResume.model_construct(
                 id="command.PAUSE-0",
                 key="command.PAUSE-0",
                 status=pe_commands.CommandStatus.SUCCEEDED,

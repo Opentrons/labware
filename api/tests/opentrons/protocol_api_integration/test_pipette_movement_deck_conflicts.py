@@ -2,54 +2,59 @@
 
 import pytest
 
-from opentrons import simulate
-from opentrons.protocol_api import COLUMN, ALL, SINGLE, ROW
+from opentrons.protocol_api import COLUMN, ALL, SINGLE, ROW, ProtocolContext
 from opentrons.protocol_api.core.engine.pipette_movement_conflict import (
     PartialTipMovementNotAllowedError,
 )
 
 
 @pytest.mark.ot3_only
-def test_deck_conflicts_for_96_ch_a12_column_configuration() -> None:
+@pytest.mark.parametrize(
+    "simulated_protocol_context", [("2.16", "Flex")], indirect=True
+)
+def test_deck_conflicts_for_96_ch_a12_column_configuration(
+    simulated_protocol_context: ProtocolContext,
+) -> None:
     """It should raise errors for the expected deck conflicts."""
-    protocol_context = simulate.get_protocol_api(version="2.16", robot_type="Flex")
-    trash_labware = protocol_context.load_labware(
+    trash_labware = simulated_protocol_context.load_labware(
         "opentrons_1_trash_3200ml_fixed", "A3"
     )
-    badly_placed_tiprack = protocol_context.load_labware(
+    badly_placed_tiprack = simulated_protocol_context.load_labware(
         "opentrons_flex_96_tiprack_50ul", "C2"
     )
-    well_placed_tiprack = protocol_context.load_labware(
+    well_placed_tiprack = simulated_protocol_context.load_labware(
         "opentrons_flex_96_tiprack_50ul", "C1"
     )
-    tiprack_on_adapter = protocol_context.load_labware(
+    tiprack_on_adapter = simulated_protocol_context.load_labware(
         "opentrons_flex_96_tiprack_50ul",
         "C3",
         adapter="opentrons_flex_96_tiprack_adapter",
     )
 
-    thermocycler = protocol_context.load_module("thermocyclerModuleV2")
-    tc_adjacent_plate = protocol_context.load_labware(
+    thermocycler = simulated_protocol_context.load_module("thermocyclerModuleV2")
+    tc_adjacent_plate = simulated_protocol_context.load_labware(
         "opentrons_96_wellplate_200ul_pcr_full_skirt", "A2"
     )
     accessible_plate = thermocycler.load_labware(
         "opentrons_96_wellplate_200ul_pcr_full_skirt"
     )
 
-    instrument = protocol_context.load_instrument("flex_96channel_1000", mount="left")
+    instrument = simulated_protocol_context.load_instrument(
+        "flex_96channel_1000", mount="left"
+    )
     instrument.trash_container = trash_labware
 
     # ############  SHORT LABWARE  ################
     # These labware should be to the west of tall labware to avoid any partial tip deck conflicts
-    badly_placed_labware = protocol_context.load_labware(
+    badly_placed_labware = simulated_protocol_context.load_labware(
         "nest_96_wellplate_200ul_flat", "D2"
     )
-    well_placed_labware = protocol_context.load_labware(
+    well_placed_labware = simulated_protocol_context.load_labware(
         "nest_96_wellplate_200ul_flat", "D3"
     )
 
     # ############ TALL LABWARE ##############
-    protocol_context.load_labware(
+    simulated_protocol_context.load_labware(
         "opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical", "D1"
     )
 
@@ -104,24 +109,30 @@ def test_deck_conflicts_for_96_ch_a12_column_configuration() -> None:
 
 
 @pytest.mark.ot3_only
-def test_close_shave_deck_conflicts_for_96_ch_a12_column_configuration() -> None:
+@pytest.mark.parametrize(
+    "simulated_protocol_context", [("2.20", "Flex")], indirect=True
+)
+def test_close_shave_deck_conflicts_for_96_ch_a12_column_configuration(
+    simulated_protocol_context: ProtocolContext,
+) -> None:
     """Shouldn't raise errors for "almost collision"s."""
-    protocol_context = simulate.get_protocol_api(version="2.20", robot_type="Flex")
-    res12 = protocol_context.load_labware("nest_12_reservoir_15ml", "C3")
+    res12 = simulated_protocol_context.load_labware("nest_12_reservoir_15ml", "C3")
 
     # Mag block and tiprack adapter are very close to the destination reservoir labware
-    protocol_context.load_module("magneticBlockV1", "D2")
-    protocol_context.load_labware(
+    simulated_protocol_context.load_module("magneticBlockV1", "D2")
+    simulated_protocol_context.load_labware(
         "opentrons_flex_96_tiprack_200ul",
         "B3",
         adapter="opentrons_flex_96_tiprack_adapter",
     )
-    tiprack_8 = protocol_context.load_labware("opentrons_flex_96_tiprack_200ul", "B2")
-    hs = protocol_context.load_module("heaterShakerModuleV1", "C1")
+    tiprack_8 = simulated_protocol_context.load_labware(
+        "opentrons_flex_96_tiprack_200ul", "B2"
+    )
+    hs = simulated_protocol_context.load_module("heaterShakerModuleV1", "C1")
     hs_adapter = hs.load_adapter("opentrons_96_deep_well_adapter")
     deepwell = hs_adapter.load_labware("nest_96_wellplate_2ml_deep")
-    protocol_context.load_trash_bin("A3")
-    p1000_96 = protocol_context.load_instrument("flex_96channel_1000")
+    simulated_protocol_context.load_trash_bin("A3")
+    p1000_96 = simulated_protocol_context.load_instrument("flex_96channel_1000")
     p1000_96.configure_nozzle_layout(style=SINGLE, start="A12", tip_racks=[tiprack_8])
 
     hs.close_labware_latch()  # type: ignore[union-attr]
@@ -135,16 +146,28 @@ def test_close_shave_deck_conflicts_for_96_ch_a12_column_configuration() -> None
 
 
 @pytest.mark.ot3_only
-def test_deck_conflicts_for_96_ch_a1_column_configuration() -> None:
+@pytest.mark.parametrize(
+    "simulated_protocol_context", [("2.16", "Flex")], indirect=True
+)
+def test_deck_conflicts_for_96_ch_a1_column_configuration(
+    simulated_protocol_context: ProtocolContext,
+) -> None:
     """It should raise errors for expected deck conflicts."""
-    protocol = simulate.get_protocol_api(version="2.16", robot_type="Flex")
-    instrument = protocol.load_instrument("flex_96channel_1000", mount="left")
-    trash_labware = protocol.load_labware("opentrons_1_trash_3200ml_fixed", "A3")
+    instrument = simulated_protocol_context.load_instrument(
+        "flex_96channel_1000", mount="left"
+    )
+    trash_labware = simulated_protocol_context.load_labware(
+        "opentrons_1_trash_3200ml_fixed", "A3"
+    )
     instrument.trash_container = trash_labware
 
-    badly_placed_tiprack = protocol.load_labware("opentrons_flex_96_tiprack_50ul", "C2")
-    well_placed_tiprack = protocol.load_labware("opentrons_flex_96_tiprack_50ul", "A1")
-    tiprack_on_adapter = protocol.load_labware(
+    badly_placed_tiprack = simulated_protocol_context.load_labware(
+        "opentrons_flex_96_tiprack_50ul", "C2"
+    )
+    well_placed_tiprack = simulated_protocol_context.load_labware(
+        "opentrons_flex_96_tiprack_50ul", "A1"
+    )
+    tiprack_on_adapter = simulated_protocol_context.load_labware(
         "opentrons_flex_96_tiprack_50ul",
         "C3",
         adapter="opentrons_flex_96_tiprack_adapter",
@@ -152,11 +175,15 @@ def test_deck_conflicts_for_96_ch_a1_column_configuration() -> None:
 
     # ############  SHORT LABWARE  ################
     # These labware should be to the east of tall labware to avoid any partial tip deck conflicts
-    badly_placed_plate = protocol.load_labware("nest_96_wellplate_200ul_flat", "B1")
-    well_placed_plate = protocol.load_labware("nest_96_wellplate_200ul_flat", "B3")
+    badly_placed_plate = simulated_protocol_context.load_labware(
+        "nest_96_wellplate_200ul_flat", "B1"
+    )
+    well_placed_plate = simulated_protocol_context.load_labware(
+        "nest_96_wellplate_200ul_flat", "B3"
+    )
 
     # ############ TALL LABWARE ###############
-    my_tuberack = protocol.load_labware(
+    my_tuberack = simulated_protocol_context.load_labware(
         "opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical", "B2"
     )
 
@@ -208,7 +235,7 @@ def test_deck_conflicts_for_96_ch_a1_column_configuration() -> None:
         instrument.drop_tip()
 
     instrument.trash_container = None  # type: ignore
-    protocol.load_trash_bin("C1")
+    simulated_protocol_context.load_trash_bin("C1")
 
     # This doesn't raise an error because it now treats the trash bin as an addressable area
     # and the bounds check doesn't yet check moves to addressable areas.
@@ -229,28 +256,38 @@ def test_deck_conflicts_for_96_ch_a1_column_configuration() -> None:
 
 
 @pytest.mark.ot3_only
-def test_deck_conflicts_for_96_ch_and_reservoirs() -> None:
+@pytest.mark.parametrize(
+    "simulated_protocol_context", [("2.20", "Flex")], indirect=True
+)
+def test_deck_conflicts_for_96_ch_and_reservoirs(
+    simulated_protocol_context: ProtocolContext,
+) -> None:
     """It should raise errors for expected deck conflicts when moving to reservoirs.
 
     This test checks that the critical point of the pipette is taken into account,
     specifically when it differs from the primary nozzle.
     """
-    protocol = simulate.get_protocol_api(version="2.20", robot_type="Flex")
-    instrument = protocol.load_instrument("flex_96channel_1000", mount="left")
+    instrument = simulated_protocol_context.load_instrument(
+        "flex_96channel_1000", mount="left"
+    )
     # trash_labware = protocol.load_labware("opentrons_1_trash_3200ml_fixed", "A3")
     # instrument.trash_container = trash_labware
 
-    protocol.load_trash_bin("A3")
-    right_tiprack = protocol.load_labware("opentrons_flex_96_tiprack_50ul", "C3")
-    front_tiprack = protocol.load_labware("opentrons_flex_96_tiprack_50ul", "D2")
+    simulated_protocol_context.load_trash_bin("A3")
+    right_tiprack = simulated_protocol_context.load_labware(
+        "opentrons_flex_96_tiprack_50ul", "C3"
+    )
+    front_tiprack = simulated_protocol_context.load_labware(
+        "opentrons_flex_96_tiprack_50ul", "D2"
+    )
     # Tall deck item in B3
-    protocol.load_labware(
+    simulated_protocol_context.load_labware(
         "opentrons_flex_96_tiprack_50ul",
         "B3",
         adapter="opentrons_flex_96_tiprack_adapter",
     )
     # Tall deck item in B1
-    protocol.load_labware(
+    simulated_protocol_context.load_labware(
         "opentrons_flex_96_tiprack_50ul",
         "B1",
         adapter="opentrons_flex_96_tiprack_adapter",
@@ -258,8 +295,12 @@ def test_deck_conflicts_for_96_ch_and_reservoirs() -> None:
 
     # ############  RESERVOIRS  ################
     # These labware should be to the east of tall labware to avoid any partial tip deck conflicts
-    reservoir_1_well = protocol.load_labware("nest_1_reservoir_195ml", "C2")
-    reservoir_12_well = protocol.load_labware("nest_12_reservoir_15ml", "B2")
+    reservoir_1_well = simulated_protocol_context.load_labware(
+        "nest_1_reservoir_195ml", "C2"
+    )
+    reservoir_12_well = simulated_protocol_context.load_labware(
+        "nest_12_reservoir_15ml", "B2"
+    )
 
     # ########### Use COLUMN A1 Config #############
     instrument.configure_nozzle_layout(style=COLUMN, start="A1")

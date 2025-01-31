@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, expect, beforeEach } from 'vitest'
 import { screen } from '@testing-library/react'
 
@@ -14,18 +13,19 @@ import { RecoveryTakeover, RecoveryTakeoverDesktop } from '../RecoveryTakeover'
 import { useUpdateClientDataRecovery } from '/app/resources/client_data'
 import { clickButtonLabeled } from './util'
 
+import type { ComponentProps } from 'react'
 import type { Mock } from 'vitest'
 
 vi.mock('/app/resources/client_data')
 
-const render = (props: React.ComponentProps<typeof RecoveryTakeover>) => {
+const render = (props: ComponentProps<typeof RecoveryTakeover>) => {
   return renderWithProviders(<RecoveryTakeover {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('RecoveryTakeover', () => {
-  let props: React.ComponentProps<typeof RecoveryTakeover>
+  let props: ComponentProps<typeof RecoveryTakeover>
   let mockClearClientData: Mock
 
   beforeEach(() => {
@@ -91,7 +91,7 @@ describe('RecoveryTakeover', () => {
 })
 
 describe('RecoveryTakeoverDesktop', () => {
-  let props: React.ComponentProps<typeof RecoveryTakeoverDesktop>
+  let props: ComponentProps<typeof RecoveryTakeoverDesktop>
 
   beforeEach(() => {
     props = {

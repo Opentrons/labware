@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { createStore } from 'redux'
 import { I18nextProvider } from 'react-i18next'
 import { Provider } from 'react-redux'
@@ -30,6 +29,7 @@ import {
 } from '../__fixtures__/taskListFixtures'
 import { i18n } from '/app/i18n'
 
+import type { FunctionComponent, ReactNode } from 'react'
 import type { Store } from 'redux'
 import type { State } from '/app/redux/types'
 
@@ -41,7 +41,7 @@ const mockTipLengthCalLauncher = vi.fn()
 const mockDeckCalLauncher = vi.fn()
 
 describe('useCalibrationTaskList hook', () => {
-  let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+  let wrapper: FunctionComponent<{ children: ReactNode }>
   let store: Store<State>
   const mockDeleteCalibration = vi.fn()
 

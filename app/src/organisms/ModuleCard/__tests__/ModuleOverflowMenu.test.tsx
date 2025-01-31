@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -16,13 +15,14 @@ import { useIsFlex } from '/app/redux-resources/robots'
 import { useCurrentRunId, useRunStatuses } from '/app/resources/runs'
 import { ModuleOverflowMenu } from '../ModuleOverflowMenu'
 
+import type { ComponentProps } from 'react'
 import type { TemperatureStatus } from '@opentrons/api-client'
 
 vi.mock('/app/resources/legacy_sessions')
 vi.mock('/app/redux-resources/robots')
 vi.mock('/app/resources/runs')
 
-const render = (props: React.ComponentProps<typeof ModuleOverflowMenu>) => {
+const render = (props: ComponentProps<typeof ModuleOverflowMenu>) => {
   return renderWithProviders(<ModuleOverflowMenu {...props} />, {
     i18nInstance: i18n,
   })[0]
@@ -161,7 +161,7 @@ const mockThermocyclerGen2LidClosed = {
 } as any
 
 describe('ModuleOverflowMenu', () => {
-  let props: React.ComponentProps<typeof ModuleOverflowMenu>
+  let props: ComponentProps<typeof ModuleOverflowMenu>
   beforeEach(() => {
     vi.mocked(useIsLegacySessionInProgress).mockReturnValue(false)
     vi.mocked(useRunStatuses).mockReturnValue({

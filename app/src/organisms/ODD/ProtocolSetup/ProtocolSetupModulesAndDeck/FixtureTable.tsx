@@ -1,4 +1,5 @@
-import * as React from 'react'
+import { useState, Fragment } from 'react'
+import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import {
   ALIGN_CENTER,
@@ -29,7 +30,9 @@ import { SmallButton } from '/app/atoms/buttons'
 import { useDeckConfigurationCompatibility } from '/app/resources/deck_configuration/hooks'
 import { getRequiredDeckConfig } from '/app/resources/deck_configuration/utils'
 import { LocationConflictModal } from '/app/organisms/LocationConflictModal'
+import { getLocalRobot } from '/app/redux/discovery'
 
+import type { Dispatch, SetStateAction } from 'react'
 import type {
   CompletedProtocolAnalysis,
   CutoutFixtureId,
@@ -39,13 +42,11 @@ import type {
 } from '@opentrons/shared-data'
 import type { SetupScreens } from '../types'
 import type { CutoutConfigAndCompatibility } from '/app/resources/deck_configuration/hooks'
-import { useSelector } from 'react-redux'
-import { getLocalRobot } from '/app/redux/discovery'
 
 interface FixtureTableProps {
   robotType: RobotType
   mostRecentAnalysis: CompletedProtocolAnalysis | null
-  setSetupScreen: React.Dispatch<React.SetStateAction<SetupScreens>>
+  setSetupScreen: Dispatch<SetStateAction<SetupScreens>>
   setCutoutId: (cutoutId: CutoutId) => void
   setProvidedFixtureOptions: (providedFixtureOptions: CutoutFixtureId[]) => void
 }
@@ -134,7 +135,7 @@ export function FixtureTable({
 
 interface FixtureTableItemProps extends CutoutConfigAndCompatibility {
   lastItem: boolean
-  setSetupScreen: React.Dispatch<React.SetStateAction<SetupScreens>>
+  setSetupScreen: Dispatch<SetStateAction<SetupScreens>>
   setCutoutId: (cutoutId: CutoutId) => void
   setProvidedFixtureOptions: (providedFixtureOptions: CutoutFixtureId[]) => void
   deckDef: DeckDefinition
@@ -158,7 +159,7 @@ function FixtureTableItem({
   const [
     showLocationConflictModal,
     setShowLocationConflictModal,
-  ] = React.useState<boolean>(false)
+  ] = useState<boolean>(false)
 
   const isCurrentFixtureCompatible =
     cutoutFixtureId != null &&
@@ -215,7 +216,7 @@ function FixtureTableItem({
     )
   }
   return (
-    <React.Fragment key={cutoutId}>
+    <Fragment key={cutoutId}>
       {showLocationConflictModal ? (
         <LocationConflictModal
           onCloseClick={() => {
@@ -265,6 +266,6 @@ function FixtureTableItem({
           {chipLabel}
         </Flex>
       </Flex>
-    </React.Fragment>
+    </Fragment>
   )
 }

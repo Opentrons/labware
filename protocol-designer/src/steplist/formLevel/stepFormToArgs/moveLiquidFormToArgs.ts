@@ -166,7 +166,13 @@ export const moveLiquidFormToArgs = (
     'dispense_delay_mmFromBottom'
   )
   const blowoutLocation =
-    (fields.blowout_checkbox && fields.blowout_location) || null
+    (fields.blowout_checkbox && fields.blowout_location) ||
+    (fields.disposalVolume_checkbox &&
+      path === 'multiDispense' &&
+      fields.disposalVolume_volume &&
+      fields.blowout_location) ||
+    null
+
   const blowoutOffsetFromTopMm =
     blowoutLocation != null
       ? blowout_z_offset ?? DEFAULT_MM_BLOWOUT_OFFSET_FROM_TOP

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, describe, expect, beforeEach, afterEach } from 'vitest'
 import { screen } from '@testing-library/react'
 import { when } from 'vitest-when'
@@ -12,6 +11,7 @@ import {
 import { i18n } from '/app/i18n'
 import { Deck } from '../Deck'
 
+import type { ComponentProps } from 'react'
 import type { UseQueryResult } from 'react-query'
 import type { CompletedProtocolAnalysis } from '@opentrons/shared-data'
 import type { Protocol } from '@opentrons/api-client'
@@ -141,14 +141,14 @@ const MOCK_PROTOCOL_ANALYSIS = {
   ],
 }
 
-const render = (props: React.ComponentProps<typeof Deck>) => {
+const render = (props: ComponentProps<typeof Deck>) => {
   return renderWithProviders(<Deck {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('Deck', () => {
-  let props: React.ComponentProps<typeof Deck>
+  let props: ComponentProps<typeof Deck>
   beforeEach(() => {
     props = {
       protocolId: MOCK_PROTOCOL_ID,

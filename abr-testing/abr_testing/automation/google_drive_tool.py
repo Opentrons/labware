@@ -56,6 +56,8 @@ class google_drive:
                     else ""  # type: ignore
                     if self.parent_folder
                     else None,
+                    supportsAllDrives=True,
+                    includeItemsFromAllDrives=True,
                     pageSize=1000,
                     fields="nextPageToken, files(id, name, mimeType)",
                     pageToken=page_token,

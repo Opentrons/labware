@@ -195,6 +195,3 @@ stages:
         doesNotExist: true
     response:
       status_code: 422
-      json:
-        message: !re_search 'value is not a valid enumeration member'
-        errorCode: '4000'

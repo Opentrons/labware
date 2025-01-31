@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -37,6 +37,7 @@ import { ModuleTable } from './ModuleTable'
 import { ModulesAndDeckMapView } from './ModulesAndDeckMapView'
 import { useNotifyDeckConfigurationQuery } from '/app/resources/deck_configuration'
 
+import type { Dispatch, SetStateAction } from 'react'
 import type { CutoutId, CutoutFixtureId } from '@opentrons/shared-data'
 import type { SetupScreens } from '../types'
 
@@ -45,7 +46,7 @@ const DECK_CONFIG_POLL_MS = 5000
 
 interface ProtocolSetupModulesAndDeckProps {
   runId: string
-  setSetupScreen: React.Dispatch<React.SetStateAction<SetupScreens>>
+  setSetupScreen: Dispatch<SetStateAction<SetupScreens>>
   setCutoutId: (cutoutId: CutoutId) => void
   setProvidedFixtureOptions: (providedFixtureOptions: CutoutFixtureId[]) => void
 }
@@ -62,7 +63,7 @@ export function ProtocolSetupModulesAndDeck({
   const { i18n, t } = useTranslation('protocol_setup')
   const navigate = useNavigate()
   const runStatus = useRunStatus(runId)
-  React.useEffect(() => {
+  useEffect(() => {
     if (runStatus === RUN_STATUS_STOPPED) {
       navigate('/protocols')
     }
@@ -70,12 +71,12 @@ export function ProtocolSetupModulesAndDeck({
   const [
     showSetupInstructionsModal,
     setShowSetupInstructionsModal,
-  ] = React.useState<boolean>(false)
-  const [showMapView, setShowMapView] = React.useState<boolean>(false)
+  ] = useState<boolean>(false)
+  const [showMapView, setShowMapView] = useState<boolean>(false)
   const [
     clearModuleMismatchBanner,
     setClearModuleMismatchBanner,
-  ] = React.useState<boolean>(false)
+  ] = useState<boolean>(false)
   const mostRecentAnalysis = useMostRecentCompletedAnalysis(runId)
 
   const deckDef = getDeckDefFromRobotType(FLEX_ROBOT_TYPE)

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { screen, fireEvent } from '@testing-library/react'
 import { describe, it, beforeEach, vi, afterEach, expect } from 'vitest'
@@ -15,6 +14,7 @@ import { useRunHasStarted } from '/app/resources/runs'
 import { useDashboardCalibrateTipLength } from '/app/pages/Desktop/Devices/CalibrationDashboard/hooks/useDashboardCalibrateTipLength'
 import { SetupTipLengthCalibrationButton } from '../SetupTipLengthCalibrationButton'
 
+import type { ComponentProps } from 'react'
 import type { LabwareDefinition2 } from '@opentrons/shared-data'
 
 vi.mock('@opentrons/components/src/hooks')
@@ -39,9 +39,7 @@ describe('SetupTipLengthCalibrationButton', () => {
     hasCalibrated = false,
     tipRackDefinition = fixtureTiprack300ul as LabwareDefinition2,
     isExtendedPipOffset = false,
-  }: Partial<
-    React.ComponentProps<typeof SetupTipLengthCalibrationButton>
-  > = {}) => {
+  }: Partial<ComponentProps<typeof SetupTipLengthCalibrationButton>> = {}) => {
     return renderWithProviders(
       <SetupTipLengthCalibrationButton
         {...{

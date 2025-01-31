@@ -1,8 +1,7 @@
-import type * as React from 'react'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import { QueryClient, QueryClientProvider } from 'react-query'
-import { vi, it, expect, describe, beforeEach, afterEach } from 'vitest'
+import { vi, it, expect, describe, beforeEach } from 'vitest'
 import { when } from 'vitest-when'
 import { waitFor, renderHook } from '@testing-library/react'
 
@@ -12,9 +11,11 @@ import {
   useTrackEvent,
   ANALYTICS_PROTOCOL_RUN_ACTION,
 } from '/app/redux/analytics'
+import { getAppLanguage } from '/app/redux/config'
 import { mockConnectableRobot } from '/app/redux/discovery/__fixtures__'
 import { useRobot } from '/app/redux-resources/robots'
 
+import type { FunctionComponent, ReactNode } from 'react'
 import type { Store } from 'redux'
 import type { Mock } from 'vitest'
 
@@ -23,6 +24,7 @@ vi.mock('../useProtocolRunAnalyticsData')
 vi.mock('/app/redux/discovery')
 vi.mock('/app/redux/pipettes')
 vi.mock('/app/redux/analytics')
+vi.mock('/app/redux/config')
 vi.mock('/app/redux/robot-settings')
 
 const RUN_ID = 'runId'
@@ -31,7 +33,7 @@ const PROTOCOL_PROPERTIES = { protocolType: 'python' }
 
 let mockTrackEvent: Mock
 let mockGetProtocolRunAnalyticsData: Mock
-let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+let wrapper: FunctionComponent<{ children: ReactNode }>
 let store: Store<any> = createStore(vi.fn(), {})
 
 describe('useTrackProtocolRunEvent hook', () => {
@@ -55,16 +57,13 @@ describe('useTrackProtocolRunEvent hook', () => {
     )
     vi.mocked(useRobot).mockReturnValue(mockConnectableRobot)
     vi.mocked(useTrackEvent).mockReturnValue(mockTrackEvent)
+    vi.mocked(getAppLanguage).mockReturnValue('en-US')
 
     when(vi.mocked(useProtocolRunAnalyticsData))
       .calledWith(RUN_ID, mockConnectableRobot)
       .thenReturn({
         getProtocolRunAnalyticsData: mockGetProtocolRunAnalyticsData,
       })
-  })
-
-  afterEach(() => {
-    vi.resetAllMocks()
   })
 
   it('returns trackProtocolRunEvent function', () => {
@@ -92,7 +91,11 @@ describe('useTrackProtocolRunEvent hook', () => {
     )
     expect(mockTrackEvent).toHaveBeenCalledWith({
       name: ANALYTICS_PROTOCOL_RUN_ACTION.START,
-      properties: PROTOCOL_PROPERTIES,
+      properties: {
+        ...PROTOCOL_PROPERTIES,
+        transactionId: RUN_ID,
+        appLanguage: 'en-US',
+      },
     })
   })
 

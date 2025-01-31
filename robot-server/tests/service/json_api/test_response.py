@@ -126,4 +126,4 @@ RESPONSE_SPECS = [
 
 @pytest.mark.parametrize(ResponseSpec._fields, RESPONSE_SPECS)
 def test_response_to_dict(subject: BaseModel, expected: Dict[str, Any]) -> None:
-    assert subject.dict() == expected
+    assert subject.model_dump() == expected

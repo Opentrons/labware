@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useSelector } from 'react-redux'
 import { Trans, useTranslation } from 'react-i18next'
@@ -37,6 +37,7 @@ import {
   useNotifyCurrentMaintenanceRun,
 } from '/app/resources/maintenance_runs'
 
+import type { SetStateAction } from 'react'
 import type { AttachedModule, CommandData } from '@opentrons/api-client'
 import { RUN_STATUS_FAILED } from '@opentrons/api-client'
 import type {
@@ -107,7 +108,7 @@ export const ModuleWizardFlows = (
         )
     ) ?? []
 
-  const [currentStepIndex, setCurrentStepIndex] = React.useState<number>(0)
+  const [currentStepIndex, setCurrentStepIndex] = useState<number>(0)
   const totalStepCount = moduleCalibrationSteps.length - 1
   const currentStep = moduleCalibrationSteps?.[currentStepIndex]
 
@@ -116,18 +117,16 @@ export const ModuleWizardFlows = (
       currentStepIndex === 0 ? currentStepIndex : currentStepIndex - 1
     )
   }
-  const [createdMaintenanceRunId, setCreatedMaintenanceRunId] = React.useState<
+  const [createdMaintenanceRunId, setCreatedMaintenanceRunId] = useState<
     string | null
   >(null)
-  const [createdAdapterId, setCreatedAdapterId] = React.useState<string | null>(
-    null
-  )
+  const [createdAdapterId, setCreatedAdapterId] = useState<string | null>(null)
   // we should start checking for run deletion only after the maintenance run is created
   // and the useCurrentRun poll has returned that created id
   const [
     monitorMaintenanceRunForDeletion,
     setMonitorMaintenanceRunForDeletion,
-  ] = React.useState<boolean>(false)
+  ] = useState<boolean>(false)
 
   const { data: maintenanceRunData } = useNotifyCurrentMaintenanceRun({
     refetchInterval: RUN_REFETCH_INTERVAL,
@@ -142,16 +141,14 @@ export const ModuleWizardFlows = (
     createTargetedMaintenanceRun,
     isLoading: isCreateLoading,
   } = useCreateTargetedMaintenanceRunMutation({
-    onSuccess: (response: {
-      data: { id: React.SetStateAction<string | null> }
-    }) => {
+    onSuccess: (response: { data: { id: SetStateAction<string | null> } }) => {
       setCreatedMaintenanceRunId(response.data.id)
     },
   })
 
   // this will close the modal in case the run was deleted by the terminate
   // activity modal on the ODD
-  React.useEffect(() => {
+  useEffect(() => {
     if (
       createdMaintenanceRunId !== null &&
       maintenanceRunData?.data.id === createdMaintenanceRunId
@@ -171,8 +168,8 @@ export const ModuleWizardFlows = (
     closeFlow,
   ])
 
-  const [errorMessage, setErrorMessage] = React.useState<null | string>(null)
-  const [isExiting, setIsExiting] = React.useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<null | string>(null)
+  const [isExiting, setIsExiting] = useState<boolean>(false)
   const proceed = (): void => {
     if (!isCommandMutationLoading) {
       setCurrentStepIndex(
@@ -216,9 +213,9 @@ export const ModuleWizardFlows = (
     }
   }
 
-  const [isRobotMoving, setIsRobotMoving] = React.useState<boolean>(false)
+  const [isRobotMoving, setIsRobotMoving] = useState<boolean>(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isCommandMutationLoading || isExiting) {
       setIsRobotMoving(true)
     } else {

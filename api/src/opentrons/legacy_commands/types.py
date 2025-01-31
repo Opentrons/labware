@@ -43,6 +43,10 @@ TOUCH_TIP: Final = "command.TOUCH_TIP"
 RETURN_TIP: Final = "command.RETURN_TIP"
 MOVE_TO: Final = "command.MOVE_TO"
 MOVE_TO_DISPOSAL_LOCATION: Final = "command.MOVE_TO_DISPOSAL_LOCATION"
+SEAL: Final = "command.SEAL"
+UNSEAL: Final = "command.UNSEAL"
+PRESSURIZE: Final = "command.PRESSURIZE"
+
 
 # Modules #
 
@@ -535,9 +539,38 @@ class MoveLabwareCommandPayload(TextOnlyPayload):
     pass
 
 
+class SealCommandPayload(TextOnlyPayload):
+    instrument: InstrumentContext
+    location: Union[None, Location, Well]
+
+
+class UnsealCommandPayload(TextOnlyPayload):
+    instrument: InstrumentContext
+    location: Union[None, Location, Well]
+
+
+class PressurizeCommandPayload(TextOnlyPayload):
+    instrument: InstrumentContext
+
+
 class MoveLabwareCommand(TypedDict):
     name: Literal["command.MOVE_LABWARE"]
     payload: MoveLabwareCommandPayload
+
+
+class SealCommand(TypedDict):
+    name: Literal["command.SEAL"]
+    payload: SealCommandPayload
+
+
+class UnsealCommand(TypedDict):
+    name: Literal["command.UNSEAL"]
+    payload: UnsealCommandPayload
+
+
+class PressurizeCommand(TypedDict):
+    name: Literal["command.PRESSURIZE"]
+    payload: PressurizeCommandPayload
 
 
 Command = Union[
@@ -588,6 +621,9 @@ Command = Union[
     MoveToCommand,
     MoveToDisposalLocationCommand,
     MoveLabwareCommand,
+    SealCommand,
+    UnsealCommand,
+    PressurizeCommand,
 ]
 
 
@@ -637,6 +673,9 @@ CommandPayload = Union[
     MoveToCommandPayload,
     MoveToDisposalLocationCommandPayload,
     MoveLabwareCommandPayload,
+    SealCommandPayload,
+    UnsealCommandPayload,
+    PressurizeCommandPayload,
 ]
 
 

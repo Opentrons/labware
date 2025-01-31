@@ -1,10 +1,11 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, afterEach, vi, beforeEach } from 'vitest'
 
 import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { NameQuickTransfer } from '../NameQuickTransfer'
+
+import type { ComponentProps } from 'react'
 import type { InputField } from '@opentrons/components'
 
 vi.mock('../utils')
@@ -17,14 +18,14 @@ vi.mock('/app/atoms/InputField', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof NameQuickTransfer>) => {
+const render = (props: ComponentProps<typeof NameQuickTransfer>) => {
   return renderWithProviders(<NameQuickTransfer {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('NameQuickTransfer', () => {
-  let props: React.ComponentProps<typeof NameQuickTransfer>
+  let props: ComponentProps<typeof NameQuickTransfer>
 
   beforeEach(() => {
     props = {

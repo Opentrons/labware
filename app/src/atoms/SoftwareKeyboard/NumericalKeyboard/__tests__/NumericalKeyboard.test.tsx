@@ -1,17 +1,19 @@
-import * as React from 'react'
+import { useRef } from 'react'
 import { describe, it, expect, vi } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { fireEvent, renderHook, screen } from '@testing-library/react'
 import { renderWithProviders } from '/app/__testing-utils__'
 import { NumericalKeyboard } from '..'
 
-const render = (props: React.ComponentProps<typeof NumericalKeyboard>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof NumericalKeyboard>) => {
   return renderWithProviders(<NumericalKeyboard {...props} />)[0]
 }
 
 describe('NumericalKeyboard', () => {
   it('should render numerical keyboard isDecimal: false and hasHyphen: false', () => {
-    const { result } = renderHook(() => React.useRef(null))
+    const { result } = renderHook(() => useRef(null))
     const props = {
       onChange: vi.fn(),
       keyboardRef: result.current,
@@ -41,7 +43,7 @@ describe('NumericalKeyboard', () => {
   })
 
   it('should render numerical keyboard isDecimal: false and hasHyphen: true', () => {
-    const { result } = renderHook(() => React.useRef(null))
+    const { result } = renderHook(() => useRef(null))
     const props = {
       onChange: vi.fn(),
       keyboardRef: result.current,
@@ -72,7 +74,7 @@ describe('NumericalKeyboard', () => {
   })
 
   it('should render numerical keyboard isDecimal: true and hasHyphen: false', () => {
-    const { result } = renderHook(() => React.useRef(null))
+    const { result } = renderHook(() => useRef(null))
     const props = {
       onChange: vi.fn(),
       keyboardRef: result.current,
@@ -103,7 +105,7 @@ describe('NumericalKeyboard', () => {
   })
 
   it('should render numerical keyboard isDecimal: true and hasHyphen: true', () => {
-    const { result } = renderHook(() => React.useRef(null))
+    const { result } = renderHook(() => useRef(null))
     const props = {
       onChange: vi.fn(),
       keyboardRef: result.current,
@@ -135,7 +137,7 @@ describe('NumericalKeyboard', () => {
   })
 
   it('should call mock function when clicking num key', () => {
-    const { result } = renderHook(() => React.useRef(null))
+    const { result } = renderHook(() => useRef(null))
     const props = {
       onChange: vi.fn(),
       keyboardRef: result.current,
@@ -149,7 +151,7 @@ describe('NumericalKeyboard', () => {
   })
 
   it('should call mock function when clicking decimal point key', () => {
-    const { result } = renderHook(() => React.useRef(null))
+    const { result } = renderHook(() => useRef(null))
     const props = {
       onChange: vi.fn(),
       keyboardRef: result.current,
@@ -163,7 +165,7 @@ describe('NumericalKeyboard', () => {
   })
 
   it('should call mock function when clicking hyphen key', () => {
-    const { result } = renderHook(() => React.useRef(null))
+    const { result } = renderHook(() => useRef(null))
     const props = {
       onChange: vi.fn(),
       keyboardRef: result.current,

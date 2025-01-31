@@ -1,10 +1,20 @@
 import type * as React from 'react'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { FormProvider, useForm } from 'react-hook-form'
-import { fireEvent, screen } from '@testing-library/react'
+import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { renderWithProviders } from '../../../__testing-utils__'
 import { i18n } from '../../../i18n'
 import { InputPrompt } from '../index'
+
+const mockUseTrackEvent = vi.fn()
+
+vi.mock('../../../resources/hooks/useTrackEvent', () => ({
+  useTrackEvent: () => mockUseTrackEvent,
+}))
+
+vi.mock('../../../hooks/useTrackEvent', () => ({
+  useTrackEvent: () => mockUseTrackEvent,
+}))
 
 const WrappingForm = (wrappedComponent: {
   children: React.ReactNode
@@ -44,4 +54,21 @@ describe('InputPrompt', () => {
   })
 
   // ToDo (kk:04/19/2024) add more test cases
+
+  it('should track event when send button is clicked', async () => {
+    render()
+    const textbox = screen.getByRole('textbox')
+    fireEvent.change(textbox, { target: { value: ['test'] } })
+    const sendButton = screen.getByRole('button')
+    fireEvent.click(sendButton)
+
+    await waitFor(() => {
+      expect(mockUseTrackEvent).toHaveBeenCalledWith({
+        name: 'chat-submitted',
+        properties: {
+          chat: 'test',
+        },
+      })
+    })
+  })
 })

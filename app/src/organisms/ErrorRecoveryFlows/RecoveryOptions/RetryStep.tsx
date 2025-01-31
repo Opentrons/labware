@@ -14,7 +14,9 @@ export function RetryStep(props: RecoveryContentProps): JSX.Element {
       case RETRY_STEP.STEPS.CONFIRM_RETRY:
         return <RetryStepInfo {...props} />
       default:
-        console.warn(`${step} in ${route} not explicitly handled. Rerouting.`)
+        console.warn(
+          `RetryStep: ${step} in ${route} not explicitly handled. Rerouting.`
+        )
         return <SelectRecoveryOption {...props} />
     }
   }

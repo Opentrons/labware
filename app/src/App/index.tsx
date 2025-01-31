@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useSelector } from 'react-redux'
 
 import { Flex, POSITION_FIXED, DIRECTION_ROW } from '@opentrons/components'
@@ -9,7 +8,9 @@ import { DesktopApp } from './DesktopApp'
 import { OnDeviceDisplayApp } from './OnDeviceDisplayApp'
 import { TopPortalRoot } from './portal'
 
-const stopEvent = (event: React.MouseEvent): void => {
+import type { MouseEvent } from 'react'
+
+const stopEvent = (event: MouseEvent): void => {
   event.preventDefault()
 }
 

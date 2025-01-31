@@ -72,7 +72,7 @@ dist-ot3: clean lib
 	NO_USB_DETECTION=true OT_APP_DEPLOY_BUCKET=opentrons-app OT_APP_DEPLOY_FOLDER=builds OPENTRONS_PROJECT=$(OPENTRONS_PROJECT) $(builder) --linux --arm64
 
 .PHONY: push-ot3
-push-ot3: dist-ot3 deps
+push-ot3: deps dist-ot3
 	tar -zcvf opentrons-robot-app.tar.gz -C ./dist/linux-arm64-unpacked/ ./
 	scp $(if $(ssh_key),-i $(ssh_key)) $(ssh_opts) -r ./opentrons-robot-app.tar.gz root@$(host):
 	ssh $(if $(ssh_key),-i $(ssh_key)) $(ssh_opts) root@$(host) "mount -o remount,rw / && systemctl stop opentrons-robot-app && rm -rf /opt/opentrons-app && mkdir -p /opt/opentrons-app"

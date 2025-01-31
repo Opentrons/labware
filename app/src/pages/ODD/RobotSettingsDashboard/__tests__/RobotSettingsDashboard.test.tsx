@@ -1,7 +1,6 @@
 import { vi, it, describe, expect, beforeEach, afterEach } from 'vitest'
 import { MemoryRouter } from 'react-router-dom'
 import { fireEvent, screen } from '@testing-library/react'
-import { when } from 'vitest-when'
 
 import { renderWithProviders } from '/app/__testing-utils__'
 
@@ -12,7 +11,6 @@ import {
   getAppLanguage,
   toggleDevtools,
   toggleHistoricOffsets,
-  useFeatureFlag,
 } from '/app/redux/config'
 import { mockConnectedRobot } from '/app/redux/discovery/__fixtures__'
 import { Navigation } from '/app/organisms/ODD/Navigation'
@@ -92,9 +90,6 @@ describe('RobotSettingsDashboard', () => {
       toggleERSettings: mockToggleER,
     })
     vi.mocked(getAppLanguage).mockReturnValue(MOCK_DEFAULT_LANGUAGE)
-    when(vi.mocked(useFeatureFlag))
-      .calledWith('enableLocalization')
-      .thenReturn(true)
   })
 
   afterEach(() => {

@@ -12,6 +12,7 @@
     "deck/**/*.json",
     "labware/**/*.json",
     "liquid/**/*.json",
+    "liquid-class/**/*.json",
     "command/**/*.json",
     "commandAnnotation/**/*.json",
     "gripper/**/*.json",

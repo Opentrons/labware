@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import styled, { css } from 'styled-components'
 import { SPACING } from '../../../ui-style-constants'
 import { BORDERS, COLORS } from '../../../helix-design-system'
@@ -6,12 +5,13 @@ import { Flex } from '../../../primitives'
 import { StyledText } from '../../StyledText'
 import { CURSOR_POINTER } from '../../../styles'
 
+import type { ChangeEventHandler, MouseEvent } from 'react'
 import type { StyleProps } from '../../../primitives'
 
 interface ListButtonRadioButtonProps extends StyleProps {
   buttonText: string
   buttonValue: string | number
-  onChange: React.ChangeEventHandler<HTMLInputElement>
+  onChange: ChangeEventHandler<HTMLInputElement>
   setNoHover?: () => void
   setHovered?: () => void
   disabled?: boolean
@@ -34,48 +34,11 @@ export function ListButtonRadioButton(
     id = buttonText,
   } = props
 
-  const SettingButton = styled.input`
-    display: none;
-  `
-
-  const AVAILABLE_BUTTON_STYLE = css`
-    background: ${COLORS.white};
-    color: ${COLORS.black90};
-
-    &:hover {
-      background-color: ${COLORS.grey10};
-    }
-  `
-
-  const SELECTED_BUTTON_STYLE = css`
-    background: ${COLORS.blue50};
-    color: ${COLORS.white};
-
-    &:active {
-      background-color: ${COLORS.blue60};
-    }
-  `
-
-  const DISABLED_STYLE = css`
-    color: ${COLORS.grey40};
-    background-color: ${COLORS.grey10};
-  `
-
-  const SettingButtonLabel = styled.label`
-    border-radius: ${BORDERS.borderRadius8};
-    cursor: ${CURSOR_POINTER};
-    padding: 14px ${SPACING.spacing12};
-    width: 100%;
-
-    ${isSelected ? SELECTED_BUTTON_STYLE : AVAILABLE_BUTTON_STYLE}
-    ${disabled && DISABLED_STYLE}
-  `
-
   return (
     <Flex
       width="100%"
       margin={SPACING.spacing4}
-      onClick={(e: React.MouseEvent) => {
+      onClick={(e: MouseEvent) => {
         e.stopPropagation()
       }}
     >
@@ -89,6 +52,8 @@ export function ListButtonRadioButton(
       />
       <SettingButtonLabel
         role="label"
+        isSelected={isSelected}
+        disabled={disabled}
         htmlFor={id}
         onMouseEnter={setHovered}
         onMouseLeave={setNoHover}
@@ -98,3 +63,46 @@ export function ListButtonRadioButton(
     </Flex>
   )
 }
+
+const SettingButton = styled.input`
+  display: none;
+`
+
+const AVAILABLE_BUTTON_STYLE = css`
+  background: ${COLORS.white};
+  color: ${COLORS.black90};
+
+  &:hover {
+    background-color: ${COLORS.grey10};
+  }
+`
+
+const SELECTED_BUTTON_STYLE = css`
+  background: ${COLORS.blue50};
+  color: ${COLORS.white};
+
+  &:active {
+    background-color: ${COLORS.blue60};
+  }
+`
+
+const DISABLED_STYLE = css`
+  color: ${COLORS.grey40};
+  background-color: ${COLORS.grey10};
+`
+
+interface ButtonLabelProps {
+  isSelected: boolean
+  disabled: boolean
+}
+
+const SettingButtonLabel = styled.label<ButtonLabelProps>`
+  border-radius: ${BORDERS.borderRadius8};
+  cursor: ${CURSOR_POINTER};
+  padding: 14px ${SPACING.spacing12};
+  width: 100%;
+
+  ${({ isSelected }) =>
+    isSelected ? SELECTED_BUTTON_STYLE : AVAILABLE_BUTTON_STYLE}
+  ${({ disabled }) => disabled && DISABLED_STYLE}
+`

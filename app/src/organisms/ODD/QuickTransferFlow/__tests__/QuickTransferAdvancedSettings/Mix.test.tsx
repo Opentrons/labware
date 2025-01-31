@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, afterEach, vi, beforeEach } from 'vitest'
 
@@ -8,6 +7,8 @@ import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { useTrackEventWithRobotSerial } from '/app/redux-resources/analytics'
 import { Mix } from '../../QuickTransferAdvancedSettings/Mix'
+
+import type { ComponentProps } from 'react'
 import type { QuickTransferSummaryState } from '../../types'
 
 vi.mock('/app/redux-resources/analytics')
@@ -21,7 +22,7 @@ vi.mock('@opentrons/components', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof Mix>) => {
+const render = (props: ComponentProps<typeof Mix>) => {
   return renderWithProviders(<Mix {...props} />, {
     i18nInstance: i18n,
   })
@@ -29,7 +30,7 @@ const render = (props: React.ComponentProps<typeof Mix>) => {
 let mockTrackEventWithRobotSerial: any
 
 describe('Mix', () => {
-  let props: React.ComponentProps<typeof Mix>
+  let props: ComponentProps<typeof Mix>
 
   beforeEach(() => {
     props = {

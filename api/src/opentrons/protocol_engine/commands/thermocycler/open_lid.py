@@ -73,7 +73,7 @@ class OpenLid(BaseCommand[OpenLidParams, OpenLidResult, ErrorOccurrence]):
 
     commandType: OpenLidCommandType = "thermocycler/openLid"
     params: OpenLidParams
-    result: Optional[OpenLidResult]
+    result: Optional[OpenLidResult] = None
 
     _ImplementationCls: Type[OpenLidImpl] = OpenLidImpl
 

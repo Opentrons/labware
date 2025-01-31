@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, vi, expect } from 'vitest'
 import { renderWithProviders } from '/app/__testing-utils__'
@@ -13,11 +12,11 @@ import {
   SUCCESSFULLY_DETACHED,
 } from '../constants'
 
+import type { ComponentProps } from 'react'
+
 describe('Success', () => {
   const mockProceed = vi.fn()
-  const render = (
-    props: Partial<React.ComponentProps<typeof Success>> = {}
-  ) => {
+  const render = (props: Partial<ComponentProps<typeof Success>> = {}) => {
     return renderWithProviders(
       <Success
         proceed={mockProceed}

@@ -13,15 +13,15 @@
         "title": "Dispense volume will overflow a destination well"
       },
       "BELOW_PIPETTE_MINIMUM_VOLUME": {
-        "title": "Transfer volume is below pipette minimum ({{min}} uL)",
+        "title": "Transfer volume is below pipette minimum ({{min}} µL)",
         "body": "Pipettes cannot accurately handle volumes below their minimum. "
       },
       "BELOW_MIN_AIR_GAP_VOLUME": {
-        "title": "Air gap volume is below pipette minimum ({{min}} uL)",
+        "title": "Air gap volume is below pipette minimum ({{min}} µL)",
         "body": "Pipettes cannot accurately handle volumes below their minimum. "
       },
       "BELOW_MIN_DISPOSAL_VOLUME": {
-        "title": "Disposal volume is below recommended minimum ({{min}} uL)",
+        "title": "Disposal volume is below recommended minimum ({{min}} µL)",
         "body": "For accuracy in multi-dispense Transfers we recommend you use a disposal volume of at least the pipette's minimum. Read more ",
         "link": "here"
       }
@@ -29,35 +29,11 @@
   },
   "hint": {
     "dont_show_again": "Don't show me again",
-    "add_liquids_and_labware": {
-      "title": "Your labware has no liquids in it",
-      "summary": "In {{deck_setup_step}}, hover on labware to add liquids.",
-      "step1": "Add liquids",
-      "step2": "Watch liquids move as you build your protocol"
+    "unused_hardware": {
+      "title": "Protocol has unused hardware"
     },
-    "deck_setup_explanation": {
-      "title": "Setting up your protocol",
-      "body1": "If you look to your left you will see the Protocol Timeline, and that the \"Starting Deck State\" step is listed first.",
-      "body2": "Before you can build a protocol that tells the robot how to move liquid around, you'll need to tell the Protocol Designer where all of your labware is on the deck, and which liquids start in which wells. As you add steps to your protocol the Protocol Designer will move liquid from the starting positions you defined in the Starting Deck State to new positions.",
-      "body3": "Hover on empty slots in the deck to add labware. Hover on labware to add liquid to the wells."
-    },
-    "custom_labware_with_modules": {
-      "title": "Cannot verify compatibility of custom labware",
-      "body": "The Protocol Designer cannot confirm whether or not custom labware is compatible with any module. Proceed if you are confident your custom labware will fit."
-    },
-    "module_without_labware": {
-      "title": "Missing labware",
-      "body": "Your module has no labware on it. We recommend you add labware before proceeding."
-    },
-    "multiple_modules_without_labware": {
-      "title": "Missing labware",
-      "body": "One or more module has no labware on it. We recommend you add labware before proceeding"
-    },
-    "export_v8_1_protocol_7_3": {
-      "title": "Robot and app update may be required",
-      "body1": "This protocol can only run on app and robot server version",
-      "body2": "7.3.0 or higher",
-      "body3": ". Please ensure your robot is updated to the correct version."
+    "no_commands": {
+      "title": "Protocol has no steps"
     },
     "change_magnet_module_model": {
       "title": "All existing engage heights will be cleared"
@@ -69,25 +45,6 @@
       "body1b": ". When entering a temperature lower than the previous temperature, keep in mind the following:",
       "li1": "If the Thermocycler lid is closed it may take a very long time to reach a cooler temperature.",
       "li2": "If the room temperature in your lab is higher than the temperature you have defined, the lid will never reach it. This will stall your protocol indefinitely."
-    },
-    "protocol_can_enter_batch_edit": {
-      "title": "Editing multiple steps",
-      "body1": "Now that your protocol has multiple steps, you can try using Protocol Designer’s batch edit features.",
-
-      "body2": "To select multiple steps:",
-      "li1a": "Hold ",
-      "strong_li1": "SHIFT + Click ",
-      "li1b": "to select a range of steps",
-
-      "li2a": "Use ",
-      "strong_li2": "CTRL + Click (PC) or ⌘ + Click (Mac) ",
-      "li2b": "to select a single additional step.",
-
-      "body3a": "To delete or duplicate multiple steps:",
-      "body3b": "Use the control bar at the top of the Protocol Timeline.",
-
-      "body4a": "To batch edit Transfer or Mix advanced settings:",
-      "body4b": "Only include Transfer or Mix steps in your selection."
     },
     "waste_chute_warning": {
       "title": "Disposing labware",
@@ -135,7 +92,7 @@
       },
       "HEATER_SHAKER_LATCH_OPEN": {
         "title": "Heater-Shaker latch open",
-        "body": "Before the robot can interact with labware on the Heater-Shaker module, the labware latch must be closed. To resolve this error, please add a Heater-Shaker step ahead of the current step, and set the labware latch status to \"closed\"."
+        "body": "This step tries to pipette to labware on the Heater-Shaker Module, which requires the labware latch to be closed. Close the latch before this step."
       },
       "HEATER_SHAKER_IS_SHAKING": {
         "title": "Heater-Shaker is shaking",
@@ -269,10 +226,42 @@
     "no_commands": {
       "heading": "Your protocol has no steps",
       "body1": "This protocol has no steps in it- there's nothing for the robot to do! Before trying to run this on your robot add at least one step between your Starting Deck State and Final Deck State.",
-      "body2": "Learn more about building steps ",
-      "redesign": {
+      "body2": "Learn more about building steps "
+    },
+    "redesign": {
+      "unused_hardware": "Unused hardware:",
+      "unused_module": "{{module}} in slot {{slot}}",
+      "unused_pipette": "{{pipette}} on {{mount}} mount",
+      "unused_staging_area": "Staging area in slot {{slot}}",
+      "no_commands": {
         "heading": "Protocol has no steps",
-        "body": "This protocol has no steps. Before trying to run this protocol on your robot, add at least one step."
+        "body1": "This protocol has no steps. Before trying to run this protocol on your robot, add at least one step."
+      },
+      "unused_gripper": {
+        "heading": "Protocol has unused gripper",
+        "body1": "The Flex Gripper is not used in any step. You won't be able to run this protocol unless the gripper is attached to your robot.",
+        "body2": "If you don’t intend to use the gripper, remove it from your protocol."
+      },
+      "unused_hardware_content": {
+        "heading": "Protocol has unused hardware",
+        "body1": "The hardware listed below is not used in any step. You won't be able to run this protocol unless the hardware is attached to your robot.",
+        "body2": "If you don’t intend to use this hardware, remove it from your protocol."
+      },
+      "unused_module_content": {
+        "heading": "Protocol has unused module",
+        "body1": "The {{module}} in slot {{slot}} is not used in any step. You won't be able to run this protocol unless the module is attached to your robot.",
+        "body2": "If you don’t intend to use the module, remove it from your protocol."
+      },
+      "unused_pipette_content": {
+        "heading": "Protocol has unused pipette",
+        "body1": "The {{pipette}} on {{mount}} mount is currently not used in any step. You won't be able to run this protocol unless this pipette is attached to your robot.",
+        "body1_96ch": "The Flex 8-Channel 1000 μL is currently not used in any step. You won't be able to run this protocol unless this pipette is attached to your robot.",
+        "body2": "If you don’t intend to use the pipette, remove it from your protocol."
+      },
+      "unused_staging_area_content": {
+        "heading": "Protocol has unused staging area",
+        "body1": "The staging area in {{slot}} is not used in any step. You won't be able to run this protocol unless it is in your robot's deck configuration.",
+        "body2": "If you don’t intend to use the staging area, remove it from your protocol."
       }
     },
     "unused_pipette_and_module": {

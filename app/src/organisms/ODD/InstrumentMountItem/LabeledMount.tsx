@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import {
@@ -15,6 +14,8 @@ import {
   TEXT_TRANSFORM_CAPITALIZE,
   TYPOGRAPHY,
 } from '@opentrons/components'
+
+import type { MouseEventHandler } from 'react'
 import type { Mount } from '/app/redux/pipettes/types'
 
 const MountButton = styled.button<{ isAttached: boolean }>`
@@ -34,7 +35,7 @@ const MountButton = styled.button<{ isAttached: boolean }>`
 interface LabeledMountProps {
   mount: Mount | 'extension'
   instrumentName: string | null
-  handleClick: React.MouseEventHandler
+  handleClick: MouseEventHandler
 }
 
 export function LabeledMount(props: LabeledMountProps): JSX.Element {

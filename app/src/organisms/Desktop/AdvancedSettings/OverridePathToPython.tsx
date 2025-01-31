@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -27,6 +26,7 @@ import {
   ANALYTICS_CHANGE_PATH_TO_PYTHON_DIRECTORY,
 } from '/app/redux/analytics'
 
+import type { MouseEventHandler } from 'react'
 import type { Dispatch } from '/app/redux/types'
 
 export function OverridePathToPython(): JSX.Element {
@@ -35,7 +35,7 @@ export function OverridePathToPython(): JSX.Element {
   const dispatch = useDispatch<Dispatch>()
   const trackEvent = useTrackEvent()
 
-  const handleClickPythonDirectoryChange: React.MouseEventHandler<HTMLButtonElement> = _event => {
+  const handleClickPythonDirectoryChange: MouseEventHandler<HTMLButtonElement> = _event => {
     dispatch(changePythonPathOverrideConfig())
     trackEvent({
       name: ANALYTICS_CHANGE_PATH_TO_PYTHON_DIRECTORY,

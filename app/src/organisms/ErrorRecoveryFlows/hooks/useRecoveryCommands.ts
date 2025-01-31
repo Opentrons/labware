@@ -70,6 +70,8 @@ export interface UseRecoveryCommandsResult {
   homeExceptPlungers: () => Promise<CommandData[]>
   /* A non-terminal recovery command */
   moveLabwareWithoutPause: () => Promise<CommandData[]>
+  /* A non-terminal recovery-command */
+  homeAll: () => Promise<CommandData[]>
 }
 
 // TODO(jh, 07-24-24): Create tighter abstractions for terminal vs. non-terminal commands.
@@ -307,6 +309,10 @@ export function useRecoveryCommands({
     return chainRunRecoveryCommands([HOME_EXCEPT_PLUNGERS])
   }, [chainRunRecoveryCommands])
 
+  const homeAll = useCallback((): Promise<CommandData[]> => {
+    return chainRunRecoveryCommands([HOME_ALL])
+  }, [chainRunRecoveryCommands])
+
   const moveLabwareWithoutPause = useCallback((): Promise<CommandData[]> => {
     const moveLabwareCmd = buildMoveLabwareWithoutPause(
       unvalidatedFailedCommand
@@ -329,6 +335,7 @@ export function useRecoveryCommands({
     moveLabwareWithoutPause,
     skipFailedCommand,
     ignoreErrorKindThisRun,
+    homeAll,
   }
 }
 
@@ -369,6 +376,11 @@ export const HOME_EXCEPT_PLUNGERS: CreateCommand = {
   params: {
     axes: ['extensionJaw', 'extensionZ', 'leftZ', 'rightZ', 'x', 'y'],
   },
+}
+
+export const HOME_ALL: CreateCommand = {
+  commandType: 'home',
+  params: {},
 }
 
 const buildMoveLabwareWithoutPause = (

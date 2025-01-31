@@ -79,7 +79,7 @@ class RobotServerError(ApiError):
                 *wrapped_details,
             ),
             links=links,
-        ).dict(exclude_none=True)
+        ).model_dump(exclude_none=True)
 
         super().__init__(
             status_code=definition.status_code,

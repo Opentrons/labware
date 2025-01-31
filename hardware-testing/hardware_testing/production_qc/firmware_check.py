@@ -1,6 +1,6 @@
 """Firmware Check."""
 from asyncio import run
-from typing import List
+from typing import Sequence
 
 from opentrons.hardware_control.ot3api import OT3API
 
@@ -31,7 +31,7 @@ def _get_instrument_serial_number(api: OT3API, subsystem: SubSystem) -> str:
     return _id
 
 
-async def _main(simulate: bool, subsystems: List[SubSystem]) -> None:
+async def _main(simulate: bool, subsystems: Sequence[SubSystem]) -> None:
     api = await helpers_ot3.build_async_ot3_hardware_api(is_simulating=simulate)
     while True:
         for subsys, state in api.attached_subsystems.items():

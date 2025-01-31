@@ -11,6 +11,8 @@ import {
 } from '@opentrons/shared-data'
 import { getAllWellSetsForLabware } from '../utils'
 import * as labwareDefSelectors from './selectors'
+
+import type { SyntheticEvent } from 'react'
 import type { ThunkAction } from '../types'
 import type { LabwareUploadMessage } from './types'
 import type { LabwareDefinition2 } from '@opentrons/shared-data'
@@ -89,7 +91,7 @@ const getIsOverwriteMismatched = (
 const _createCustomLabwareDef: (
   onlyTiprack: boolean
 ) => (
-  event: React.SyntheticEvent<HTMLInputElement>
+  event: SyntheticEvent<HTMLInputElement>
 ) => ThunkAction<any> = onlyTiprack => event => (dispatch, getState) => {
   const customLabwareDefs = values(
     labwareDefSelectors.getCustomLabwareDefsByURI(getState())
@@ -242,11 +244,11 @@ const _createCustomLabwareDef: (
 }
 
 export const createCustomLabwareDef: (
-  event: React.SyntheticEvent<HTMLInputElement>
+  event: SyntheticEvent<HTMLInputElement>
 ) => ThunkAction<any> = _createCustomLabwareDef(false)
 
 export const createCustomTiprackDef: (
-  event: React.SyntheticEvent<HTMLInputElement>
+  event: SyntheticEvent<HTMLInputElement>
 ) => ThunkAction<any> = _createCustomLabwareDef(true)
 
 interface DismissLabwareUploadMessage {

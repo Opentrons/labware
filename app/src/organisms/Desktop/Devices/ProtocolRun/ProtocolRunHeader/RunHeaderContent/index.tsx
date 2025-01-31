@@ -1,16 +1,15 @@
-import type * as React from 'react'
-
 import { RunHeaderSectionUpper } from './RunHeaderSectionUpper'
 import { RunHeaderSectionLower } from './RunHeaderSectionLower'
 
-import type { ProtocolRunHeaderProps } from '..'
+import type { MutableRefObject } from 'react'
 import type { AttachedModule, RunStatus } from '@opentrons/api-client'
+import type { ProtocolRunHeaderProps } from '..'
 import type { RunControls } from '/app/organisms/RunTimeControl'
 import type { UseRunHeaderModalContainerResult } from '../RunHeaderModalContainer'
 
 export type RunHeaderContentProps = ProtocolRunHeaderProps & {
   runStatus: RunStatus | null
-  isResetRunLoadingRef: React.MutableRefObject<boolean>
+  isResetRunLoadingRef: MutableRefObject<boolean>
   attachedModules: AttachedModule[]
   protocolRunControls: RunControls
   runHeaderModalContainerUtils: UseRunHeaderModalContainerResult

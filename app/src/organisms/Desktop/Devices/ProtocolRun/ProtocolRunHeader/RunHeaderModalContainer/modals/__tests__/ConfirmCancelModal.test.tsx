@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
@@ -17,6 +16,7 @@ import { useIsFlex } from '/app/redux-resources/robots'
 import { useTrackEvent } from '/app/redux/analytics'
 import { ConfirmCancelModal } from '../ConfirmCancelModal'
 
+import type { ComponentProps } from 'react'
 import type * as ApiClient from '@opentrons/react-api-client'
 
 vi.mock('@opentrons/react-api-client', async importOriginal => {
@@ -30,7 +30,7 @@ vi.mock('/app/redux/analytics')
 vi.mock('/app/redux-resources/analytics')
 vi.mock('/app/redux-resources/robots')
 
-const render = (props: React.ComponentProps<typeof ConfirmCancelModal>) => {
+const render = (props: ComponentProps<typeof ConfirmCancelModal>) => {
   return renderWithProviders(<ConfirmCancelModal {...props} />, {
     i18nInstance: i18n,
   })[0]
@@ -43,7 +43,7 @@ let mockTrackProtocolRunEvent: any
 const ROBOT_NAME = 'otie'
 
 describe('ConfirmCancelModal', () => {
-  let props: React.ComponentProps<typeof ConfirmCancelModal>
+  let props: ComponentProps<typeof ConfirmCancelModal>
   beforeEach(() => {
     mockTrackEvent = vi.fn()
     mockStopRun = vi.fn((_runId, opts) => opts.onSuccess())

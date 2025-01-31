@@ -46,7 +46,7 @@ def starting_calibration_data(
             "tipLength": 27,
             "lastModified": inside_data.lastModified.isoformat(),
             "source": inside_data.source,
-            "status": inside_data.status.dict(),
+            "status": inside_data.status.model_dump(),
             "uri": "dummy_namespace/minimal_labware_def/1",
         }
     }

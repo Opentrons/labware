@@ -259,7 +259,7 @@ async def _force_gauge(
                         mount=mount,
                         abs_position=press_pos,
                         speed=FORCE_SPEED,
-                        _expect_stalls=True,
+                        expect_stalls=True,
                     )
             finally:
                 thread_sensor = False

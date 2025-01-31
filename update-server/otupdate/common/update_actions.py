@@ -69,8 +69,8 @@ class UpdateActionsInterface:
         self,
         rootfs_filepath: str,
         progress_callback: Callable[[float], None],
-        chunk_size: int,
-        file_size: Optional[int],
+        chunk_size: int = -1,
+        file_size: Optional[int] = None,
     ) -> Partition:
         """
         Write the object to a specific rootfs path

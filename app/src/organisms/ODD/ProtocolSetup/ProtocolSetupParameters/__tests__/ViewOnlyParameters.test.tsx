@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { it, describe, beforeEach, vi, expect } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
@@ -9,17 +8,19 @@ import { useToaster } from '/app/organisms/ToasterOven'
 import { mockRunTimeParameterData } from '../../__fixtures__'
 import { ViewOnlyParameters } from '../ViewOnlyParameters'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/resources/runs')
 vi.mock('/app/organisms/ToasterOven')
 const RUN_ID = 'mockId'
-const render = (props: React.ComponentProps<typeof ViewOnlyParameters>) => {
+const render = (props: ComponentProps<typeof ViewOnlyParameters>) => {
   return renderWithProviders(<ViewOnlyParameters {...props} />, {
     i18nInstance: i18n,
   })
 }
 const mockMakeSnackBar = vi.fn()
 describe('ViewOnlyParameters', () => {
-  let props: React.ComponentProps<typeof ViewOnlyParameters>
+  let props: ComponentProps<typeof ViewOnlyParameters>
 
   beforeEach(() => {
     props = {

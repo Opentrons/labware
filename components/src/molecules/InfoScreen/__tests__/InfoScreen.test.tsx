@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { describe, it, expect, beforeEach } from 'vitest'
 
@@ -6,12 +5,14 @@ import { renderWithProviders } from '../../../testing/utils'
 import { BORDERS, COLORS } from '../../../helix-design-system'
 import { InfoScreen } from '..'
 
-const render = (props: React.ComponentProps<typeof InfoScreen>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof InfoScreen>) => {
   return renderWithProviders(<InfoScreen {...props} />)
 }
 
 describe('InfoScreen', () => {
-  let props: React.ComponentProps<typeof InfoScreen>
+  let props: ComponentProps<typeof InfoScreen>
 
   beforeEach(() => {
     props = {

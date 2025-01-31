@@ -1,0 +1,22 @@
+ARG BASE_IMAGE_NAME=opentrons-python-base:3.10
+
+FROM ${BASE_IMAGE_NAME}
+
+# Define build arguments
+ARG ANALYSIS_REF=edge
+
+# Set the working directory in the container
+WORKDIR /opentrons
+
+# Clone the Opentrons repository at the specified commit or tag
+ARG CACHEBUST=1
+RUN git clone --branch $ANALYSIS_REF --depth 1 https://github.com/Opentrons/opentrons .
+
+# Install packages from local directories
+RUN python -m pip install -U ./shared-data/python
+RUN python -m pip install -U ./hardware[flex]
+RUN python -m pip install -U ./api
+RUN python -m pip install -U pandas==1.4.3
+
+# The default command to run when starting the container
+CMD ["tail", "-f", "/dev/null"]

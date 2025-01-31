@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useTranslation, Trans } from 'react-i18next'
 
 import {
@@ -12,11 +11,13 @@ import {
 
 import { ChildNavigation } from '/app/organisms/ODD/ChildNavigation'
 import { useNotifyDeckConfigurationQuery } from '/app/resources/deck_configuration'
+
+import type { ComponentProps } from 'react'
 import type { SmallButton } from '/app/atoms/buttons'
 
 interface CreateNewTransferProps {
   onNext: () => void
-  exitButtonProps: React.ComponentProps<typeof SmallButton>
+  exitButtonProps: ComponentProps<typeof SmallButton>
 }
 
 export function CreateNewTransfer(props: CreateNewTransferProps): JSX.Element {

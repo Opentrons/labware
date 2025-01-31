@@ -52,10 +52,11 @@
       "body6": "All protocols require {{app}} version <strong>7.3.0 or later</strong> to run."
     },
     "redesign": {
-      "body1": "Welcome to Protocol Designer 8.2.0!",
+      "body1": "Welcome to Protocol Designer {{version}}!",
       "body2": "We’re excited to release the new Opentrons Protocol Designer, now with a fresh redesign!  Enjoy the same functionality with the added ability to:",
       "body3": "Add multiple Heater-Shaker Modules and Magnetic Blocks to the deck (Flex only).",
-      "body4": "All protocols now require Opentrons App version <strong>8.0.0+</strong> to run."
+      "body4": "All protocols now require Opentrons App version <strong>8.2.0+</strong> to run.",
+      "body5": "For more information, see the <link1>Protocol Designer Instruction Manual</link1>."
     }
   },
   "labware_selection": {
@@ -76,7 +77,7 @@
   "tip_position": {
     "title": "Tip Positioning",
     "caption": "between {{min}} and {{max}}",
-    "warning": "One or more position offset values are close to the edge of the well and might collide with it",
+    "warning": "Tip position is close to the edge of the well and may cause collisions.",
     "radio_button": {
       "default": "{{defaultMmFromBottom}} mm from the bottom center (default)",
       "blowout": "0 mm from the top center (default)",
@@ -84,15 +85,15 @@
       "custom": "Custom"
     },
     "body": {
-      "blowout_z_offset": "Change from where in the well the robot emits blowout",
-      "aspirate_mmFromBottom": "Change from where in the well the robot aspirates",
-      "dispense_mmFromBottom": "Change from where in the well the robot dispenses",
-      "mix_mmFromBottom": "Change from where in the well the robot aspirates and dispenses during the mix",
-      "aspirate_touchTip_mmFromBottom": "Change from where in the well the robot performs touch tip",
-      "dispense_touchTip_mmFromBottom": "Change from where in the well the robot performs touch tip",
-      "mix_touchTip_mmFromBottom": "Change from where in the well the robot performs touch tip",
-      "aspirate_delay_mmFromBottom": "Change from where in the well the robot delays after aspirating",
-      "dispense_delay_mmFromBottom": "Change from where in the well the robot delays after dispensing"
+      "blowout_z_offset": "Change where in the well the robot performs the blowout.",
+      "aspirate_mmFromBottom": "Change where in the well the robot aspirates from.",
+      "dispense_mmFromBottom": "Change where in the well the robot dispenses from.",
+      "mix_mmFromBottom": "Change from where in the well the robot aspirates and dispenses during the mix.",
+      "aspirate_touchTip_mmFromBottom": "Change from where in the well the robot performs the touch tip.",
+      "dispense_touchTip_mmFromBottom": "Change from where in the well the robot performs the touch tip.",
+      "mix_touchTip_mmFromBottom": "Change from where in the well the robot performs the touch tip.",
+      "aspirate_delay_mmFromBottom": "Change from where in the well the robot delays after aspirating.",
+      "dispense_delay_mmFromBottom": "Change from where in the well the robot delays after dispensing."
     },
     "field_titles": {
       "z_position": "Z position",

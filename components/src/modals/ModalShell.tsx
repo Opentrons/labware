@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import styled from 'styled-components'
 import {
   ALIGN_CENTER,
@@ -15,18 +14,19 @@ import { BORDERS, COLORS } from '../helix-design-system'
 import { RESPONSIVENESS, SPACING } from '../ui-style-constants'
 import { styleProps } from '../primitives'
 
+import type { MouseEvent, MouseEventHandler, ReactNode } from 'react'
 import type { StyleProps } from '../primitives'
 
 export type Position = 'center' | 'bottomRight'
 export interface ModalShellProps extends StyleProps {
   /** Modal content */
-  children: React.ReactNode
+  children: ReactNode
   /** Optional close on outside click **/
-  onOutsideClick?: React.MouseEventHandler
+  onOutsideClick?: MouseEventHandler
   /** Optional sticky header */
-  header?: React.ReactNode
+  header?: ReactNode
   /** Optional sticky footer */
-  footer?: React.ReactNode
+  footer?: ReactNode
   /** Optional full page takeover */
   fullPage?: boolean
   /** Optional zIndex for the overlay */
@@ -69,7 +69,7 @@ export function ModalShell(props: ModalShellProps): JSX.Element {
       showOverlay={showOverlay}
       zIndex={zIndexOverlay}
       aria-label="BackgroundOverlay_ModalShell"
-      onClick={(e: React.MouseEvent) => {
+      onClick={(e: MouseEvent) => {
         e.stopPropagation()
         if (onOutsideClick != null) onOutsideClick(e)
       }}
@@ -78,7 +78,7 @@ export function ModalShell(props: ModalShellProps): JSX.Element {
         <ModalArea
           aria-label="ModalShell_ModalArea"
           isFullPage={fullPage}
-          onClick={(e: React.MouseEvent) => {
+          onClick={(e: MouseEvent) => {
             e.stopPropagation()
           }}
           {...styleProps}

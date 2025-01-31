@@ -197,6 +197,7 @@ def mock_send_stop_threshold() -> Iterator[mock.AsyncMock]:
 
 @pytest.fixture
 def mock_move_group_run() -> Iterator[mock.AsyncMock]:
+
     with mock.patch(
         "opentrons.hardware_control.backends.ot3controller.MoveGroupRunner.run",
         autospec=True,
@@ -338,7 +339,7 @@ home_test_params = [
 ]
 
 
-def move_group_run_side_effect(
+def move_group_run_side_effect_home(
     controller: OT3Controller, axes_to_home: List[Axis]
 ) -> Iterator[Dict[NodeId, MotorPositionStatus]]:
     """Return homed position for axis that is present and was commanded to home."""
@@ -366,13 +367,15 @@ async def test_home_execute(
     mock_present_devices: None,
     mock_check_overpressure: None,
 ) -> None:
-    config = {"run.side_effect": move_group_run_side_effect(controller, axes)}
+    config = {"run.side_effect": move_group_run_side_effect_home(controller, axes)}
     with mock.patch(  # type: ignore [call-overload]
         "opentrons.hardware_control.backends.ot3controller.MoveGroupRunner",
         spec=MoveGroupRunner,
         **config
     ) as mock_runner:
         present_axes = set(ax for ax in axes if controller.axis_is_present(ax))
+        controller.set_pressure_sensor_available(Axis.P_L, True)
+        controller.set_pressure_sensor_available(Axis.P_R, True)
 
         # nothing has been homed
         assert not controller._motor_status
@@ -484,8 +487,10 @@ async def test_home_only_present_devices(
     homed_position = {}
 
     controller._position = starting_position
+    controller.set_pressure_sensor_available(Axis.P_L, True)
+    controller.set_pressure_sensor_available(Axis.P_R, True)
 
-    mock_move_group_run.side_effect = move_group_run_side_effect(controller, axes)
+    mock_move_group_run.side_effect = move_group_run_side_effect_home(controller, axes)
 
     # nothing has been homed
     assert not controller._motor_status
@@ -728,6 +733,9 @@ async def test_liquid_probe(
     mock_move_group_run.side_effect = probe_move_group_run_side_effect(
         head_node, tool_node
     )
+    controller._pipettes_to_monitor_pressure = mock.MagicMock(  # type: ignore[method-assign]
+        return_value=[sensor_node_for_mount(mount)]
+    )
     try:
         await controller.liquid_probe(
             mount=mount,
@@ -737,6 +745,7 @@ async def test_liquid_probe(
             threshold_pascals=fake_liquid_settings.sensor_threshold_pascals,
             plunger_impulse_time=fake_liquid_settings.plunger_impulse_time,
             num_baseline_reads=fake_liquid_settings.samples_for_baselining,
+            z_offset_for_plunger_prep=2.0,
         )
     except PipetteLiquidNotFoundError:
         # the move raises a liquid not found now since we don't call the move group and it doesn't
@@ -1292,3 +1301,154 @@ def test_grip_error_detection(
             hard_max,
             hard_min,
         )
+
+
+def move_group_run_side_effect(
+    controller: OT3Controller, target_pos: Dict[Axis, float]
+) -> Iterator[Dict[NodeId, MotorPositionStatus]]:
+    """Return homed position for axis that is present and was commanded to home."""
+    motor_nodes = controller._motor_nodes()
+    target_nodes = {axis_to_node(ax): ax for ax in target_pos.keys() if ax != Axis.Q}
+    res = {}
+    for node in motor_nodes:
+        pos = 0.0
+        if target_nodes.get(node):
+            pos = target_pos[target_nodes[node]]
+        res[node] = MotorPositionStatus(pos, pos, True, True, MoveCompleteAck(1))
+    yield res
+
+
+@pytest.mark.parametrize(
+    argnames=["origin_pos", "target_pos", "expected_pos", "gear_position"],
+    argvalues=[
+        [
+            {
+                Axis.X: 0,
+                Axis.Y: 0,
+                Axis.Z_L: 0,
+                Axis.Z_R: 0,
+                Axis.P_L: 0,
+                Axis.P_R: 0,
+                Axis.Z_G: 0,
+                Axis.G: 0,
+                Axis.Q: 0,
+            },
+            {Axis.Q: 10},
+            {
+                Axis.X: 0,
+                Axis.Y: 0,
+                Axis.Z_L: 0,
+                Axis.Z_R: 0,
+                Axis.P_L: 0,
+                Axis.P_R: 0,
+                Axis.Z_G: 0,
+                Axis.G: 0,
+            },
+            10,
+        ],
+        [
+            {
+                Axis.X: 0,
+                Axis.Y: 0,
+                Axis.Z_L: 0,
+                Axis.Z_R: 0,
+                Axis.P_L: 0,
+                Axis.P_R: 0,
+                Axis.Z_G: 0,
+                Axis.G: 0,
+            },
+            {Axis.Q: 10},
+            {
+                Axis.X: 0,
+                Axis.Y: 0,
+                Axis.Z_L: 0,
+                Axis.Z_R: 0,
+                Axis.P_L: 0,
+                Axis.P_R: 0,
+                Axis.Z_G: 0,
+                Axis.G: 0,
+            },
+            None,
+        ],
+        [
+            {
+                Axis.X: 0,
+                Axis.Y: 0,
+                Axis.Z_L: 0,
+                Axis.Z_R: 0,
+            },
+            {
+                Axis.X: 10,
+                Axis.Y: 10,
+                Axis.Z_L: 10,
+            },
+            {
+                Axis.X: 10,
+                Axis.Y: 10,
+                Axis.Z_L: 10,
+                Axis.Z_R: 0,
+                Axis.P_L: 0,
+                Axis.P_R: 0,
+                Axis.Z_G: 0,
+                Axis.G: 0,
+            },
+            None,
+        ],
+    ],
+)
+async def test_controller_move(
+    controller: OT3Controller,
+    mock_present_devices: mock.AsyncMock,
+    origin_pos: Dict[Axis, float],
+    target_pos: Dict[Axis, float],
+    expected_pos: Dict[Axis, float],
+    gear_position: Optional[float],
+) -> None:
+    from copy import deepcopy
+
+    controller.update_constraints_for_gantry_load(GantryLoad.HIGH_THROUGHPUT)
+
+    run_target_pos = deepcopy(target_pos)
+    config = {"run.side_effect": move_group_run_side_effect(controller, run_target_pos)}
+    with mock.patch(  # type: ignore [call-overload]
+        "opentrons.hardware_control.backends.ot3controller.MoveGroupRunner",
+        spec=MoveGroupRunner,
+        **config
+    ):
+        await controller.move(origin_pos, target_pos, 100)
+        position = await controller.update_position()
+        gear_position = controller.gear_motor_position
+
+        assert position == expected_pos
+        assert gear_position == gear_position
+
+
+@pytest.mark.parametrize(
+    argnames=["axes", "pipette_has_sensor"],
+    argvalues=[[[Axis.P_L, Axis.P_R], True], [[Axis.P_L, Axis.P_R], False]],
+)
+async def test_pressure_disable(
+    controller: OT3Controller,
+    axes: List[Axis],
+    mock_present_devices: None,
+    mock_check_overpressure: None,
+    pipette_has_sensor: bool,
+) -> None:
+    config = {"run.side_effect": move_group_run_side_effect_home(controller, axes)}
+    with mock.patch(  # type: ignore [call-overload]
+        "opentrons.hardware_control.backends.ot3controller.MoveGroupRunner",
+        spec=MoveGroupRunner,
+        **config
+    ):
+        with mock.patch.object(controller, "_monitor_overpressure") as monitor:
+            controller.set_pressure_sensor_available(Axis.P_L, pipette_has_sensor)
+            controller.set_pressure_sensor_available(Axis.P_R, True)
+
+            await controller.home(axes, GantryLoad.LOW_THROUGHPUT)
+
+            if pipette_has_sensor:
+                monitor.assert_called_once_with(
+                    [NodeId.pipette_left, NodeId.pipette_right]
+                )
+            else:
+                monitor.assert_called_once_with([NodeId.pipette_right])

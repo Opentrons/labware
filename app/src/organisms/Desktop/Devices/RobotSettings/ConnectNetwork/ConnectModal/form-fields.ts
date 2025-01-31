@@ -1,9 +1,9 @@
 import get from 'lodash/get'
 
 import * as Constants from '../constants'
-import * as Copy from '../i18n'
 
 import type { FieldError } from 'react-hook-form'
+import type { TFunction } from 'i18next'
 import type {
   WifiNetwork,
   WifiKey,
@@ -24,28 +24,29 @@ type Errors = Record<string, FieldError>
 export const renderLabel = (label: string, required: boolean): string =>
   `${required ? '* ' : ''}${label}`
 
-const FIELD_SSID: ConnectFormTextField = {
+const makeFieldSsid = (t: TFunction): ConnectFormTextField => ({
   type: Constants.FIELD_TYPE_TEXT,
   name: Constants.CONFIGURE_FIELD_SSID,
-  label: renderLabel(Copy.LABEL_SSID, true),
+  label: renderLabel(t('network_name'), true),
   isPassword: false,
-}
+})
 
-const FIELD_PSK: ConnectFormTextField = {
+const makeFieldPsk = (t: TFunction): ConnectFormTextField => ({
   type: Constants.FIELD_TYPE_TEXT,
   name: Constants.CONFIGURE_FIELD_PSK,
-  label: renderLabel(Copy.LABEL_PSK, true),
+  label: renderLabel(t('password'), true),
   isPassword: true,
-}
+})
 
 const makeSecurityField = (
   eapOptions: EapOption[],
-  showAllOptions: boolean
+  showAllOptions: boolean,
+  t: TFunction
 ): ConnectFormSecurityField => ({
   type: Constants.FIELD_TYPE_SECURITY,
   name: Constants.CONFIGURE_FIELD_SECURITY_TYPE,
-  label: renderLabel(Copy.LABEL_SECURITY, true),
-  placeholder: Copy.SELECT_AUTHENTICATION_METHOD,
+  label: renderLabel(t('authentication'), true),
+  placeholder: t('select_auth_method_short'),
   eapOptions,
   showAllOptions,
 })
@@ -77,21 +78,22 @@ export function getConnectFormFields(
   robotName: string,
   eapOptions: EapOption[],
   wifiKeys: WifiKey[],
-  values: ConnectFormValues
+  values: ConnectFormValues,
+  t: TFunction
 ): ConnectFormField[] {
   const { securityType: formSecurityType } = values
   const fields = []
 
   // if the network is unknown, display a field to enter the SSID
   if (network === null) {
-    fields.push(FIELD_SSID)
+    fields.push(makeFieldSsid(t))
   }
 
   // if the network is unknown or the known network is EAP, display a
   // security dropdown; security dropdown will handle which options to
   // display based on known or unknown network
   if (!network || network.securityType === Constants.SECURITY_WPA_EAP) {
-    fields.push(makeSecurityField(eapOptions, !network))
+    fields.push(makeSecurityField(eapOptions, !network, t))
   }
 
   // if known network is PSK or network is unknown and user has selected PSK
@@ -100,7 +102,7 @@ export function getConnectFormFields(
     network?.securityType === Constants.SECURITY_WPA_PSK ||
     formSecurityType === Constants.SECURITY_WPA_PSK
   ) {
-    fields.push(FIELD_PSK)
+    fields.push(makeFieldPsk(t))
   }
 
   // if known network is EAP or user selected EAP, map eap options to fields
@@ -121,7 +123,7 @@ export function getConnectFormFields(
             label,
             robotName,
             wifiKeys,
-            placeholder: Copy.SELECT_FILE,
+            placeholder: t('select_file'),
           }
         }
 
@@ -142,7 +144,8 @@ export function validateConnectFormFields(
   network: WifiNetwork | null,
   eapOptions: EapOption[],
   values: ConnectFormValues,
-  errors: Errors
+  errors: Errors,
+  t: TFunction
 ): Errors {
   const {
     ssid: formSsid,
@@ -152,7 +155,7 @@ export function validateConnectFormFields(
   let errorMessage: string | undefined
 
   if (network === null && (formSsid == null || formSsid.length === 0)) {
-    errorMessage = Copy.FIELD_IS_REQUIRED(Copy.LABEL_SSID)
+    errorMessage = t('field_is_required', { field: t('network_name') })
     return errorMessage != null
       ? {
           ...errors,
@@ -168,7 +171,7 @@ export function validateConnectFormFields(
     (network === null || network.securityType === Constants.SECURITY_WPA_EAP) &&
     !formSecurityType
   ) {
-    errorMessage = Copy.FIELD_IS_REQUIRED(Copy.LABEL_SECURITY)
+    errorMessage = t('field_is_required', { field: t('authentication') })
     return errorMessage != null
       ? {
           ...errors,
@@ -185,10 +188,9 @@ export function validateConnectFormFields(
       formSecurityType === Constants.SECURITY_WPA_PSK) &&
     (!formPsk || formPsk.length < Constants.CONFIGURE_PSK_MIN_LENGTH)
   ) {
-    errorMessage = Copy.FIELD_NOT_LONG_ENOUGH(
-      Copy.LABEL_PSK,
-      Constants.CONFIGURE_PSK_MIN_LENGTH
-    )
+    errorMessage = t('password_not_long_enough', {
+      minLength: Constants.CONFIGURE_PSK_MIN_LENGTH,
+    })
     return errorMessage != null
       ? {
           ...errors,
@@ -215,7 +217,9 @@ export function validateConnectFormFields(
         ) => {
           const fieldName = getEapFieldName(name)
           const errorMessage =
-            displayName != null ? Copy.FIELD_IS_REQUIRED(displayName) : ''
+            displayName != null
+              ? t('field_is_required', { field: displayName })
+              : ''
 
           if (errorMessage != null) {
             acc[fieldName] = {

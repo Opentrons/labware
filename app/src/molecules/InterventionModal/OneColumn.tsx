@@ -1,14 +1,14 @@
-import type * as React from 'react'
-
 import {
   Flex,
   DIRECTION_COLUMN,
   JUSTIFY_SPACE_BETWEEN,
 } from '@opentrons/components'
+
+import type { ReactNode } from 'react'
 import type { StyleProps } from '@opentrons/components'
 
 export interface OneColumnProps extends StyleProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export function OneColumn({

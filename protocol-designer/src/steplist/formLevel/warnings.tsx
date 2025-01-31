@@ -1,5 +1,4 @@
 import { getWellTotalVolume } from '@opentrons/shared-data'
-import { KnowledgeBaseLink } from '../../components/KnowledgeBaseLink'
 import type { FormError } from './errors'
 import type { LabwareDefinition2 } from '@opentrons/shared-data'
 
@@ -29,13 +28,8 @@ const belowMinAirGapVolumeWarning = (min: number): FormWarning => ({
 const belowPipetteMinVolumeWarning = (min: number): FormWarning => ({
   type: 'BELOW_PIPETTE_MINIMUM_VOLUME',
   title: `Disposal volume is below recommended minimum (${min} uL)`,
-  body: (
-    <>
-      {
-        'For accuracy in multi-dispense Transfers we recommend you use a disposal volume of at least the pipette`s minimum. Read more '
-      }
-    </>
-  ),
+  body:
+    'For accuracy in multi-dispense Transfers we recommend you use a disposal volume of at least the pipette`s minimum.',
   dependentFields: ['pipette', 'volume'],
 })
 
@@ -48,14 +42,8 @@ const overMaxWellVolumeWarning = (): FormWarning => ({
 const belowMinDisposalVolumeWarning = (min: number): FormWarning => ({
   type: 'BELOW_MIN_DISPOSAL_VOLUME',
   title: `Disposal volume is below recommended minimum (${min} uL)`,
-  body: (
-    <>
-      {
-        'For accuracy in multi-dispense Transfers we recommend you use a disposal volume of at least the pipette`s minimum. Read more '
-      }
-      <KnowledgeBaseLink to="multiDispense">{'here'}</KnowledgeBaseLink>.
-    </>
-  ),
+  body:
+    'For accuracy in multi-dispense Transfers we recommend you use a disposal volume of at least the pipette`s minimum.',
   dependentFields: ['disposalVolume_volume', 'pipette'],
 })
 

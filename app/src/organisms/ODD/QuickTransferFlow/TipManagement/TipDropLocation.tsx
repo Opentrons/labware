@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { createPortal } from 'react-dom'
 import {
@@ -21,6 +21,7 @@ import { useNotifyDeckConfigurationQuery } from '/app/resources/deck_configurati
 import { useTrackEventWithRobotSerial } from '/app/redux-resources/analytics'
 import { ChildNavigation } from '/app/organisms/ODD/ChildNavigation'
 
+import type { Dispatch } from 'react'
 import type {
   QuickTransferSummaryState,
   QuickTransferSummaryAction,
@@ -30,7 +31,7 @@ import type { CutoutConfig } from '@opentrons/shared-data'
 interface TipDropLocationProps {
   onBack: () => void
   state: QuickTransferSummaryState
-  dispatch: React.Dispatch<QuickTransferSummaryAction>
+  dispatch: Dispatch<QuickTransferSummaryAction>
 }
 
 export function TipDropLocation(props: TipDropLocationProps): JSX.Element {
@@ -56,7 +57,7 @@ export function TipDropLocation(props: TipDropLocationProps): JSX.Element {
   const [
     selectedTipDropLocation,
     setSelectedTipDropLocation,
-  ] = React.useState<CutoutConfig>(state.dropTipLocation)
+  ] = useState<CutoutConfig>(state.dropTipLocation)
 
   const handleClickSave = (): void => {
     if (selectedTipDropLocation.cutoutId !== state.dropTipLocation.cutoutId) {

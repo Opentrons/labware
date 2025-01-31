@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { describe, it, beforeEach, vi } from 'vitest'
 import { when } from 'vitest-when'
@@ -9,13 +8,13 @@ import { IncompatibleModuleDesktopModalBody } from '../IncompatibleModuleDesktop
 import { useIsFlex } from '/app/redux-resources/robots'
 import * as Fixtures from '../__fixtures__'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/redux-resources/robots')
 
 const getRenderer = (isFlex: boolean) => {
   when(useIsFlex).calledWith('otie').thenReturn(isFlex)
-  return (
-    props: React.ComponentProps<typeof IncompatibleModuleDesktopModalBody>
-  ) => {
+  return (props: ComponentProps<typeof IncompatibleModuleDesktopModalBody>) => {
     return renderWithProviders(
       <IncompatibleModuleDesktopModalBody {...props} />,
       {
@@ -26,7 +25,7 @@ const getRenderer = (isFlex: boolean) => {
 }
 
 describe('IncompatibleModuleDesktopModalBody', () => {
-  let props: React.ComponentProps<typeof IncompatibleModuleDesktopModalBody>
+  let props: ComponentProps<typeof IncompatibleModuleDesktopModalBody>
   beforeEach(() => {
     props = {
       modules: [],

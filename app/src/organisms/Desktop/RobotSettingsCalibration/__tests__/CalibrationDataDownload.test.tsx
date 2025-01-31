@@ -16,6 +16,7 @@ import {
   useModulesQuery,
 } from '@opentrons/react-api-client'
 import { instrumentsResponseFixture } from '@opentrons/api-client'
+import { OT2_ROBOT_TYPE } from '@opentrons/shared-data'
 
 import { i18n } from '/app/i18n'
 import {
@@ -145,7 +146,7 @@ describe('CalibrationDataDownload', () => {
     fireEvent.click(downloadButton)
     expect(mockTrackEvent).toHaveBeenCalledWith({
       name: ANALYTICS_CALIBRATION_DATA_DOWNLOADED,
-      properties: {},
+      properties: { robotType: OT2_ROBOT_TYPE },
     })
   })
 

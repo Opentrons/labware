@@ -6,6 +6,7 @@ import {
   ALIGN_CENTER,
   COLORS,
   DIRECTION_COLUMN,
+  RESPONSIVENESS,
   DISPLAY_FLEX,
   Flex,
   Icon,
@@ -83,13 +84,14 @@ export function RecoverySplash(props: RecoverySplashProps): JSX.Element | null {
     runStatus,
     recoveryActionMutationUtils,
     resumePausedRecovery,
+    recoveryCommands,
   } = props
   const { t } = useTranslation('error_recovery')
   const errorKind = getErrorKind(failedCommand)
   const title = useErrorName(errorKind)
   const { makeToast } = useToaster()
 
-  const { proceedToRouteAndStep } = routeUpdateActions
+  const { proceedToRouteAndStep, handleMotionRouting } = routeUpdateActions
   const { reportErrorEvent } = analytics
 
   const buildTitleHeadingDesktop = (): JSX.Element => {
@@ -138,9 +140,16 @@ export function RecoverySplash(props: RecoverySplashProps): JSX.Element | null {
 
   const onLaunchERClick = (): void => {
     const onClick = (): void => {
-      void toggleERWizAsActiveUser(true, true).then(() => {
-        reportErrorEvent(failedCommand?.byRunRecord ?? null, 'launch-recovery')
-      })
+      void toggleERWizAsActiveUser(true, true)
+        .then(() => {
+          reportErrorEvent(
+            failedCommand?.byRunRecord ?? null,
+            'launch-recovery'
+          )
+        })
+        .then(() => handleMotionRouting(true))
+        .then(() => recoveryCommands.homePipetteZAxes())
+        .finally(() => handleMotionRouting(false))
     }
     handleConditionalClick(onClick)
   }
@@ -192,6 +201,7 @@ export function RecoverySplash(props: RecoverySplashProps): JSX.Element | null {
               overflowWrap={OVERFLOW_WRAP_BREAK_WORD}
               color={COLORS.white}
               textAlign={TEXT_ALIGN_CENTER}
+              css={TEXT_TRUNCATION_STYLE}
             />
           </Flex>
         </SplashFrame>
@@ -245,6 +255,7 @@ export function RecoverySplash(props: RecoverySplashProps): JSX.Element | null {
                 overflow="hidden"
                 overflowWrap={OVERFLOW_WRAP_BREAK_WORD}
                 textAlign={TEXT_ALIGN_CENTER}
+                css={TEXT_TRUNCATION_STYLE}
               />
             </Flex>
           </Flex>
@@ -291,6 +302,18 @@ const SplashFrame = styled(Flex)`
   align-items: ${ALIGN_CENTER};
   grid-gap: ${SPACING.spacing40};
   padding-bottom: 0px;
+`
+
+const TEXT_TRUNCATION_STYLE = css`
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media ${RESPONSIVENESS.touchscreenMediaQuerySpecs} {
+    font-size: ${TYPOGRAPHY.fontSize22};
+  }
 `
 
 const SHARED_BUTTON_STYLE_ODD = css`

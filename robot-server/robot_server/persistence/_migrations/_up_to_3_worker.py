@@ -86,11 +86,7 @@ def migrate_commands_for_run(
         )
 
         parsed_commands: typing.Iterable[commands.Command] = (
-            pydantic.parse_obj_as(
-                commands.Command,  # type: ignore[arg-type]
-                c,
-            )
-            for c in old_commands
+            commands.CommandAdapter.validate_python(c) for c in old_commands
         )
 
         new_command_rows = [

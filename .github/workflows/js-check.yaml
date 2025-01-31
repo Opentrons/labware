@@ -42,10 +42,10 @@ jobs:
     runs-on: 'ubuntu-22.04'
     timeout-minutes: 20
     steps:
-      - uses: 'actions/checkout@v3'
-      - uses: 'actions/setup-node@v3'
+      - uses: 'actions/checkout@v4'
+      - uses: 'actions/setup-node@v4'
         with:
-          node-version: '18.19.0'
+          node-version: '22.11.0'
       - name: 'set complex environment variables'
         id: 'set-vars'
         uses: actions/github-script@v6

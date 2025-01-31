@@ -12,6 +12,7 @@ from opentrons.protocol_engine import (
     LabwareOffset,
     LabwareOffsetCreate,
     Liquid,
+    LiquidClassRecordWithId,
 )
 from robot_server.service.json_api import ResourceModel
 
@@ -66,6 +67,10 @@ class MaintenanceRun(ResourceModel):
     liquids: List[Liquid] = Field(
         ...,
         description="Liquids loaded to the run.",
+    )
+    liquidClasses: List[LiquidClassRecordWithId] = Field(
+        ...,
+        description="Liquid classes loaded to the run.",
     )
     labwareOffsets: List[LabwareOffset] = Field(
         ...,

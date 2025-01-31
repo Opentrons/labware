@@ -36,10 +36,10 @@ jobs:
     timeout-minutes: 30
     runs-on: 'ubuntu-22.04'
     steps:
-      - uses: 'actions/checkout@v3'
-      - uses: 'actions/setup-node@v3'
+      - uses: 'actions/checkout@v4'
+      - uses: 'actions/setup-node@v4'
         with:
-          node-version: '18.19.0'
+          node-version: '22.11.0'
       - name: 'install libudev for usb-detection'
         run: |
           # WORKAROUND: Remove microsoft debian repo due to https://github.com/microsoft/linux-package-repositories/issues/130. Remove line below after it is resolved

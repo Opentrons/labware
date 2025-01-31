@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, beforeEach, expect, vi } from 'vitest'
 import { screen } from '@testing-library/react'
 
@@ -8,16 +7,18 @@ import { i18n } from '/app/i18n'
 import { LeftColumnLabwareInfo } from '../LeftColumnLabwareInfo'
 import { InterventionContent } from '/app/molecules/InterventionModal/InterventionContent'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/molecules/InterventionModal/InterventionContent')
 
-const render = (props: React.ComponentProps<typeof LeftColumnLabwareInfo>) => {
+const render = (props: ComponentProps<typeof LeftColumnLabwareInfo>) => {
   return renderWithProviders(<LeftColumnLabwareInfo {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('LeftColumnLabwareInfo', () => {
-  let props: React.ComponentProps<typeof LeftColumnLabwareInfo>
+  let props: ComponentProps<typeof LeftColumnLabwareInfo>
 
   beforeEach(() => {
     props = {

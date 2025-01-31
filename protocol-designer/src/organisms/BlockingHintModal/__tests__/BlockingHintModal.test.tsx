@@ -29,8 +29,9 @@ describe('BlockingHintModal', () => {
     render(props)
     fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
     expect(props.handleCancel).toHaveBeenCalled()
-    expect(vi.mocked(removeHint)).toHaveBeenCalled()
-    fireEvent.click(screen.getByRole('button', { name: 'Continue' }))
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Continue with export' })
+    )
     expect(props.handleContinue).toHaveBeenCalled()
     expect(vi.mocked(removeHint)).toHaveBeenCalled()
     screen.getByText('mock content')

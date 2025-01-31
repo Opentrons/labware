@@ -1,6 +1,6 @@
 import typing
 
-from pydantic import BaseModel, Field
+from pydantic import ConfigDict, BaseModel, Field
 
 
 class AttachedPipette(BaseModel):
@@ -36,9 +36,8 @@ class PipettesByMount(BaseModel):
 
     left: AttachedPipette
     right: AttachedPipette
-
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "left": {
                     "model": "p300_single_v1.5",
@@ -58,3 +57,4 @@ class PipettesByMount(BaseModel):
                 },
             }
         }
+    )

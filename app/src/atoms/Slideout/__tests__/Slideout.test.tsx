@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { screen, fireEvent } from '@testing-library/react'
@@ -6,14 +5,16 @@ import { i18n } from '/app/i18n'
 import { renderWithProviders } from '/app/__testing-utils__'
 import { Slideout } from '..'
 
-const render = (props: React.ComponentProps<typeof Slideout>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof Slideout>) => {
   return renderWithProviders(<Slideout {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('Slideout', () => {
-  let props: React.ComponentProps<typeof Slideout>
+  let props: ComponentProps<typeof Slideout>
   const mockOnClick = vi.fn()
   beforeEach(() => {
     props = {

@@ -15,7 +15,7 @@ from robot_server.persistence.tables import (
     analysis_csv_rtp_table,
     run_csv_rtp_table,
 )
-from robot_server.persistence.tables.schema_7 import DataFileSourceSQLEnum
+from robot_server.persistence.tables import DataFileSourceSQLEnum
 
 from .models import DataFileSource, FileIdNotFoundError, FileInUseError
 

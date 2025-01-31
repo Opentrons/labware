@@ -1,5 +1,3 @@
-import type * as React from 'react'
-
 import {
   getDeckDefFromRobotType,
   FLEX_ROBOT_TYPE,
@@ -27,6 +25,7 @@ import { TrashBinConfigFixture } from './TrashBinConfigFixture'
 import { WasteChuteConfigFixture } from './WasteChuteConfigFixture'
 import { StaticFixture } from './StaticFixture'
 
+import type { ReactNode } from 'react'
 import type {
   CutoutFixtureId,
   CutoutId,
@@ -37,6 +36,8 @@ import { HeaterShakerFixture } from './HeaterShakerFixture'
 import { MagneticBlockFixture } from './MagneticBlockFixture'
 import { ThermocyclerFixture } from './ThermocyclerFixture'
 import { AbsorbanceReaderFixture } from './AbsorbanceReaderFixture'
+
+export * from './constants'
 
 interface DeckConfiguratorProps {
   deckConfig: DeckConfiguration
@@ -49,7 +50,7 @@ interface DeckConfiguratorProps {
   darkFill?: string
   editableCutoutIds?: CutoutId[]
   showExpansion?: boolean
-  children?: React.ReactNode
+  children?: ReactNode
   additionalStaticFixtures?: Array<{ location: CutoutId; label: string }>
   height?: string
   selectedCutoutId?: CutoutId

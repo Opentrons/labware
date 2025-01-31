@@ -10,7 +10,13 @@ from opentrons_shared_data.pipette.types import PipetteNameType
 from opentrons_shared_data.labware.types import LabwareDefinition
 from opentrons_shared_data.robot.types import RobotType
 
-from opentrons.types import DeckSlotName, StagingSlotName, Location, Mount, Point
+from opentrons.types import (
+    DeckSlotName,
+    StagingSlotName,
+    Location,
+    Mount,
+    Point,
+)
 from opentrons.hardware_control import SyncHardwareAPI
 from opentrons.hardware_control.modules.types import ModuleModel
 from opentrons.protocols.api_support.util import AxisMaxSpeeds
@@ -19,6 +25,7 @@ from .instrument import InstrumentCoreType
 from .labware import LabwareCoreType, LabwareLoadParams
 from .module import ModuleCoreType
 from .._liquid import Liquid, LiquidClass
+from .robot import AbstractRobot
 from .._types import OffDeckType
 from ..disposal_locations import TrashBin, WasteChute
 
@@ -91,6 +98,17 @@ class AbstractProtocol(
         version: Optional[int],
     ) -> LabwareCoreType:
         """Load an adapter using its identifying parameters"""
+        ...
+
+    @abstractmethod
+    def load_lid(
+        self,
+        load_name: str,
+        location: LabwareCoreType,
+        namespace: Optional[str],
+        version: Optional[int],
+    ) -> LabwareCoreType:
+        """Load an individual lid labware using its identifying parameters. Must be loaded on a labware."""
         ...
 
     @abstractmethod
@@ -191,6 +209,17 @@ class AbstractProtocol(
         ...
 
     @abstractmethod
+    def load_lid_stack(
+        self,
+        load_name: str,
+        location: Union[DeckSlotName, StagingSlotName, LabwareCoreType],
+        quantity: int,
+        namespace: Optional[str],
+        version: Optional[int],
+    ) -> LabwareCoreType:
+        ...
+
+    @abstractmethod
     def get_deck_definition(self) -> DeckDefinitionV5:
         """Get the geometry definition of the robot's deck."""
 
@@ -257,3 +286,7 @@ class AbstractProtocol(
         self, labware_core: LabwareCoreType
     ) -> Union[str, LabwareCoreType, ModuleCoreType, OffDeckType]:
         """Get labware parent location."""
+
+    @abstractmethod
+    def load_robot(self) -> AbstractRobot:
+        """Load a Robot Core context into a protocol"""

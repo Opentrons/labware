@@ -96,7 +96,7 @@ class OpenLabwareLatch(
 
     commandType: OpenLabwareLatchCommandType = "heaterShaker/openLabwareLatch"
     params: OpenLabwareLatchParams
-    result: Optional[OpenLabwareLatchResult]
+    result: Optional[OpenLabwareLatchResult] = None
 
     _ImplementationCls: Type[OpenLabwareLatchImpl] = OpenLabwareLatchImpl
 

@@ -1,9 +1,14 @@
 import { getPositionFromSlotId } from '@opentrons/shared-data'
+import { getStagingAreaAddressableAreas } from '../../utils'
 import type {
   AdditionalEquipmentName,
   DeckSlot,
 } from '@opentrons/step-generation'
-import type { CoordinateTuple, DeckDefinition } from '@opentrons/shared-data'
+import type {
+  CoordinateTuple,
+  CutoutId,
+  DeckDefinition,
+} from '@opentrons/shared-data'
 import type {
   AllTemporalPropertiesForTimelineFrame,
   LabwareOnDeck,
@@ -18,6 +23,7 @@ interface AdditionalEquipment {
 }
 
 interface SlotInformation {
+  matchingLabwareFor4thColumn: LabwareOnDeck | null
   slotPosition: CoordinateTuple | null
   createdModuleForSlot?: ModuleOnDeck
   createdLabwareForSlot?: LabwareOnDeck
@@ -66,6 +72,24 @@ export const getSlotInformation = (
     }
   )
 
+  const fixturesOnSlot = Object.values(additionalEquipmentOnDeck).filter(
+    ae => ae.location?.split('cutout')[1] === slot
+  )
+  const stagingAreaCutout = fixturesOnSlot.find(
+    fixture => fixture.name === 'stagingArea'
+  )?.location
+
+  let matchingLabware: LabwareOnDeck | null = null
+  if (stagingAreaCutout != null) {
+    const stagingAreaAddressableAreaName = getStagingAreaAddressableAreas([
+      stagingAreaCutout,
+    ] as CutoutId[])
+    matchingLabware =
+      Object.values(deckSetupLabware).find(
+        lw => lw.slot === stagingAreaAddressableAreaName[0]
+      ) ?? null
+  }
+
   const preSelectedFixture =
     createFixtureForSlots != null && createFixtureForSlots.length === 2
       ? ('wasteChuteAndStagingArea' as Fixture)
@@ -78,5 +102,6 @@ export const getSlotInformation = (
     createFixtureForSlots,
     preSelectedFixture,
     slotPosition: slotPosition,
+    matchingLabwareFor4thColumn: matchingLabware,
   }
 }

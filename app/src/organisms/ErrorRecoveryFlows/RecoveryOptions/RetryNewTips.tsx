@@ -35,7 +35,9 @@ export function RetryNewTips(props: RecoveryContentProps): JSX.Element {
       case RETRY_NEW_TIPS.STEPS.RETRY:
         return <RetryWithNewTips {...props} />
       default:
-        console.warn(`${step} in ${route} not explicitly handled. Rerouting.`)
+        console.warn(
+          `RetryNewTips: ${step} in ${route} not explicitly handled. Rerouting.`
+        )
         return <SelectRecoveryOption {...props} />
     }
   }

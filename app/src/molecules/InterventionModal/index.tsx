@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useSelector } from 'react-redux'
 import { css } from 'styled-components'
 
@@ -32,6 +31,7 @@ import { DescriptionContent } from './DescriptionContent'
 import { DeckMapContent } from './DeckMapContent'
 import { CategorizedStepContent } from './CategorizedStepContent'
 
+import type { MouseEvent, ReactNode } from 'react'
 import type { FlattenSimpleInterpolation } from 'styled-components'
 import type { IconName } from '@opentrons/components'
 
@@ -116,9 +116,9 @@ const ERROR_COLOR = COLORS.red50
 
 export interface InterventionModalProps {
   /** Optional modal title heading. Aligned to the left. */
-  titleHeading?: React.ReactNode
+  titleHeading?: ReactNode
   /** Optional modal heading right of the icon. Aligned right if titleHeading is supplied, otherwise aligned left. **/
-  iconHeading?: React.ReactNode
+  iconHeading?: ReactNode
   /** Optional onClick for the icon heading and icon. */
   iconHeadingOnClick?: () => void
   /** overall style hint */
@@ -128,7 +128,7 @@ export interface InterventionModalProps {
   /* Optional icon size override. */
   iconSize?: string
   /** modal contents */
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export function InterventionModal({
@@ -160,7 +160,7 @@ export function InterventionModal({
           {...modalStyle}
           flexDirection={DIRECTION_COLUMN}
           border={border}
-          onClick={(e: React.MouseEvent) => {
+          onClick={(e: MouseEvent) => {
             e.stopPropagation()
           }}
         >

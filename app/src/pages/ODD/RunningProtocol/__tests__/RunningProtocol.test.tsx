@@ -161,6 +161,7 @@ describe('RunningProtocol', () => {
     vi.mocked(useErrorRecoveryFlows).mockReturnValue({
       isERActive: false,
       failedCommand: {} as any,
+      runLwDefsByUri: {} as any,
     })
     vi.mocked(useInterventionModal).mockReturnValue({
       showModal: false,
@@ -224,6 +225,7 @@ describe('RunningProtocol', () => {
     vi.mocked(useErrorRecoveryFlows).mockReturnValue({
       isERActive: true,
       failedCommand: {} as any,
+      runLwDefsByUri: {} as any,
     })
     render(`/runs/${RUN_ID}/run`)
     screen.getByText('MOCK ERROR RECOVERY')

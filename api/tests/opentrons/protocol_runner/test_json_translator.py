@@ -1,4 +1,5 @@
 """Tests for the JSON JsonTranslator interface."""
+
 import pytest
 from typing import Dict, List
 
@@ -193,7 +194,7 @@ VALID_TEST_PARAMS = [
                 wellName="A1",
             ),
         ),
-        protocol_schema_v8.Command(
+        protocol_schema_v8.Command.model_construct(
             commandType="dropTip",
             params={
                 "pipetteId": "pipette-id-1",
@@ -230,7 +231,7 @@ VALID_TEST_PARAMS = [
                 wellName="A1",
             ),
         ),
-        protocol_schema_v8.Command(
+        protocol_schema_v8.Command.model_construct(
             commandType="pickUpTip",
             params={
                 "pipetteId": "pipette-id-1",
@@ -272,7 +273,7 @@ VALID_TEST_PARAMS = [
                 ),
             ),
         ),
-        protocol_schema_v8.Command(
+        protocol_schema_v8.Command.model_construct(
             commandType="touchTip",
             params={
                 "pipetteId": "pipette-id-1",
@@ -307,7 +308,7 @@ VALID_TEST_PARAMS = [
                 pipetteId="pipette-id-1", mount="left", pipetteName="p10_single"
             ),
         ),
-        protocol_schema_v8.Command(
+        protocol_schema_v8.Command.model_construct(
             commandType="loadPipette",
             params={
                 "pipetteId": "pipette-id-1",
@@ -339,7 +340,7 @@ VALID_TEST_PARAMS = [
                 location=Location(slotName="3"),
             ),
         ),
-        protocol_schema_v8.Command(
+        protocol_schema_v8.Command.model_construct(
             commandType="loadModule",
             params={
                 "moduleId": "module-id-1",
@@ -374,7 +375,7 @@ VALID_TEST_PARAMS = [
                 displayName="Trash",
             ),
         ),
-        protocol_schema_v8.Command(
+        protocol_schema_v8.Command.model_construct(
             commandType="loadLabware",
             params={
                 "labwareId": "labware-id-2",
@@ -423,7 +424,7 @@ VALID_TEST_PARAMS = [
                 flowRate=1.23,
             ),
         ),
-        protocol_schema_v8.Command(
+        protocol_schema_v8.Command.model_construct(
             commandType="blowout",
             params={
                 "pipetteId": "pipette-id-1",
@@ -458,7 +459,7 @@ VALID_TEST_PARAMS = [
             commandType="delay",
             params=protocol_schema_v7.Params(waitForResume=True, message="hello world"),
         ),
-        protocol_schema_v8.Command(
+        protocol_schema_v8.Command.model_construct(
             commandType="delay",
             params={"waitForResume": True, "message": "hello world"},
         ),
@@ -475,7 +476,7 @@ VALID_TEST_PARAMS = [
             commandType="delay",
             params=protocol_schema_v7.Params(seconds=12.34, message="hello world"),
         ),
-        protocol_schema_v8.Command(
+        protocol_schema_v8.Command.model_construct(
             commandType="delay",
             params={"seconds": 12.34, "message": "hello world"},
         ),
@@ -495,7 +496,7 @@ VALID_TEST_PARAMS = [
             commandType="waitForResume",
             params=protocol_schema_v7.Params(message="hello world"),
         ),
-        protocol_schema_v8.Command(
+        protocol_schema_v8.Command.model_construct(
             commandType="waitForResume",
             params={"message": "hello world"},
         ),
@@ -512,7 +513,7 @@ VALID_TEST_PARAMS = [
             commandType="waitForDuration",
             params=protocol_schema_v7.Params(seconds=12.34, message="hello world"),
         ),
-        protocol_schema_v8.Command(
+        protocol_schema_v8.Command.model_construct(
             commandType="waitForDuration",
             params={"seconds": 12.34, "message": "hello world"},
         ),
@@ -542,7 +543,7 @@ VALID_TEST_PARAMS = [
                 forceDirect=True,
             ),
         ),
-        protocol_schema_v8.Command(
+        protocol_schema_v8.Command.model_construct(
             commandType="moveToCoordinates",
             params={
                 "pipetteId": "pipette-id-1",
@@ -595,7 +596,7 @@ VALID_TEST_PARAMS = [
                 ],
             ),
         ),
-        protocol_schema_v8.Command(
+        protocol_schema_v8.Command.model_construct(
             commandType="thermocycler/runProfile",
             params={
                 "moduleId": "module-id-2",
@@ -646,7 +647,7 @@ VALID_TEST_PARAMS = [
                 volumeByWell={"A1": 32, "B2": 50},
             ),
         ),
-        protocol_schema_v8.Command(
+        protocol_schema_v8.Command.model_construct(
             commandType="loadLiquid",
             key=None,
             params={
@@ -873,6 +874,6 @@ def test_load_liquid(
             id="liquid-id-555",
             displayName="water",
             description="water description",
-            displayColor=HexColor(__root__="#F00"),
+            displayColor=HexColor("#F00"),
         )
     ]

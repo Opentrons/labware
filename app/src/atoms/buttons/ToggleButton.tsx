@@ -1,8 +1,8 @@
-import type * as React from 'react'
 import { css } from 'styled-components'
 
-import { Btn, Icon, COLORS, SIZE_1, SIZE_2 } from '@opentrons/components'
+import { Btn, COLORS, Icon } from '@opentrons/components'
 
+import type { MouseEvent } from 'react'
 import type { StyleProps } from '@opentrons/components'
 
 const TOGGLE_DISABLED_STYLES = css`
@@ -42,7 +42,7 @@ interface ToggleButtonProps extends StyleProps {
   toggledOn: boolean
   disabled?: boolean | null
   id?: string
-  onClick?: (e: React.MouseEvent) => unknown
+  onClick?: (e: MouseEvent) => unknown
 }
 
 export const ToggleButton = (props: ToggleButtonProps): JSX.Element => {
@@ -55,12 +55,12 @@ export const ToggleButton = (props: ToggleButtonProps): JSX.Element => {
       role="switch"
       aria-label={label}
       aria-checked={toggledOn}
-      size={size ?? SIZE_2}
+      size={size ?? '2rem'}
       css={props.toggledOn ? TOGGLE_ENABLED_STYLES : TOGGLE_DISABLED_STYLES}
       {...buttonProps}
     >
       {/* TODO(bh, 2022-10-05): implement small and large sizes from design system */}
-      <Icon name={iconName} height={SIZE_1} />
+      <Icon name={iconName} height="1rem" />
     </Btn>
   )
 }

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import snakeCase from 'lodash/snakeCase'
@@ -20,6 +20,7 @@ import {
   LegacyStyledText,
   TYPOGRAPHY,
 } from '@opentrons/components'
+import { FLEX_ROBOT_TYPE, OT2_ROBOT_TYPE } from '@opentrons/shared-data'
 
 import { Slideout } from '/app/atoms/Slideout'
 import { Divider } from '/app/atoms/structure'
@@ -40,6 +41,7 @@ import {
 import { useRobot, useIsFlex } from '/app/redux-resources/robots'
 import { useNotifyAllRunsQuery } from '/app/resources/runs'
 
+import type { MouseEventHandler } from 'react'
 import type { State, Dispatch } from '/app/redux/types'
 import type { ResetConfigRequest } from '/app/redux/robot-admin/types'
 
@@ -61,7 +63,7 @@ export function DeviceResetSlideout({
   const doTrackEvent = useTrackEvent()
   const robot = useRobot(robotName)
   const dispatch = useDispatch<Dispatch>()
-  const [resetOptions, setResetOptions] = React.useState<ResetConfigRequest>({})
+  const [resetOptions, setResetOptions] = useState<ResetConfigRequest>({})
   const runsQueryResponse = useNotifyAllRunsQuery()
   const isFlex = useIsFlex(robotName)
 
@@ -98,15 +100,17 @@ export function DeviceResetSlideout({
       ? options.filter(opt => opt.id.includes('authorizedKeys'))
       : []
 
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(fetchResetConfigOptions(robotName))
   }, [dispatch, robotName])
 
-  const downloadCalibrationLogs: React.MouseEventHandler = e => {
+  const downloadCalibrationLogs: MouseEventHandler = e => {
     e.preventDefault()
     doTrackEvent({
       name: ANALYTICS_CALIBRATION_DATA_DOWNLOADED,
-      properties: {},
+      properties: {
+        robotType: isFlex ? FLEX_ROBOT_TYPE : OT2_ROBOT_TYPE,
+      },
     })
     saveAs(
       new Blob([
@@ -120,7 +124,7 @@ export function DeviceResetSlideout({
     )
   }
 
-  const downloadRunHistoryLogs: React.MouseEventHandler = e => {
+  const downloadRunHistoryLogs: MouseEventHandler = e => {
     e.preventDefault()
     const runsHistory =
       runsQueryResponse != null ? runsQueryResponse.data?.data : []

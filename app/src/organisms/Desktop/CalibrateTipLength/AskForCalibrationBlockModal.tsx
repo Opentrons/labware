@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Trans, useTranslation } from 'react-i18next'
 import {
@@ -24,6 +24,7 @@ import { WizardHeader } from '/app/molecules/WizardHeader'
 import { getTopPortalEl } from '/app/App/portal'
 import { setUseTrashSurfaceForTipCal } from '/app/redux/calibration'
 
+import type { ChangeEvent } from 'react'
 import type { Dispatch } from '/app/redux/types'
 
 const BLOCK_REQUEST_EMAIL_BODY =
@@ -41,9 +42,7 @@ interface Props {
 
 export function AskForCalibrationBlockModal(props: Props): JSX.Element {
   const { t } = useTranslation(['robot_calibration', 'shared', 'branded'])
-  const [rememberPreference, setRememberPreference] = React.useState<boolean>(
-    true
-  )
+  const [rememberPreference, setRememberPreference] = useState<boolean>(true)
   const dispatch = useDispatch<Dispatch>()
 
   const makeSetHasBlock = (hasBlock: boolean) => (): void => {
@@ -108,7 +107,7 @@ export function AskForCalibrationBlockModal(props: Props): JSX.Element {
         >
           <Flex alignItems={ALIGN_CENTER}>
             <CheckboxField
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 setRememberPreference(e.currentTarget.checked)
               }}
               value={rememberPreference}

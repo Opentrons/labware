@@ -6,6 +6,7 @@ from opentrons_shared_data.pipette.types import (
     PipetteModelType,
     PipetteVersionType,
     PipetteGenerationType,
+    PipetteOEMType,
 )
 from opentrons_shared_data.pipette.types import PipetteModel, PipetteName
 from opentrons_shared_data.pipette import (
@@ -23,6 +24,7 @@ from opentrons_shared_data.pipette import (
                 PipetteModelType.p50,
                 PipetteChannelType.SINGLE_CHANNEL,
                 PipetteVersionType(2, 0),
+                PipetteOEMType.OT,
             ),
         ],
         [
@@ -31,6 +33,7 @@ from opentrons_shared_data.pipette import (
                 PipetteModelType.p1000,
                 PipetteChannelType.EIGHT_CHANNEL,
                 PipetteVersionType(1, 0),
+                PipetteOEMType.OT,
             ),
         ],
         [
@@ -39,6 +42,7 @@ from opentrons_shared_data.pipette import (
                 PipetteModelType.p1000,
                 PipetteChannelType.NINETY_SIX_CHANNEL,
                 PipetteVersionType(1, 0),
+                PipetteOEMType.OT,
             ),
         ],
     ],
@@ -59,6 +63,7 @@ def test_convert_pipette_model(
                 PipetteModelType.p50,
                 PipetteChannelType.SINGLE_CHANNEL,
                 PipetteVersionType(2, 0),
+                PipetteOEMType.OT,
             ),
         ],
         [
@@ -68,6 +73,7 @@ def test_convert_pipette_model(
                 PipetteModelType.p1000,
                 PipetteChannelType.EIGHT_CHANNEL,
                 PipetteVersionType(3, 3),
+                PipetteOEMType.OT,
             ),
         ],
         [
@@ -77,6 +83,7 @@ def test_convert_pipette_model(
                 PipetteModelType.p1000,
                 PipetteChannelType.NINETY_SIX_CHANNEL,
                 PipetteVersionType(1, 1),
+                PipetteOEMType.OT,
             ),
         ],
     ],
@@ -96,6 +103,7 @@ def test_convert_pipette_model_provided_version(
                 PipetteModelType.p50,
                 PipetteChannelType.SINGLE_CHANNEL,
                 PipetteVersionType(2, 0),
+                PipetteOEMType.OT,
             ),
         ],
         [
@@ -104,6 +112,7 @@ def test_convert_pipette_model_provided_version(
                 PipetteModelType.p1000,
                 PipetteChannelType.EIGHT_CHANNEL,
                 PipetteVersionType(3, 5),
+                PipetteOEMType.OT,
             ),
         ],
         [
@@ -112,6 +121,7 @@ def test_convert_pipette_model_provided_version(
                 PipetteModelType.p1000,
                 PipetteChannelType.NINETY_SIX_CHANNEL,
                 PipetteVersionType(3, 6),
+                PipetteOEMType.OT,
             ),
         ],
     ],
@@ -123,19 +133,21 @@ def test_convert_pipette_name(
 
 
 @pytest.mark.parametrize(
-    argnames=["model_type", "channels", "generation", "output"],
+    argnames=["model_type", "channels", "generation", "output", "oem"],
     argvalues=[
         [
             PipetteModelType.p50,
             PipetteChannelType.SINGLE_CHANNEL,
             PipetteGenerationType.GEN2,
             "p50_single_gen2",
+            PipetteOEMType.OT,
         ],
         [
             PipetteModelType.p1000,
             PipetteChannelType.EIGHT_CHANNEL,
             PipetteGenerationType.GEN2,
             "p1000_multi_gen2",
+            PipetteOEMType.OT,
         ],
         [
             # 96 channel has a unique "name" right now
@@ -143,6 +155,7 @@ def test_convert_pipette_name(
             PipetteChannelType.NINETY_SIX_CHANNEL,
             PipetteGenerationType.FLEX,
             "p1000_96",
+            PipetteOEMType.OT,
         ],
     ],
 )
@@ -151,35 +164,40 @@ def test_model_version_type_string_version(
     channels: PipetteChannelType,
     generation: PipetteGenerationType,
     output: PipetteName,
+    oem: PipetteOEMType,
 ) -> None:
     data = pc.PipetteNameType(
         pipette_type=model_type,
         pipette_channels=channels,
         pipette_generation=generation,
+        oem_type=oem,
     )
     assert output == str(data)
 
 
 @pytest.mark.parametrize(
-    argnames=["model_type", "channels", "version", "output"],
+    argnames=["model_type", "channels", "version", "output", "oem"],
     argvalues=[
         [
             PipetteModelType.p50,
             PipetteChannelType.SINGLE_CHANNEL,
             PipetteVersionType(1, 0),
             "p50_single_v1",
+            PipetteOEMType.OT,
         ],
         [
             PipetteModelType.p1000,
             PipetteChannelType.EIGHT_CHANNEL,
             PipetteVersionType(2, 1),
             "p1000_multi_v2.1",
+            PipetteOEMType.OT,
         ],
         [
             PipetteModelType.p1000,
             PipetteChannelType.NINETY_SIX_CHANNEL,
             PipetteVersionType(3, 3),
             "p1000_96_v3.3",
+            PipetteOEMType.OT,
         ],
     ],
 )
@@ -188,9 +206,13 @@ def test_name_type_string_generation(
     channels: PipetteChannelType,
     version: PipetteVersionType,
     output: PipetteModel,
+    oem: PipetteOEMType,
 ) -> None:
     data = pc.PipetteModelVersionType(
-        pipette_type=model_type, pipette_channels=channels, pipette_version=version
+        pipette_type=model_type,
+        pipette_channels=channels,
+        pipette_version=version,
+        oem_type=oem,
     )
     assert output == str(data)
 

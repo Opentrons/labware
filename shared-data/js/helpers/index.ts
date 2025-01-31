@@ -10,6 +10,7 @@ import type {
   RobotType,
   ThermalAdapterName,
 } from '../types'
+import type { AddressableAreaName, CutoutId } from '../../deck/types/schemaV5'
 
 export { getWellNamePerMultiTip } from './getWellNamePerMultiTip'
 export { getWellTotalVolume } from './getWellTotalVolume'
@@ -59,7 +60,7 @@ export const constructLabwareDefURI = (
 // Load names of "retired" labware
 // TODO(mc, 2019-12-3): how should this correspond to LABWAREV2_DO_NOT_LIST?
 // see shared-data/js/getLabware.js
-const RETIRED_LABWARE = [
+export const RETIRED_LABWARE = [
   'geb_96_tiprack_10ul',
   'geb_96_tiprack_1000ul',
   'opentrons_1_trash_850ml_fixed',
@@ -372,4 +373,29 @@ export const getDeckDefFromRobotType = (
   return robotType === 'OT-3 Standard'
     ? standardFlexDeckDef
     : standardOt2DeckDef
+}
+
+export const getCutoutIdFromAddressableArea = (
+  addressableAreaName: string,
+  deckDefinition: DeckDefinition
+): CutoutId | null => {
+  /**
+   * Given an addressable area name, returns the cutout ID associated with it, or null if there is none
+   */
+
+  for (const cutoutFixture of deckDefinition.cutoutFixtures) {
+    for (const [cutoutId, providedAreas] of Object.entries(
+      cutoutFixture.providesAddressableAreas
+    ) as Array<[CutoutId, AddressableAreaName[]]>) {
+      if (providedAreas.includes(addressableAreaName as AddressableAreaName)) {
+        return cutoutId
+      }
+    }
+  }
+
+  console.error(
+    `${addressableAreaName} is not provided by any cutout fixtures in deck definition ${deckDefinition.otId}`
+  )
+
+  return null
 }

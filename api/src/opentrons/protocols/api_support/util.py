@@ -391,3 +391,13 @@ def requires_version(major: int, minor: int) -> Callable[[FuncT], FuncT]:
         return cast(FuncT, _check_version_wrapper)
 
     return _set_version
+
+
+class ModifiedList(list[str]):
+    def __contains__(self, item: object) -> bool:
+        if not isinstance(item, str):
+            return False
+        for name in self:
+            if name == item.replace("-", "_").lower():
+                return True
+        return False

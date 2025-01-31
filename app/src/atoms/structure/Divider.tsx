@@ -1,7 +1,7 @@
-import type * as React from 'react'
 import { Box, COLORS, SPACING } from '@opentrons/components'
+import type { ComponentProps } from 'react'
 
-type Props = React.ComponentProps<typeof Box>
+type Props = ComponentProps<typeof Box>
 
 export function Divider(props: Props): JSX.Element {
   const { marginY } = props

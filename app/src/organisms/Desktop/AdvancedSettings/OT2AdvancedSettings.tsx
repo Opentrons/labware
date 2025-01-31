@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { css } from 'styled-components'
@@ -17,6 +16,7 @@ import {
 } from '/app/redux/calibration'
 import { getUseTrashSurfaceForTipCal } from '/app/redux/config'
 
+import type { ChangeEvent } from 'react'
 import type { Dispatch, State } from '/app/redux/types'
 
 const ALWAYS_BLOCK: 'always-block' = 'always-block'
@@ -74,7 +74,7 @@ export function OT2AdvancedSettings(): JSX.Element {
               ? ALWAYS_BLOCK
               : ALWAYS_PROMPT
           }
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
             // you know this is a limited-selection field whose values are only
             // the elements of BlockSelection; i know this is a limited-selection
             // field whose values are only the elements of BlockSelection; but sadly,

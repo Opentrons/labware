@@ -148,6 +148,7 @@ export function getRelevantFailedLabwareCmdFrom({
     case ERROR_KINDS.OVERPRESSURE_PREPARE_TO_ASPIRATE:
     case ERROR_KINDS.OVERPRESSURE_WHILE_ASPIRATING:
     case ERROR_KINDS.OVERPRESSURE_WHILE_DISPENSING:
+    case ERROR_KINDS.STALL_OR_COLLISION:
       return getRelevantPickUpTipCommand(failedCommandByRunRecord, runCommands)
     case ERROR_KINDS.GRIPPER_ERROR:
       return failedCommandByRunRecord as MoveLabwareRunTimeCommand
@@ -155,7 +156,7 @@ export function getRelevantFailedLabwareCmdFrom({
       return null
     default:
       console.error(
-        'No labware associated with failed command. Handle case explicitly.'
+        `useFailedLabwareUtils: No labware associated with error kind ${errorKind}. Handle case explicitly.`
       )
       return null
   }

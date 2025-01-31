@@ -166,7 +166,7 @@ Now we'll bring sample count into consideration as we :ref:`load the liquids <lo
     * - Tagmentation Wash Buffer
       - 900
 
-To calculate the total volume for each liquid, we'll multiply these numbers by ``column_count`` and by 1.1 (to ensure that the pipette can aspirate the required volume without drawing in air at the bottom of the well). This calculation can be done inline as the ``volume`` value of :py:meth:`.load_liquid`::
+To calculate the total volume for each liquid, we'll multiply these numbers by ``column_count`` and by 1.1 (to ensure that the pipette can aspirate the required volume without drawing in air at the bottom of the well). This calculation can be done inline as the ``volume`` value of :py:meth:`~.Well.load_liquid`::
 
     reservoir["A1"].load_liquid(
         liquid=ampure_liquid, volume=180 * column_count * 1.1

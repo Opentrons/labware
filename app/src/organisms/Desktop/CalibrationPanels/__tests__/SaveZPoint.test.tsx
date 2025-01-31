@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { vi, it, describe, expect } from 'vitest'
 
@@ -12,13 +11,13 @@ import {
 import * as Sessions from '/app/redux/sessions'
 import { SaveZPoint } from '../SaveZPoint'
 
+import type { ComponentProps } from 'react'
+
 describe('SaveZPoint', () => {
   const mockSendCommands = vi.fn()
   const mockDeleteSession = vi.fn()
 
-  const render = (
-    props: Partial<React.ComponentProps<typeof SaveZPoint>> = {}
-  ) => {
+  const render = (props: Partial<ComponentProps<typeof SaveZPoint>> = {}) => {
     const {
       mount = 'left',
       isMulti = false,

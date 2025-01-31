@@ -1,8 +1,11 @@
 """Implementation, request models, and response models for the load module command."""
 from __future__ import annotations
-from typing import TYPE_CHECKING, Optional, Type
+from typing import TYPE_CHECKING, Optional, Type, Any
 from typing_extensions import Literal
 from pydantic import BaseModel, Field
+from pydantic.json_schema import SkipJsonSchema
+
+from opentrons.protocol_engine.state.update_types import StateUpdate
 
 from .command import AbstractCommandImpl, BaseCommand, BaseCommandCreate, SuccessData
 from ..errors.error_occurrence import ErrorOccurrence
@@ -23,6 +26,10 @@ if TYPE_CHECKING:
 
 
 LoadModuleCommandType = Literal["loadModule"]
+
+
+def _remove_default(s: dict[str, Any]) -> None:
+    s.pop("default", None)
 
 
 class LoadModuleParams(BaseModel):
@@ -57,12 +64,13 @@ class LoadModuleParams(BaseModel):
         ),
     )
 
-    moduleId: Optional[str] = Field(
+    moduleId: str | SkipJsonSchema[None] = Field(
         None,
         description=(
             "An optional ID to assign to this module."
             " If None, an ID will be generated."
         ),
+        json_schema_extra=_remove_default,
     )
 
 
@@ -75,7 +83,7 @@ class LoadModuleResult(BaseModel):
 
     # TODO(mm, 2023-04-13): Remove this field. Jira RSS-221.
     definition: ModuleDefinition = Field(
-        deprecated=True,
+        json_schema_extra={"deprecated": True},
         description=(
             "The definition of the connected module."
             " This field is an implementation detail. We might change or remove it without warning."
@@ -116,25 +124,34 @@ class LoadModuleImplementation(
 
     async def execute(self, params: LoadModuleParams) -> SuccessData[LoadModuleResult]:
         """Check that the requested module is attached and assign its identifier."""
+        state_update = StateUpdate()
+
         module_type = params.model.as_type()
         self._ensure_module_location(params.location.slotName, module_type)
 
+        # todo(mm, 2024-12-03): Theoretically, we should be able to deal with
+        # addressable areas and deck configurations the same way between OT-2 and Flex.
+        # Can this be simplified?
         if self._state_view.config.robot_type == "OT-2 Standard":
             self._state_view.addressable_areas.raise_if_area_not_in_deck_configuration(
                 params.location.slotName.id
             )
         else:
-            addressable_area = self._state_view.geometry._modules.ensure_and_convert_module_fixture_location(
-                deck_slot=params.location.slotName,
-                deck_type=self._state_view.config.deck_type,
-                model=params.model,
+            addressable_area_provided_by_module = (
+                self._state_view.modules.ensure_and_convert_module_fixture_location(
+                    deck_slot=params.location.slotName,
+                    model=params.model,
+                )
             )
             self._state_view.addressable_areas.raise_if_area_not_in_deck_configuration(
-                addressable_area
+                addressable_area_provided_by_module
             )
 
         verified_location = self._state_view.geometry.ensure_location_not_occupied(
             params.location
+        )
+        state_update.set_addressable_area_used(
+            addressable_area_name=params.location.slotName.id
         )
 
         if params.model == ModuleModel.MAGNETIC_BLOCK_V1:
@@ -157,11 +174,15 @@ class LoadModuleImplementation(
                 model=loaded_module.definition.model,
                 definition=loaded_module.definition,
             ),
+            state_update=state_update,
         )
 
     def _ensure_module_location(
         self, slot: DeckSlotName, module_type: ModuleType
     ) -> None:
+        # todo(mm, 2024-12-03): Theoretically, we should be able to deal with
+        # addressable areas and deck configurations the same way between OT-2 and Flex.
+        # Can this be simplified?
         if self._state_view.config.robot_type == "OT-2 Standard":
             slot_def = self._state_view.addressable_areas.get_slot_definition(slot.id)
             compatible_modules = slot_def["compatibleModuleTypes"]
@@ -173,7 +194,7 @@ class LoadModuleImplementation(
             cutout_fixture_id = ModuleType.to_module_fixture_id(module_type)
             module_fixture = deck_configuration_provider.get_cutout_fixture(
                 cutout_fixture_id,
-                self._state_view.addressable_areas.state.deck_definition,
+                self._state_view.labware.get_deck_definition(),
             )
             cutout_id = (
                 self._state_view.addressable_areas.get_cutout_id_by_deck_slot_name(slot)
@@ -189,7 +210,7 @@ class LoadModule(BaseCommand[LoadModuleParams, LoadModuleResult, ErrorOccurrence
 
     commandType: LoadModuleCommandType = "loadModule"
     params: LoadModuleParams
-    result: Optional[LoadModuleResult]
+    result: Optional[LoadModuleResult] = None
 
     _ImplementationCls: Type[LoadModuleImplementation] = LoadModuleImplementation
 

@@ -1,7 +1,6 @@
 // TODO: replace this by making these props true of interventionmodal content wrappers
 // once error recovery uses interventionmodal consistently
 
-import type * as React from 'react'
 import { css } from 'styled-components'
 import {
   DIRECTION_COLUMN,
@@ -18,19 +17,21 @@ import {
 } from '/app/molecules/InterventionModal'
 import { RecoveryFooterButtons } from './RecoveryFooterButtons'
 
+import type { ComponentProps, ReactNode } from 'react'
+
 interface SingleColumnContentWrapperProps {
-  children: React.ReactNode
-  footerDetails?: React.ComponentProps<typeof RecoveryFooterButtons>
+  children: ReactNode
+  footerDetails?: ComponentProps<typeof RecoveryFooterButtons>
 }
 
 interface TwoColumnContentWrapperProps {
-  children: [React.ReactNode, React.ReactNode]
-  footerDetails?: React.ComponentProps<typeof RecoveryFooterButtons>
+  children: [ReactNode, ReactNode]
+  footerDetails?: ComponentProps<typeof RecoveryFooterButtons>
 }
 
 interface OneOrTwoColumnContentWrapperProps {
-  children: [React.ReactNode, React.ReactNode]
-  footerDetails?: React.ComponentProps<typeof RecoveryFooterButtons>
+  children: [ReactNode, ReactNode]
+  footerDetails?: ComponentProps<typeof RecoveryFooterButtons>
 }
 // For flex-direction: column recovery content with one column only.
 export function RecoverySingleColumnContentWrapper({

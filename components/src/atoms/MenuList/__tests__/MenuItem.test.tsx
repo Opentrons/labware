@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, expect, beforeEach } from 'vitest'
 import { screen } from '@testing-library/react'
 
@@ -8,12 +7,14 @@ import { SPACING, TYPOGRAPHY } from '../../../ui-style-constants'
 
 import { MenuItem } from '../MenuItem'
 
-const render = (props: React.ComponentProps<typeof MenuItem>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof MenuItem>) => {
   return renderWithProviders(<MenuItem {...props} />)[0]
 }
 
 describe('MenuItem', () => {
-  let props: React.ComponentProps<typeof MenuItem>
+  let props: ComponentProps<typeof MenuItem>
 
   beforeEach(() => {
     props = {

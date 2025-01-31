@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { fireEvent, screen, waitFor, renderHook } from '@testing-library/react'
@@ -21,6 +20,7 @@ import { StepInfo } from '../shared'
 import { useToaster } from '../../ToasterOven'
 import { clickButtonLabeled } from './util'
 
+import type { ComponentProps, FunctionComponent, ReactNode } from 'react'
 import type { Store } from 'redux'
 
 vi.mock('/app/redux/config')
@@ -30,7 +30,7 @@ vi.mock('../../ToasterOven')
 const store: Store<any> = createStore(vi.fn(), {})
 
 describe('useRunPausedSplash', () => {
-  let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+  let wrapper: FunctionComponent<{ children: ReactNode }>
   beforeEach(() => {
     vi.mocked(getIsOnDevice).mockReturnValue(true)
     const queryClient = new QueryClient()
@@ -65,7 +65,7 @@ describe('useRunPausedSplash', () => {
   })
 })
 
-const render = (props: React.ComponentProps<typeof RecoverySplash>) => {
+const render = (props: ComponentProps<typeof RecoverySplash>) => {
   return renderWithProviders(
     <MemoryRouter>
       <RecoverySplash {...props} />
@@ -77,14 +77,17 @@ const render = (props: React.ComponentProps<typeof RecoverySplash>) => {
 }
 
 describe('RecoverySplash', () => {
-  let props: React.ComponentProps<typeof RecoverySplash>
+  let props: ComponentProps<typeof RecoverySplash>
   const mockToggleERWiz = vi.fn(() => Promise.resolve())
   const mockProceedToRouteAndStep = vi.fn()
+  const mockHandleMotionRouting = vi.fn(() => Promise.resolve())
   const mockRouteUpdateActions = {
     proceedToRouteAndStep: mockProceedToRouteAndStep,
+    handleMotionRouting: mockHandleMotionRouting,
   } as any
   const mockMakeToast = vi.fn()
   const mockResumeRecovery = vi.fn()
+  const mockHomePipetteZAxes = vi.fn(() => Promise.resolve())
 
   beforeEach(() => {
     props = {
@@ -96,6 +99,7 @@ describe('RecoverySplash', () => {
         resumeRecovery: mockResumeRecovery,
       } as any,
       resumePausedRecovery: true,
+      recoveryCommands: { homePipetteZAxes: mockHomePipetteZAxes } as any,
     }
 
     vi.mocked(StepInfo).mockReturnValue(<div>MOCK STEP INFO</div>)
@@ -161,6 +165,13 @@ describe('RecoverySplash', () => {
     })
     await waitFor(() => {
       expect(mockToggleERWiz).toHaveBeenCalledWith(true, true)
+    })
+
+    expect(mockHandleMotionRouting).toHaveBeenNthCalledWith(1, true)
+    expect(mockHandleMotionRouting).toHaveBeenNthCalledWith(2, false)
+
+    await waitFor(() => {
+      expect(props.recoveryCommands.homePipetteZAxes).toHaveBeenCalled()
     })
   })
 

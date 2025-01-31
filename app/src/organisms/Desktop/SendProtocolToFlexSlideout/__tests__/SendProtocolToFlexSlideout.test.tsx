@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
@@ -36,6 +35,7 @@ import { storedProtocolData as storedProtocolDataFixture } from '/app/redux/prot
 import { SendProtocolToFlexSlideout } from '..'
 import { useNotifyAllRunsQuery } from '/app/resources/runs'
 
+import type { ComponentProps } from 'react'
 import type * as ApiClient from '@opentrons/react-api-client'
 
 vi.mock('@opentrons/react-api-client', async importOriginal => {
@@ -53,9 +53,7 @@ vi.mock('/app/redux/custom-labware')
 vi.mock('/app/redux/protocol-storage/selectors')
 vi.mock('/app/resources/runs')
 
-const render = (
-  props: React.ComponentProps<typeof SendProtocolToFlexSlideout>
-) => {
+const render = (props: ComponentProps<typeof SendProtocolToFlexSlideout>) => {
   return renderWithProviders(
     <MemoryRouter>
       <SendProtocolToFlexSlideout {...props} />

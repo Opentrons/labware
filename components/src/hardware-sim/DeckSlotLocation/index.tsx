@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import {
   getPositionFromSlotId,
   OT2_ROBOT_TYPE,
@@ -7,17 +6,18 @@ import {
 
 import { SlotBase } from '../BaseDeck/SlotBase'
 
+import type { SVGProps } from 'react'
 import type {
   DeckDefinition,
   DeckSlot,
   RobotType,
 } from '@opentrons/shared-data'
 
-interface LegacyDeckSlotLocationProps extends React.SVGProps<SVGGElement> {
+interface LegacyDeckSlotLocationProps extends SVGProps<SVGGElement> {
   robotType: RobotType
   slotName: DeckSlot['id']
-  slotBaseColor?: React.SVGProps<SVGPathElement>['fill']
-  slotClipColor?: React.SVGProps<SVGPathElement>['stroke']
+  slotBaseColor?: SVGProps<SVGPathElement>['fill']
+  slotClipColor?: SVGProps<SVGPathElement>['stroke']
 }
 
 type AddressableAreaFromDeckDef = typeof ot2DeckDefV5.locations.addressableAreas[number]

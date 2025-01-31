@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, beforeEach, expect } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { fireEvent, screen } from '@testing-library/react'
@@ -8,19 +7,21 @@ import { getUnsavedForm } from '../../../../../step-forms/selectors'
 import { StepContainer } from '../StepContainer'
 import { StepOverflowMenu } from '../StepOverflowMenu'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('../../../../../step-forms/selectors')
 vi.mock('../../../../../ui/steps/actions/actions')
 vi.mock('../../../../../ui/steps/selectors')
 vi.mock('../StepOverflowMenu')
 
-const render = (props: React.ComponentProps<typeof StepContainer>) => {
+const render = (props: ComponentProps<typeof StepContainer>) => {
   return renderWithProviders(<StepContainer {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('StepContainer', () => {
-  let props: React.ComponentProps<typeof StepContainer>
+  let props: ComponentProps<typeof StepContainer>
 
   beforeEach(() => {
     props = {
@@ -32,6 +33,7 @@ describe('StepContainer', () => {
       stepId: 'mockStepId',
       hasError: false,
       isStepAfterError: false,
+      sidebarWidth: 350,
     }
     vi.mocked(StepOverflowMenu).mockReturnValue(
       <div>mock StepOverflowMenu</div>
@@ -48,5 +50,9 @@ describe('StepContainer', () => {
     props.title = 'Final deck state'
     render(props)
     screen.getByText('Final deck state')
+  })
+  it('renders the divider if hover targets that step', () => {
+    render({ ...props, dragHovered: true })
+    screen.getByTestId('divider')
   })
 })

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, vi, expect, beforeEach, afterEach } from 'vitest'
 
@@ -9,6 +8,7 @@ import { i18n } from '/app/i18n'
 import { useTrackEvent } from '/app/redux/analytics'
 import { CustomLabwareOverflowMenu } from '../CustomLabwareOverflowMenu'
 
+import type { ComponentProps } from 'react'
 import type { Mock } from 'vitest'
 import type * as OpentronsComponents from '@opentrons/components'
 
@@ -31,7 +31,7 @@ vi.mock('@opentrons/components', async importOriginal => {
 })
 
 const render = (
-  props: React.ComponentProps<typeof CustomLabwareOverflowMenu>
+  props: ComponentProps<typeof CustomLabwareOverflowMenu>
 ): ReturnType<typeof renderWithProviders> => {
   return renderWithProviders(<CustomLabwareOverflowMenu {...props} />, {
     i18nInstance: i18n,
@@ -39,7 +39,7 @@ const render = (
 }
 
 describe('CustomLabwareOverflowMenu', () => {
-  let props: React.ComponentProps<typeof CustomLabwareOverflowMenu>
+  let props: ComponentProps<typeof CustomLabwareOverflowMenu>
 
   beforeEach(() => {
     props = {

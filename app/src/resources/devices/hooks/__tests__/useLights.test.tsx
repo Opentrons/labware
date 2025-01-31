@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, expect, describe, beforeEach, afterEach } from 'vitest'
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
@@ -11,6 +10,7 @@ import {
 
 import { useLights } from '../useLights'
 
+import type { FunctionComponent, ReactNode } from 'react'
 import type { Store } from 'redux'
 import type { Mock } from 'vitest'
 
@@ -19,7 +19,7 @@ vi.mock('@opentrons/react-api-client')
 const store: Store<any> = createStore(vi.fn(), {})
 
 describe('useLights hook', () => {
-  let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+  let wrapper: FunctionComponent<{ children: ReactNode }>
   let setLights: Mock
 
   beforeEach(() => {

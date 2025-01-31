@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { DIRECTION_COLUMN, Flex } from '@opentrons/components'
@@ -6,11 +6,12 @@ import { DIRECTION_COLUMN, Flex } from '@opentrons/components'
 import { ChildNavigation } from '/app/organisms/ODD/ChildNavigation'
 import { SetWifiSsid } from '../../NetworkSettings'
 
+import type { Dispatch, SetStateAction } from 'react'
 import type { SetSettingOption } from '../types'
 
 interface RobotSettingsJoinOtherNetworkProps {
   setCurrentOption: SetSettingOption
-  setSelectedSsid: React.Dispatch<React.SetStateAction<string>>
+  setSelectedSsid: Dispatch<SetStateAction<string>>
 }
 
 /**
@@ -22,8 +23,8 @@ export function RobotSettingsJoinOtherNetwork({
 }: RobotSettingsJoinOtherNetworkProps): JSX.Element {
   const { i18n, t } = useTranslation('device_settings')
 
-  const [inputSsid, setInputSsid] = React.useState<string>('')
-  const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
+  const [inputSsid, setInputSsid] = useState<string>('')
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const handleContinue = (): void => {
     if (inputSsid.length >= 2 && inputSsid.length <= 32) {

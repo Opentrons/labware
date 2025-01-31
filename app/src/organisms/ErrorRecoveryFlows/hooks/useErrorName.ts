@@ -23,6 +23,8 @@ export function useErrorName(errorKind: ErrorKind): string {
       return t('tip_drop_failed')
     case ERROR_KINDS.GRIPPER_ERROR:
       return t('gripper_error')
+    case ERROR_KINDS.STALL_OR_COLLISION:
+      return t('stall_or_collision_error')
     default:
       return t('error')
   }

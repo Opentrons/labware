@@ -1,7 +1,8 @@
-import type * as React from 'react'
-import { Btn, StyledText, COLORS, RESPONSIVENESS } from '@opentrons/components'
-import type { StyleProps } from '@opentrons/components'
 import { css } from 'styled-components'
+import { Btn, StyledText, COLORS, RESPONSIVENESS } from '@opentrons/components'
+
+import type { ReactNode } from 'react'
+import type { StyleProps } from '@opentrons/components'
 
 const GO_BACK_BUTTON_STYLE = css`
   color: ${COLORS.grey50};
@@ -26,7 +27,7 @@ const GO_BACK_BUTTON_DISABLED_STYLE = css`
 
 interface TextOnlyButtonProps extends StyleProps {
   onClick: () => void
-  buttonText: React.ReactNode
+  buttonText: ReactNode
   disabled?: boolean
 }
 

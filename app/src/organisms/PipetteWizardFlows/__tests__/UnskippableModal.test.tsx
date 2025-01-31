@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 
@@ -6,14 +5,16 @@ import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { UnskippableModal } from '../UnskippableModal'
 
-const render = (props: React.ComponentProps<typeof UnskippableModal>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof UnskippableModal>) => {
   return renderWithProviders(<UnskippableModal {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('UnskippableModal', () => {
-  let props: React.ComponentProps<typeof UnskippableModal>
+  let props: ComponentProps<typeof UnskippableModal>
   it('returns the correct information for unskippable modal, pressing return button calls goBack prop', () => {
     props = {
       goBack: vi.fn(),

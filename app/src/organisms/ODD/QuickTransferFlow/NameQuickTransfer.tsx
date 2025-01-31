@@ -33,7 +33,6 @@ export function NameQuickTransfer(props: NameQuickTransferProps): JSX.Element {
   if (name.length > 60) {
     error = t('character_limit_error')
   }
-  // TODO add error handling for quick transfer name replication
 
   return createPortal(
     <Flex position={POSITION_FIXED} backgroundColor={COLORS.white} width="100%">

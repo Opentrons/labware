@@ -20,6 +20,7 @@ import { CLIENT_MAX_WIDTH } from './resources/constants'
 import { Footer } from './molecules/Footer'
 import { HeaderWithMeter } from './molecules/HeaderWithMeter'
 import styled from 'styled-components'
+import { ExitConfirmModal } from './molecules/ExitConfirmModal'
 
 export function OpentronsAI(): JSX.Element | null {
   const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0()
@@ -94,6 +95,7 @@ export function OpentronsAI(): JSX.Element | null {
           flex={1}
         >
           <HashRouter>
+            <ExitConfirmModal />
             <OpentronsAIRoutes />
           </HashRouter>
         </Flex>

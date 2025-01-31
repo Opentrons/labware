@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { createPortal } from 'react-dom'
 
@@ -8,8 +8,8 @@ import {
   DIRECTION_COLUMN,
   Flex,
   InputField,
-  RadioButton,
   POSITION_FIXED,
+  RadioButton,
   SPACING,
 } from '@opentrons/components'
 
@@ -18,19 +18,20 @@ import { getTopPortalEl } from '/app/App/portal'
 import { ChildNavigation } from '/app/organisms/ODD/ChildNavigation'
 import { useTrackEventWithRobotSerial } from '/app/redux-resources/analytics'
 import { ACTIONS } from '../constants'
+import { i18n } from '/app/i18n'
+import { NumericalKeyboard } from '/app/atoms/SoftwareKeyboard'
 
+import type { Dispatch } from 'react'
 import type {
   QuickTransferSummaryState,
   QuickTransferSummaryAction,
   FlowRateKind,
 } from '../types'
-import { i18n } from '/app/i18n'
-import { NumericalKeyboard } from '/app/atoms/SoftwareKeyboard'
 
 interface MixProps {
   onBack: () => void
   state: QuickTransferSummaryState
-  dispatch: React.Dispatch<QuickTransferSummaryAction>
+  dispatch: Dispatch<QuickTransferSummaryAction>
   kind: FlowRateKind
 }
 
@@ -38,20 +39,20 @@ export function Mix(props: MixProps): JSX.Element {
   const { kind, onBack, state, dispatch } = props
   const { t } = useTranslation('quick_transfer')
   const { trackEventWithRobotSerial } = useTrackEventWithRobotSerial()
-  const keyboardRef = React.useRef(null)
+  const keyboardRef = useRef(null)
 
-  const [mixIsEnabled, setMixIsEnabled] = React.useState<boolean>(
+  const [mixIsEnabled, setMixIsEnabled] = useState<boolean>(
     kind === 'aspirate'
       ? state.mixOnAspirate != null
       : state.mixOnDispense != null
   )
-  const [currentStep, setCurrentStep] = React.useState<number>(1)
-  const [mixVolume, setMixVolume] = React.useState<number | null>(
+  const [currentStep, setCurrentStep] = useState<number>(1)
+  const [mixVolume, setMixVolume] = useState<number | null>(
     kind === 'aspirate'
       ? state.mixOnAspirate?.mixVolume ?? null
       : state.mixOnDispense?.mixVolume ?? null
   )
-  const [mixReps, setMixReps] = React.useState<number | null>(
+  const [mixReps, setMixReps] = useState<number | null>(
     kind === 'aspirate'
       ? state.mixOnAspirate?.repititions ?? null
       : state.mixOnDispense?.repititions ?? null

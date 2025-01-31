@@ -58,6 +58,7 @@ export const mockRecoveryContentProps: RecoveryContentProps = {
     byRunRecord: mockFailedCommand,
     byAnalysis: mockFailedCommand,
   },
+  runLwDefsByUri: {} as any,
   errorKind: 'GENERAL_ERROR',
   robotType: FLEX_ROBOT_TYPE,
   runId: 'MOCK_RUN_ID',

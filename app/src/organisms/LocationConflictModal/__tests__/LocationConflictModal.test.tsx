@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
@@ -21,6 +20,7 @@ import { useCloseCurrentRun } from '/app/resources/runs'
 import { LocationConflictModal } from '../LocationConflictModal'
 import { useNotifyDeckConfigurationQuery } from '/app/resources/deck_configuration'
 
+import type { ComponentProps } from 'react'
 import type { UseQueryResult } from 'react-query'
 import type { DeckConfiguration } from '@opentrons/shared-data'
 
@@ -33,7 +33,7 @@ const mockFixture = {
   cutoutFixtureId: STAGING_AREA_RIGHT_SLOT_FIXTURE,
 }
 
-const render = (props: React.ComponentProps<typeof LocationConflictModal>) => {
+const render = (props: ComponentProps<typeof LocationConflictModal>) => {
   return renderWithProviders(
     <MemoryRouter>
       <LocationConflictModal {...props} />
@@ -45,7 +45,7 @@ const render = (props: React.ComponentProps<typeof LocationConflictModal>) => {
 }
 
 describe('LocationConflictModal', () => {
-  let props: React.ComponentProps<typeof LocationConflictModal>
+  let props: ComponentProps<typeof LocationConflictModal>
   const mockUpdate = vi.fn()
   beforeEach(() => {
     props = {

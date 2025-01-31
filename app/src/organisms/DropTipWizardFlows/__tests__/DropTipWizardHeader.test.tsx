@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { screen } from '@testing-library/react'
 
@@ -10,17 +9,18 @@ import {
   DropTipWizardHeader,
 } from '../DropTipWizardHeader'
 
+import type { ComponentProps } from 'react'
 import type { Mock } from 'vitest'
 import type { UseWizardExitHeaderProps } from '../DropTipWizardHeader'
 
-const render = (props: React.ComponentProps<typeof DropTipWizardHeader>) => {
+const render = (props: ComponentProps<typeof DropTipWizardHeader>) => {
   return renderWithProviders(<DropTipWizardHeader {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('DropTipWizardHeader', () => {
-  let props: React.ComponentProps<typeof DropTipWizardHeader>
+  let props: ComponentProps<typeof DropTipWizardHeader>
 
   beforeEach(() => {
     props = mockDropTipWizardContainerProps

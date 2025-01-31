@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useRobot } from '/app/redux-resources/robots'
@@ -10,8 +9,10 @@ import {
   ANALYTICS_PROTOCOL_PROCEED_TO_RUN,
 } from '/app/redux/analytics'
 
+import type { RefObject } from 'react'
+
 interface BackToTopButtonProps {
-  protocolRunHeaderRef: React.RefObject<HTMLDivElement> | null
+  protocolRunHeaderRef: RefObject<HTMLDivElement> | null
   robotName: string
   runId: string
   sourceLocation: string

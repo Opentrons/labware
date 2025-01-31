@@ -1,7 +1,7 @@
 from enum import Enum
 
 import typing
-from pydantic import BaseModel, Field, validator
+from pydantic import field_validator, BaseModel, Field
 
 from opentrons.hardware_control import types
 
@@ -38,8 +38,10 @@ class EngagedMotors(BaseModel):
     z_r: EngagedMotor
     p_l: EngagedMotor
     p_r: EngagedMotor
-    q: typing.Optional[EngagedMotor]  # Optional since OT2 doesn't have these axes
-    g: typing.Optional[EngagedMotor]
+    q: typing.Optional[
+        EngagedMotor
+    ] = None  # Optional since OT2 doesn't have these axes
+    g: typing.Optional[EngagedMotor] = None
 
 
 class Axes(BaseModel):
@@ -47,6 +49,7 @@ class Axes(BaseModel):
 
     axes: typing.List[MotorName]
 
-    @validator("axes", pre=True)
+    @field_validator("axes", mode="before")
+    @classmethod
     def lower_case_motor_name(cls, v):
         return [m.lower() for m in v]

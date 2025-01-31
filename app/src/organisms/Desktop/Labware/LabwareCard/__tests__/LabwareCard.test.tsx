@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { describe, it, vi, beforeEach } from 'vitest'
 import { renderWithProviders, nestedTextMatcher } from '/app/__testing-utils__'
@@ -8,6 +7,7 @@ import { mockDefinition } from '/app/redux/custom-labware/__fixtures__'
 import { CustomLabwareOverflowMenu } from '../CustomLabwareOverflowMenu'
 import { LabwareCard } from '..'
 
+import type { ComponentProps } from 'react'
 import type * as OpentronsComponents from '@opentrons/components'
 
 vi.mock('/app/local-resources/labware')
@@ -21,14 +21,14 @@ vi.mock('@opentrons/components', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof LabwareCard>) => {
+const render = (props: ComponentProps<typeof LabwareCard>) => {
   return renderWithProviders(<LabwareCard {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('LabwareCard', () => {
-  let props: React.ComponentProps<typeof LabwareCard>
+  let props: ComponentProps<typeof LabwareCard>
   beforeEach(() => {
     vi.mocked(CustomLabwareOverflowMenu).mockReturnValue(
       <div>Mock CustomLabwareOverflowMenu</div>

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, waitFor, screen } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
@@ -7,14 +6,16 @@ import { useInstrumentsQuery } from '@opentrons/react-api-client'
 import { renderWithProviders } from '/app/__testing-utils__'
 import { CheckPipetteButton } from '../CheckPipetteButton'
 
-const render = (props: React.ComponentProps<typeof CheckPipetteButton>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof CheckPipetteButton>) => {
   return renderWithProviders(<CheckPipetteButton {...props} />)[0]
 }
 
 vi.mock('@opentrons/react-api-client')
 
 describe('CheckPipetteButton', () => {
-  let props: React.ComponentProps<typeof CheckPipetteButton>
+  let props: ComponentProps<typeof CheckPipetteButton>
   const refetch = vi.fn(() => Promise.resolve())
   beforeEach(() => {
     props = {

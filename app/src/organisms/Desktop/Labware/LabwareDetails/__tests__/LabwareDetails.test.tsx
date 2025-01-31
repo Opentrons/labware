@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, beforeEach, afterEach, vi, expect } from 'vitest'
 
@@ -17,6 +16,8 @@ import { WellSpacing } from '../WellSpacing'
 
 import { LabwareDetails } from '..'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/local-resources/labware')
 vi.mock('../../LabwareCard/CustomLabwareOverflowMenu')
 vi.mock('../Dimensions')
@@ -28,7 +29,7 @@ vi.mock('../WellDimensions')
 vi.mock('../WellSpacing')
 
 const render = (
-  props: React.ComponentProps<typeof LabwareDetails>
+  props: ComponentProps<typeof LabwareDetails>
 ): ReturnType<typeof renderWithProviders> => {
   return renderWithProviders(<LabwareDetails {...props} />, {
     i18nInstance: i18n,
@@ -36,7 +37,7 @@ const render = (
 }
 
 describe('LabwareDetails', () => {
-  let props: React.ComponentProps<typeof LabwareDetails>
+  let props: ComponentProps<typeof LabwareDetails>
   beforeEach(() => {
     vi.mocked(CustomLabwareOverflowMenu).mockReturnValue(
       <div>Mock CustomLabwareOverflowMenu</div>

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { vi, it, describe, expect, beforeEach } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
@@ -18,9 +17,11 @@ import {
   expectedTaskList,
 } from '../../Devices/hooks/__fixtures__/taskListFixtures'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('../../Devices/hooks')
 
-const render = (props: React.ComponentProps<typeof CalibrationStatusCard>) => {
+const render = (props: ComponentProps<typeof CalibrationStatusCard>) => {
   return renderWithProviders(
     <MemoryRouter>
       <CalibrationStatusCard {...props} />
@@ -38,7 +39,7 @@ describe('CalibrationStatusCard', () => {
     vi.mocked(useCalibrationTaskList).mockReturnValue(expectedTaskList)
   })
 
-  const props: React.ComponentProps<typeof CalibrationStatusCard> = {
+  const props: ComponentProps<typeof CalibrationStatusCard> = {
     robotName: 'otie',
     setShowHowCalibrationWorksModal: mockSetShowHowCalibrationWorksModal,
   }

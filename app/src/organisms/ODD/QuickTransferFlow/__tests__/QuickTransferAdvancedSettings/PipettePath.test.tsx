@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, afterEach, vi, beforeEach } from 'vitest'
 
@@ -9,6 +8,8 @@ import { i18n } from '/app/i18n'
 import { useTrackEventWithRobotSerial } from '/app/redux-resources/analytics'
 import { PipettePath } from '../../QuickTransferAdvancedSettings/PipettePath'
 import { useBlowOutLocationOptions } from '../../QuickTransferAdvancedSettings/BlowOut'
+
+import type { ComponentProps } from 'react'
 import type { QuickTransferSummaryState } from '../../types'
 
 vi.mock('/app/redux-resources/analytics')
@@ -23,7 +24,7 @@ vi.mock('@opentrons/components', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof PipettePath>) => {
+const render = (props: ComponentProps<typeof PipettePath>) => {
   return renderWithProviders(<PipettePath {...props} />, {
     i18nInstance: i18n,
   })
@@ -31,7 +32,7 @@ const render = (props: React.ComponentProps<typeof PipettePath>) => {
 let mockTrackEventWithRobotSerial: any
 
 describe('PipettePath', () => {
-  let props: React.ComponentProps<typeof PipettePath>
+  let props: ComponentProps<typeof PipettePath>
 
   beforeEach(() => {
     props = {

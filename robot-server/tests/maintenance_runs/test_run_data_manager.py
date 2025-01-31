@@ -1,4 +1,5 @@
 """Tests for RunDataManager."""
+
 import pytest
 from datetime import datetime
 from decoy import Decoy
@@ -62,13 +63,18 @@ def engine_state_summary() -> StateSummary:
     """Get a StateSummary value object."""
     return StateSummary(
         status=EngineStatus.IDLE,
-        errors=[ErrorOccurrence.construct(id="some-error-id")],  # type: ignore[call-arg]
+        errors=[ErrorOccurrence.model_construct(id="some-error-id")],  # type: ignore[call-arg]
         hasEverEnteredErrorRecovery=False,
-        labware=[LoadedLabware.construct(id="some-labware-id")],  # type: ignore[call-arg]
-        labwareOffsets=[LabwareOffset.construct(id="some-labware-offset-id")],  # type: ignore[call-arg]
-        pipettes=[LoadedPipette.construct(id="some-pipette-id")],  # type: ignore[call-arg]
-        modules=[LoadedModule.construct(id="some-module-id")],  # type: ignore[call-arg]
-        liquids=[Liquid(id="some-liquid-id", displayName="liquid", description="desc")],
+        labware=[LoadedLabware.model_construct(id="some-labware-id")],  # type: ignore[call-arg]
+        labwareOffsets=[LabwareOffset.model_construct(id="some-labware-offset-id")],  # type: ignore[call-arg]
+        pipettes=[LoadedPipette.model_construct(id="some-pipette-id")],  # type: ignore[call-arg]
+        modules=[LoadedModule.model_construct(id="some-module-id")],  # type: ignore[call-arg]
+        liquids=[
+            Liquid.model_construct(
+                id="some-liquid-id", displayName="liquid", description="desc"
+            )
+        ],
+        liquidClasses=[],
         wells=[],
     )
 
@@ -140,6 +146,7 @@ async def test_create(
         pipettes=engine_state_summary.pipettes,
         modules=engine_state_summary.modules,
         liquids=engine_state_summary.liquids,
+        liquidClasses=engine_state_summary.liquidClasses,
     )
 
 
@@ -193,6 +200,7 @@ async def test_create_with_options(
         pipettes=engine_state_summary.pipettes,
         modules=engine_state_summary.modules,
         liquids=engine_state_summary.liquids,
+        liquidClasses=engine_state_summary.liquidClasses,
     )
 
 
@@ -262,6 +270,7 @@ async def test_get_current_run(
         pipettes=engine_state_summary.pipettes,
         modules=engine_state_summary.modules,
         liquids=engine_state_summary.liquids,
+        liquidClasses=engine_state_summary.liquidClasses,
     )
     assert subject.current_run_id == run_id
 

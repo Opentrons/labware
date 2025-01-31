@@ -145,6 +145,8 @@ export function GripperWizardFlows(
   })
 
   const handleCleanUpAndClose = (): void => {
+    setIsExiting(true)
+
     if (maintenanceRunData?.data.id == null) {
       handleClose()
     } else {

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, vi, beforeEach, expect, afterEach } from 'vitest'
 import { renderWithProviders } from '/app/__testing-utils__'
@@ -13,6 +12,8 @@ import {
   REMOVE_PIN_FROM_REAR_JAW,
   SECTIONS,
 } from '../constants'
+
+import type { ComponentProps } from 'react'
 import type { CommandData } from '@opentrons/api-client'
 
 describe('MovePin', () => {
@@ -25,9 +26,7 @@ describe('MovePin', () => {
   const mockSetFrontJawOffset = vi.fn()
   const mockRunId = 'fakeRunId'
 
-  const render = (
-    props: Partial<React.ComponentProps<typeof MovePin>> = {}
-  ) => {
+  const render = (props: Partial<ComponentProps<typeof MovePin>> = {}) => {
     return renderWithProviders(
       <MovePin
         maintenanceRunId={mockRunId}

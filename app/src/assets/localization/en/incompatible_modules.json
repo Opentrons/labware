@@ -1,7 +1,7 @@
 {
   "incompatible_modules_attached": "incompatible module detected",
-  "remove_before_running_protocol": "Remove the following hardware before running a protocol:",
+  "is_not_compatible": "{{module_name}} is not compatible with the {{robot_type}}",
   "needs_your_assistance": "{{robot_name}} needs your assistance",
-  "remove_before_using": "You must remove incompatible modules before using this robot.",
-  "is_not_compatible": "{{module_name}} is not compatible with the {{robot_type}}"
+  "remove_before_running_protocol": "Remove the following hardware before running a protocol:",
+  "remove_before_using": "You must remove incompatible modules before using this robot."
 }

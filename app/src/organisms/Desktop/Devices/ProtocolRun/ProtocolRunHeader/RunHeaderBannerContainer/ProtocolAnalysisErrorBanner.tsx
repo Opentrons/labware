@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Trans, useTranslation } from 'react-i18next'
 
@@ -18,6 +18,7 @@ import {
 
 import { getTopPortalEl } from '/app/App/portal'
 
+import type { MouseEventHandler } from 'react'
 import type { AnalysisError } from '@opentrons/shared-data'
 
 interface ProtocolAnalysisErrorBannerProps {
@@ -29,9 +30,9 @@ export function ProtocolAnalysisErrorBanner(
 ): JSX.Element {
   const { errors } = props
   const { t } = useTranslation(['run_details'])
-  const [showErrorDetails, setShowErrorDetails] = React.useState(false)
+  const [showErrorDetails, setShowErrorDetails] = useState(false)
 
-  const handleToggleDetails: React.MouseEventHandler = e => {
+  const handleToggleDetails: MouseEventHandler = e => {
     e.preventDefault()
     e.stopPropagation()
     setShowErrorDetails(!showErrorDetails)

@@ -22,13 +22,7 @@ class Item(BaseModel):
 @pytest.fixture
 def app() -> FastAPI:
     """Get a FastAPI app with our exception handlers."""
-    app = FastAPI()
-
-    # TODO(mc, 2021-05-10): upgrade to FastAPI > 0.61.2 to use `exception_handlers` arg
-    # see https://github.com/tiangolo/fastapi/pull/1924
-    for exc_cls, handler in exception_handlers.items():
-        app.add_exception_handler(exc_cls, handler)
-
+    app = FastAPI(exception_handlers=exception_handlers)
     return app
 
 
@@ -159,21 +153,23 @@ def test_handles_body_validation_error(app: FastAPI, client: TestClient) -> None
                 "errorCode": "4000",
                 "id": "InvalidRequest",
                 "title": "Invalid Request",
-                "detail": "field required",
+                "detail": "Field required",
                 "source": {"pointer": "/string_field"},
             },
             {
                 "errorCode": "4000",
                 "id": "InvalidRequest",
                 "title": "Invalid Request",
-                "detail": "value is not a valid integer",
+                "detail": "Input should be a valid integer, unable to parse "
+                "string as an integer",
                 "source": {"pointer": "/int_field"},
             },
             {
                 "errorCode": "4000",
                 "id": "InvalidRequest",
                 "title": "Invalid Request",
-                "detail": "value could not be parsed to a boolean",
+                "detail": "Input should be a valid boolean, unable to interpret "
+                "input",
                 "source": {"pointer": "/array_field/0"},
             },
         ]
@@ -196,7 +192,8 @@ def test_handles_query_validation_error(app: FastAPI, client: TestClient) -> Non
                 "errorCode": "4000",
                 "id": "InvalidRequest",
                 "title": "Invalid Request",
-                "detail": "value is not a valid integer",
+                "detail": "Input should be a valid integer, unable to parse "
+                "string as an integer",
                 "source": {"parameter": "count"},
             },
         ]
@@ -219,7 +216,7 @@ def test_handles_header_validation_error(app: FastAPI, client: TestClient) -> No
                 "errorCode": "4000",
                 "id": "InvalidRequest",
                 "title": "Invalid Request",
-                "detail": "field required",
+                "detail": "Field required",
                 "source": {"header": "header-name"},
             },
         ]
@@ -242,8 +239,9 @@ def test_handles_legacy_validation_error(app: FastAPI, client: TestClient) -> No
     assert response.json() == {
         "errorCode": "4000",
         "message": (
-            "body.string_field: none is not an allowed value; "
-            "body.int_field: value is not a valid integer; "
-            "body.array_field.0: value could not be parsed to a boolean"
+            "body.string_field: Input should be a valid string; "
+            "body.int_field: Input should be a valid integer, unable to parse "
+            "string as an integer; body.array_field.0: Input should be a valid "
+            "boolean, unable to interpret input"
         ),
     }

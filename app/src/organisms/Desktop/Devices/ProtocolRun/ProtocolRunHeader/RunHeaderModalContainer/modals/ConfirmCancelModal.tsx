@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 
@@ -27,6 +27,7 @@ import { useTrackProtocolRunEvent } from '/app/redux-resources/analytics'
 import { useIsFlex } from '/app/redux-resources/robots'
 import { ANALYTICS_PROTOCOL_RUN_ACTION } from '/app/redux/analytics'
 
+import type { MouseEventHandler } from 'react'
 import type { RunStatus } from '@opentrons/api-client'
 
 export interface UseConfirmCancelModalResult {
@@ -35,7 +36,7 @@ export interface UseConfirmCancelModalResult {
 }
 
 export function useConfirmCancelModal(): UseConfirmCancelModalResult {
-  const [showModal, setShowModal] = React.useState(false)
+  const [showModal, setShowModal] = useState(false)
 
   const toggleModal = (): void => {
     setShowModal(!showModal)
@@ -58,14 +59,14 @@ export function ConfirmCancelModal(
   const { stopRun } = useStopRunMutation()
   const isFlex = useIsFlex(robotName)
   const { trackProtocolRunEvent } = useTrackProtocolRunEvent(runId, robotName)
-  const [isCanceling, setIsCanceling] = React.useState(false)
+  const [isCanceling, setIsCanceling] = useState(false)
   const { t } = useTranslation('run_details')
 
   const cancelRunAlertInfo = isFlex
     ? t('cancel_run_alert_info_flex')
     : t('cancel_run_alert_info_ot2')
 
-  const cancelRun: React.MouseEventHandler<HTMLButtonElement> = (e): void => {
+  const cancelRun: MouseEventHandler<HTMLButtonElement> = (e): void => {
     e.preventDefault()
     e.stopPropagation()
     setIsCanceling(true)
@@ -78,7 +79,8 @@ export function ConfirmCancelModal(
       },
     })
   }
-  React.useEffect(() => {
+
+  useEffect(() => {
     if (
       runStatus === RUN_STATUS_STOP_REQUESTED ||
       runStatus === RUN_STATUS_STOPPED

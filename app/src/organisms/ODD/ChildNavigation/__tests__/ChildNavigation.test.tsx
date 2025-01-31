@@ -1,19 +1,20 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { vi, it, describe, expect, beforeEach } from 'vitest'
 
 import { renderWithProviders } from '/app/__testing-utils__'
 import { ChildNavigation } from '..'
+
+import type { ComponentProps } from 'react'
 import type { SmallButton } from '/app/atoms/buttons'
 
-const render = (props: React.ComponentProps<typeof ChildNavigation>) =>
+const render = (props: ComponentProps<typeof ChildNavigation>) =>
   renderWithProviders(<ChildNavigation {...props} />)
 
 const mockOnClickBack = vi.fn()
 const mockOnClickButton = vi.fn()
 const mockOnClickSecondaryButton = vi.fn()
 
-const mockSecondaryButtonProps: React.ComponentProps<typeof SmallButton> = {
+const mockSecondaryButtonProps: ComponentProps<typeof SmallButton> = {
   onClick: mockOnClickSecondaryButton,
   buttonText: 'Setup Instructions',
   buttonType: 'tertiaryLowLight',
@@ -22,7 +23,7 @@ const mockSecondaryButtonProps: React.ComponentProps<typeof SmallButton> = {
 }
 
 describe('ChildNavigation', () => {
-  let props: React.ComponentProps<typeof ChildNavigation>
+  let props: ComponentProps<typeof ChildNavigation>
 
   beforeEach(() => {
     props = {

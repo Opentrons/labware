@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { fireEvent, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -29,12 +28,13 @@ import { FirmwareUpdateFailedModal } from '../FirmwareUpdateFailedModal'
 import { ErrorInfo } from '../ErrorInfo'
 import { ModuleCard } from '..'
 
+import type { ComponentProps } from 'react'
+import type { Mock } from 'vitest'
 import type {
   HeaterShakerModule,
   MagneticModule,
   ThermocyclerModule,
 } from '/app/redux/modules/types'
-import type { Mock } from 'vitest'
 
 vi.mock('../ErrorInfo')
 vi.mock('../MagneticModuleData')
@@ -175,14 +175,14 @@ const mockEatToast = vi.fn()
 
 const MOCK_LATEST_REQUEST_ID = '1234'
 
-const render = (props: React.ComponentProps<typeof ModuleCard>) => {
+const render = (props: ComponentProps<typeof ModuleCard>) => {
   return renderWithProviders(<ModuleCard {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('ModuleCard', () => {
-  let props: React.ComponentProps<typeof ModuleCard>
+  let props: ComponentProps<typeof ModuleCard>
   let mockHandleModuleApiRequests: Mock
 
   beforeEach(() => {

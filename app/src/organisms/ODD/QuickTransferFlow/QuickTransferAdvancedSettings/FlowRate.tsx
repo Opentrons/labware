@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 
@@ -24,6 +24,7 @@ import { useTrackEventWithRobotSerial } from '/app/redux-resources/analytics'
 
 import { ACTIONS } from '../constants'
 
+import type { Dispatch } from 'react'
 import type { SupportedTip } from '@opentrons/shared-data'
 import type {
   QuickTransferSummaryState,
@@ -34,7 +35,7 @@ import type {
 interface FlowRateEntryProps {
   onBack: () => void
   state: QuickTransferSummaryState
-  dispatch: React.Dispatch<QuickTransferSummaryAction>
+  dispatch: Dispatch<QuickTransferSummaryAction>
   kind: FlowRateKind
 }
 
@@ -42,9 +43,9 @@ export function FlowRateEntry(props: FlowRateEntryProps): JSX.Element {
   const { onBack, state, dispatch, kind } = props
   const { i18n, t } = useTranslation(['quick_transfer', 'shared'])
   const { trackEventWithRobotSerial } = useTrackEventWithRobotSerial()
-  const keyboardRef = React.useRef(null)
+  const keyboardRef = useRef(null)
 
-  const [flowRate, setFlowRate] = React.useState<number>(
+  const [flowRate, setFlowRate] = useState<number>(
     kind === 'aspirate' ? state.aspirateFlowRate : state.dispenseFlowRate
   )
 

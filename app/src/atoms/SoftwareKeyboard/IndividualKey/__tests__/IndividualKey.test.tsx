@@ -1,17 +1,19 @@
-import * as React from 'react'
+import { useRef } from 'react'
 import { describe, it, vi, expect } from 'vitest'
 import { fireEvent, renderHook, screen } from '@testing-library/react'
 
 import { renderWithProviders } from '/app/__testing-utils__'
 import { IndividualKey } from '..'
 
-const render = (props: React.ComponentProps<typeof IndividualKey>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof IndividualKey>) => {
   return renderWithProviders(<IndividualKey {...props} />)[0]
 }
 
 describe('IndividualKey', () => {
   it('should render the text key', () => {
-    const { result } = renderHook(() => React.useRef(null))
+    const { result } = renderHook(() => useRef(null))
     const props = {
       onChange: vi.fn(),
       keyboardRef: result.current,
@@ -22,7 +24,7 @@ describe('IndividualKey', () => {
   })
 
   it('should call mock function when clicking text key', () => {
-    const { result } = renderHook(() => React.useRef(null))
+    const { result } = renderHook(() => useRef(null))
     const props = {
       onChange: vi.fn(),
       keyboardRef: result.current,

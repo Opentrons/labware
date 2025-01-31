@@ -263,7 +263,7 @@ export const transfer: CommandCreator<TransferArgs> = (
             ? [
                 curryCommandCreator(configureForVolume, {
                   pipetteId: args.pipette,
-                  volume: args.volume,
+                  volume: chunksPerSubTransfer,
                 }),
               ]
             : []

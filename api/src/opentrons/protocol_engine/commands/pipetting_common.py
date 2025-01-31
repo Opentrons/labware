@@ -1,11 +1,23 @@
 """Common pipetting command base models."""
-from opentrons_shared_data.errors import ErrorCodes
+
+from __future__ import annotations
+from typing import Literal, Tuple, TYPE_CHECKING
+
+from typing_extensions import TypedDict
 from pydantic import BaseModel, Field
-from typing import Literal, Optional, Tuple, TypedDict
 
+from opentrons_shared_data.errors import ErrorCodes
 from opentrons.protocol_engine.errors.error_occurrence import ErrorOccurrence
+from opentrons.protocol_engine.types import AspiratedFluid, FluidKind
+from opentrons_shared_data.errors.exceptions import PipetteOverpressureError
+from .command import DefinedErrorData, SuccessData
+from opentrons.protocol_engine.state.update_types import StateUpdate
 
-from ..types import WellLocation, LiquidHandlingWellLocation, DeckPoint
+
+if TYPE_CHECKING:
+    from ..execution.pipetting import PipettingHandler
+    from ..resources import ModelUtils
+    from ..notes import CommandNoteAdder
 
 
 class PipetteIdMixin(BaseModel):
@@ -51,72 +63,6 @@ class FlowRateMixin(BaseModel):
     )
 
 
-class WellLocationMixin(BaseModel):
-    """Mixin for command requests that take a location that's somewhere in a well."""
-
-    labwareId: str = Field(
-        ...,
-        description="Identifier of labware to use.",
-    )
-    wellName: str = Field(
-        ...,
-        description="Name of well to use in labware.",
-    )
-    wellLocation: WellLocation = Field(
-        default_factory=WellLocation,
-        description="Relative well location at which to perform the operation",
-    )
-
-
-class LiquidHandlingWellLocationMixin(BaseModel):
-    """Mixin for command requests that take a location that's somewhere in a well."""
-
-    labwareId: str = Field(
-        ...,
-        description="Identifier of labware to use.",
-    )
-    wellName: str = Field(
-        ...,
-        description="Name of well to use in labware.",
-    )
-    wellLocation: LiquidHandlingWellLocation = Field(
-        default_factory=LiquidHandlingWellLocation,
-        description="Relative well location at which to perform the operation",
-    )
-
-
-class MovementMixin(BaseModel):
-    """Mixin for command requests that move a pipette."""
-
-    minimumZHeight: Optional[float] = Field(
-        None,
-        description=(
-            "Optional minimal Z margin in mm."
-            " If this is larger than the API's default safe Z margin,"
-            " it will make the arc higher. If it's smaller, it will have no effect."
-        ),
-    )
-
-    forceDirect: bool = Field(
-        False,
-        description=(
-            "If true, moving from one labware/well to another"
-            " will not arc to the default safe z,"
-            " but instead will move directly to the specified location."
-            " This will also force the `minimumZHeight` param to be ignored."
-            " A 'direct' movement is in X/Y/Z simultaneously."
-        ),
-    )
-
-    speed: Optional[float] = Field(
-        None,
-        description=(
-            "Override the travel speed in mm/s."
-            " This controls the straight linear speed of motion."
-        ),
-    )
-
-
 class BaseLiquidHandlingResult(BaseModel):
     """Base properties of a liquid handling result."""
 
@@ -127,24 +73,8 @@ class BaseLiquidHandlingResult(BaseModel):
     )
 
 
-class DestinationPositionResult(BaseModel):
-    """Mixin for command results that move a pipette."""
-
-    # todo(mm, 2024-08-02): Consider deprecating or redefining this.
-    #
-    # This is here because opentrons.protocol_engine needed it for internal bookkeeping
-    # and, at the time, we didn't have a way to do that without adding this to the
-    # public command results. Its usefulness to callers outside
-    # opentrons.protocol_engine is questionable because they would need to know which
-    # critical point is in play, and I think that can change depending on obscure
-    # things like labware quirks.
-    position: DeckPoint = Field(
-        DeckPoint(x=0, y=0, z=0),
-        description=(
-            "The (x,y,z) coordinates of the pipette's critical point in deck space"
-            " after the move was completed."
-        ),
-    )
+class EmptyResult(BaseModel):
+    """A result with no data."""
 
 
 class ErrorLocationInfo(TypedDict):
@@ -208,3 +138,155 @@ class TipPhysicallyAttachedError(ErrorOccurrence):
     detail: str = ErrorCodes.TIP_DROP_FAILED.value.detail
 
     errorInfo: ErrorLocationInfo
+
+
+async def prepare_for_aspirate(
+    pipette_id: str,
+    pipetting: PipettingHandler,
+    model_utils: ModelUtils,
+    location_if_error: ErrorLocationInfo,
+) -> SuccessData[EmptyResult] | DefinedErrorData[OverpressureError]:
+    """Execute pipetting.prepare_for_aspirate, handle errors, and marshal success."""
+    try:
+        await pipetting.prepare_for_aspirate(pipette_id)
+    except PipetteOverpressureError as e:
+        return DefinedErrorData(
+            public=OverpressureError(
+                id=model_utils.generate_id(),
+                createdAt=model_utils.get_timestamp(),
+                wrappedErrors=[
+                    ErrorOccurrence.from_failed(
+                        id=model_utils.generate_id(),
+                        createdAt=model_utils.get_timestamp(),
+                        error=e,
+                    )
+                ],
+                errorInfo=location_if_error,
+            ),
+            state_update=StateUpdate().set_fluid_unknown(pipette_id=pipette_id),
+        )
+    else:
+        return SuccessData(
+            public=EmptyResult(),
+            state_update=StateUpdate().set_fluid_empty(pipette_id=pipette_id),
+        )
+
+
+async def aspirate_in_place(
+    pipette_id: str,
+    volume: float,
+    flow_rate: float,
+    location_if_error: ErrorLocationInfo,
+    command_note_adder: CommandNoteAdder,
+    pipetting: PipettingHandler,
+    model_utils: ModelUtils,
+) -> SuccessData[BaseLiquidHandlingResult] | DefinedErrorData[OverpressureError]:
+    """Execute an aspirate in place microoperation."""
+    try:
+        volume_aspirated = await pipetting.aspirate_in_place(
+            pipette_id=pipette_id,
+            volume=volume,
+            flow_rate=flow_rate,
+            command_note_adder=command_note_adder,
+        )
+    except PipetteOverpressureError as e:
+        return DefinedErrorData(
+            public=OverpressureError(
+                id=model_utils.generate_id(),
+                createdAt=model_utils.get_timestamp(),
+                wrappedErrors=[
+                    ErrorOccurrence.from_failed(
+                        id=model_utils.generate_id(),
+                        createdAt=model_utils.get_timestamp(),
+                        error=e,
+                    )
+                ],
+                errorInfo=location_if_error,
+            ),
+            state_update=StateUpdate().set_fluid_unknown(pipette_id=pipette_id),
+        )
+    else:
+        return SuccessData(
+            public=BaseLiquidHandlingResult(
+                volume=volume_aspirated,
+            ),
+            state_update=StateUpdate().set_fluid_aspirated(
+                pipette_id=pipette_id,
+                fluid=AspiratedFluid(kind=FluidKind.LIQUID, volume=volume_aspirated),
+            ),
+        )
+
+
+async def dispense_in_place(
+    pipette_id: str,
+    volume: float,
+    flow_rate: float,
+    push_out: float | None,
+    location_if_error: ErrorLocationInfo,
+    pipetting: PipettingHandler,
+    model_utils: ModelUtils,
+) -> SuccessData[BaseLiquidHandlingResult] | DefinedErrorData[OverpressureError]:
+    """Dispense-in-place as a microoperation."""
+    try:
+        volume = await pipetting.dispense_in_place(
+            pipette_id=pipette_id,
+            volume=volume,
+            flow_rate=flow_rate,
+            push_out=push_out,
+        )
+    except PipetteOverpressureError as e:
+        return DefinedErrorData(
+            public=OverpressureError(
+                id=model_utils.generate_id(),
+                createdAt=model_utils.get_timestamp(),
+                wrappedErrors=[
+                    ErrorOccurrence.from_failed(
+                        id=model_utils.generate_id(),
+                        createdAt=model_utils.get_timestamp(),
+                        error=e,
+                    )
+                ],
+                errorInfo=location_if_error,
+            ),
+            state_update=StateUpdate().set_fluid_unknown(pipette_id=pipette_id),
+        )
+    else:
+        return SuccessData(
+            public=BaseLiquidHandlingResult(volume=volume),
+            state_update=StateUpdate().set_fluid_ejected(
+                pipette_id=pipette_id, volume=volume
+            ),
+        )
+
+
+async def blow_out_in_place(
+    pipette_id: str,
+    flow_rate: float,
+    location_if_error: ErrorLocationInfo,
+    pipetting: PipettingHandler,
+    model_utils: ModelUtils,
+) -> SuccessData[EmptyResult] | DefinedErrorData[OverpressureError]:
+    """Execute a blow-out-in-place micro-operation."""
+    try:
+        await pipetting.blow_out_in_place(pipette_id=pipette_id, flow_rate=flow_rate)
+    except PipetteOverpressureError as e:
+        return DefinedErrorData(
+            public=OverpressureError(
+                id=model_utils.generate_id(),
+                createdAt=model_utils.get_timestamp(),
+                wrappedErrors=[
+                    ErrorOccurrence.from_failed(
+                        id=model_utils.generate_id(),
+                        createdAt=model_utils.get_timestamp(),
+                        error=e,
+                    )
+                ],
+                errorInfo=location_if_error,
+            ),
+            state_update=StateUpdate().set_fluid_unknown(pipette_id=pipette_id),
+        )
+    else:
+        return SuccessData(
+            public=EmptyResult(),
+            state_update=StateUpdate().set_fluid_empty(pipette_id=pipette_id),
+        )

@@ -56,10 +56,10 @@ jobs:
     name: 'opentrons app frontend unit tests'
     timeout-minutes: 60
     steps:
-      - uses: 'actions/checkout@v3'
-      - uses: 'actions/setup-node@v3'
+      - uses: 'actions/checkout@v4'
+      - uses: 'actions/setup-node@v4'
         with:
-          node-version: '18.19.0'
+          node-version: '22.11.0'
       - name: 'install udev'
         run: |
           # WORKAROUND: Remove microsoft debian repo due to https://github.com/microsoft/linux-package-repositories/issues/130. Remove line below after it is resolved
@@ -105,7 +105,7 @@ jobs:
     timeout-minutes: 60
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: 'actions/checkout@v3'
+      - uses: 'actions/checkout@v4'
         with:
           fetch-depth: 0
       # https://github.com/actions/checkout/issues/290
@@ -114,9 +114,9 @@ jobs:
         run: |
           git fetch -f origin ${{ github.ref }}:${{ github.ref }}
           git checkout ${{ github.ref }}
-      - uses: 'actions/setup-node@v3'
+      - uses: 'actions/setup-node@v4'
         with:
-          node-version: '18.19.0'
+          node-version: '22.11.0'
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
@@ -261,7 +261,7 @@ jobs:
              echo "bucket=${{env._APP_DEPLOY_BUCKET_OT3}}" >> $GITHUB_OUTPUT
              echo "folder=${{env._APP_DEPLOY_FOLDER_OT3}}" >> $GITHUB_OUTPUT
           fi
-      - uses: 'actions/checkout@v3'
+      - uses: 'actions/checkout@v4'
         with:
           fetch-depth: 0
       # https://github.com/actions/checkout/issues/290
@@ -270,9 +270,9 @@ jobs:
         run: |
           git fetch -f origin ${{ github.ref }}:${{ github.ref }}
           git checkout ${{ github.ref }}
-      - uses: 'actions/setup-node@v3'
+      - uses: 'actions/setup-node@v4'
         with:
-          node-version: '18.19.0'
+          node-version: '22.11.0'
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
@@ -370,7 +370,7 @@ jobs:
 
       - name: 'upload github artifact'
         if: matrix.target == 'desktop'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: 'opentrons-${{matrix.variant}}-${{ matrix.os }}'
           path: app-shell/dist/publish
@@ -392,7 +392,7 @@ jobs:
     if: contains(fromJSON(needs.determine-build-type.outputs.variants), 'release') || contains(fromJSON(needs.determine-build-type.outputs.variants), 'internal-release')
     steps:
       - name: 'download run app builds'
-        uses: 'actions/download-artifact@v3'
+        uses: 'actions/download-artifact@v4'
         with:
           path: ./artifacts
       - name: 'separate release and internal-release artifacts'
@@ -488,7 +488,7 @@ jobs:
           _ACCESS_URL: https://${{env._APP_DEPLOY_BUCKET_ROBOTSTACK}}/${{env._APP_DEPLOY_FOLDER_ROBOTSTACK}}
 
       - name: 'pull repo for scripts'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
         with:
           path: ./monorepo
       # https://github.com/actions/checkout/issues/290
@@ -498,9 +498,9 @@ jobs:
           cd ./monorepo
           git fetch -f origin ${{ github.ref }}:${{ github.ref }}
           git checkout ${{ github.ref }}
-      - uses: 'actions/setup-node@v3'
+      - uses: 'actions/setup-node@v4'
         with:
-          node-version: '18.19.0'
+          node-version: '22.11.0'
       - name: 'install udev'
         run: |
           # WORKAROUND: Remove microsoft debian repo due to https://github.com/microsoft/linux-package-repositories/issues/130. Remove line below after it is resolved

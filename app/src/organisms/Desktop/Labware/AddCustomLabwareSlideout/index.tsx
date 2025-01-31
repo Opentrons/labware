@@ -19,6 +19,8 @@ import {
   ANALYTICS_ADD_CUSTOM_LABWARE,
 } from '/app/redux/analytics'
 import { UploadInput } from '/app/molecules/UploadInput'
+import { remote } from '/app/redux/shell/remote'
+
 import type { Dispatch } from '/app/redux/types'
 
 export interface AddCustomLabwareSlideoutProps {
@@ -46,7 +48,9 @@ export function AddCustomLabwareSlideout(
       >
         <UploadInput
           onUpload={(file: File) => {
-            dispatch(addCustomLabwareFile(file.path))
+            void remote.getFilePathFrom(file).then(filePath => {
+              dispatch(addCustomLabwareFile(filePath))
+            })
           }}
           onClick={() => {
             dispatch(addCustomLabware())

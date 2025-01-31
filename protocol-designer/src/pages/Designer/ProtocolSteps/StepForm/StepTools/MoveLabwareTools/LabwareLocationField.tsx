@@ -1,19 +1,13 @@
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { getHasWasteChute } from '@opentrons/step-generation'
-import {
-  WASTE_CHUTE_CUTOUT,
-  getModuleDisplayName,
-} from '@opentrons/shared-data'
-import {
-  getAdditionalEquipmentEntities,
-  getLabwareEntities,
-  getModuleEntities,
-} from '../../../../../../step-forms/selectors'
+import { WASTE_CHUTE_CUTOUT } from '@opentrons/shared-data'
+import { getAdditionalEquipmentEntities } from '../../../../../../step-forms/selectors'
 import {
   getRobotStateAtActiveItem,
   getUnoccupiedLabwareLocationOptions,
 } from '../../../../../../top-selectors/labware-locations'
+import { hoverSelection } from '../../../../../../ui/steps/actions/actions'
 import { DropdownStepFormField } from '../../../../../../molecules'
 import type { FieldProps } from '../../types'
 
@@ -26,13 +20,12 @@ export function LabwareLocationField(
   props: LabwareLocationFieldProps
 ): JSX.Element {
   const { t } = useTranslation(['form', 'protocol_steps'])
-  const { labware, useGripper, value, canSave } = props
+  const { labware, useGripper } = props
   const additionalEquipmentEntities = useSelector(
     getAdditionalEquipmentEntities
   )
-  const labwareEntities = useSelector(getLabwareEntities)
+  const dispatch = useDispatch()
   const robotState = useSelector(getRobotStateAtActiveItem)
-  const moduleEntities = useSelector(getModuleEntities)
   const isLabwareOffDeck =
     labware != null ? robotState?.labware[labware]?.slot === 'offDeck' : false
 
@@ -51,41 +44,23 @@ export function LabwareLocationField(
     )
   }
 
-  const location: string = value as string
-
-  const bothFieldsSelected = labware != null && value != null
-  const labwareDisplayName =
-    labware != null ? labwareEntities[labware]?.def.metadata.displayName : ''
-  let locationString = `slot ${location}`
-  if (location != null) {
-    if (robotState?.modules[location] != null) {
-      const moduleSlot = robotState?.modules[location].slot ?? ''
-      locationString = `${getModuleDisplayName(
-        moduleEntities[location].model
-      )} in slot ${moduleSlot}`
-    } else if (robotState?.labware[location] != null) {
-      const adapterSlot = robotState?.labware[location].slot
-      locationString =
-        robotState?.modules[adapterSlot] != null
-          ? `${getModuleDisplayName(
-              moduleEntities[adapterSlot].model
-            )} in slot ${robotState?.modules[adapterSlot].slot}`
-          : `slot ${robotState?.labware[location].slot}` ?? ''
-    }
-  }
   return (
     <DropdownStepFormField
       {...props}
       options={unoccupiedLabwareLocationsOptions}
-      errorToShow={
-        !canSave && bothFieldsSelected
-          ? t('step_edit_form.labwareLabel.errors.labwareSlotIncompatible', {
-              labwareName: labwareDisplayName,
-              slot: locationString,
-            })
-          : null
-      }
+      errorToShow={props.errorToShow}
       title={t('protocol_steps:new_location')}
+      onEnter={(id: string) => {
+        dispatch(
+          hoverSelection({
+            id,
+            text: t('application:location'),
+          })
+        )
+      }}
+      onExit={() => {
+        dispatch(hoverSelection({ id: null, text: null }))
+      }}
     />
   )
 }

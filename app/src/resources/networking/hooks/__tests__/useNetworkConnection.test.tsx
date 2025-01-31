@@ -1,5 +1,3 @@
-import type * as React from 'react'
-
 import { when } from 'vitest-when'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { Provider } from 'react-redux'
@@ -14,6 +12,8 @@ import * as Fixtures from '/app/redux/networking/__fixtures__'
 import { getNetworkInterfaces } from '/app/redux/networking'
 
 import { useNetworkConnection } from '../useNetworkConnection'
+
+import type { FunctionComponent, ReactNode } from 'react'
 import type { Store } from 'redux'
 
 vi.mock('/app/redux/networking/selectors')
@@ -48,7 +48,7 @@ const store: Store<any> = createStore(vi.fn(), {})
 
 // ToDo (kj:0202/2023) USB test cases will be added when USB is out
 describe('useNetworkConnection', () => {
-  let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+  let wrapper: FunctionComponent<{ children: ReactNode }>
 
   beforeEach(() => {
     wrapper = ({ children }) => (

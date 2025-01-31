@@ -43,7 +43,7 @@ class Comment(BaseCommand[CommentParams, CommentResult, ErrorOccurrence]):
 
     commandType: CommentCommandType = "comment"
     params: CommentParams
-    result: Optional[CommentResult]
+    result: Optional[CommentResult] = None
 
     _ImplementationCls: Type[CommentImplementation] = CommentImplementation
 

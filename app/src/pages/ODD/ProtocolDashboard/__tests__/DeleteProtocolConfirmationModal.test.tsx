@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, describe, expect, beforeEach, afterEach } from 'vitest'
 import { when } from 'vitest-when'
 import { act, fireEvent, screen } from '@testing-library/react'
@@ -10,6 +9,8 @@ import { useHost, useProtocolQuery } from '@opentrons/react-api-client'
 import { i18n } from '/app/i18n'
 import { useToaster } from '/app/organisms/ToasterOven'
 import { DeleteProtocolConfirmationModal } from '../DeleteProtocolConfirmationModal'
+
+import type { ComponentProps } from 'react'
 import type { HostConfig } from '@opentrons/api-client'
 
 vi.mock('@opentrons/api-client')
@@ -22,7 +23,7 @@ const mockMakeSnackbar = vi.fn()
 const MOCK_HOST_CONFIG = {} as HostConfig
 
 const render = (
-  props: React.ComponentProps<typeof DeleteProtocolConfirmationModal>
+  props: ComponentProps<typeof DeleteProtocolConfirmationModal>
 ) => {
   return renderWithProviders(<DeleteProtocolConfirmationModal {...props} />, {
     i18nInstance: i18n,
@@ -30,7 +31,7 @@ const render = (
 }
 
 describe('DeleteProtocolConfirmationModal', () => {
-  let props: React.ComponentProps<typeof DeleteProtocolConfirmationModal>
+  let props: ComponentProps<typeof DeleteProtocolConfirmationModal>
 
   beforeEach(() => {
     props = {

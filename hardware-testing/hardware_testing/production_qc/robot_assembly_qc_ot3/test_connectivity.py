@@ -385,9 +385,9 @@ async def run(api: OT3API, report: CSVReport, section: str) -> None:
         await _test_wifi(report, section)
     else:
         report(section, "wifi", ["", "", "0.0.0.0", CSVResult.PASS])
-        assert nmcli.iface_info
-        assert nmcli.configure
-        assert nmcli.wifi_disconnect
+        assert nmcli.iface_info is not None
+        assert nmcli.configure is not None
+        assert nmcli.wifi_disconnect is not None
 
     # USB-B-REAR
     ui.print_header("USB-B-REAR")

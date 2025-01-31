@@ -35,7 +35,7 @@
     "outDir": "lib",
     "paths": {
       "/app/*": ["./src/*"]
-    }
+    },
   },
   "include": ["typings", "src"],
   "exclude": ["**/*.stories.tsx"]

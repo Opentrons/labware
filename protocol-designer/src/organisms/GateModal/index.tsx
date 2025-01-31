@@ -9,7 +9,6 @@ import {
   Modal,
   PrimaryButton,
   SPACING,
-  SecondaryButton,
   StyledText,
 } from '@opentrons/components'
 import {
@@ -22,12 +21,15 @@ const EULA_URL = 'https://opentrons.com/eula'
 
 export function GateModal(): JSX.Element | null {
   const { t } = useTranslation('shared')
-  const hasOptedIn = useSelector(analyticsSelectors.getHasOptedIn)
+  const { appVersion, hasOptedIn } = useSelector(
+    analyticsSelectors.getHasOptedIn
+  )
   const dispatch = useDispatch()
 
-  if (hasOptedIn == null) {
+  if (appVersion == null || hasOptedIn == null) {
     return (
       <Modal
+        hasHeader={false}
         position="bottomRight"
         showOverlay={false}
         footer={
@@ -36,16 +38,9 @@ export function GateModal(): JSX.Element | null {
             gridGap={SPACING.spacing8}
             padding={SPACING.spacing24}
           >
-            <SecondaryButton
-              onClick={() => dispatch(analyticsActions.optOut())}
-            >
-              <StyledText desktopStyle="bodyDefaultRegular">
-                {t('reject')}
-              </StyledText>
-            </SecondaryButton>
             <PrimaryButton onClick={() => dispatch(analyticsActions.optIn())}>
               <StyledText desktopStyle="bodyDefaultRegular">
-                {t('agree')}
+                {t('confirm')}
               </StyledText>
             </PrimaryButton>
           </Flex>
@@ -84,9 +79,6 @@ export function GateModal(): JSX.Element | null {
                 ),
               }}
             />
-          </StyledText>
-          <StyledText desktopStyle="bodyDefaultRegular">
-            {t('analytics_tracking')}
           </StyledText>
         </Flex>
       </Modal>

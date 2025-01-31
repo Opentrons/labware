@@ -21,7 +21,7 @@ import { useHomePipettes } from '/app/local-resources/instruments'
 import type { PipetteData } from '@opentrons/api-client'
 import type { IconProps } from '@opentrons/components'
 import type { UseHomePipettesProps } from '/app/local-resources/instruments'
-import type { TipAttachmentStatusResult } from '/app/organisms/DropTipWizardFlows'
+import type { TipAttachmentStatusResult } from '/app/resources/instruments'
 
 type UseProtocolDropTipModalProps = Pick<
   UseHomePipettesProps,

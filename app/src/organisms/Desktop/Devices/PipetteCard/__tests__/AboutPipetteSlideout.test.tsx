@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, beforeEach, expect } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { renderWithProviders } from '/app/__testing-utils__'
@@ -7,16 +6,18 @@ import { i18n } from '/app/i18n'
 import { AboutPipetteSlideout } from '../AboutPipetteSlideout'
 import { mockLeftSpecs } from '/app/redux/pipettes/__fixtures__'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('@opentrons/react-api-client')
 
-const render = (props: React.ComponentProps<typeof AboutPipetteSlideout>) => {
+const render = (props: ComponentProps<typeof AboutPipetteSlideout>) => {
   return renderWithProviders(<AboutPipetteSlideout {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('AboutPipetteSlideout', () => {
-  let props: React.ComponentProps<typeof AboutPipetteSlideout>
+  let props: ComponentProps<typeof AboutPipetteSlideout>
   beforeEach(() => {
     props = {
       pipetteId: '123',

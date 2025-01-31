@@ -6,7 +6,13 @@ from opentrons_shared_data.labware.types import LabwareDefinition
 from opentrons_shared_data.pipette.types import PipetteNameType
 from opentrons_shared_data.robot.types import RobotType
 
-from opentrons.types import DeckSlotName, StagingSlotName, Location, Mount, Point
+from opentrons.types import (
+    DeckSlotName,
+    StagingSlotName,
+    Location,
+    Mount,
+    Point,
+)
 from opentrons.util.broker import Broker
 from opentrons.hardware_control import SyncHardwareAPI
 from opentrons.hardware_control.modules import AbstractModule, ModuleModel, ModuleType
@@ -267,6 +273,20 @@ class LegacyProtocolCore(
         """Load an adapter using its identifying parameters"""
         raise APIVersionError(api_element="Loading adapter")
 
+    def load_lid(
+        self,
+        load_name: str,
+        location: LegacyLabwareCore,
+        namespace: Optional[str],
+        version: Optional[int],
+    ) -> LegacyLabwareCore:
+        """Load an individual lid labware using its identifying parameters. Must be loaded on a labware."""
+        raise APIVersionError(api_element="Loading lid")
+
+    def load_robot(self) -> None:  # type: ignore
+        """Load an adapter using its identifying parameters"""
+        raise APIVersionError(api_element="Loading robot")
+
     def move_labware(
         self,
         labware_core: LegacyLabwareCore,
@@ -473,6 +493,17 @@ class LegacyProtocolCore(
         """Set the most recent moved to location."""
         self._last_location = location
         self._last_mount = mount
+
+    def load_lid_stack(
+        self,
+        load_name: str,
+        location: Union[DeckSlotName, StagingSlotName, LegacyLabwareCore],
+        quantity: int,
+        namespace: Optional[str],
+        version: Optional[int],
+    ) -> LegacyLabwareCore:
+        """Load a Stack of Lids to a given location, creating a Lid Stack."""
+        raise APIVersionError(api_element="Lid stack")
 
     def get_module_cores(self) -> List[legacy_module_core.LegacyModuleCore]:
         """Get loaded module cores."""

@@ -1,8 +1,9 @@
 import time
 from functools import wraps
-from typing import Any, Callable, TypeVar
+from typing import Any, Callable, Optional, TypeVar
 
-from api.models.chat_request import ChatRequest
+from api.models.chat_request import ChatRequest, FakeKeys
+from api.models.feedback_request import FeedbackRequest
 from httpx import Client as HttpxClient
 from httpx import Response, Timeout
 from rich.console import Console, Group
@@ -62,11 +63,19 @@ class Client:
         return self.httpx.get("/health", headers=self.type_headers)
 
     @timeit
-    def get_chat_completion(self, message: str, fake: bool = True, bad_auth: bool = False) -> Response:
+    def get_chat_completion(self, message: str, fake: bool = True, fake_key: Optional[FakeKeys] = None, bad_auth: bool = False) -> Response:
         """Call the /chat/completion endpoint and return the response."""
-        request = ChatRequest(message=message, fake=fake)
+        request = ChatRequest(message=message, fake=fake, fake_key=fake_key, history=None, chat_options=None)
         headers = self.standard_headers if not bad_auth else self.invalid_auth_headers
         return self.httpx.post("/chat/completion", headers=headers, json=request.model_dump())
+
+    def post_feedback(self, message: str, fake: bool = True, bad_auth: bool = False) -> Response:
+        """Call the /chat/feedback endpoint and return the response."""
+        request: dict[str, Any] = {"message": message, "fake": fake}
+        if message != "":
+            request = FeedbackRequest(feedbackText=message, fake=fake).model_dump()
+        headers = self.standard_headers if not bad_auth else self.invalid_auth_headers
+        return self.httpx.post("/chat/feedback", headers=headers, json=request)
 
     def get_bad_endpoint(self, bad_auth: bool = False) -> Response:
         """Call nonexistent endpoint and return the response."""
@@ -106,6 +115,11 @@ def main() -> None:
     try:
         console.print(Rule("Getting health endpoint", style="bold"))
         response = client.get_health()
+        print_response(response)
+
+        console.print(Rule("Submit feedback", style="bold"))
+        feedback_message = Prompt.ask("Enter feedback message")
+        response = client.post_feedback(feedback_message, fake=False)
         print_response(response)
 
         console.print(Rule("Getting chat completion with fake=True and good auth (won't call OpenAI)", style="bold"))

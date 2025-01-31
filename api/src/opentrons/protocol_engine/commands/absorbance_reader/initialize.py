@@ -1,9 +1,10 @@
 """Command models to initialize an Absorbance Reader."""
 from __future__ import annotations
-from typing import List, Optional, Literal, TYPE_CHECKING
+from typing import List, Optional, Literal, TYPE_CHECKING, Any
 from typing_extensions import Type
 
 from pydantic import BaseModel, Field
+from pydantic.json_schema import SkipJsonSchema
 
 from opentrons.drivers.types import ABSMeasurementMode
 from opentrons.protocol_engine.types import ABSMeasureMode
@@ -11,6 +12,7 @@ from opentrons.protocol_engine.types import ABSMeasureMode
 from ..command import AbstractCommandImpl, BaseCommand, BaseCommandCreate, SuccessData
 from ...errors.error_occurrence import ErrorOccurrence
 from ...errors import InvalidWavelengthError
+from ...state import update_types
 
 if TYPE_CHECKING:
     from opentrons.protocol_engine.state.state import StateView
@@ -18,6 +20,10 @@ if TYPE_CHECKING:
 
 
 InitializeCommandType = Literal["absorbanceReader/initialize"]
+
+
+def _remove_default(s: dict[str, Any]) -> None:
+    s.pop("default", None)
 
 
 class InitializeParams(BaseModel):
@@ -28,8 +34,10 @@ class InitializeParams(BaseModel):
         ..., description="Initialize single or multi measurement mode."
     )
     sampleWavelengths: List[int] = Field(..., description="Sample wavelengths in nm.")
-    referenceWavelength: Optional[int] = Field(
-        None, description="Optional reference wavelength in nm."
+    referenceWavelength: int | SkipJsonSchema[None] = Field(
+        None,
+        description="Optional reference wavelength in nm.",
+        json_schema_extra=_remove_default,
     )
 
 
@@ -53,6 +61,7 @@ class InitializeImpl(
 
     async def execute(self, params: InitializeParams) -> SuccessData[InitializeResult]:
         """Initiate a single absorbance measurement."""
+        state_update = update_types.StateUpdate()
         abs_reader_substate = self._state_view.modules.get_absorbance_reader_substate(
             module_id=params.moduleId
         )
@@ -113,9 +122,14 @@ class InitializeImpl(
                 reference_wavelength=params.referenceWavelength,
             )
 
-        return SuccessData(
-            public=InitializeResult(),
+        state_update.initialize_absorbance_reader(
+            abs_reader_substate.module_id,
+            params.measureMode,
+            params.sampleWavelengths,
+            params.referenceWavelength,
         )
+
+        return SuccessData(public=InitializeResult(), state_update=state_update)
 
 
 class Initialize(BaseCommand[InitializeParams, InitializeResult, ErrorOccurrence]):
@@ -123,7 +137,7 @@ class Initialize(BaseCommand[InitializeParams, InitializeResult, ErrorOccurrence
 
     commandType: InitializeCommandType = "absorbanceReader/initialize"
     params: InitializeParams
-    result: Optional[InitializeResult]
+    result: Optional[InitializeResult] = None
 
     _ImplementationCls: Type[InitializeImpl] = InitializeImpl
 

@@ -23,6 +23,7 @@ LabwareDisplayCategory = Union[
     Literal["adapter"],
     Literal["other"],
     Literal["lid"],
+    Literal["system"],
 ]
 
 LabwareFormat = Union[
@@ -39,6 +40,7 @@ LabwareRoles = Union[
     Literal["adapter"],
     Literal["maintenance"],
     Literal["lid"],
+    Literal["system"],
 ]
 
 
@@ -58,6 +60,7 @@ class LabwareParameters(TypedDict, total=False):
     isTiprack: bool
     loadName: str
     isMagneticModuleCompatible: bool
+    isDeckSlotCompatible: bool
     quirks: List[str]
     tipLength: float
     tipOverlap: float
@@ -122,7 +125,7 @@ class WellGroup(TypedDict, total=False):
 
 
 class LabwareDefinition(TypedDict):
-    schemaVersion: Literal[2]
+    schemaVersion: Literal[2, 3]
     version: int
     namespace: str
     metadata: LabwareMetadata
@@ -140,3 +143,5 @@ class LabwareDefinition(TypedDict):
     gripForce: NotRequired[float]
     gripHeightFromLabwareBottom: NotRequired[float]
     innerLabwareGeometry: NotRequired[Dict[str, InnerWellGeometry]]
+    compatibleParentLabware: NotRequired[List[str]]
+    stackLimit: NotRequired[int]

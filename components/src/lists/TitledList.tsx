@@ -1,10 +1,12 @@
 // TitledList component
-import * as React from 'react'
+import { Children } from 'react'
 import cx from 'classnames'
 
 import { Icon } from '../icons'
 import { LegacyStyledText } from '../atoms'
 import { COLORS } from '../helix-design-system'
+
+import type { MouseEvent, ReactNode } from 'react'
 import type { IconName, IconProps } from '../icons'
 
 import styles from './lists.module.css'
@@ -25,21 +27,21 @@ export interface TitledListProps {
   'data-test'?: string
   // TODO(mc, 2018-01-25): enforce <li> children requirement with flow
   /** children must all be `<li>` */
-  children?: React.ReactNode
+  children?: ReactNode
   /** additional classnames */
   className?: string
   /** component with descriptive text about the list */
-  description?: React.ReactNode
+  description?: ReactNode
   /** optional click action (on title div, not children) */
-  onClick?: (event: React.MouseEvent) => unknown
+  onClick?: (event: MouseEvent) => unknown
   /** optional right click action (on wrapping div) */
-  onContextMenu?: (event: React.MouseEvent) => unknown
+  onContextMenu?: (event: MouseEvent) => unknown
   /** optional mouseEnter action */
-  onMouseEnter?: (event: React.MouseEvent) => unknown
+  onMouseEnter?: (event: MouseEvent) => unknown
   /** optional mouseLeave action */
-  onMouseLeave?: (event: React.MouseEvent) => unknown
+  onMouseLeave?: (event: MouseEvent) => unknown
   /** caret click action; if defined, list is expandable and carat is visible */
-  onCollapseToggle?: (event: React.MouseEvent) => unknown
+  onCollapseToggle?: (event: MouseEvent) => unknown
   /** collapse the list if true (false by default) */
   collapsed?: boolean
   /** set to true when TitledList is selected (eg, user clicked it) */
@@ -74,16 +76,14 @@ export function TitledList(props: TitledListProps): JSX.Element {
 
   // clicking on the carat will not call props.onClick,
   // so prevent bubbling up if there is an onCollapseToggle fn
-  const handleCollapseToggle = (e: React.MouseEvent): void => {
+  const handleCollapseToggle = (e: MouseEvent): void => {
     if (onCollapseToggle && !disabled) {
       e.stopPropagation()
       onCollapseToggle(e)
     }
   }
 
-  const hasValidChildren = React.Children.toArray(props.children).some(
-    child => child
-  )
+  const hasValidChildren = Children.toArray(props.children).some(child => child)
 
   const className = cx(styles.titled_list, props.className, {
     [styles.disabled]: disabled || inert,

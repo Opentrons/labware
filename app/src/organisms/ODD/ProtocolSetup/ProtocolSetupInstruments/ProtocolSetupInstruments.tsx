@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import {
@@ -16,15 +15,16 @@ import { PipetteRecalibrationODDWarning } from '/app/organisms/ODD/PipetteRecali
 import { getShowPipetteCalibrationWarning } from '/app/transformations/instruments'
 import { useMostRecentCompletedAnalysis } from '/app/resources/runs'
 import { ProtocolInstrumentMountItem } from '/app/organisms/ODD/InstrumentMountItem'
+import { isGripperInCommands } from '/app/resources/protocols/utils'
 
+import type { Dispatch, SetStateAction } from 'react'
 import type { GripperData, PipetteData } from '@opentrons/api-client'
 import type { GripperModel } from '@opentrons/shared-data'
 import type { SetupScreens } from '../types'
-import { isGripperInCommands } from '/app/resources/protocols/utils'
 
 export interface ProtocolSetupInstrumentsProps {
   runId: string
-  setSetupScreen: React.Dispatch<React.SetStateAction<SetupScreens>>
+  setSetupScreen: Dispatch<SetStateAction<SetupScreens>>
 }
 
 export function ProtocolSetupInstruments({

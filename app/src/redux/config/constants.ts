@@ -4,9 +4,11 @@ export const DEV_INTERNAL_FLAGS: DevInternalFlag[] = [
   'forceHttpPolling',
   'protocolStats',
   'enableRunNotes',
+  'lpcRedesign',
   'protocolTimeline',
   'enableLabwareCreator',
-  'enableLocalization',
+  'reactQueryDevtools',
+  'reactScan',
 ]
 
 // action type constants

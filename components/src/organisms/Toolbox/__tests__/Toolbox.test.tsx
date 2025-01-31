@@ -1,15 +1,16 @@
-import type * as React from 'react'
 import { describe, it, expect, vi } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 import { renderWithProviders } from '../../../testing/utils'
 import { Toolbox } from '../index'
 
-const render = (props: React.ComponentProps<typeof Toolbox>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof Toolbox>) => {
   return renderWithProviders(<Toolbox {...props} />)
 }
 
 describe('Toolbox', () => {
-  let props: React.ComponentProps<typeof Toolbox>
+  let props: ComponentProps<typeof Toolbox>
 
   it('should render text and buttons', () => {
     props = {

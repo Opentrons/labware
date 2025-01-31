@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import '@testing-library/jest-dom/vitest'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -6,12 +5,14 @@ import { renderWithProviders } from '../../../testing/utils'
 import { JUSTIFY_CENTER, JUSTIFY_START } from '../../../styles'
 import { EmptySelectorButton } from '../EmptySelectorButton'
 
-const render = (props: React.ComponentProps<typeof EmptySelectorButton>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof EmptySelectorButton>) => {
   return renderWithProviders(<EmptySelectorButton {...props} />)[0]
 }
 
 describe('EmptySelectorButton', () => {
-  let props: React.ComponentProps<typeof EmptySelectorButton>
+  let props: ComponentProps<typeof EmptySelectorButton>
   beforeEach(() => {
     props = {
       onClick: vi.fn(),

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { when } from 'vitest-when'
 import { screen, fireEvent } from '@testing-library/react'
@@ -48,10 +47,11 @@ import {
   useErrorRecoveryBanner,
 } from '../ErrorRecoveryBanner'
 
+import type { ComponentProps } from 'react'
+import type * as ReactApiClient from '@opentrons/react-api-client'
 import type { Config } from '/app/redux/config/types'
 import type { DiscoveryClientRobotAddress } from '/app/redux/discovery/types'
 import type { State } from '/app/redux/types'
-import type * as ReactApiClient from '@opentrons/react-api-client'
 
 vi.mock('@opentrons/react-api-client', async importOriginal => {
   const actual = await importOriginal<typeof ReactApiClient>()
@@ -104,7 +104,7 @@ const MOCK_STATE: State = {
 
 const mockToggleLights = vi.fn()
 
-const render = (props: React.ComponentProps<typeof RobotOverview>) => {
+const render = (props: ComponentProps<typeof RobotOverview>) => {
   return renderWithProviders(
     <MemoryRouter>
       <RobotOverview robotName={props.robotName} />
@@ -117,7 +117,7 @@ const render = (props: React.ComponentProps<typeof RobotOverview>) => {
 }
 
 describe('RobotOverview', () => {
-  let props: React.ComponentProps<typeof RobotOverview>
+  let props: ComponentProps<typeof RobotOverview>
 
   beforeEach(() => {
     props = { robotName: mockConnectableRobot.name }

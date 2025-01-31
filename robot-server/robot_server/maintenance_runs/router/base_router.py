@@ -8,8 +8,9 @@ from textwrap import dedent
 from typing import Annotated, Optional, Callable
 from typing_extensions import Literal
 
-from fastapi import APIRouter, Depends, status
+from fastapi import Depends, status
 from pydantic import BaseModel, Field
+from server_utils.fastapi_utils.light_router import LightRouter
 
 from robot_server.errors.error_responses import ErrorDetails, ErrorBody
 from robot_server.service.dependencies import get_current_time, get_unique_id
@@ -42,7 +43,7 @@ from robot_server.deck_configuration.store import DeckConfigurationStore
 from robot_server.service.notifications import get_pe_notify_publishers
 
 log = logging.getLogger(__name__)
-base_router = APIRouter()
+base_router = LightRouter()
 
 
 # TODO (spp, 2023-04-10): move all error types from maintenance & regular runs
@@ -188,7 +189,7 @@ async def create_run(
 
     log.info(f'Created an empty run "{run_id}"".')
     return await PydanticResponse.create(
-        content=SimpleBody.construct(data=run_data),
+        content=SimpleBody.model_construct(data=run_data),
         status_code=status.HTTP_201_CREATED,
     )
 
@@ -221,11 +222,11 @@ async def get_current_run(
 
     data = run_data_manager.get(current_run_id)
     links = AllRunsLinks(
-        current=ResourceLink.construct(href=f"/maintenance_runs/{current_run_id}")
+        current=ResourceLink.model_construct(href=f"/maintenance_runs/{current_run_id}")
     )
 
     return await PydanticResponse.create(
-        content=Body.construct(data=data, links=links),
+        content=Body.model_construct(data=data, links=links),
         status_code=status.HTTP_200_OK,
     )
 
@@ -249,7 +250,7 @@ async def get_run(
         run_data: Data of the run specified in the runId url parameter.
     """
     return await PydanticResponse.create(
-        content=SimpleBody.construct(data=run_data),
+        content=SimpleBody.model_construct(data=run_data),
         status_code=status.HTTP_200_OK,
     )
 
@@ -285,6 +286,6 @@ async def remove_run(
         raise RunNotFound(detail=str(e)).as_error(status.HTTP_404_NOT_FOUND) from e
 
     return await PydanticResponse.create(
-        content=SimpleEmptyBody.construct(),
+        content=SimpleEmptyBody.model_construct(),
         status_code=status.HTTP_200_OK,
     )

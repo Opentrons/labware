@@ -149,6 +149,33 @@ class MovementHandler:
 
         return final_point
 
+    async def move_mount_to(
+        self, mount: MountType, destination: DeckPoint, speed: Optional[float] = None
+    ) -> Point:
+        """Move mount to a specific location on the deck."""
+        hw_mount = mount.to_hw_mount()
+        await self._gantry_mover.prepare_for_mount_movement(hw_mount)
+        origin = await self._gantry_mover.get_position_from_mount(mount=hw_mount)
+        max_travel_z = self._gantry_mover.get_max_travel_z_from_mount(mount=mount)
+
+        # calculate the movement's waypoints
+        waypoints = self._state_store.motion.get_movement_waypoints_to_coords(
+            origin=origin,
+            dest=Point(x=destination.x, y=destination.y, z=destination.z),
+            max_travel_z=max_travel_z,
+            direct=False,
+            additional_min_travel_z=None,
+        )
+
+        # move through the waypoints
+        final_point = await self._gantry_mover.move_mount_to(
+            mount=hw_mount,
+            waypoints=waypoints,
+            speed=speed,
+        )
+
+        return final_point
+
     async def move_to_addressable_area(
         self,
         pipette_id: str,

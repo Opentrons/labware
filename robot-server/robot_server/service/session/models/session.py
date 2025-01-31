@@ -52,7 +52,7 @@ class SessionCreateAttributes(BaseModel):
 class SessionCreateAttributesNoParams(SessionCreateAttributes):
     """The base model of request that has no createParams."""
 
-    createParams: typing.Optional[BaseModel]
+    createParams: typing.Optional[BaseModel] = None
 
 
 class CalibrationCheckCreateAttributes(SessionCreateAttributesNoParams):

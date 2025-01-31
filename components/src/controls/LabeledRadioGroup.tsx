@@ -1,13 +1,12 @@
-import type * as React from 'react'
-
 import { StackedLabeledControl } from './StackedLabeledControl'
 import { RadioGroup } from '../forms'
 
+import type { ReactNode } from 'react'
 import type { RadioGroupProps } from '../forms'
 
 export interface LabeledRadioGroupProps extends RadioGroupProps {
   label: string
-  children: React.ReactNode
+  children: ReactNode
   'data-test'?: string
 }
 

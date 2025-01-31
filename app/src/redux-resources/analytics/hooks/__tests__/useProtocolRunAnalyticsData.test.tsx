@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, expect, describe, beforeEach, afterEach } from 'vitest'
 import { when } from 'vitest-when'
 import { renderHook, waitFor } from '@testing-library/react'
@@ -14,6 +13,8 @@ import { useStoredProtocolAnalysis } from '/app/resources/analysis'
 import { useProtocolMetadata } from '/app/resources/protocols'
 import { formatInterval } from '/app/transformations/commands'
 import { mockConnectableRobot } from '/app/redux/discovery/__fixtures__'
+
+import type { FunctionComponent, ReactNode } from 'react'
 import type { Store } from 'redux'
 
 vi.mock('/app/redux/analytics/hash')
@@ -23,7 +24,7 @@ vi.mock('/app/resources/analysis')
 vi.mock('/app/resources/runs')
 vi.mock('/app/transformations/commands')
 
-let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+let wrapper: FunctionComponent<{ children: ReactNode }>
 let store: Store<any> = createStore(vi.fn(), {})
 
 const RUN_ID = '1'

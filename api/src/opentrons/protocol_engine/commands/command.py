@@ -1,12 +1,11 @@
 """Base command data model and type definitions."""
 
-
 from __future__ import annotations
 
 import dataclasses
 from abc import ABC, abstractmethod
 from datetime import datetime
-from enum import Enum
+import enum
 from typing import (
     TYPE_CHECKING,
     Generic,
@@ -15,10 +14,12 @@ from typing import (
     List,
     Type,
     Union,
+    Any,
+    Dict,
 )
 
 from pydantic import BaseModel, Field
-from pydantic.generics import GenericModel
+from pydantic.json_schema import SkipJsonSchema
 
 from opentrons.hardware_control import HardwareControlAPI
 from opentrons.protocol_engine.state.update_types import StateUpdate
@@ -41,7 +42,7 @@ _ErrorT = TypeVar("_ErrorT", bound=ErrorOccurrence)
 _ErrorT_co = TypeVar("_ErrorT_co", bound=ErrorOccurrence, covariant=True)
 
 
-class CommandStatus(str, Enum):
+class CommandStatus(str, enum.Enum):
     """Command execution status."""
 
     QUEUED = "queued"
@@ -50,7 +51,7 @@ class CommandStatus(str, Enum):
     FAILED = "failed"
 
 
-class CommandIntent(str, Enum):
+class CommandIntent(str, enum.Enum):
     """Run intent for a given command.
 
     Props:
@@ -63,8 +64,12 @@ class CommandIntent(str, Enum):
     FIXIT = "fixit"
 
 
+def _pop_default(s: Dict[str, Any]) -> None:
+    s.pop("default", None)
+
+
 class BaseCommandCreate(
-    GenericModel,
+    BaseModel,
     # These type parameters need to be invariant because our fields are mutable.
     Generic[_ParamsT],
 ):
@@ -82,7 +87,7 @@ class BaseCommandCreate(
         ),
     )
     params: _ParamsT = Field(..., description="Command execution data payload")
-    intent: Optional[CommandIntent] = Field(
+    intent: CommandIntent | SkipJsonSchema[None] = Field(
         None,
         description=(
             "The reason the command was added. If not specified or `protocol`,"
@@ -95,14 +100,16 @@ class BaseCommandCreate(
             "Use setup commands for activities like pre-run calibration checks"
             " and module setup, like pre-heating."
         ),
+        json_schema_extra=_pop_default,
     )
-    key: Optional[str] = Field(
+    key: str | SkipJsonSchema[None] = Field(
         None,
         description=(
             "A key value, unique in this run, that can be used to track"
             " the same logical command across multiple runs of the same protocol."
             " If a value is not provided, one will be generated."
         ),
+        json_schema_extra=_pop_default,
     )
 
 
@@ -144,8 +151,65 @@ class DefinedErrorData(Generic[_ErrorT_co]):
     )
 
 
+_ExecuteReturnT_co = TypeVar(
+    "_ExecuteReturnT_co",
+    bound=Union[
+        SuccessData[BaseModel],
+        DefinedErrorData[ErrorOccurrence],
+    ],
+    covariant=True,
+)
+
+
+class AbstractCommandImpl(
+    ABC,
+    Generic[_ParamsT_contra, _ExecuteReturnT_co],
+):
+    """Abstract command creation and execution implementation.
+
+    A given command request should map to a specific command implementation,
+    which defines how to execute the command and map data from execution into the
+    result model.
+    """
+
+    def __init__(
+        self,
+        state_view: StateView,
+        hardware_api: HardwareControlAPI,
+        equipment: execution.EquipmentHandler,
+        file_provider: execution.FileProvider,
+        movement: execution.MovementHandler,
+        gantry_mover: execution.GantryMover,
+        labware_movement: execution.LabwareMovementHandler,
+        pipetting: execution.PipettingHandler,
+        tip_handler: execution.TipHandler,
+        run_control: execution.RunControlHandler,
+        rail_lights: execution.RailLightsHandler,
+        model_utils: ModelUtils,
+        status_bar: execution.StatusBarHandler,
+        command_note_adder: CommandNoteAdder,
+    ) -> None:
+        """Initialize the command implementation with execution handlers."""
+        pass
+
+    @abstractmethod
+    async def execute(self, params: _ParamsT_contra) -> _ExecuteReturnT_co:
+        """Execute the command, mapping data from execution into a response model.
+
+        This should either:
+
+        - Return a `SuccessData`, if the command completed normally.
+        - Return a `DefinedErrorData`, if the command failed with a "defined error."
+          Defined errors are errors that are documented as part of the robot's public
+          API.
+        - Raise an exception, if the command failed with any other error
+          (in other words, an undefined error).
+        """
+        ...
+
+
 class BaseCommand(
-    GenericModel,
+    BaseModel,
     # These type parameters need to be invariant because our fields are mutable.
     Generic[_ParamsT, _ResultT, _ErrorT],
 ):
@@ -242,60 +306,3 @@ class BaseCommand(
             ],
         ]
     ]
-
-
-_ExecuteReturnT_co = TypeVar(
-    "_ExecuteReturnT_co",
-    bound=Union[
-        SuccessData[BaseModel],
-        DefinedErrorData[ErrorOccurrence],
-    ],
-    covariant=True,
-)
-
-
-class AbstractCommandImpl(
-    ABC,
-    Generic[_ParamsT_contra, _ExecuteReturnT_co],
-):
-    """Abstract command creation and execution implementation.
-
-    A given command request should map to a specific command implementation,
-    which defines how to execute the command and map data from execution into the
-    result model.
-    """
-
-    def __init__(
-        self,
-        state_view: StateView,
-        hardware_api: HardwareControlAPI,
-        equipment: execution.EquipmentHandler,
-        file_provider: execution.FileProvider,
-        movement: execution.MovementHandler,
-        gantry_mover: execution.GantryMover,
-        labware_movement: execution.LabwareMovementHandler,
-        pipetting: execution.PipettingHandler,
-        tip_handler: execution.TipHandler,
-        run_control: execution.RunControlHandler,
-        rail_lights: execution.RailLightsHandler,
-        model_utils: ModelUtils,
-        status_bar: execution.StatusBarHandler,
-        command_note_adder: CommandNoteAdder,
-    ) -> None:
-        """Initialize the command implementation with execution handlers."""
-        pass
-
-    @abstractmethod
-    async def execute(self, params: _ParamsT_contra) -> _ExecuteReturnT_co:
-        """Execute the command, mapping data from execution into a response model.
-
-        This should either:
-
-        - Return a `SuccessData`, if the command completed normally.
-        - Return a `DefinedErrorData`, if the command failed with a "defined error."
-          Defined errors are errors that are documented as part of the robot's public
-          API.
-        - Raise an exception, if the command failed with any other error
-          (in other words, an undefined error).
-        """
-        ...

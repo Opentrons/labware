@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, beforeEach } from 'vitest'
 import { screen } from '@testing-library/react'
 
@@ -10,18 +9,20 @@ import { RECOVERY_MAP } from '../../constants'
 import { SelectRecoveryOption } from '../SelectRecoveryOption'
 import { SkipStepInfo } from '/app/organisms/ErrorRecoveryFlows/shared'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/molecules/Command')
 vi.mock('/app/organisms/ErrorRecoveryFlows/shared')
 vi.mock('../SelectRecoveryOption')
 
-const render = (props: React.ComponentProps<typeof SkipStepSameTips>) => {
+const render = (props: ComponentProps<typeof SkipStepSameTips>) => {
   return renderWithProviders(<SkipStepSameTips {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('SkipStepSameTips', () => {
-  let props: React.ComponentProps<typeof SkipStepSameTips>
+  let props: ComponentProps<typeof SkipStepSameTips>
 
   beforeEach(() => {
     props = {

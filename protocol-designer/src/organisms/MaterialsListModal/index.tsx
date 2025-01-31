@@ -28,10 +28,10 @@ import {
 
 import { getRobotType } from '../../file-data/selectors'
 import { getInitialDeckSetup } from '../../step-forms/selectors'
-import { getTopPortalEl } from '../../components/portals/TopPortal'
 import { selectors as labwareIngredSelectors } from '../../labware-ingred/selectors'
 import { HandleEnter } from '../../atoms/HandleEnter'
 import { LINE_CLAMP_TEXT_STYLE } from '../../atoms'
+import { getMainPagePortalEl } from '../Portal'
 
 import type { AdditionalEquipmentName } from '@opentrons/step-generation'
 import type { LabwareOnDeck, ModuleOnDeck } from '../../step-forms'
@@ -110,10 +110,7 @@ export function MaterialsListModal({
                           </Flex>
                         }
                         content={
-                          <Flex
-                            alignItems={ALIGN_CENTER}
-                            grigGap={SPACING.spacing4}
-                          >
+                          <Flex alignItems={ALIGN_CENTER}>
                             <StyledText desktopStyle="bodyDefaultRegular">
                               {t(`shared:${fixture.name}`)}
                             </StyledText>
@@ -145,7 +142,7 @@ export function MaterialsListModal({
                         content={
                           <Flex
                             alignItems={ALIGN_CENTER}
-                            grigGap={SPACING.spacing4}
+                            gridGap={SPACING.spacing4}
                           >
                             <ModuleIcon moduleType={hw.type} size="1rem" />
                             <StyledText desktopStyle="bodyDefaultRegular">
@@ -300,6 +297,6 @@ export function MaterialsListModal({
         </Flex>
       </Modal>
     </HandleEnter>,
-    getTopPortalEl()
+    getMainPagePortalEl()
   )
 }

@@ -4,7 +4,7 @@ from logging import getLogger
 from datetime import datetime
 from textwrap import dedent
 from typing import Any, Dict, Mapping, List, Type, Union, Optional, Sequence
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from opentrons_shared_data.errors.codes import ErrorCodes
 from .exceptions import ProtocolEngineError
 from opentrons_shared_data.errors.exceptions import EnumeratedError
@@ -29,7 +29,7 @@ class ErrorOccurrence(BaseModel):
             wrappedErrors = [
                 cls.from_failed(id, createdAt, err) for err in error.wrapping
             ]
-        return cls.construct(
+        return cls.model_construct(
             id=id,
             createdAt=createdAt,
             errorType=type(error).__name__,
@@ -38,6 +38,21 @@ class ErrorOccurrence(BaseModel):
             errorCode=error.code.value.code,
             wrappedErrors=wrappedErrors,
         )
+
+    @staticmethod
+    def schema_extra(schema: Dict[str, Any], model: object) -> None:
+        """Append the schema to make the errorCode appear required.
+
+        `errorCode`, `wrappedErrors`, and `errorInfo` have defaults because they are not included in earlier
+        versions of this model, _and_ this model is loaded directly from
+        the on-robot store. That means that, without a default, it will
+        fail to parse. Once a default is defined, the automated schema will
+        mark this as a non-required field, which is misleading as this is
+        a response from the server to the client and it will always have an
+        errorCode defined. This hack is required because it informs the client
+        that it does not, in fact, have to account for a missing errorCode, wrappedError, or errorInfo.
+        """
+        schema["required"].extend(["errorCode", "wrappedErrors", "errorInfo"])
 
     id: str = Field(..., description="Unique identifier of this error occurrence.")
     createdAt: datetime = Field(..., description="When the error occurred.")
@@ -145,23 +160,7 @@ class ErrorOccurrence(BaseModel):
         default=[], description="Errors that may have caused this one."
     )
 
-    class Config:
-        """Customize configuration for this model."""
-
-        @staticmethod
-        def schema_extra(schema: Dict[str, Any], model: object) -> None:
-            """Append the schema to make the errorCode appear required.
-
-            `errorCode`, `wrappedErrors`, and `errorInfo` have defaults because they are not included in earlier
-            versions of this model, _and_ this model is loaded directly from
-            the on-robot store. That means that, without a default, it will
-            fail to parse. Once a default is defined, the automated schema will
-            mark this as a non-required field, which is misleading as this is
-            a response from the server to the client and it will always have an
-            errorCode defined. This hack is required because it informs the client
-            that it does not, in fact, have to account for a missing errorCode, wrappedError, or errorInfo.
-            """
-            schema["required"].extend(["errorCode", "wrappedErrors", "errorInfo"])
+    model_config = ConfigDict(json_schema_extra=schema_extra)
 
 
 # TODO (tz, 7-12-23): move this to exceptions.py when we stop relaying on ErrorOccurrence.
@@ -180,4 +179,4 @@ class ProtocolCommandFailedError(ProtocolEngineError):
         self.original_error = original_error
 
 
-ErrorOccurrence.update_forward_refs()
+ErrorOccurrence.model_rebuild()

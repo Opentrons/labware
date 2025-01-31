@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -6,6 +5,7 @@ import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { AlternativeSecurityTypeModal } from '../AlternativeSecurityTypeModal'
 
+import type { ComponentProps } from 'react'
 import type { NavigateFunction } from 'react-router-dom'
 
 const mockFunc = vi.fn()
@@ -18,16 +18,14 @@ vi.mock('react-router-dom', async importOriginal => {
   }
 })
 
-const render = (
-  props: React.ComponentProps<typeof AlternativeSecurityTypeModal>
-) => {
+const render = (props: ComponentProps<typeof AlternativeSecurityTypeModal>) => {
   return renderWithProviders(<AlternativeSecurityTypeModal {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('AlternativeSecurityTypeModal', () => {
-  let props: React.ComponentProps<typeof AlternativeSecurityTypeModal>
+  let props: ComponentProps<typeof AlternativeSecurityTypeModal>
 
   beforeEach(() => {
     props = {

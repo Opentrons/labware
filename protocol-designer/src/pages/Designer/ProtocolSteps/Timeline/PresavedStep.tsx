@@ -10,7 +10,13 @@ import {
 } from '../../../../ui/steps'
 import { StepContainer } from './StepContainer'
 
-export function PresavedStep(): JSX.Element | null {
+interface PresavedStepProps {
+  sidebarWidth: number
+}
+
+export function PresavedStep({
+  sidebarWidth,
+}: PresavedStepProps): JSX.Element | null {
   const { t } = useTranslation('application')
   const presavedStepForm = useSelector(stepFormSelectors.getPresavedStepForm)
   const stepNumber = useSelector(stepFormSelectors.getOrderedStepIds).length + 1
@@ -39,6 +45,7 @@ export function PresavedStep(): JSX.Element | null {
       hovered={hovered}
       iconName={stepIconsByType[stepType]}
       title={`${stepNumber}. ${t(`stepType.${stepType}`)}`}
+      sidebarWidth={sidebarWidth}
     />
   )
 }

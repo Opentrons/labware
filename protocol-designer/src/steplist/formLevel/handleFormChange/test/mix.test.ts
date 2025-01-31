@@ -94,6 +94,8 @@ describe('well selection should update', () => {
       wells: [],
       aspirate_flowRate: null,
       dispense_flowRate: null,
+      nozzles: null,
+      tipRack: null,
     })
   })
   it('pipette single -> multi', () => {
@@ -105,6 +107,8 @@ describe('well selection should update', () => {
       wells: [],
       aspirate_flowRate: null,
       dispense_flowRate: null,
+      nozzles: null,
+      tipRack: null,
     })
   })
   it('pipette multi -> single', () => {
@@ -117,6 +121,8 @@ describe('well selection should update', () => {
       wells: ['A10', 'B10', 'C10', 'D10', 'E10', 'F10', 'G10', 'H10'],
       aspirate_flowRate: null,
       dispense_flowRate: null,
+      nozzles: null,
+      tipRack: null,
     })
   })
   it('select single-well labware', () => {

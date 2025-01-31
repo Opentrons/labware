@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { fireEvent, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -7,6 +6,7 @@ import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { ConfirmRobotName } from '../ConfirmRobotName'
 
+import type { ComponentProps } from 'react'
 import type { NavigateFunction } from 'react-router-dom'
 
 const mockNavigate = vi.fn()
@@ -19,7 +19,7 @@ vi.mock('react-router-dom', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof ConfirmRobotName>) => {
+const render = (props: ComponentProps<typeof ConfirmRobotName>) => {
   return renderWithProviders(
     <MemoryRouter>
       <ConfirmRobotName {...props} />
@@ -31,7 +31,7 @@ const render = (props: React.ComponentProps<typeof ConfirmRobotName>) => {
 }
 
 describe('ConfirmRobotName', () => {
-  let props: React.ComponentProps<typeof ConfirmRobotName>
+  let props: ComponentProps<typeof ConfirmRobotName>
   beforeEach(() => {
     props = {
       robotName: 'otie',

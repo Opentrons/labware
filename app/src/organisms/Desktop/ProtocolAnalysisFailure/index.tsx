@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useDispatch } from 'react-redux'
 import { useTranslation, Trans } from 'react-i18next'
@@ -6,15 +6,15 @@ import { css } from 'styled-components'
 
 import {
   ALIGN_CENTER,
-  Btn,
   Banner,
+  Btn,
   Flex,
   JUSTIFY_FLEX_END,
-  Modal,
   JUSTIFY_SPACE_BETWEEN,
+  LegacyStyledText,
+  Modal,
   PrimaryButton,
   SPACING,
-  LegacyStyledText,
   TYPOGRAPHY,
   WRAP_REVERSE,
 } from '@opentrons/components'
@@ -22,6 +22,7 @@ import {
 import { analyzeProtocol } from '/app/redux/protocol-storage'
 import { getTopPortalEl } from '/app/App/portal'
 
+import type { MouseEventHandler } from 'react'
 import type { Dispatch } from '/app/redux/types'
 interface ProtocolAnalysisFailureProps {
   errors: string[]
@@ -34,19 +35,19 @@ export function ProtocolAnalysisFailure(
   const { errors, protocolKey } = props
   const { t } = useTranslation(['protocol_list', 'shared'])
   const dispatch = useDispatch<Dispatch>()
-  const [showErrorDetails, setShowErrorDetails] = React.useState(false)
+  const [showErrorDetails, setShowErrorDetails] = useState(false)
 
-  const handleClickShowDetails: React.MouseEventHandler = e => {
+  const handleClickShowDetails: MouseEventHandler = e => {
     e.preventDefault()
     e.stopPropagation()
     setShowErrorDetails(true)
   }
-  const handleClickHideDetails: React.MouseEventHandler = e => {
+  const handleClickHideDetails: MouseEventHandler = e => {
     e.preventDefault()
     e.stopPropagation()
     setShowErrorDetails(false)
   }
-  const handleClickReanalyze: React.MouseEventHandler = e => {
+  const handleClickReanalyze: MouseEventHandler = e => {
     e.preventDefault()
     e.stopPropagation()
     dispatch(analyzeProtocol(protocolKey))

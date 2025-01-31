@@ -46,12 +46,12 @@ jobs:
     timeout-minutes: 10
     runs-on: 'ubuntu-22.04'
     steps:
-      - uses: 'actions/checkout@v3'
+      - uses: 'actions/checkout@v4'
         with:
           fetch-depth: 0
-      - uses: 'actions/setup-node@v3'
+      - uses: 'actions/setup-node@v4'
         with:
-          node-version: '18.19.0'
+          node-version: '22.11.0'
       - uses: 'actions/setup-python@v3'
         with:
           python-version: '3.10'
@@ -75,7 +75,7 @@ jobs:
 
     runs-on: '${{ matrix.os }}'
     steps:
-      - uses: 'actions/checkout@v3'
+      - uses: 'actions/checkout@v4'
         with:
           fetch-depth: 0
       - name: 'install udev for usb-detection'
@@ -86,7 +86,7 @@ jobs:
           sudo apt-get update && sudo apt-get install libudev-dev
       - uses: 'actions/setup-node@v1'
         with:
-          node-version: '18.19.0'
+          node-version: '22.11.0'
       - uses: 'actions/setup-python@v4'
         with:
           python-version: ${{ matrix.python }}
@@ -115,10 +115,10 @@ jobs:
     runs-on: 'ubuntu-22.04'
     timeout-minutes: 30
     steps:
-      - uses: 'actions/checkout@v3'
-      - uses: 'actions/setup-node@v3'
+      - uses: 'actions/checkout@v4'
+      - uses: 'actions/setup-node@v4'
         with:
-          node-version: '18.19.0'
+          node-version: '22.11.0'
       - name: 'install udev'
         run: |
           # WORKAROUND: Remove microsoft debian repo due to https://github.com/microsoft/linux-package-repositories/issues/130. Remove line below after it is resolved
@@ -152,7 +152,7 @@ jobs:
     runs-on: 'ubuntu-22.04'
     if: github.event_name == 'push'
     steps:
-      - uses: 'actions/checkout@v3'
+      - uses: 'actions/checkout@v4'
         with:
           fetch-depth: 0
       # https://github.com/actions/checkout/issues/290
@@ -161,9 +161,9 @@ jobs:
         run: |
           git fetch -f origin ${{ github.ref }}:${{ github.ref }}
           git checkout ${{ github.ref }}
-      - uses: 'actions/setup-node@v3'
+      - uses: 'actions/setup-node@v4'
         with:
-          node-version: '18.19.0'
+          node-version: '22.11.0'
       - name: 'install udev for usb-detection'
         run: |
           # WORKAROUND: Remove microsoft debian repo due to https://github.com/microsoft/linux-package-repositories/issues/130. Remove line below after it is resolved
@@ -223,16 +223,16 @@ jobs:
     needs: ['js-test', 'publish-switch']
     if: needs.publish-switch.outputs.should_publish == 'true'
     steps:
-      - uses: 'actions/checkout@v3'
+      - uses: 'actions/checkout@v4'
       # https://github.com/actions/checkout/issues/290
       - name: 'Fix actions/checkout odd handling of tags'
         if: startsWith(github.ref, 'refs/tags')
         run: |
           git fetch -f origin ${{ github.ref }}:${{ github.ref }}
           git checkout ${{ github.ref }}
-      - uses: 'actions/setup-node@v3'
+      - uses: 'actions/setup-node@v4'
         with:
-          node-version: '18.19.0'
+          node-version: '22.11.0'
           registry-url: 'https://registry.npmjs.org'
       - name: 'install udev for usb-detection'
         run: |
@@ -252,7 +252,7 @@ jobs:
         run: |
           npm config set cache ./.npm-cache
           yarn config set cache-folder ./.yarn-cache
-          make setup-js 
+          make setup-js
       - name: 'build typescript'
         run: make build-ts
       - name: 'build library'
@@ -265,9 +265,9 @@ jobs:
           VERSION_STRING=$(echo ${{ github.ref }} | sed -E 's/refs\/tags\/(components|shared-data)@//')
           json -I -f ./shared-data/package.json -e "this.version=\"$VERSION_STRING\""
           cd ./shared-data
-      - uses: 'actions/setup-node@v3'
+      - uses: 'actions/setup-node@v4'
         with:
-          node-version: '18.19.0'
+          node-version: '22.11.0'
           registry-url: 'https://registry.npmjs.org'
       - name: 'publish to npm registry'
         env:

@@ -66,7 +66,7 @@ class PythonAndLegacyFileReader:
                 namespace=lw.namespace,
                 load_name=lw.parameters.loadName,
                 version=lw.version,
-            ): cast(LabwareDefinitionTypedDict, lw.dict(exclude_none=True))
+            ): cast(LabwareDefinitionTypedDict, lw.model_dump(exclude_none=True))
             for lw in labware_definitions
         }
         data_file_paths = [

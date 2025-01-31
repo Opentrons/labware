@@ -1,32 +1,31 @@
-import type * as React from 'react'
 import { vi, it, describe, beforeEach, afterEach } from 'vitest'
 import { when } from 'vitest-when'
-import { renderWithProviders } from '/app/__testing-utils__'
-import { i18n } from '/app/i18n'
-import { useRequiredProtocolLabware } from '/app/resources/protocols'
-import { Labware } from '../Labware'
-
+import { screen } from '@testing-library/react'
 import {
   fixtureTiprack10ul,
   fixtureTiprack300ul,
   fixture96Plate,
 } from '@opentrons/shared-data'
+import { renderWithProviders } from '/app/__testing-utils__'
+import { i18n } from '/app/i18n'
+import { useRequiredProtocolLabware } from '/app/resources/protocols'
+import { Labware } from '../Labware'
 
+import type { ComponentProps } from 'react'
 import type { LabwareDefinition2 } from '@opentrons/shared-data'
-import { screen } from '@testing-library/react'
 
 vi.mock('/app/resources/protocols')
 
 const MOCK_PROTOCOL_ID = 'mock_protocol_id'
 
-const render = (props: React.ComponentProps<typeof Labware>) => {
+const render = (props: ComponentProps<typeof Labware>) => {
   return renderWithProviders(<Labware {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('Labware', () => {
-  let props: React.ComponentProps<typeof Labware>
+  let props: ComponentProps<typeof Labware>
   beforeEach(() => {
     props = {
       transferId: MOCK_PROTOCOL_ID,

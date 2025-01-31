@@ -1,0 +1,2462 @@
+{
+  "liquidClassName": "glycerol_50",
+  "displayName": "Glycerol-50",
+  "schemaVersion": 1,
+  "namespace": "opentrons",
+  "byPipette": [
+    {
+      "pipetteModel": "flex_1channel_50",
+      "byTipType": [
+        {
+          "tiprack": "opentrons_flex_96_tiprack_50ul",
+          "aspirate": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-bottom",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [
+              [1.0, 7.0],
+              [10.0, 10.0],
+              [50.0, 50.0]
+            ],
+            "correctionByVolume": [
+              [1.0, -0.5],
+              [10.0, -0.2],
+              [50.0, -0.2]
+            ],
+            "preWet": false,
+            "mix": {
+              "enable": false,
+              "params": {
+                "repetitions": 1,
+                "volume": 50
+              }
+            },
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 1.0
+              }
+            }
+          },
+          "singleDispense": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "blowout": {
+                "enable": false
+              },
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-top",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [[0.0, 25.0]],
+            "correctionByVolume": [
+              [1.0, -0.5],
+              [10.0, -0.2],
+              [50.0, -0.2]
+            ],
+            "mix": {
+              "enable": false,
+              "params": {
+                "repetitions": 1,
+                "volume": 50
+              }
+            },
+            "pushOutByVolume": [
+              [1.0, 11.7],
+              [4.999, 11.7],
+              [5.0, 3.9],
+              [50.0, 3.9]
+            ],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 0.5
+              }
+            }
+          },
+          "multiDispense": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "blowout": {
+                "enable": false
+              },
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-top",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [[0.0, 25.0]],
+            "correctionByVolume": [
+              [1.0, -0.5],
+              [10.0, -0.2],
+              [50.0, -0.2]
+            ],
+            "conditioningByVolume": [
+              [1.0, 5.0],
+              [40.0, 5.0],
+              [45.0, 0.0],
+              [50.0, 0.0]
+            ],
+            "disposalByVolume": [
+              [1.0, 5.0],
+              [40.0, 5.0],
+              [45.0, 0.0],
+              [50.0, 0.0]
+            ],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 0.5
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "pipetteModel": "flex_8channel_50",
+      "byTipType": [
+        {
+          "tiprack": "opentrons_flex_96_tiprack_50ul",
+          "aspirate": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-bottom",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [
+              [1.0, 7.0],
+              [10.0, 10.0],
+              [50.0, 50.0]
+            ],
+            "correctionByVolume": [
+              [1.0, -0.5],
+              [10.0, -0.2],
+              [50.0, -0.2]
+            ],
+            "preWet": false,
+            "mix": {
+              "enable": false,
+              "params": {
+                "repetitions": 1,
+                "volume": 50
+              }
+            },
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 1.0
+              }
+            }
+          },
+          "singleDispense": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "blowout": {
+                "enable": false
+              },
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-top",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [[0.0, 25.0]],
+            "correctionByVolume": [
+              [1.0, -0.5],
+              [10.0, -0.2],
+              [50.0, -0.2]
+            ],
+            "mix": {
+              "enable": false,
+              "params": {
+                "repetitions": 1,
+                "volume": 50
+              }
+            },
+            "pushOutByVolume": [
+              [1.0, 11.7],
+              [4.999, 11.7],
+              [5.0, 3.9],
+              [50.0, 3.9]
+            ],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 0.5
+              }
+            }
+          },
+          "multiDispense": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "blowout": {
+                "enable": false
+              },
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-top",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [[0.0, 25.0]],
+            "correctionByVolume": [
+              [1.0, -0.5],
+              [10.0, -0.2],
+              [50.0, -0.2]
+            ],
+            "conditioningByVolume": [
+              [1.0, 5.0],
+              [40.0, 5.0],
+              [45.0, 0.0],
+              [50.0, 0.0]
+            ],
+            "disposalByVolume": [
+              [1.0, 5.0],
+              [40.0, 5.0],
+              [45.0, 0.0],
+              [50.0, 0.0]
+            ],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 0.5
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "pipetteModel": "flex_1channel_1000",
+      "byTipType": [
+        {
+          "tiprack": "opentrons_flex_96_tiprack_50ul",
+          "aspirate": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-bottom",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [
+              [1.0, 7.0],
+              [10.0, 10.0],
+              [50.0, 40.0]
+            ],
+            "correctionByVolume": [
+              [5.0, -0.3],
+              [10.0, -0.2],
+              [50.0, 0.0]
+            ],
+            "preWet": false,
+            "mix": {
+              "enable": false,
+              "params": {
+                "repetitions": 1,
+                "volume": 50
+              }
+            },
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 2.0
+              }
+            }
+          },
+          "singleDispense": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "blowout": {
+                "enable": false
+              },
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-top",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [[0.0, 50.0]],
+            "correctionByVolume": [
+              [5.0, -0.3],
+              [10.0, -0.2],
+              [50.0, 0.0]
+            ],
+            "mix": {
+              "enable": false,
+              "params": {
+                "repetitions": 1,
+                "volume": 50
+              }
+            },
+            "pushOutByVolume": [
+              [5.0, 30.0],
+              [10.0, 20.0],
+              [50.0, 20.0]
+            ],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 1.0
+              }
+            }
+          },
+          "multiDispense": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "blowout": {
+                "enable": false
+              },
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-top",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [[0.0, 50.0]],
+            "correctionByVolume": [
+              [5.0, -0.3],
+              [10.0, -0.2],
+              [50.0, 0.0]
+            ],
+            "conditioningByVolume": [
+              [1.0, 5.0],
+              [40.0, 5.0],
+              [45.0, 0.0],
+              [50.0, 0.0]
+            ],
+            "disposalByVolume": [
+              [1.0, 5.0],
+              [40.0, 5.0],
+              [45.0, 0.0],
+              [50.0, 0.0]
+            ],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 1.0
+              }
+            }
+          }
+        },
+        {
+          "tiprack": "opentrons_flex_96_tiprack_200ul",
+          "aspirate": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-bottom",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [
+              [5.0, 10.0],
+              [50.0, 50.0],
+              [200.0, 200.0]
+            ],
+            "correctionByVolume": [
+              [5.0, -0.3],
+              [50.0, -0.3],
+              [200.0, -0.8]
+            ],
+            "preWet": false,
+            "mix": {
+              "enable": false,
+              "params": {
+                "repetitions": 1,
+                "volume": 50
+              }
+            },
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 1.0
+              }
+            }
+          },
+          "singleDispense": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "blowout": {
+                "enable": false
+              },
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-top",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [[0.0, 50.0]],
+            "correctionByVolume": [
+              [5.0, -0.3],
+              [50.0, -0.3],
+              [200.0, -0.8]
+            ],
+            "mix": {
+              "enable": false,
+              "params": {
+                "repetitions": 1,
+                "volume": 50
+              }
+            },
+            "pushOutByVolume": [[0.0, 20.0]],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 0.5
+              }
+            }
+          },
+          "multiDispense": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "blowout": {
+                "enable": false
+              },
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-top",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [[0.0, 50.0]],
+            "correctionByVolume": [
+              [5.0, -0.3],
+              [50.0, -0.3],
+              [200.0, -0.8]
+            ],
+            "conditioningByVolume": [
+              [1.0, 5.0],
+              [190.0, 5.0],
+              [195.0, 0.0],
+              [200.0, 0.0]
+            ],
+            "disposalByVolume": [
+              [1.0, 5.0],
+              [190.0, 5.0],
+              [195.0, 0.0],
+              [200.0, 0.0]
+            ],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 0.5
+              }
+            }
+          }
+        },
+        {
+          "tiprack": "opentrons_flex_96_tiprack_1000ul",
+          "aspirate": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-bottom",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [
+              [10.0, 10.0],
+              [100.0, 100.0],
+              [1000.0, 800.0]
+            ],
+            "correctionByVolume": [
+              [10.0, -0.2],
+              [100.0, -0.1],
+              [1000.0, -2.5]
+            ],
+            "preWet": false,
+            "mix": {
+              "enable": false,
+              "params": {
+                "repetitions": 1,
+                "volume": 50
+              }
+            },
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 0.7
+              }
+            }
+          },
+          "singleDispense": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "blowout": {
+                "enable": false
+              },
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-top",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [[0.0, 250.0]],
+            "correctionByVolume": [
+              [10.0, -0.2],
+              [100.0, -0.1],
+              [1000.0, -2.5]
+            ],
+            "mix": {
+              "enable": false,
+              "params": {
+                "repetitions": 1,
+                "volume": 50
+              }
+            },
+            "pushOutByVolume": [[0.0, 35.0]],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 0.5
+              }
+            }
+          },
+          "multiDispense": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "blowout": {
+                "enable": false
+              },
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-top",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [[0.0, 250.0]],
+            "correctionByVolume": [
+              [10.0, -0.2],
+              [100.0, -0.1],
+              [1000.0, -2.5]
+            ],
+            "conditioningByVolume": [
+              [1.0, 5.0],
+              [990.0, 5.0],
+              [995.0, 0.0],
+              [1000.0, 0.0]
+            ],
+            "disposalByVolume": [
+              [1.0, 5.0],
+              [990.0, 5.0],
+              [995.0, 0.0],
+              [1000.0, 0.0]
+            ],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 0.5
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "pipetteModel": "flex_8channel_1000",
+      "byTipType": [
+        {
+          "tiprack": "opentrons_flex_96_tiprack_50ul",
+          "aspirate": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-bottom",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [
+              [1.0, 7.0],
+              [10.0, 10.0],
+              [50.0, 40.0]
+            ],
+            "correctionByVolume": [
+              [5.0, -0.3],
+              [10.0, -0.2],
+              [50.0, 0.0]
+            ],
+            "preWet": false,
+            "mix": {
+              "enable": false,
+              "params": {
+                "repetitions": 1,
+                "volume": 50
+              }
+            },
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 2.0
+              }
+            }
+          },
+          "singleDispense": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "blowout": {
+                "enable": false
+              },
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-top",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [[0.0, 50.0]],
+            "correctionByVolume": [
+              [5.0, -0.3],
+              [10.0, -0.2],
+              [50.0, 0.0]
+            ],
+            "mix": {
+              "enable": false,
+              "params": {
+                "repetitions": 1,
+                "volume": 50
+              }
+            },
+            "pushOutByVolume": [
+              [5.0, 30.0],
+              [10.0, 20.0],
+              [50.0, 20.0]
+            ],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 1.0
+              }
+            }
+          },
+          "multiDispense": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "blowout": {
+                "enable": false
+              },
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-top",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [[0.0, 50.0]],
+            "correctionByVolume": [
+              [5.0, -0.3],
+              [10.0, -0.2],
+              [50.0, 0.0]
+            ],
+            "conditioningByVolume": [
+              [1.0, 5.0],
+              [40.0, 5.0],
+              [45.0, 0.0],
+              [50.0, 0.0]
+            ],
+            "disposalByVolume": [
+              [1.0, 5.0],
+              [40.0, 5.0],
+              [45.0, 0.0],
+              [50.0, 0.0]
+            ],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 1.0
+              }
+            }
+          }
+        },
+        {
+          "tiprack": "opentrons_flex_96_tiprack_200ul",
+          "aspirate": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-bottom",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [
+              [5.0, 10.0],
+              [50.0, 50.0],
+              [200.0, 200.0]
+            ],
+            "correctionByVolume": [
+              [5.0, -0.3],
+              [50.0, -0.3],
+              [200.0, -0.8]
+            ],
+            "preWet": false,
+            "mix": {
+              "enable": false,
+              "params": {
+                "repetitions": 1,
+                "volume": 50
+              }
+            },
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 1.0
+              }
+            }
+          },
+          "singleDispense": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "blowout": {
+                "enable": false
+              },
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-top",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [[0.0, 50.0]],
+            "correctionByVolume": [
+              [5.0, -0.3],
+              [50.0, -0.3],
+              [200.0, -0.8]
+            ],
+            "mix": {
+              "enable": false,
+              "params": {
+                "repetitions": 1,
+                "volume": 50
+              }
+            },
+            "pushOutByVolume": [[0.0, 20.0]],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 0.5
+              }
+            }
+          },
+          "multiDispense": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "blowout": {
+                "enable": false
+              },
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-top",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [[0.0, 50.0]],
+            "correctionByVolume": [
+              [5.0, -0.3],
+              [50.0, -0.3],
+              [200.0, -0.8]
+            ],
+            "conditioningByVolume": [
+              [1.0, 5.0],
+              [190.0, 5.0],
+              [195.0, 0.0],
+              [200.0, 0.0]
+            ],
+            "disposalByVolume": [
+              [1.0, 5.0],
+              [190.0, 5.0],
+              [195.0, 0.0],
+              [200.0, 0.0]
+            ],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 0.5
+              }
+            }
+          }
+        },
+        {
+          "tiprack": "opentrons_flex_96_tiprack_1000ul",
+          "aspirate": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-bottom",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [
+              [10.0, 10.0],
+              [100.0, 100.0],
+              [1000.0, 800.0]
+            ],
+            "correctionByVolume": [
+              [10.0, -0.2],
+              [100.0, -0.1],
+              [1000.0, -2.5]
+            ],
+            "preWet": false,
+            "mix": {
+              "enable": false,
+              "params": {
+                "repetitions": 1,
+                "volume": 50
+              }
+            },
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 0.7
+              }
+            }
+          },
+          "singleDispense": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "blowout": {
+                "enable": false
+              },
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-top",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [[0.0, 250.0]],
+            "correctionByVolume": [
+              [10.0, -0.2],
+              [100.0, -0.1],
+              [1000.0, -2.5]
+            ],
+            "mix": {
+              "enable": false,
+              "params": {
+                "repetitions": 1,
+                "volume": 50
+              }
+            },
+            "pushOutByVolume": [[0.0, 35.0]],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 0.5
+              }
+            }
+          },
+          "multiDispense": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "blowout": {
+                "enable": false
+              },
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-top",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [[0.0, 250.0]],
+            "correctionByVolume": [
+              [10.0, -0.2],
+              [100.0, -0.1],
+              [1000.0, -2.5]
+            ],
+            "conditioningByVolume": [
+              [1.0, 5.0],
+              [990.0, 5.0],
+              [995.0, 0.0],
+              [1000.0, 0.0]
+            ],
+            "disposalByVolume": [
+              [1.0, 5.0],
+              [990.0, 5.0],
+              [995.0, 0.0],
+              [1000.0, 0.0]
+            ],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 0.5
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "pipetteModel": "flex_96channel_1000",
+      "byTipType": [
+        {
+          "tiprack": "opentrons_flex_96_tiprack_50ul",
+          "aspirate": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-bottom",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [
+              [1.0, 7.0],
+              [10.0, 10.0],
+              [50.0, 40.0]
+            ],
+            "correctionByVolume": [
+              [5.0, -0.3],
+              [10.0, -0.2],
+              [50.0, 0.0]
+            ],
+            "preWet": false,
+            "mix": {
+              "enable": false,
+              "params": {
+                "repetitions": 1,
+                "volume": 50
+              }
+            },
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 2.0
+              }
+            }
+          },
+          "singleDispense": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "blowout": {
+                "enable": false
+              },
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-top",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [
+              [1.0, 7.0],
+              [10.0, 10.0],
+              [50.0, 40.0]
+            ],
+            "correctionByVolume": [
+              [5.0, -0.3],
+              [10.0, -0.2],
+              [50.0, 0.0]
+            ],
+            "mix": {
+              "enable": false,
+              "params": {
+                "repetitions": 1,
+                "volume": 50
+              }
+            },
+            "pushOutByVolume": [
+              [5.0, 30.0],
+              [10.0, 20.0],
+              [50.0, 20.0]
+            ],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 1.0
+              }
+            }
+          },
+          "multiDispense": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "blowout": {
+                "enable": false
+              },
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-top",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [
+              [1.0, 7.0],
+              [10.0, 10.0],
+              [50.0, 40.0]
+            ],
+            "correctionByVolume": [
+              [5.0, -0.3],
+              [10.0, -0.2],
+              [50.0, 0.0]
+            ],
+            "conditioningByVolume": [
+              [1.0, 5.0],
+              [40.0, 5.0],
+              [45.0, 0.0],
+              [50.0, 0.0]
+            ],
+            "disposalByVolume": [
+              [1.0, 5.0],
+              [40.0, 5.0],
+              [45.0, 0.0],
+              [50.0, 0.0]
+            ],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 1.0
+              }
+            }
+          }
+        },
+        {
+          "tiprack": "opentrons_flex_96_tiprack_200ul",
+          "aspirate": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-bottom",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [
+              [5.0, 10.0],
+              [50.0, 50.0],
+              [200.0, 200.0]
+            ],
+            "correctionByVolume": [
+              [5.0, -0.3],
+              [50.0, -0.3],
+              [200.0, -0.8]
+            ],
+            "preWet": false,
+            "mix": {
+              "enable": false,
+              "params": {
+                "repetitions": 1,
+                "volume": 50
+              }
+            },
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 1.0
+              }
+            }
+          },
+          "singleDispense": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "blowout": {
+                "enable": false
+              },
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-top",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [[0.0, 50.0]],
+            "correctionByVolume": [
+              [5.0, -0.3],
+              [50.0, -0.3],
+              [200.0, -0.8]
+            ],
+            "mix": {
+              "enable": false,
+              "params": {
+                "repetitions": 1,
+                "volume": 50
+              }
+            },
+            "pushOutByVolume": [[0.0, 20.0]],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 0.5
+              }
+            }
+          },
+          "multiDispense": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "blowout": {
+                "enable": false
+              },
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-top",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [[0.0, 50.0]],
+            "correctionByVolume": [
+              [5.0, -0.3],
+              [50.0, -0.3],
+              [200.0, -0.8]
+            ],
+            "conditioningByVolume": [
+              [1.0, 5.0],
+              [190.0, 5.0],
+              [195.0, 0.0],
+              [200.0, 0.0]
+            ],
+            "disposalByVolume": [
+              [1.0, 5.0],
+              [190.0, 5.0],
+              [195.0, 0.0],
+              [200.0, 0.0]
+            ],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 0.5
+              }
+            }
+          }
+        },
+        {
+          "tiprack": "opentrons_flex_96_tiprack_1000ul",
+          "aspirate": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-bottom",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [
+              [10.0, 10.0],
+              [100.0, 100.0],
+              [200.0, 200.0],
+              [1000.0, 200.0]
+            ],
+            "correctionByVolume": [
+              [10.0, -0.2],
+              [100.0, -0.1],
+              [1000.0, -2.5]
+            ],
+            "preWet": false,
+            "mix": {
+              "enable": false,
+              "params": {
+                "repetitions": 1,
+                "volume": 50
+              }
+            },
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 0.7
+              }
+            }
+          },
+          "singleDispense": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "blowout": {
+                "enable": false
+              },
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-top",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [[0.0, 250.0]],
+            "correctionByVolume": [
+              [10.0, -0.2],
+              [100.0, -0.1],
+              [1000.0, -2.5]
+            ],
+            "mix": {
+              "enable": false,
+              "params": {
+                "repetitions": 1,
+                "volume": 50
+              }
+            },
+            "pushOutByVolume": [[0.0, 35.0]],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 0.5
+              }
+            }
+          },
+          "multiDispense": {
+            "submerge": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0.0
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 2
+              },
+              "speed": 4,
+              "airGapByVolume": [[0.0, 0.0]],
+              "blowout": {
+                "enable": false
+              },
+              "touchTip": {
+                "enable": false,
+                "params": {
+                  "zOffset": -1,
+                  "mmToEdge": 0.5,
+                  "speed": 30
+                }
+              },
+              "delay": {
+                "enable": false,
+                "params": {
+                  "duration": 0
+                }
+              }
+            },
+            "positionReference": "well-top",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": 2
+            },
+            "flowRateByVolume": [[0.0, 200.0]],
+            "correctionByVolume": [
+              [10.0, -0.2],
+              [100.0, -0.1],
+              [1000.0, -2.5]
+            ],
+            "conditioningByVolume": [
+              [1.0, 5.0],
+              [990.0, 5.0],
+              [995.0, 0.0],
+              [1000.0, 0.0]
+            ],
+            "disposalByVolume": [
+              [1.0, 5.0],
+              [990.0, 5.0],
+              [995.0, 0.0],
+              [1000.0, 0.0]
+            ],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 0.5
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

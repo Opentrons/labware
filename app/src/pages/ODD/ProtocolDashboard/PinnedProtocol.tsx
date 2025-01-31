@@ -1,7 +1,6 @@
-import * as React from 'react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { formatDistance } from 'date-fns'
 import styled, { css } from 'styled-components'
 
 import {
@@ -22,7 +21,9 @@ import {
 
 import { LongPressModal } from './LongPressModal'
 import { formatTimeWithUtcLabel } from '/app/resources/runs'
+import { useUpdatedLastRunTime } from './hooks'
 
+import type { Dispatch, SetStateAction } from 'react'
 import type { UseLongPressResult } from '@opentrons/components'
 import type { ProtocolResource } from '@opentrons/shared-data'
 
@@ -63,7 +64,7 @@ const cardStyleBySize: {
 
 interface PinnedProtocolProps {
   protocol: ProtocolResource
-  longPress: React.Dispatch<React.SetStateAction<boolean>>
+  longPress: Dispatch<SetStateAction<boolean>>
   setShowDeleteConfirmationModal: (showDeleteConfirmationModal: boolean) => void
   setTargetProtocolId: (targetProtocolId: string) => void
   cardSize?: CardSizeType
@@ -87,6 +88,8 @@ export function PinnedProtocol(props: PinnedProtocolProps): JSX.Element {
   const protocolName = protocol.metadata.protocolName ?? protocol.files[0].name
   const { t } = useTranslation('protocol_info')
 
+  const updatedLastRun = useUpdatedLastRunTime(lastRun)
+
   // ToDo (kk:06/18/2024) this will be removed later
   const handleProtocolClick = (
     longpress: UseLongPressResult,
@@ -96,7 +99,7 @@ export function PinnedProtocol(props: PinnedProtocolProps): JSX.Element {
       navigate(`/protocols/${protocolId}`)
     }
   }
-  React.useEffect(() => {
+  useEffect(() => {
     if (longpress.isLongPressed) {
       longPress(true)
     }
@@ -155,14 +158,12 @@ export function PinnedProtocol(props: PinnedProtocolProps): JSX.Element {
         color={COLORS.grey60}
       >
         <LegacyStyledText as="p">
-          {lastRun !== undefined
-            ? `${formatDistance(new Date(lastRun), new Date(), {
-                addSuffix: true,
-              }).replace('about ', '')}`
-            : t('no_history')}
+          {t('last_run_time', { time: updatedLastRun })}
         </LegacyStyledText>
         <LegacyStyledText as="p">
-          {formatTimeWithUtcLabel(protocol.createdAt)}
+          {t('date_added_date', {
+            date: formatTimeWithUtcLabel(protocol.createdAt),
+          })}
         </LegacyStyledText>
       </Flex>
       {longpress.isLongPressed && (

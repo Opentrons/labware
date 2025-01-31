@@ -4,8 +4,9 @@ from pathlib import Path
 from textwrap import dedent
 from typing import Annotated, Optional, Literal, Union
 
-from fastapi import APIRouter, UploadFile, File, Form, Depends, Response, status
+from fastapi import UploadFile, File, Form, Depends, Response, status
 from opentrons.protocol_reader import FileHasher, FileReaderWriter
+from server_utils.fastapi_utils.light_router import LightRouter
 
 from robot_server.service.json_api import (
     SimpleBody,
@@ -32,7 +33,7 @@ from .models import (
 from ..protocols.dependencies import get_file_hasher, get_file_reader_writer
 from ..service.dependencies import get_current_time, get_unique_id
 
-datafiles_router = APIRouter()
+datafiles_router = LightRouter()
 
 
 class MultipleDataFileSources(ErrorDetails):
@@ -138,8 +139,8 @@ async def upload_data_file(
     existing_file_info = data_files_store.get_file_info_by_hash(file_hash)
     if existing_file_info:
         return await PydanticResponse.create(
-            content=SimpleBody.construct(
-                data=DataFile.construct(
+            content=SimpleBody.model_construct(
+                data=DataFile.model_construct(
                     id=existing_file_info.id,
                     name=existing_file_info.name,
                     createdAt=existing_file_info.created_at,
@@ -162,8 +163,8 @@ async def upload_data_file(
     )
     await data_files_store.insert(file_info)
     return await PydanticResponse.create(
-        content=SimpleBody.construct(
-            data=DataFile.construct(
+        content=SimpleBody.model_construct(
+            data=DataFile.model_construct(
                 id=file_info.id,
                 name=file_info.name,
                 createdAt=created_at,
@@ -199,8 +200,8 @@ async def get_data_file_info_by_id(
         raise FileIdNotFound(detail=str(e)).as_error(status.HTTP_404_NOT_FOUND)
 
     return await PydanticResponse.create(
-        content=SimpleBody.construct(
-            data=DataFile.construct(
+        content=SimpleBody.model_construct(
+            data=DataFile.model_construct(
                 id=resource.id,
                 name=resource.name,
                 createdAt=resource.created_at,
@@ -264,9 +265,9 @@ async def get_all_data_files(
     meta = MultiBodyMeta(cursor=0, totalLength=len(data_files))
 
     return await PydanticResponse.create(
-        content=SimpleMultiBody.construct(
+        content=SimpleMultiBody.model_construct(
             data=[
-                DataFile.construct(
+                DataFile.model_construct(
                     id=data_file_info.id,
                     name=data_file_info.name,
                     createdAt=data_file_info.created_at,
@@ -307,6 +308,6 @@ async def delete_file_by_id(
         raise DataFileInUse(detail=str(e)).as_error(status.HTTP_409_CONFLICT) from e
 
     return await PydanticResponse.create(
-        content=SimpleEmptyBody.construct(),
+        content=SimpleEmptyBody.model_construct(),
         status_code=status.HTTP_200_OK,
     )

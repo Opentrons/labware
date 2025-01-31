@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { describe, beforeEach, it, vi } from 'vitest'
 import { LEFT, RIGHT, fixtureP1000SingleV2Specs } from '@opentrons/shared-data'
@@ -6,14 +5,16 @@ import { renderWithProviders } from '../../testing/utils'
 import { InstrumentInfo } from '../InstrumentInfo'
 import { InstrumentDiagram } from '../InstrumentDiagram'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('../InstrumentDiagram')
 
-const render = (props: React.ComponentProps<typeof InstrumentInfo>) => {
+const render = (props: ComponentProps<typeof InstrumentInfo>) => {
   return renderWithProviders(<InstrumentInfo {...props} />)[0]
 }
 
 describe('InstrumentInfo', () => {
-  let props: React.ComponentProps<typeof InstrumentInfo>
+  let props: ComponentProps<typeof InstrumentInfo>
 
   beforeEach(() => {
     props = {

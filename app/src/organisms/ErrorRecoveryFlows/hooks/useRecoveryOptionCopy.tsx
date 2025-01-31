@@ -26,6 +26,8 @@ export function useRecoveryOptionCopy(): (
         }
       case RECOVERY_MAP.CANCEL_RUN.ROUTE:
         return t('cancel_run')
+      case RECOVERY_MAP.HOME_AND_RETRY.ROUTE:
+        return t('home_and_retry')
       case RECOVERY_MAP.RETRY_NEW_TIPS.ROUTE:
         return t('retry_with_new_tips')
       case RECOVERY_MAP.RETRY_SAME_TIPS.ROUTE:

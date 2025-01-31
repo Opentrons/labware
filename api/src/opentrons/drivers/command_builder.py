@@ -6,7 +6,7 @@ from typing import List, Optional, Iterator
 class CommandBuilder:
     """Class used to build GCODE commands."""
 
-    def __init__(self, terminator: str) -> None:
+    def __init__(self, terminator: str = "\n") -> None:
         """
         Construct a command builder.
 
@@ -17,7 +17,7 @@ class CommandBuilder:
         self._elements: List[str] = []
 
     def add_float(
-        self, prefix: str, value: float, precision: Optional[int]
+        self, prefix: str, value: float, precision: Optional[int] = None
     ) -> CommandBuilder:
         """
         Add a float value.

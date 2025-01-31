@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 import subprocess
 from typing import Annotated, Optional
 
@@ -90,10 +91,17 @@ async def get_wifi_networks(
                 "letting the system decide when to do a rescan."
             ),
         ),
-    ] = False
+    ] = False,
 ) -> WifiNetworks:
     networks = await nmcli.available_ssids(rescan)
     return WifiNetworks(list=[WifiNetworkFull(**n) for n in networks])
+
+
+def _massage_nmcli_error(error_string: str) -> str:
+    """Raises a better-formatted error message from an nmcli error string."""
+    if re.search("password.*802-11-wireless-security\\.psk.*not given", error_string):
+        return "Could not connect to network. Please double-check network credentials."
+    return error_string
 
 
 @router.post(
@@ -129,7 +137,8 @@ async def post_wifi_configure(
 
     if not ok:
         raise LegacyErrorResponse(
-            message=message, errorCode=ErrorCodes.GENERAL_ERROR.value.code
+            message=_massage_nmcli_error(message),
+            errorCode=ErrorCodes.GENERAL_ERROR.value.code,
         ).as_error(status.HTTP_401_UNAUTHORIZED)
 
     return WifiConfigurationResponse(message=message, ssid=configuration.ssid)
@@ -190,7 +199,7 @@ async def post_wifi_key(key: UploadFile = File(...)):
     else:
         # We return a JSONResponse because we want the 200 status code.
         response.message = "Key file already present"
-        return JSONResponse(content=response.dict())
+        return JSONResponse(content=response.model_dump())
 
 
 @router.delete(
@@ -210,7 +219,7 @@ async def delete_wifi_key(
             description="The ID of key to delete, as determined by a previous"
             " call to GET /wifi/keys",
         ),
-    ]
+    ],
 ) -> V1BasicResponse:
     """Delete wifi key handler"""
     deleted_file = wifi.remove_key(key_uuid)
@@ -274,4 +283,4 @@ async def post_wifi_disconnect(wifi_ssid: WifiNetwork):
         )
     else:
         stat = status.HTTP_500_INTERNAL_SERVER_ERROR
-    return JSONResponse(status_code=stat, content=result.dict())
+    return JSONResponse(status_code=stat, content=result.model_dump())

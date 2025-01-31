@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { forwardRef, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import last from 'lodash/last'
@@ -6,6 +6,7 @@ import last from 'lodash/last'
 import { useDispatchApiRequest } from '/app/redux/robot-api'
 import { postWifiKeys, getWifiKeyByRequestId } from '/app/redux/networking'
 
+import type { ChangeEventHandler, ForwardedRef } from 'react'
 import type { State } from '/app/redux/types'
 
 export interface UploadKeyInputProps {
@@ -28,17 +29,17 @@ const HiddenInput = styled.input`
 
 const UploadKeyInputComponent = (
   props: UploadKeyInputProps,
-  ref: React.ForwardedRef<HTMLInputElement>
+  ref: ForwardedRef<HTMLInputElement>
 ): JSX.Element => {
   const { robotName, label, onUpload } = props
   const [dispatchApi, requestIds] = useDispatchApiRequest()
-  const handleUpload = React.useRef<(key: string) => void>()
+  const handleUpload = useRef<(key: string) => void>()
 
   const createdKeyId = useSelector((state: State) => {
     return getWifiKeyByRequestId(state, robotName, last(requestIds) ?? null)
   })?.id
 
-  const handleFileInput: React.ChangeEventHandler<HTMLInputElement> = event => {
+  const handleFileInput: ChangeEventHandler<HTMLInputElement> = event => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0]
       event.target.value = ''
@@ -47,11 +48,11 @@ const UploadKeyInputComponent = (
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     handleUpload.current = onUpload
   }, [onUpload])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (createdKeyId != null && handleUpload.current) {
       handleUpload.current(createdKeyId)
     }
@@ -67,7 +68,6 @@ const UploadKeyInputComponent = (
   )
 }
 
-export const UploadKeyInput = React.forwardRef<
-  HTMLInputElement,
-  UploadKeyInputProps
->(UploadKeyInputComponent)
+export const UploadKeyInput = forwardRef<HTMLInputElement, UploadKeyInputProps>(
+  UploadKeyInputComponent
+)

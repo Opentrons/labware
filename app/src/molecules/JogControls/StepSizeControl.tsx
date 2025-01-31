@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 import {
@@ -22,6 +21,7 @@ import {
 import { ControlContainer } from './ControlContainer'
 import { TouchControlButton } from './TouchControlButton'
 
+import type { MouseEvent } from 'react'
 import type { StepSize } from './types'
 
 const JUMP_SIZE_SUBTITLE = '- / +'
@@ -107,9 +107,7 @@ export function StepSizeControl(props: StepSizeControlProps): JSX.Element {
     if (i > 0) setCurrentStepSize(stepSizes[i - 1])
   }
 
-  const handleStepSelect = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ): void => {
+  const handleStepSelect = (event: MouseEvent<HTMLButtonElement>): void => {
     setCurrentStepSize(Number(event.currentTarget.value) as StepSize)
     event.currentTarget.blur()
   }

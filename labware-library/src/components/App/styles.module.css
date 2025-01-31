@@ -33,6 +33,7 @@
 }
 
 .content_container {
+  min-height: 87vh;
   width: 100%;
   padding: var(--spacing-5);
   margin: 0;

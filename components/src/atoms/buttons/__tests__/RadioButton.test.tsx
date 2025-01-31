@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import '@testing-library/jest-dom/vitest'
 import { screen, queryByAttribute } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -7,12 +6,14 @@ import { COLORS } from '../../../helix-design-system'
 import { SPACING } from '../../../ui-style-constants'
 import { RadioButton } from '../RadioButton'
 
-const render = (props: React.ComponentProps<typeof RadioButton>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof RadioButton>) => {
   return renderWithProviders(<RadioButton {...props} />)[0]
 }
 
 describe('RadioButton', () => {
-  let props: React.ComponentProps<typeof RadioButton>
+  let props: ComponentProps<typeof RadioButton>
   beforeEach(() => {
     props = {
       onChange: vi.fn(),

@@ -1,17 +1,18 @@
-import type * as React from 'react'
 import cx from 'classnames'
 
 import { DeprecatedCheckboxField } from '../forms'
 import { LabeledControl } from './LabeledControl'
 import styles from './styles.module.css'
 
+import type { ChangeEventHandler, ReactNode } from 'react'
+
 export interface LabeledCheckboxProps {
   label: string
   name: string
   value: boolean
   className?: string
-  children: React.ReactNode
-  onChange: React.ChangeEventHandler<HTMLInputElement>
+  children: ReactNode
+  onChange: ChangeEventHandler<HTMLInputElement>
 }
 
 export function LabeledCheckbox(props: LabeledCheckboxProps): JSX.Element {

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { vi, it, describe, expect, beforeEach } from 'vitest'
 
@@ -8,16 +7,18 @@ import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { CheckPipettesButton } from '../CheckPipettesButton'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('@opentrons/react-api-client')
 
-const render = (props: React.ComponentProps<typeof CheckPipettesButton>) => {
+const render = (props: ComponentProps<typeof CheckPipettesButton>) => {
   return renderWithProviders(<CheckPipettesButton {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('CheckPipettesButton', () => {
-  let props: React.ComponentProps<typeof CheckPipettesButton>
+  let props: ComponentProps<typeof CheckPipettesButton>
   beforeEach(() => {
     props = {
       robotName: 'otie',

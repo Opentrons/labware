@@ -1,11 +1,7 @@
 'use strict'
 const path = require('path')
 
-const {
-  OT_APP_DEPLOY_BUCKET,
-  OT_APP_DEPLOY_FOLDER,
-  APPLE_TEAM_ID,
-} = process.env
+const { OT_APP_DEPLOY_BUCKET, OT_APP_DEPLOY_FOLDER } = process.env
 const DEV_MODE = process.env.NODE_ENV !== 'production'
 const USE_PYTHON = process.env.NO_PYTHON !== 'true'
 const WINDOWS_SIGN = process.env.WINDOWS_SIGN === 'true'
@@ -25,7 +21,7 @@ const publishConfig =
 module.exports = async () => ({
   appId:
     project === 'robot-stack' ? 'com.opentrons.app' : 'com.opentrons.appot3',
-  electronVersion: '27.0.0',
+  electronVersion: '33.2.1',
   npmRebuild: false,
   releaseInfo: {
     releaseNotesFile:
@@ -62,9 +58,7 @@ module.exports = async () => ({
     icon: project === 'robot-stack' ? 'build/icon.icns' : 'build/three.icns',
     forceCodeSigning: !DEV_MODE,
     gatekeeperAssess: true,
-    notarize: {
-      teamId: APPLE_TEAM_ID,
-    },
+    // note: notarize.teamId is passed by implicitly sending through the APPLE_TEAM_ID env var
   },
   dmg: {
     icon: null,

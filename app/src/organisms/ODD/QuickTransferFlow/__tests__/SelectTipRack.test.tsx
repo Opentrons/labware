@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, afterEach, vi, beforeEach } from 'vitest'
 
@@ -6,15 +5,17 @@ import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { SelectTipRack } from '../SelectTipRack'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('@opentrons/react-api-client')
-const render = (props: React.ComponentProps<typeof SelectTipRack>) => {
+const render = (props: ComponentProps<typeof SelectTipRack>) => {
   return renderWithProviders(<SelectTipRack {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('SelectTipRack', () => {
-  let props: React.ComponentProps<typeof SelectTipRack>
+  let props: ComponentProps<typeof SelectTipRack>
 
   beforeEach(() => {
     props = {

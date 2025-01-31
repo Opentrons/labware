@@ -48,6 +48,8 @@ DESCRIPTION = "Hardware control for Opentrons Robots."
 PACKAGES = find_packages(where=".", exclude=["tests.*", "tests"])
 INSTALL_REQUIRES = [
     "pyserial==3.5",
+    "pydantic>=2,<3",
+    "pydantic-settings>=2,<3",
     f"opentrons_shared_data=={VERSION}",
 ]
 

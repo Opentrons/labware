@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, expect } from 'vitest'
 import { renderWithProviders } from '../../../testing/utils'
 import { screen } from '@testing-library/react'
@@ -7,12 +6,14 @@ import { BORDERS, COLORS } from '../../../helix-design-system'
 
 import { LiquidIcon } from '..'
 
-const render = (props: React.ComponentProps<typeof LiquidIcon>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof LiquidIcon>) => {
   return renderWithProviders(<LiquidIcon {...props} />)
 }
 
 describe('LiquidIcon', () => {
-  let props: React.ComponentProps<typeof LiquidIcon>
+  let props: ComponentProps<typeof LiquidIcon>
 
   it('should render the proper style for large icon', () => {
     props = {

@@ -1,12 +1,9 @@
 """Test load labware commands."""
 import inspect
 from typing import Optional
-from opentrons.protocol_engine.state.update_types import (
-    LoadedLabwareUpdate,
-    StateUpdate,
-)
-import pytest
+from unittest.mock import sentinel
 
+import pytest
 from decoy import Decoy
 
 from opentrons.types import DeckSlotName
@@ -18,12 +15,19 @@ from opentrons.protocol_engine.errors import (
 )
 
 from opentrons.protocol_engine.types import (
+    AddressableAreaLocation,
     DeckSlotLocation,
+    LabwareLocation,
     OnLabwareLocation,
 )
 from opentrons.protocol_engine.execution import LoadedLabwareData, EquipmentHandler
 from opentrons.protocol_engine.resources import labware_validation
 from opentrons.protocol_engine.state.state import StateView
+from opentrons.protocol_engine.state.update_types import (
+    AddressableAreaUsedUpdate,
+    LoadedLabwareUpdate,
+    StateUpdate,
+)
 
 from opentrons.protocol_engine.commands.command import SuccessData
 from opentrons.protocol_engine.commands.load_labware import (
@@ -42,33 +46,40 @@ def patch_mock_labware_validation(
         monkeypatch.setattr(labware_validation, name, decoy.mock(func=func))
 
 
-@pytest.mark.parametrize("display_name", [("My custom display name"), (None)])
-async def test_load_labware_implementation(
+@pytest.mark.parametrize("display_name", ["My custom display name", None])
+@pytest.mark.parametrize(
+    ("location", "expected_addressable_area_name"),
+    [
+        (DeckSlotLocation(slotName=DeckSlotName.SLOT_3), "3"),
+        (AddressableAreaLocation(addressableAreaName="3"), "3"),
+    ],
+)
+async def test_load_labware_on_slot_or_addressable_area(
     decoy: Decoy,
     well_plate_def: LabwareDefinition,
     equipment: EquipmentHandler,
     state_view: StateView,
     display_name: Optional[str],
+    location: LabwareLocation,
+    expected_addressable_area_name: str,
 ) -> None:
     """A LoadLabware command should have an execution implementation."""
     subject = LoadLabwareImplementation(equipment=equipment, state_view=state_view)
 
     data = LoadLabwareParams(
-        location=DeckSlotLocation(slotName=DeckSlotName.SLOT_3),
+        location=location,
         loadName="some-load-name",
         namespace="opentrons-test",
         version=1,
         displayName=display_name,
     )
 
-    decoy.when(
-        state_view.geometry.ensure_location_not_occupied(
-            DeckSlotLocation(slotName=DeckSlotName.SLOT_3)
-        )
-    ).then_return(DeckSlotLocation(slotName=DeckSlotName.SLOT_4))
+    decoy.when(state_view.geometry.ensure_location_not_occupied(location)).then_return(
+        sentinel.validated_empty_location
+    )
     decoy.when(
         await equipment.load_labware(
-            location=DeckSlotLocation(slotName=DeckSlotName.SLOT_4),
+            location=sentinel.validated_empty_location,
             load_name="some-load-name",
             namespace="opentrons-test",
             version=1,
@@ -99,9 +110,12 @@ async def test_load_labware_implementation(
                 labware_id="labware-id",
                 definition=well_plate_def,
                 offset_id="labware-offset-id",
-                new_location=DeckSlotLocation(slotName=DeckSlotName.SLOT_4),
+                new_location=sentinel.validated_empty_location,
                 display_name=display_name,
-            )
+            ),
+            addressable_area_used=AddressableAreaUsedUpdate(
+                addressable_area_name=expected_addressable_area_name
+            ),
         ),
     )
 

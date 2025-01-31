@@ -1,13 +1,14 @@
-import type * as React from 'react'
 import { renderHook } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import { I18nextProvider } from 'react-i18next'
 import { createStore } from 'redux'
 import { vi, it, expect, describe, beforeEach, afterEach } from 'vitest'
+
 import {
   getLoadedLabwareDefinitionsByUri,
   simple_v6 as _uncastedSimpleV6Protocol,
 } from '@opentrons/shared-data'
+
 import { i18n } from '/app/i18n'
 import { RUN_ID_1 } from '..//__fixtures__'
 import { useStoredProtocolAnalysis } from '/app/resources/analysis'
@@ -17,6 +18,7 @@ import { useRunCalibrationStatus } from '../useRunCalibrationStatus'
 import { useMostRecentCompletedAnalysis } from '../useMostRecentCompletedAnalysis'
 import { useRunHasStarted } from '../useRunHasStarted'
 
+import type { FunctionComponent, ReactNode } from 'react'
 import type { Store } from 'redux'
 import type * as SharedData from '@opentrons/shared-data'
 import type { State } from '/app/redux/types'
@@ -38,7 +40,7 @@ const simpleV6Protocol = (_uncastedSimpleV6Protocol as unknown) as SharedData.Pr
 
 describe('useLPCDisabledReason', () => {
   const store: Store<State> = createStore(vi.fn(), {})
-  const wrapper: React.FunctionComponent<{ children: React.ReactNode }> = ({
+  const wrapper: FunctionComponent<{ children: ReactNode }> = ({
     children,
   }) => (
     <I18nextProvider i18n={i18n}>

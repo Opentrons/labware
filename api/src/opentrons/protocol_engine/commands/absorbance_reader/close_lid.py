@@ -60,7 +60,6 @@ class CloseLidImpl(AbstractCommandImpl[CloseLidParams, SuccessData[CloseLidResul
         hardware_lid_status = AbsorbanceReaderLidStatus.OFF
         if not self._state_view.config.use_virtual_modules:
             abs_reader = self._equipment.get_module_hardware_api(mod_substate.module_id)
-
             if abs_reader is not None:
                 hardware_lid_status = await abs_reader.get_current_lid_status()
             else:
@@ -95,7 +94,6 @@ class CloseLidImpl(AbstractCommandImpl[CloseLidParams, SuccessData[CloseLidResul
                     deck_slot=self._state_view.modules.get_location(
                         params.moduleId
                     ).slotName,
-                    deck_type=self._state_view.config.deck_type,
                     model=absorbance_model,
                 )
             )
@@ -134,7 +132,7 @@ class CloseLid(BaseCommand[CloseLidParams, CloseLidResult, ErrorOccurrence]):
 
     commandType: CloseLidCommandType = "absorbanceReader/closeLid"
     params: CloseLidParams
-    result: Optional[CloseLidResult]
+    result: Optional[CloseLidResult] = None
 
     _ImplementationCls: Type[CloseLidImpl] = CloseLidImpl
 

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { createPortal } from 'react-dom'
 import { css } from 'styled-components'
 
@@ -13,11 +12,12 @@ import {
 import { InterventionModal } from '/app/molecules/InterventionModal'
 import { getModalPortalEl, getTopPortalEl } from '/app/App/portal'
 
+import type { ComponentProps } from 'react'
 import type { ModalType } from '/app/molecules/InterventionModal'
 import type { DesktopSizeType } from '../types'
 
 export type RecoveryInterventionModalProps = Omit<
-  React.ComponentProps<typeof InterventionModal>,
+  ComponentProps<typeof InterventionModal>,
   'type'
 > & {
   /* If on desktop, specifies the hard-coded dimensions height of the modal. */
@@ -38,7 +38,7 @@ export function RecoveryInterventionModal({
   }
 
   return createPortal(
-    <InterventionModal {...restProps}>
+    <InterventionModal {...restProps} iconSize={isOnDevice ? '28px' : '16px'}>
       <Flex
         css={
           desktopType === 'desktop-small'

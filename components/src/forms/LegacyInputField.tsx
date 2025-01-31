@@ -1,7 +1,13 @@
-import type * as React from 'react'
 import cx from 'classnames'
 import { Icon } from '../icons'
 import styles from './forms.module.css'
+
+import type {
+  ChangeEventHandler,
+  FocusEvent,
+  MouseEvent,
+  ReactNode,
+} from 'react'
 
 export const INPUT_TYPE_TEXT: 'text' = 'text'
 export const INPUT_TYPE_PASSWORD: 'password' = 'password'
@@ -12,7 +18,7 @@ export interface LegacyInputFieldProps {
   /** field is disabled if value is true */
   disabled?: boolean
   /** change handler */
-  onChange?: React.ChangeEventHandler<HTMLInputElement>
+  onChange?: ChangeEventHandler<HTMLInputElement>
   /** classes to apply to outer element */
   className?: string
   /** inline label text. DEPRECATED */
@@ -26,7 +32,7 @@ export interface LegacyInputFieldProps {
   /** placeholder text */
   placeholder?: string
   /** optional suffix component, appears to the right of input text */
-  units?: React.ReactNode // TODO: Ian 2018-10-30 rename to 'suffix'
+  units?: ReactNode // TODO: Ian 2018-10-30 rename to 'suffix'
   /** current value of text in box, defaults to '' */
   value?: string | null | undefined
   /** if included, InputField will use error style and display error instead of caption */
@@ -38,11 +44,11 @@ export interface LegacyInputFieldProps {
   /** optional input type (default "text") */
   type?: typeof INPUT_TYPE_TEXT | typeof INPUT_TYPE_PASSWORD
   /** mouse click handler */
-  onClick?: (event: React.MouseEvent<HTMLInputElement>) => unknown
+  onClick?: (event: MouseEvent<HTMLInputElement>) => unknown
   /** focus handler */
-  onFocus?: (event: React.FocusEvent<HTMLInputElement>) => unknown
+  onFocus?: (event: FocusEvent<HTMLInputElement>) => unknown
   /** blur handler */
-  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => unknown
+  onBlur?: (event: FocusEvent<HTMLInputElement>) => unknown
   /** makes input field read-only */
   readOnly?: boolean | undefined
   /** html tabindex property */

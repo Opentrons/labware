@@ -16,9 +16,15 @@ import { useProtocolDetailsForRun } from '/app/resources/runs'
 import { getFallbackRobotSerialNumber } from '../utils'
 import {
   ANALYTICS_PROTOCOL_PROCEED_TO_RUN,
+  ANALYTICS_PROTOCOL_RUN_ACTION,
   useTrackEvent,
 } from '/app/redux/analytics'
+import {
+  useRobotAnalyticsData,
+  useTrackProtocolRunEvent,
+} from '/app/redux-resources/analytics'
 import { useRobot, useRobotType } from '/app/redux-resources/robots'
+
 import type { AttachedModule, RunStatus, Run } from '@opentrons/api-client'
 import type { UseErrorRecoveryResult } from '/app/organisms/ErrorRecoveryFlows'
 import type {
@@ -71,13 +77,19 @@ export function useRunHeaderModalContainer({
   const robot = useRobot(robotName)
   const robotSerialNumber = getFallbackRobotSerialNumber(robot)
   const trackEvent = useTrackEvent()
+  const { trackProtocolRunEvent } = useTrackProtocolRunEvent(runId, robotName)
   const robotType = useRobotType(robotName)
+  const robotAnalyticsData = useRobotAnalyticsData(robotName)
 
   function handleProceedToRunClick(): void {
     navigate(`/devices/${robotName}/protocol-runs/${runId}/run-preview`)
     trackEvent({
       name: ANALYTICS_PROTOCOL_PROCEED_TO_RUN,
       properties: { robotSerialNumber },
+    })
+    trackProtocolRunEvent({
+      name: ANALYTICS_PROTOCOL_RUN_ACTION.START,
+      properties: robotAnalyticsData ?? {},
     })
     protocolRunControls.play()
   }

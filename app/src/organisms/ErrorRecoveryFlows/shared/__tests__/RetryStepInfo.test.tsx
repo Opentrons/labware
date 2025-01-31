@@ -7,10 +7,11 @@ import { RetryStepInfo } from '../RetryStepInfo'
 import { ERROR_KINDS, RECOVERY_MAP } from '../../constants'
 import { clickButtonLabeled } from '/app/organisms/ErrorRecoveryFlows/__tests__/util'
 
+import type { ComponentProps } from 'react'
 import type { Mock } from 'vitest'
 
 describe('RetryStepInfo', () => {
-  let props: React.ComponentProps<typeof RetryStepInfo>
+  let props: ComponentProps<typeof RetryStepInfo>
   let mockHandleMotionRouting: Mock
   let mockRetryFailedCommand: Mock
   let mockResumeRun: Mock
@@ -33,7 +34,7 @@ describe('RetryStepInfo', () => {
     } as any
   })
 
-  const render = (props: React.ComponentProps<typeof RetryStepInfo>) => {
+  const render = (props: ComponentProps<typeof RetryStepInfo>) => {
     return renderWithProviders(<RetryStepInfo {...props} />, {
       i18nInstance: i18n,
     })[0]
@@ -107,8 +108,8 @@ describe('RetryStepInfo', () => {
     render(props)
 
     screen.getByText(
-      'First, take any necessary actions to prepare the robot to retry the failed step.'
+      'Take any necessary additional actions to prepare the robot to retry the failed step.'
     )
-    screen.getByText('Then, close the robot door before proceeding.')
+    screen.getByText('Close the robot door before proceeding.')
   })
 })

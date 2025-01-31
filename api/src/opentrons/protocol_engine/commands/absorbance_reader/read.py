@@ -1,10 +1,11 @@
 """Command models to read absorbance."""
 from __future__ import annotations
 from datetime import datetime
-from typing import Optional, Dict, TYPE_CHECKING, List
-from typing_extensions import Literal, Type
+from typing import Optional, Dict, TYPE_CHECKING, List, Any
 
+from typing_extensions import Literal, Type
 from pydantic import BaseModel, Field
+from pydantic.json_schema import SkipJsonSchema
 
 from ..command import AbstractCommandImpl, BaseCommand, BaseCommandCreate, SuccessData
 from ...errors import CannotPerformModuleAction, StorageLimitReachedError
@@ -16,10 +17,15 @@ from ...resources.file_provider import (
     MAXIMUM_CSV_FILE_LIMIT,
 )
 from ...resources import FileProvider
+from ...state import update_types
 
 if TYPE_CHECKING:
     from opentrons.protocol_engine.state.state import StateView
     from opentrons.protocol_engine.execution import EquipmentHandler
+
+
+def _remove_default(s: dict[str, Any]) -> None:
+    s.pop("default", None)
 
 
 ReadAbsorbanceCommandType = Literal["absorbanceReader/read"]
@@ -29,9 +35,10 @@ class ReadAbsorbanceParams(BaseModel):
     """Input parameters for an absorbance reading."""
 
     moduleId: str = Field(..., description="Unique ID of the Absorbance Reader.")
-    fileName: Optional[str] = Field(
+    fileName: str | SkipJsonSchema[None] = Field(
         None,
         description="Optional file name to use when storing the results of a measurement.",
+        json_schema_extra=_remove_default,
     )
 
 
@@ -67,6 +74,7 @@ class ReadAbsorbanceImpl(
         self, params: ReadAbsorbanceParams
     ) -> SuccessData[ReadAbsorbanceResult]:
         """Initiate an absorbance measurement."""
+        state_update = update_types.StateUpdate()
         abs_reader_substate = self._state_view.modules.get_absorbance_reader_substate(
             module_id=params.moduleId
         )
@@ -117,7 +125,9 @@ class ReadAbsorbanceImpl(
                     )
                     asbsorbance_result[wavelength] = converted_values
                     transform_results.append(
-                        ReadData.construct(wavelength=wavelength, data=converted_values)
+                        ReadData.model_construct(
+                            wavelength=wavelength, data=converted_values
+                        )
                     )
         # Handle the virtual module case for data creation (all zeroes)
         elif self._state_view.config.use_virtual_modules:
@@ -131,22 +141,27 @@ class ReadAbsorbanceImpl(
                     )
                     asbsorbance_result[wavelength] = converted_values
                     transform_results.append(
-                        ReadData.construct(wavelength=wavelength, data=converted_values)
+                        ReadData.model_construct(
+                            wavelength=wavelength, data=converted_values
+                        )
                     )
             else:
                 raise CannotPerformModuleAction(
                     "Plate Reader data cannot be requested with a module that has not been initialized."
                 )
 
+        state_update.set_absorbance_reader_data(
+            module_id=abs_reader_substate.module_id, read_result=asbsorbance_result
+        )
         # TODO (cb, 10-17-2024): FILE PROVIDER - Some day we may want to break the file provider behavior into a seperate API function.
         # When this happens, we probably will to have the change the command results handler we utilize to track file IDs in engine.
         # Today, the action handler for the FileStore looks for a ReadAbsorbanceResult command action, this will need to be delinked.
 
         # Begin interfacing with the file provider if the user provided a filename
-        file_ids = []
+        file_ids: list[str] = []
         if params.fileName is not None:
             # Create the Plate Reader Transform
-            plate_read_result = PlateReaderData.construct(
+            plate_read_result = PlateReaderData.model_construct(
                 read_results=transform_results,
                 reference_wavelength=abs_reader_substate.reference_wavelength,
                 start_time=start_time,
@@ -167,15 +182,26 @@ class ReadAbsorbanceImpl(
                     )
                     file_ids.append(file_id)
 
+                state_update.files_added = update_types.FilesAddedUpdate(
+                    file_ids=file_ids
+                )
                 # Return success data to api
                 return SuccessData(
                     public=ReadAbsorbanceResult(
-                        data=asbsorbance_result, fileIds=file_ids
+                        data=asbsorbance_result,
+                        fileIds=file_ids,
                     ),
+                    state_update=state_update,
                 )
 
+        state_update.files_added = update_types.FilesAddedUpdate(file_ids=file_ids)
+
         return SuccessData(
-            public=ReadAbsorbanceResult(data=asbsorbance_result, fileIds=file_ids),
+            public=ReadAbsorbanceResult(
+                data=asbsorbance_result,
+                fileIds=file_ids,
+            ),
+            state_update=state_update,
         )
 
 
@@ -186,7 +212,7 @@ class ReadAbsorbance(
 
     commandType: ReadAbsorbanceCommandType = "absorbanceReader/read"
     params: ReadAbsorbanceParams
-    result: Optional[ReadAbsorbanceResult]
+    result: Optional[ReadAbsorbanceResult] = None
 
     _ImplementationCls: Type[ReadAbsorbanceImpl] = ReadAbsorbanceImpl
 

@@ -1,10 +1,10 @@
-import * as React from 'react'
+import { useState, useReducer } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
-  useConditionalConfirm,
-  StepMeter,
   POSITION_STICKY,
+  StepMeter,
+  useConditionalConfirm,
 } from '@opentrons/components'
 import { ANALYTICS_QUICK_TRANSFER_EXIT_EARLY } from '/app/redux/analytics'
 import { useTrackEventWithRobotSerial } from '/app/redux-resources/analytics'
@@ -20,6 +20,7 @@ import { VolumeEntry } from './VolumeEntry'
 import { SummaryAndSettings } from './SummaryAndSettings'
 import { quickTransferWizardReducer } from './reducers'
 
+import type { ComponentProps } from 'react'
 import type { SmallButton } from '/app/atoms/buttons'
 import type { QuickTransferWizardState } from './types'
 
@@ -30,13 +31,13 @@ export const QuickTransferFlow = (): JSX.Element => {
   const navigate = useNavigate()
   const { i18n, t } = useTranslation(['quick_transfer', 'shared'])
   const { trackEventWithRobotSerial } = useTrackEventWithRobotSerial()
-  const [state, dispatch] = React.useReducer(
+  const [state, dispatch] = useReducer(
     quickTransferWizardReducer,
     initialQuickTransferState
   )
-  const [currentStep, setCurrentStep] = React.useState(0)
+  const [currentStep, setCurrentStep] = useState(0)
 
-  const [analyticsStartTime] = React.useState<Date>(new Date())
+  const [analyticsStartTime] = useState<Date>(new Date())
 
   const {
     confirm: confirmExit,
@@ -52,7 +53,7 @@ export const QuickTransferFlow = (): JSX.Element => {
     navigate('/quick-transfer')
   }, true)
 
-  const exitButtonProps: React.ComponentProps<typeof SmallButton> = {
+  const exitButtonProps: ComponentProps<typeof SmallButton> = {
     buttonType: 'tertiaryLowLight',
     buttonText: i18n.format(t('shared:exit'), 'capitalize'),
     onClick: confirmExit,

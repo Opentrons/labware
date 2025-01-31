@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { vi, it, describe, expect } from 'vitest'
 
@@ -8,11 +7,13 @@ import { mockDeckCalTipRack } from '/app/redux/sessions/__fixtures__'
 import * as Sessions from '/app/redux/sessions'
 import { TipConfirmation } from '../TipConfirmation'
 
+import type { ComponentProps } from 'react'
+
 describe('TipConfirmation', () => {
   const mockSendCommands = vi.fn()
   const mockDeleteSession = vi.fn()
   const render = (
-    props: Partial<React.ComponentProps<typeof TipConfirmation>> = {}
+    props: Partial<ComponentProps<typeof TipConfirmation>> = {}
   ) => {
     const {
       mount = 'left',

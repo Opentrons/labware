@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { screen } from '@testing-library/react'
@@ -11,13 +10,17 @@ import {
 import { LabwareRender, Module } from '@opentrons/components'
 import { selectors } from '../../../../labware-ingred/selectors'
 import { getCustomLabwareDefsByURI } from '../../../../labware-defs/selectors'
+import { getDesignerTab } from '../../../../file-data/selectors'
 import { FixtureRender } from '../FixtureRender'
 import { HoveredItems } from '../HoveredItems'
+
+import type { ComponentProps } from 'react'
 import type * as OpentronsComponents from '@opentrons/components'
 
 vi.mock('../FixtureRender')
 vi.mock('../../../../labware-ingred/selectors')
 vi.mock('../../../../labware-defs/selectors')
+vi.mock('../../../../file-data/selectors')
 vi.mock('@opentrons/components', async importOriginal => {
   const actual = await importOriginal<typeof OpentronsComponents>()
   return {
@@ -27,12 +30,12 @@ vi.mock('@opentrons/components', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof HoveredItems>) => {
+const render = (props: ComponentProps<typeof HoveredItems>) => {
   return renderWithProviders(<HoveredItems {...props} />)[0]
 }
 
 describe('HoveredItems', () => {
-  let props: React.ComponentProps<typeof HoveredItems>
+  let props: ComponentProps<typeof HoveredItems>
 
   beforeEach(() => {
     props = {
@@ -54,6 +57,7 @@ describe('HoveredItems', () => {
     vi.mocked(FixtureRender).mockReturnValue(<div>mock FixtureRender</div>)
     vi.mocked(LabwareRender).mockReturnValue(<div>mock LabwareRender</div>)
     vi.mocked(Module).mockReturnValue(<div>mock Module</div>)
+    vi.mocked(getDesignerTab).mockReturnValue('startingDeck')
   })
   it('renders a hovered fixture', () => {
     render(props)

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, afterEach, vi, beforeEach } from 'vitest'
 
@@ -7,13 +6,15 @@ import { i18n } from '/app/i18n'
 import { useNotifyDeckConfigurationQuery } from '/app/resources/deck_configuration'
 import { useTrackEventWithRobotSerial } from '/app/redux-resources/analytics'
 import { BlowOut } from '../../QuickTransferAdvancedSettings/BlowOut'
+
+import type { ComponentProps } from 'react'
 import type { QuickTransferSummaryState } from '../../types'
 
 vi.mock('/app/resources/deck_configuration')
 vi.mock('/app/redux-resources/analytics')
 vi.mock('../utils')
 
-const render = (props: React.ComponentProps<typeof BlowOut>) => {
+const render = (props: ComponentProps<typeof BlowOut>) => {
   return renderWithProviders(<BlowOut {...props} />, {
     i18nInstance: i18n,
   })
@@ -21,7 +22,7 @@ const render = (props: React.ComponentProps<typeof BlowOut>) => {
 let mockTrackEventWithRobotSerial: any
 
 describe('BlowOut', () => {
-  let props: React.ComponentProps<typeof BlowOut>
+  let props: ComponentProps<typeof BlowOut>
 
   beforeEach(() => {
     props = {

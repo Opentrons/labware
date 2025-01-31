@@ -7,7 +7,7 @@ import {
   SPACING,
   TYPOGRAPHY,
 } from '@opentrons/components'
-import { BUTTON_LINK_STYLE } from '../../atoms'
+import { LINK_BUTTON_STYLE } from '../../atoms'
 import { selectDesignerTab } from '../../file-data/actions'
 
 import type { AlertLevel } from './types'
@@ -38,7 +38,7 @@ export const ErrorContents = (
             <Btn
               width="7.25rem"
               textDecoration={TYPOGRAPHY.textDecorationUnderline}
-              css={BUTTON_LINK_STYLE}
+              css={LINK_BUTTON_STYLE}
               onClick={() => {
                 dispatch(selectDesignerTab({ tab: 'startingDeck' }))
               }}
@@ -58,7 +58,7 @@ export const ErrorContents = (
             <Btn
               width="7.25rem"
               textDecoration={TYPOGRAPHY.textDecorationUnderline}
-              css={BUTTON_LINK_STYLE}
+              css={LINK_BUTTON_STYLE}
               onClick={() => {
                 dispatch(selectDesignerTab({ tab: 'startingDeck' }))
               }}

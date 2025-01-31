@@ -28,7 +28,7 @@ Labware
 =======
 .. autoclass:: opentrons.protocol_api.Labware
    :members:
-   :exclude-members: next_tip, use_tips, previous_tip, return_tips
+   :exclude-members: next_tip, use_tips, previous_tip, return_tips, load_empty, load_liquid, load_liquid_by_well
 
 ..
    The trailing ()s at the end of TrashBin and WasteChute here hide the __init__()

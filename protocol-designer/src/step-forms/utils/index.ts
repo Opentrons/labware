@@ -316,7 +316,7 @@ export function getHydratedForm(
   return hydratedForm
 }
 
-export const getUnoccupiedSlotForMoveableTrash = (
+export const getUnoccupiedSlotForTrash = (
   file: PDProtocolFile,
   hasWasteChuteCommands: boolean,
   stagingAreaSlotNames: AddressableAreaName[]
@@ -385,6 +385,15 @@ export const getUnoccupiedSlotForMoveableTrash = (
       !wasteChuteSlot.includes(cutout.value as typeof WASTE_CHUTE_CUTOUT) &&
       !stagingAreaCutoutIds.includes(cutout.value as CutoutId)
   )
+  //  if all slots are occupied except for D3 on a staging area, then auto-generate the waste chute
+  if (
+    unoccupiedSlot == null &&
+    !allLoadLabwareSlotNames.includes('D3') &&
+    stagingAreaCutoutIds.includes(WASTE_CHUTE_CUTOUT)
+  ) {
+    return WASTE_CHUTE_CUTOUT
+  }
+
   if (unoccupiedSlot == null) {
     console.error(
       'Expected to find an unoccupied slot for auto-generating a trash bin but could not'

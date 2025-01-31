@@ -101,7 +101,7 @@ export function useGripperRelease({
   doorStatusUtils,
   recoveryMap,
 }: UseGripperReleaseProps): number {
-  const { releaseGripperJaws } = recoveryCommands
+  const { releaseGripperJaws, homeExceptPlungers } = recoveryCommands
   const { selectedRecoveryOption } = currentRecoveryOptionUtils
   const {
     proceedToRouteAndStep,
@@ -112,46 +112,44 @@ export function useGripperRelease({
   const { MANUAL_MOVE_AND_SKIP, MANUAL_REPLACE_AND_RETRY } = RECOVERY_MAP
   const [countdown, setCountdown] = useState(GRIPPER_RELEASE_COUNTDOWN_S)
 
+  const proceedToDoorStep = (): void => {
+    switch (selectedRecoveryOption) {
+      case MANUAL_MOVE_AND_SKIP.ROUTE:
+        void proceedToRouteAndStep(
+          MANUAL_MOVE_AND_SKIP.ROUTE,
+          MANUAL_MOVE_AND_SKIP.STEPS.CLOSE_DOOR_GRIPPER_Z_HOME
+        )
+        break
+      case MANUAL_REPLACE_AND_RETRY.ROUTE:
+        void proceedToRouteAndStep(
+          MANUAL_REPLACE_AND_RETRY.ROUTE,
+          MANUAL_REPLACE_AND_RETRY.STEPS.CLOSE_DOOR_GRIPPER_Z_HOME
+        )
+        break
+      default: {
+        console.error('Unhandled post grip-release routing when door is open.')
+        void proceedToRouteAndStep(RECOVERY_MAP.OPTION_SELECTION.ROUTE)
+      }
+    }
+  }
+
   const proceedToValidNextStep = (): void => {
-    if (isDoorOpen) {
-      switch (selectedRecoveryOption) {
-        case MANUAL_MOVE_AND_SKIP.ROUTE:
-          void proceedToRouteAndStep(
-            MANUAL_MOVE_AND_SKIP.ROUTE,
-            MANUAL_MOVE_AND_SKIP.STEPS.CLOSE_DOOR_GRIPPER_Z_HOME
-          )
-          break
-        case MANUAL_REPLACE_AND_RETRY.ROUTE:
-          void proceedToRouteAndStep(
-            MANUAL_REPLACE_AND_RETRY.ROUTE,
-            MANUAL_REPLACE_AND_RETRY.STEPS.CLOSE_DOOR_GRIPPER_Z_HOME
-          )
-          break
-        default: {
-          console.error(
-            'Unhandled post grip-release routing when door is open.'
-          )
-          void proceedToRouteAndStep(RECOVERY_MAP.OPTION_SELECTION.ROUTE)
-        }
-      }
-    } else {
-      switch (selectedRecoveryOption) {
-        case MANUAL_MOVE_AND_SKIP.ROUTE:
-          void proceedToRouteAndStep(
-            MANUAL_MOVE_AND_SKIP.ROUTE,
-            MANUAL_MOVE_AND_SKIP.STEPS.MANUAL_MOVE
-          )
-          break
-        case MANUAL_REPLACE_AND_RETRY.ROUTE:
-          void proceedToRouteAndStep(
-            MANUAL_REPLACE_AND_RETRY.ROUTE,
-            MANUAL_REPLACE_AND_RETRY.STEPS.MANUAL_REPLACE
-          )
-          break
-        default:
-          console.error('Unhandled post grip-release routing.')
-          void proceedNextStep()
-      }
+    switch (selectedRecoveryOption) {
+      case MANUAL_MOVE_AND_SKIP.ROUTE:
+        void proceedToRouteAndStep(
+          MANUAL_MOVE_AND_SKIP.ROUTE,
+          MANUAL_MOVE_AND_SKIP.STEPS.MANUAL_MOVE
+        )
+        break
+      case MANUAL_REPLACE_AND_RETRY.ROUTE:
+        void proceedToRouteAndStep(
+          MANUAL_REPLACE_AND_RETRY.ROUTE,
+          MANUAL_REPLACE_AND_RETRY.STEPS.MANUAL_REPLACE
+        )
+        break
+      default:
+        console.error('Unhandled post grip-release routing.')
+        void proceedNextStep()
     }
   }
 
@@ -167,11 +165,21 @@ export function useGripperRelease({
             if (intervalId != null) {
               clearInterval(intervalId)
             }
-            void releaseGripperJaws()
-              .finally(() => handleMotionRouting(false))
-              .then(() => {
-                proceedToValidNextStep()
-              })
+
+            void releaseGripperJaws().then(() => {
+              if (isDoorOpen) {
+                return handleMotionRouting(false).then(() => {
+                  proceedToDoorStep()
+                })
+              }
+
+              return handleMotionRouting(true)
+                .then(() => homeExceptPlungers())
+                .then(() => handleMotionRouting(false))
+                .then(() => {
+                  proceedToValidNextStep()
+                })
+            })
           }
 
           return updatedCountdown

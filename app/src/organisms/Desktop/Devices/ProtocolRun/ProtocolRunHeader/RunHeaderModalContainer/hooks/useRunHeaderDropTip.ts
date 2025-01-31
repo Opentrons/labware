@@ -1,13 +1,10 @@
 import { useEffect } from 'react'
 
-import { useHost } from '@opentrons/react-api-client'
 import { RUN_STATUS_IDLE, RUN_STATUS_STOPPED } from '@opentrons/api-client'
 import { FLEX_ROBOT_TYPE, OT2_ROBOT_TYPE } from '@opentrons/shared-data'
+import { useErrorRecoverySettings } from '@opentrons/react-api-client'
 
-import {
-  useDropTipWizardFlows,
-  useTipAttachmentStatus,
-} from '/app/organisms/DropTipWizardFlows'
+import { useDropTipWizardFlows } from '/app/organisms/DropTipWizardFlows'
 import { useProtocolDropTipModal } from '../modals'
 import {
   useCloseCurrentRun,
@@ -15,15 +12,16 @@ import {
   useIsRunCurrent,
 } from '/app/resources/runs'
 import { isTerminalRunStatus } from '../../utils'
+import { useTipAttachmentStatus } from '/app/resources/instruments'
 import { lastRunCommandPromptedErrorRecovery } from '/app/local-resources/commands'
 
 import type { RobotType } from '@opentrons/shared-data'
 import type { Run, RunStatus } from '@opentrons/api-client'
 import type {
-  DropTipWizardFlowsProps,
   PipetteWithTip,
   TipAttachmentStatusResult,
-} from '/app/organisms/DropTipWizardFlows'
+} from '/app/resources/instruments'
+import type { DropTipWizardFlowsProps } from '/app/organisms/DropTipWizardFlows'
 import type { UseProtocolDropTipModalResult } from '../modals'
 import type { PipetteDetails } from '/app/resources/maintenance_runs'
 
@@ -51,7 +49,6 @@ export function useRunHeaderDropTip({
   robotType,
   runStatus,
 }: UseRunHeaderDropTipParams): UseRunHeaderDropTipResult {
-  const host = useHost()
   const isRunCurrent = useIsRunCurrent(runId)
   const enteredER = runRecord?.data.hasEverEnteredErrorRecovery ?? false
 
@@ -68,7 +65,6 @@ export function useRunHeaderDropTip({
   } = useTipAttachmentStatus({
     runId,
     runRecord: runRecord ?? null,
-    host,
   })
 
   const dropTipModalUtils = useProtocolDropTipModal({
@@ -109,6 +105,8 @@ export function useRunHeaderDropTip({
       : { showDTWiz: false, dtWizProps: null }
   }
 
+  const { data } = useErrorRecoverySettings()
+  const isEREnabled = data?.data.enabled ?? true
   const runSummaryNoFixit = useCurrentRunCommands(
     {
       includeFixitCommands: false,
@@ -116,6 +114,7 @@ export function useRunHeaderDropTip({
     },
     { enabled: isTerminalRunStatus(runStatus) }
   )
+
   // Manage tip checking
   useEffect(() => {
     // If a user begins a new run without navigating away from the run page, reset tip status.
@@ -123,21 +122,16 @@ export function useRunHeaderDropTip({
       if (runStatus === RUN_STATUS_IDLE) {
         resetTipStatus()
       }
-      // Only determine tip status when necessary as this can be an expensive operation. Error Recovery handles tips, so don't
-      // have to do it here if done during Error Recovery.
+      // Only run tip checking if it wasn't *just* handled during Error Recovery.
       else if (
-        runSummaryNoFixit != null &&
-        runSummaryNoFixit.length > 0 &&
-        !lastRunCommandPromptedErrorRecovery(runSummaryNoFixit) &&
+        !lastRunCommandPromptedErrorRecovery(runSummaryNoFixit, isEREnabled) &&
+        isRunCurrent &&
         isTerminalRunStatus(runStatus)
       ) {
         void determineTipStatus()
       }
     }
-  }, [runStatus, robotType, runSummaryNoFixit])
-
-  // TODO(jh, 08-15-24): The enteredER condition is a hack, because errorCommands are only returned when a run is current.
-  // Ideally the run should not need to be current to view errorCommands.
+  }, [runStatus, robotType, isRunCurrent, runSummaryNoFixit, isEREnabled])
 
   // If the run terminates with a "stopped" status, close the run if no tips are attached after running tip check at least once.
   // This marks the robot as "not busy" if drop tip CTAs are unnecessary.
@@ -145,8 +139,7 @@ export function useRunHeaderDropTip({
     if (
       runStatus === RUN_STATUS_STOPPED &&
       isRunCurrent &&
-      (initialPipettesWithTipsCount === 0 || robotType === OT2_ROBOT_TYPE) &&
-      !enteredER
+      (initialPipettesWithTipsCount === 0 || robotType === OT2_ROBOT_TYPE)
     ) {
       closeCurrentRun()
     }

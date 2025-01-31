@@ -20,6 +20,10 @@ export type PipettingRunTimeCommand =
   | VerifyTipPresenceRunTimeCommand
   | LiquidProbeRunTimeCommand
   | TryLiquidProbeRunTimeCommand
+  | AirGapInPlaceRunTimeCommand
+  | EvotipSealRunTimeCommand
+  | EvotipUnsealRunTimeCommand
+  | EvotipPressurizeRunTimeCommand
 
 export type PipettingCreateCommand =
   | AspirateCreateCommand
@@ -39,6 +43,10 @@ export type PipettingCreateCommand =
   | VerifyTipPresenceCreateCommand
   | LiquidProbeCreateCommand
   | TryLiquidProbeCreateCommand
+  | AirGapInPlaceCreateCommand
+  | EvotipSealCreateCommand
+  | EvotipUnsealCreateCommand
+  | EvotipPressurizeCreateCommand
 
 export interface ConfigureForVolumeCreateCommand
   extends CommonCommandCreateInfo {
@@ -55,6 +63,22 @@ export interface ConfigureForVolumeRunTimeCommand
     ConfigureForVolumeCreateCommand {
   result?: BasicLiquidHandlingResult
 }
+
+export type AirGapInPlaceParams = FlowRateParams &
+  PipetteIdentityParams &
+  VolumeParams
+
+export interface AirGapInPlaceCreateCommand extends CommonCommandCreateInfo {
+  commandType: 'airGapInPlace'
+  params: AirGapInPlaceParams
+}
+
+export interface AirGapInPlaceRunTimeCommand
+  extends CommonCommandRunTimeInfo,
+    AirGapInPlaceCreateCommand {
+  result?: BasicLiquidHandlingResult
+}
+
 export interface AspirateCreateCommand extends CommonCommandCreateInfo {
   commandType: 'aspirate'
   params: AspDispAirgapParams
@@ -219,6 +243,37 @@ export interface TryLiquidProbeRunTimeCommand
   result?: Record<string, unknown>
 }
 
+export interface EvotipSealCreateCommand extends CommonCommandCreateInfo {
+  commandType: 'evotipSealPipette'
+  params: PipetteAccessParams & WellLocationParam
+}
+export interface EvotipUnsealCreateCommand extends CommonCommandCreateInfo {
+  commandType: 'evotipUnsealPipette'
+  params: PipetteAccessParams & WellLocationParam
+}
+
+export interface EvotipPressurizeCreateCommand extends CommonCommandCreateInfo {
+  commandType: 'evotipDispense'
+  params: PipetteAccessParams &
+    WellLocationParam &
+    FlowRateParams &
+    VolumeParams
+}
+export interface EvotipSealRunTimeCommand
+  extends CommonCommandRunTimeInfo,
+    EvotipSealCreateCommand {
+  result?: EvotipSealResult
+}
+export interface EvotipUnsealRunTimeCommand
+  extends CommonCommandRunTimeInfo,
+    EvotipUnsealCreateCommand {
+  result?: EvotipUnsealResult
+}
+export interface EvotipPressurizeRunTimeCommand
+  extends CommonCommandRunTimeInfo,
+    EvotipPressurizeCreateCommand {
+  result?: BasicLiquidHandlingResult
+}
 export type AspDispAirgapParams = FlowRateParams &
   PipetteAccessParams &
   VolumeParams &
@@ -302,4 +357,14 @@ interface BasicLiquidHandlingResult {
 interface TipPresenceResult {
   // ot2 should alwasy return unknown
   status?: 'present' | 'absent' | 'unknown'
+}
+
+interface EvotipSealResult {
+  position: AddressableOffsetVector
+  tipVolume: number
+  tipLength: number
+  tipDiameter: number
+}
+interface EvotipUnsealResult {
+  position: AddressableOffsetVector
 }

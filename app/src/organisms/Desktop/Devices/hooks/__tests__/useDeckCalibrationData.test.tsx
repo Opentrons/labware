@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { vi, it, expect, describe, beforeEach, afterEach } from 'vitest'
 import { Provider } from 'react-redux'
@@ -15,12 +14,12 @@ import {
 import { getDiscoverableRobotByName } from '/app/redux/discovery'
 import { mockDeckCalData } from '/app/redux/calibration/__fixtures__'
 import { useDispatchApiRequest } from '/app/redux/robot-api'
-
-import type { Store } from 'redux'
-import type { DispatchApiRequestType } from '/app/redux/robot-api'
-
 import { useDeckCalibrationData } from '..'
 import { mockConnectableRobot } from '/app/redux/discovery/__fixtures__'
+
+import type { FunctionComponent, ReactNode } from 'react'
+import type { Store } from 'redux'
+import type { DispatchApiRequestType } from '/app/redux/robot-api'
 
 vi.mock('@opentrons/react-api-client')
 vi.mock('/app/redux/calibration')
@@ -31,7 +30,7 @@ const store: Store<any> = createStore(vi.fn(), {})
 
 describe('useDeckCalibrationData hook', () => {
   let dispatchApiRequest: DispatchApiRequestType
-  let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+  let wrapper: FunctionComponent<{ children: ReactNode }>
   beforeEach(() => {
     dispatchApiRequest = vi.fn()
     const queryClient = new QueryClient()

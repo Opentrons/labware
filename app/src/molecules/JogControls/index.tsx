@@ -1,5 +1,5 @@
 // jog controls component
-import * as React from 'react'
+import { useState } from 'react'
 import { css } from 'styled-components'
 import {
   Flex,
@@ -20,15 +20,16 @@ import {
   DEFAULT_STEP_SIZES,
 } from './constants'
 
-import type { Jog, Plane, StepSize } from './types'
+import type { ReactNode } from 'react'
 import type { StyleProps } from '@opentrons/components'
+import type { Jog, Plane, StepSize } from './types'
 
 export type { Jog }
 export interface JogControlsProps extends StyleProps {
   jog: Jog
   planes?: Plane[]
   stepSizes?: StepSize[]
-  auxiliaryControl?: React.ReactNode | null
+  auxiliaryControl?: ReactNode | null
   directionControlButtonColor?: string
   initialPlane?: Plane
   isOnDevice?: boolean
@@ -53,9 +54,7 @@ export function JogControls(props: JogControlsProps): JSX.Element {
     isOnDevice = false,
     ...styleProps
   } = props
-  const [currentStepSize, setCurrentStepSize] = React.useState<StepSize>(
-    stepSizes[0]
-  )
+  const [currentStepSize, setCurrentStepSize] = useState<StepSize>(stepSizes[0])
 
   const controls = isOnDevice ? (
     <>

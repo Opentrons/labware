@@ -19,15 +19,6 @@ import type {
   RobotUpdateTarget,
 } from './types'
 
-// TODO(mc, 2020-08-02): i18n
-const UPDATE_SERVER_UNAVAILABLE =
-  "Unable to update because your robot's update server is not responding."
-const OTHER_ROBOT_UPDATING =
-  'Unable to update because the app is currently updating a different robot.'
-const NO_UPDATE_FILES =
-  'Unable to retrieve update for this robot. Ensure your computer is connected to the internet and try again later.'
-const UNAVAILABLE = 'Update unavailable'
-
 export const getRobotUpdateTarget: (
   state: State,
   robotName: string
@@ -198,6 +189,7 @@ export function getRobotUpdateAvailable(
     : getRobotUpdateType(currentVersion, updateVersion)
 }
 
+// this util returns i18n keys in device_settings
 export const getRobotUpdateDisplayInfo: (
   state: State,
   robotName: string
@@ -212,21 +204,21 @@ export const getRobotUpdateDisplayInfo: (
   (robot, currentUpdatingRobot, updateVersion) => {
     const robotVersion = robot ? getRobotApiVersion(robot) : null
     const autoUpdateType = getRobotUpdateType(robotVersion, updateVersion)
-    const autoUpdateAction = autoUpdateType ?? UNAVAILABLE
+    const autoUpdateAction = autoUpdateType ?? 'update_unavailable'
     let autoUpdateDisabledReason = null
     let updateFromFileDisabledReason = null
 
     if (robot?.serverHealthStatus !== HEALTH_STATUS_OK) {
-      autoUpdateDisabledReason = UPDATE_SERVER_UNAVAILABLE
-      updateFromFileDisabledReason = UPDATE_SERVER_UNAVAILABLE
+      autoUpdateDisabledReason = 'update_server_unavailable'
+      updateFromFileDisabledReason = 'update_server_unavailable'
     } else if (
       currentUpdatingRobot !== null &&
       currentUpdatingRobot.name !== robot?.name
     ) {
-      autoUpdateDisabledReason = OTHER_ROBOT_UPDATING
-      updateFromFileDisabledReason = OTHER_ROBOT_UPDATING
+      autoUpdateDisabledReason = 'other_robot_updating'
+      updateFromFileDisabledReason = 'other_robot_updating'
     } else if (autoUpdateType === null) {
-      autoUpdateDisabledReason = NO_UPDATE_FILES
+      autoUpdateDisabledReason = 'no_update_files'
     }
 
     return {

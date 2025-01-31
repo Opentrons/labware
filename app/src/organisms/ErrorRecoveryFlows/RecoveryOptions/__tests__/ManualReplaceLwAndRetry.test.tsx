@@ -6,7 +6,7 @@ import { i18n } from '/app/i18n'
 import { ManualReplaceLwAndRetry } from '../ManualReplaceLwAndRetry'
 import { RECOVERY_MAP } from '../../constants'
 
-import type * as React from 'react'
+import type { ComponentProps } from 'react'
 
 vi.mock('../../shared', () => ({
   GripperIsHoldingLabware: vi.fn(() => (
@@ -23,7 +23,7 @@ vi.mock('../SelectRecoveryOption', () => ({
 }))
 
 describe('ManualReplaceLwAndRetry', () => {
-  let props: React.ComponentProps<typeof ManualReplaceLwAndRetry>
+  let props: ComponentProps<typeof ManualReplaceLwAndRetry>
 
   beforeEach(() => {
     props = {
@@ -35,9 +35,7 @@ describe('ManualReplaceLwAndRetry', () => {
     } as any
   })
 
-  const render = (
-    props: React.ComponentProps<typeof ManualReplaceLwAndRetry>
-  ) => {
+  const render = (props: ComponentProps<typeof ManualReplaceLwAndRetry>) => {
     return renderWithProviders(<ManualReplaceLwAndRetry {...props} />, {
       i18nInstance: i18n,
     })[0]

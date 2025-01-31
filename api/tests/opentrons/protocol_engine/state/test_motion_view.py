@@ -928,6 +928,7 @@ def test_get_touch_tip_waypoints(
             x_radius=1.2,
             y_radius=3.4,
             edge_path_type=_move_types.EdgePathType.RIGHT,
+            mm_from_edge=0.456,
         )
     ).then_return([Point(x=11, y=22, z=33), Point(x=44, y=55, z=66)])
 
@@ -937,6 +938,7 @@ def test_get_touch_tip_waypoints(
         well_name="B2",
         center_point=center_point,
         radius=0.123,
+        mm_from_edge=0.456,
     )
 
     assert result == [

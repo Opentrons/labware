@@ -4,7 +4,7 @@ import mapValues from 'lodash/mapValues'
 import max from 'lodash/max'
 import reduce from 'lodash/reduce'
 import type { Selector } from 'reselect'
-import type { Options } from '@opentrons/components'
+import type { DropdownOption } from '@opentrons/components'
 import type { LabwareLiquidState } from '@opentrons/step-generation'
 import type { CutoutId } from '@opentrons/shared-data'
 import type {
@@ -59,18 +59,18 @@ const getLiquidNamesById: Selector<
       string
     >
 )
-const getLiquidSelectionOptions: Selector<RootSlice, Options> = createSelector(
-  getLiquidGroupsById,
-  liquidGroupsById => {
-    return Object.keys(liquidGroupsById).map(id => ({
-      // NOTE: if these fallbacks are used, it's a bug
-      name: liquidGroupsById[id]
-        ? liquidGroupsById[id].name || `(Unnamed Liquid: ${String(id)})`
-        : 'Missing Liquid',
-      value: id,
-    }))
-  }
-)
+const getLiquidSelectionOptions: Selector<
+  RootSlice,
+  DropdownOption[]
+> = createSelector(getLiquidGroupsById, liquidGroupsById => {
+  return Object.keys(liquidGroupsById).map(id => ({
+    // NOTE: if these fallbacks are used, it's a bug
+    name: liquidGroupsById[id]
+      ? liquidGroupsById[id].name || `(Unnamed Liquid: ${String(id)})`
+      : 'Missing Liquid',
+    value: id,
+  }))
+})
 
 // false or selected slot to add labware to, eg 'A2'
 const selectedAddLabwareSlot = (state: BaseState): DeckSlot | false =>
@@ -113,6 +113,7 @@ const allIngredientNamesIds: Selector<
     ingredientId: ingredId,
     name: ingreds[ingredId].name,
     displayColor: ingreds[ingredId].displayColor,
+    liquidClass: ingreds[ingredId].liquidClass,
   }))
 })
 const getLabwareSelectionMode: Selector<RootSlice, boolean> = createSelector(

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { getInitialAndMovedLabwareInSlots } from '@opentrons/components'
 import {
   FLEX_ROBOT_TYPE,
@@ -15,6 +15,7 @@ import {
   SINGLE_SLOT_FIXTURES,
 } from '@opentrons/shared-data'
 
+import type { ReactNode } from 'react'
 import type {
   CompletedProtocolAnalysis,
   CutoutConfigProtocolSpec,
@@ -118,7 +119,7 @@ interface DeckConfigurationEditingTools {
     cutoutId: CutoutId,
     cutoutFixtureId: CutoutFixtureId
   ) => void
-  addFixtureModal: React.ReactNode
+  addFixtureModal: ReactNode
 }
 export function useDeckConfigurationEditingTools(
   isOnDevice: boolean
@@ -129,9 +130,7 @@ export function useDeckConfigurationEditingTools(
       refetchInterval: DECK_CONFIG_REFETCH_INTERVAL,
     }).data ?? []
   const { updateDeckConfiguration } = useUpdateDeckConfigurationMutation()
-  const [targetCutoutId, setTargetCutoutId] = React.useState<CutoutId | null>(
-    null
-  )
+  const [targetCutoutId, setTargetCutoutId] = useState<CutoutId | null>(null)
 
   const addFixtureToCutout = (cutoutId: CutoutId): void => {
     setTargetCutoutId(cutoutId)

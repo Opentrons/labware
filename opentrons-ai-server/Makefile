@@ -75,6 +75,12 @@ deploy: gen-requirements
 	@echo "Deploying to environment: $(ENV)"
 	python -m pipenv run python deploy.py --env $(ENV) $(if $(TAG),--tag $(TAG),)
 
+.PHONY: dry-deploy
+dry-deploy: gen-requirements
+	@echo "Dry run deploying to environment: $(ENV)"
+	@echo "Data is retrieved from AWS but no changes are made"
+	python -m pipenv run python deploy.py --dry --env $(ENV) $(if $(TAG),--tag $(TAG),)
+
 .PHONY: prompted-deploy
 prompted-deploy: gen-requirements
 	python -m pipenv run python deploy.py
@@ -132,4 +138,9 @@ run-shell:
 
 .PHONY: shell
 shell:
-	docker exec -it $(CONTAINER_NAME) /bin/bash]
+	docker exec -it $(CONTAINER_NAME) /bin/bash
+
+.PHONY: test-googlesheet
+test-googlesheet:
+	@echo "Loading environment variables from .env and running test-googlesheet"
+	pipenv run python -m api.integration.google_sheets

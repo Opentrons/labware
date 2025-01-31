@@ -17,6 +17,7 @@ from opentrons.protocol_engine.commands.prepare_to_aspirate import (
 from opentrons.protocol_engine.execution.gantry_mover import GantryMover
 from opentrons.protocol_engine.resources.model_utils import ModelUtils
 from opentrons.protocol_engine.commands.pipetting_common import OverpressureError
+from opentrons.protocol_engine.state import update_types
 from opentrons_shared_data.errors.exceptions import PipetteOverpressureError
 
 
@@ -32,18 +33,30 @@ def subject(
     )
 
 
-async def test_prepare_to_aspirate_implmenetation(
-    decoy: Decoy, subject: PrepareToAspirateImplementation, pipetting: PipettingHandler
+async def test_prepare_to_aspirate_implementation(
+    decoy: Decoy,
+    gantry_mover: GantryMover,
+    subject: PrepareToAspirateImplementation,
+    pipetting: PipettingHandler,
 ) -> None:
     """A PrepareToAspirate command should have an executing implementation."""
     data = PrepareToAspirateParams(pipetteId="some id")
+    position = Point(x=1, y=2, z=3)
 
     decoy.when(await pipetting.prepare_for_aspirate(pipette_id="some id")).then_return(
         None
     )
+    decoy.when(await gantry_mover.get_position("some id")).then_return(position)
 
     result = await subject.execute(data)
-    assert result == SuccessData(public=PrepareToAspirateResult())
+    assert result == SuccessData(
+        public=PrepareToAspirateResult(),
+        state_update=update_types.StateUpdate(
+            pipette_aspirated_fluid=update_types.PipetteEmptyFluidUpdate(
+                pipette_id="some id"
+            )
+        ),
+    )
 
 
 async def test_overpressure_error(
@@ -78,10 +91,15 @@ async def test_overpressure_error(
     result = await subject.execute(data)
 
     assert result == DefinedErrorData(
-        public=OverpressureError.construct(
+        public=OverpressureError.model_construct(
             id=error_id,
             createdAt=error_timestamp,
             wrappedErrors=[matchers.Anything()],
             errorInfo={"retryLocation": (position.x, position.y, position.z)},
+        ),
+        state_update=update_types.StateUpdate(
+            pipette_aspirated_fluid=update_types.PipetteUnknownFluidUpdate(
+                pipette_id="pipette-id"
+            )
         ),
     )

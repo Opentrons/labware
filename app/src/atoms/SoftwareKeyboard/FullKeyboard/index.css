@@ -103,3 +103,12 @@
   color: #16212d;
   background-color: #e3e3e3; /* grey30 */
 }
+
+.hg-candidate-box {
+  max-width: 400px;
+}
+
+li.hg-candidate-box-list-item {
+  height: 60px;
+  width: 60px;
+}

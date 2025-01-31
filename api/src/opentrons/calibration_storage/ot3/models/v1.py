@@ -3,7 +3,7 @@ import typing
 from typing_extensions import Literal
 from opentrons.hardware_control.modules.types import ModuleType
 from opentrons.hardware_control.types import OT3Mount
-from pydantic import BaseModel, Field, validator
+from pydantic import field_validator, BaseModel, Field, PlainSerializer
 from datetime import datetime
 
 from opentrons_shared_data.pipette.types import LabwareUri
@@ -12,15 +12,21 @@ from opentrons.types import Point
 from opentrons.calibration_storage import types
 
 
+DatetimeType = typing.Annotated[
+    datetime,
+    PlainSerializer(lambda x: x.isoformat(), when_used="json"),
+]
+
+
 class CalibrationStatus(BaseModel):
     markedBad: bool = False
     source: typing.Optional[types.SourceType] = None
-    markedAt: typing.Optional[datetime] = None
+    markedAt: typing.Optional[DatetimeType] = None
 
 
 class TipLengthModel(BaseModel):
     tipLength: float = Field(..., description="Tip length data found from calibration.")
-    lastModified: datetime = Field(
+    lastModified: DatetimeType = Field(
         ..., description="The last time this tip length was calibrated."
     )
     uri: typing.Union[LabwareUri, Literal[""]] = Field(
@@ -34,22 +40,19 @@ class TipLengthModel(BaseModel):
         description="The status of the calibration data.",
     )
 
-    @validator("tipLength")
+    @field_validator("tipLength")
+    @classmethod
     def ensure_tip_length_positive(cls, tipLength: float) -> float:
         if tipLength < 0.0:
             raise ValueError("Tip Length must be a positive number")
         return tipLength
-
-    class Config:
-        json_encoders = {datetime: lambda obj: obj.isoformat()}
-        json_decoders = {datetime: lambda obj: datetime.fromisoformat(obj)}
 
 
 class BeltCalibrationModel(BaseModel):
     attitude: types.AttitudeMatrix = Field(
         ..., description="Attitude matrix for belts found from calibration."
     )
-    lastModified: datetime = Field(
+    lastModified: DatetimeType = Field(
         ..., description="The last time this deck was calibrated."
     )
     source: types.SourceType = Field(
@@ -63,14 +66,10 @@ class BeltCalibrationModel(BaseModel):
         description="The status of the calibration data.",
     )
 
-    class Config:
-        json_encoders = {datetime: lambda obj: obj.isoformat()}
-        json_decoders = {datetime: lambda obj: datetime.fromisoformat(obj)}
-
 
 class InstrumentOffsetModel(BaseModel):
     offset: Point = Field(..., description="Instrument offset found from calibration.")
-    lastModified: datetime = Field(
+    lastModified: DatetimeType = Field(
         ..., description="The last time this instrument was calibrated."
     )
     source: types.SourceType = Field(
@@ -80,10 +79,6 @@ class InstrumentOffsetModel(BaseModel):
         default_factory=CalibrationStatus,
         description="The status of the calibration data.",
     )
-
-    class Config:
-        json_encoders = {datetime: lambda obj: obj.isoformat()}
-        json_decoders = {datetime: lambda obj: datetime.fromisoformat(obj)}
 
 
 class ModuleOffsetModel(BaseModel):
@@ -99,7 +94,7 @@ class ModuleOffsetModel(BaseModel):
         ...,
         description="The unique id of the instrument used to calibrate this module.",
     )
-    lastModified: datetime = Field(
+    lastModified: DatetimeType = Field(
         ..., description="The last time this module was calibrated."
     )
     source: types.SourceType = Field(
@@ -109,7 +104,3 @@ class ModuleOffsetModel(BaseModel):
         default_factory=CalibrationStatus,
         description="The status of the calibration data.",
     )
-
-    class Config:
-        json_encoders = {datetime: lambda obj: obj.isoformat()}
-        json_decoders = {datetime: lambda obj: datetime.fromisoformat(obj)}

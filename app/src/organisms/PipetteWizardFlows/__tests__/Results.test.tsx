@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { act, fireEvent, screen, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
@@ -18,19 +17,20 @@ import { RUN_ID_1 } from '/app/resources/runs/__fixtures__'
 import { Results } from '../Results'
 import { FLOWS } from '../constants'
 
+import type { ComponentProps } from 'react'
 import type { Mock } from 'vitest'
 
 vi.mock('@opentrons/react-api-client')
 vi.mock('/app/resources/robot-settings/hooks')
 
-const render = (props: React.ComponentProps<typeof Results>) => {
+const render = (props: ComponentProps<typeof Results>) => {
   return renderWithProviders(<Results {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('Results', () => {
-  let props: React.ComponentProps<typeof Results>
+  let props: ComponentProps<typeof Results>
   let pipettePromise: Promise<void>
   let mockRefetchInstruments: Mock
   beforeEach(() => {

@@ -31,7 +31,8 @@ from opentrons.hardware_control.instruments.ot2.pipette import Pipette
 from opentrons.hardware_control.types import Axis, CriticalPoint
 from opentrons.protocol_api.core.legacy.deck import Deck
 from opentrons.hardware_control.modules import SimulatingModule
-from opentrons.protocols.advanced_control import transfers as tf
+from opentrons.protocols.advanced_control.common import MixStrategy, Mix, MixOpts
+from opentrons.protocols.advanced_control.transfers import transfer as tf
 from opentrons.protocols.api_support.types import APIVersion
 
 
@@ -852,15 +853,15 @@ def test_transfer_options(ctx: papi.ProtocolContext, monkeypatch: MonkeyPatch) -
             carryover=True,
             gradient_function=None,
             disposal_volume=0,
-            mix_strategy=tf.MixStrategy.BOTH,
+            mix_strategy=MixStrategy.BOTH,
             drop_tip_strategy=tf.DropTipStrategy.TRASH,
             blow_out_strategy=tf.BlowOutStrategy.TRASH,
             touch_tip_strategy=tf.TouchTipStrategy.NEVER,
         ),
         pick_up_tip=tf.PickUpTipOpts(),
-        mix=tf.Mix(
-            mix_before=tf.MixOpts(repetitions=2, volume=10, rate=None),
-            mix_after=tf.MixOpts(repetitions=3, volume=20, rate=None),
+        mix=Mix(
+            mix_before=MixOpts(repetitions=2, volume=10, rate=None),
+            mix_after=MixOpts(repetitions=3, volume=20, rate=None),
         ),
         blow_out=tf.BlowOutOpts(),
         touch_tip=tf.TouchTipOpts(),
@@ -889,15 +890,15 @@ def test_transfer_options(ctx: papi.ProtocolContext, monkeypatch: MonkeyPatch) -
             carryover=True,
             gradient_function=None,
             disposal_volume=10,
-            mix_strategy=tf.MixStrategy.BEFORE,
+            mix_strategy=MixStrategy.BEFORE,
             drop_tip_strategy=tf.DropTipStrategy.RETURN,
             blow_out_strategy=tf.BlowOutStrategy.NONE,
             touch_tip_strategy=tf.TouchTipStrategy.ALWAYS,
         ),
         pick_up_tip=tf.PickUpTipOpts(),
-        mix=tf.Mix(
-            mix_before=tf.MixOpts(repetitions=2, volume=30, rate=None),
-            mix_after=tf.MixOpts(),
+        mix=Mix(
+            mix_before=MixOpts(repetitions=2, volume=30, rate=None),
+            mix_after=MixOpts(),
         ),
         blow_out=tf.BlowOutOpts(),
         touch_tip=tf.TouchTipOpts(),

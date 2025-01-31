@@ -1,4 +1,6 @@
 import type { IpcMainEvent } from 'electron'
+import type { UpdateFileInfo } from 'electron-updater'
+import type { ReleaseNoteInfo } from 'builder-util-runtime'
 import type { Error } from '../types'
 import type { RobotSystemAction } from './is-ready/types'
 
@@ -9,6 +11,8 @@ export interface Remote {
     on: (channel: string, listener: IpcListener) => void
     off: (channel: string, listener: IpcListener) => void
   }
+  /* The renderer process isn't allowed the file path for security reasons. */
+  getFilePathFrom: (file: File) => Promise<string>
 }
 
 export type IpcListener = (
@@ -31,16 +35,11 @@ export type NotifyBrokerResponses = NotifyRefetchData | NotifyUnsubscribeData
 export type NotifyNetworkError = 'ECONNFAILED' | 'ECONNREFUSED'
 export type NotifyResponseData = NotifyBrokerResponses | NotifyNetworkError
 
-interface File {
-  sha512: string
-  url: string
-  [key: string]: unknown
-}
 export interface UpdateInfo {
   version: string
-  files: File[]
+  files: UpdateFileInfo[]
   releaseDate?: string
-  releaseNotes?: string
+  releaseNotes?: string | null | ReleaseNoteInfo[]
 }
 
 export interface ShellUpdateState {

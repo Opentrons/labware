@@ -599,6 +599,54 @@
       "opentrons/opentrons_flex_96_filtertiprack_50ul/1"
     ]
   },
+  "p1000_multi_em_flex": {
+    "displayName": "Flex 8-Channel EM 1000 μL",
+    "displayCategory": "FLEX",
+    "defaultAspirateFlowRate": {
+      "value": 478,
+      "min": 3,
+      "max": 812,
+      "valuesByApiLevel": {
+        "2.0": 159.04,
+        "2.6": 159.04,
+        "2.14": 478
+      }
+    },
+    "defaultDispenseFlowRate": {
+      "value": 478,
+      "min": 3,
+      "max": 812,
+      "valuesByApiLevel": {
+        "2.0": 159.04,
+        "2.14": 478
+      }
+    },
+    "defaultBlowOutFlowRate": {
+      "value": 478,
+      "min": 3,
+      "max": 812,
+      "valuesByApiLevel": {
+        "2.0": 78.52,
+        "2.14": 478
+      }
+    },
+    "channels": 8,
+    "minVolume": 5,
+    "maxVolume": 1000,
+    "smoothieConfigs": {
+      "stepsPerMM": 2133.33,
+      "homePosition": 230.15,
+      "travelDistance": 80
+    },
+    "defaultTipracks": [
+      "opentrons/opentrons_flex_96_tiprack_1000ul/1",
+      "opentrons/opentrons_flex_96_filtertiprack_1000ul/1",
+      "opentrons/opentrons_flex_96_tiprack_200ul/1",
+      "opentrons/opentrons_flex_96_filtertiprack_200ul/1",
+      "opentrons/opentrons_flex_96_tiprack_50ul/1",
+      "opentrons/opentrons_flex_96_filtertiprack_50ul/1"
+    ]
+  },
   "p50_multi_flex": {
     "displayName": "Flex 8-Channel 50 μL",
     "displayCategory": "FLEX",

@@ -145,7 +145,9 @@ export const OT3_PIPETTES = [
   'p50_single_flex',
   'p50_multi_flex',
   'p1000_multi_flex',
+  'p1000_multi_em_flex',
   'p1000_96',
+  'p200_96',
 ]
 export const OT2_PIPETTES = [
   'p300_single',

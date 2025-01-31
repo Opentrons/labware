@@ -31,21 +31,23 @@ export interface DuplicateMultipleStepsAction {
     indexToInsert: number
   }
 }
-export interface ExpandAddStepButtonAction {
-  type: 'EXPAND_ADD_STEP_BUTTON'
-  payload: boolean
+
+export type Mode = 'clear' | 'add'
+export interface Selection {
+  id: string | null
+  text: string | null
+  field?: '1' | '2'
 }
-export interface ToggleStepCollapsedAction {
-  type: 'TOGGLE_STEP_COLLAPSED'
-  payload: StepIdType
+export interface selectDropdownItemAction {
+  type: 'SELECT_DROPDOWN_ITEM'
+  payload: {
+    selection: Selection | null
+    mode: 'add' | 'clear'
+  }
 }
-export interface ExpandMultipleStepsAction {
-  type: 'EXPAND_MULTIPLE_STEPS'
-  payload: StepIdType[]
-}
-export interface CollapseMultipleStepsAction {
-  type: 'COLLAPSE_MULTIPLE_STEPS'
-  payload: StepIdType[]
+export interface hoverSelectionAction {
+  type: 'HOVER_DROPDOWN_ITEM'
+  payload: Selection
 }
 export interface HoverOnSubstepAction {
   type: 'HOVER_ON_SUBSTEP'
@@ -90,6 +92,13 @@ export interface SelectMultipleStepsAction {
   }
 }
 
+export interface SelectMultipleStepsForGroupAction {
+  type: 'SELECT_MULTIPLE_STEPS_FOR_GROUP'
+  payload: {
+    stepIds: StepIdType[]
+    lastSelected: StepIdType
+  }
+}
 export type ViewSubstep = StepIdType | null
 export interface ToggleViewSubstepAction {
   type: 'TOGGLE_VIEW_SUBSTEP'

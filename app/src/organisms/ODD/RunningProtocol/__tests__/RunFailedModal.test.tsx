@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { fireEvent, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -11,6 +10,8 @@ import { RunFailedModal } from '../RunFailedModal'
 
 import type { NavigateFunction } from 'react-router-dom'
 import { RUN_STATUS_FAILED } from '@opentrons/api-client'
+
+import type { ComponentProps } from 'react'
 
 vi.mock('@opentrons/react-api-client')
 
@@ -82,7 +83,7 @@ vi.mock('react-router-dom', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof RunFailedModal>) => {
+const render = (props: ComponentProps<typeof RunFailedModal>) => {
   return renderWithProviders(
     <MemoryRouter>
       <RunFailedModal {...props} />
@@ -94,7 +95,7 @@ const render = (props: React.ComponentProps<typeof RunFailedModal>) => {
 }
 
 describe('RunFailedModal', () => {
-  let props: React.ComponentProps<typeof RunFailedModal>
+  let props: ComponentProps<typeof RunFailedModal>
 
   beforeEach(() => {
     props = {

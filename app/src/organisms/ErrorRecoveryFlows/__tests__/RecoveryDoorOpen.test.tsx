@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, beforeEach, vi, expect } from 'vitest'
 
 import { screen } from '@testing-library/react'
@@ -10,16 +9,17 @@ import { i18n } from '/app/i18n'
 import { RecoveryDoorOpen } from '../RecoveryDoorOpen'
 import { clickButtonLabeled } from './util'
 
+import type { ComponentProps } from 'react'
 import type { Mock } from 'vitest'
 
-const render = (props: React.ComponentProps<typeof RecoveryDoorOpen>) => {
+const render = (props: ComponentProps<typeof RecoveryDoorOpen>) => {
   return renderWithProviders(<RecoveryDoorOpen {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('RecoveryDoorOpen', () => {
-  let props: React.ComponentProps<typeof RecoveryDoorOpen>
+  let props: ComponentProps<typeof RecoveryDoorOpen>
   let mockResumeRecovery: Mock
   let mockProceedToRouteAndStep: Mock
 

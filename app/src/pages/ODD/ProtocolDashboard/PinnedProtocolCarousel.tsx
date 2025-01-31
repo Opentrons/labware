@@ -1,4 +1,4 @@
-import type * as React from 'react'
+import styled from 'styled-components'
 import {
   ALIGN_FLEX_START,
   DIRECTION_ROW,
@@ -9,13 +9,13 @@ import {
 import { useNotifyAllRunsQuery } from '/app/resources/runs'
 import { PinnedProtocol } from './PinnedProtocol'
 
+import type { Dispatch, SetStateAction } from 'react'
 import type { ProtocolResource } from '@opentrons/shared-data'
 import type { CardSizeType } from './PinnedProtocol'
-import styled from 'styled-components'
 
 interface PinnedProtocolCarouselProps {
   pinnedProtocols: ProtocolResource[]
-  longPress: React.Dispatch<React.SetStateAction<boolean>>
+  longPress: Dispatch<SetStateAction<boolean>>
   setShowDeleteConfirmationModal: (showDeleteConfirmationModal: boolean) => void
   setTargetProtocolId: (targetProtocolId: string) => void
   isRequiredCSV?: boolean

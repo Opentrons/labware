@@ -14,7 +14,9 @@ export function SkipStepSameTips(props: RecoveryContentProps): JSX.Element {
       case SKIP_STEP_WITH_SAME_TIPS.STEPS.SKIP:
         return <SkipStepInfo {...props} />
       default:
-        console.warn(`${step} in ${route} not explicitly handled. Rerouting.`)
+        console.warn(
+          `SkipStepSameTips: ${step} in ${route} not explicitly handled. Rerouting.`
+        )
         return <SelectRecoveryOption {...props} />
     }
   }

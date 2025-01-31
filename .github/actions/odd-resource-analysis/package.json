@@ -1,0 +1,22 @@
+{
+  "name": "odd-memory-analysis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "ncc build action/index.js -o dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@actions/core": "1.11.1",
+    "@actions/github": "6.0.0",
+    "calculate-correlation": "^1.2.3",
+    "node-fetch": "2.6.9"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "0.38.3",
+    "prettier": "2.7.1"
+  }
+}

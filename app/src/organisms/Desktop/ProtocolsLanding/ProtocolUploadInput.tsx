@@ -18,6 +18,7 @@ import {
 } from '/app/redux/analytics'
 import { useLogger } from '/app/logger'
 import { useToaster } from '/app/organisms/ToasterOven'
+import { remote } from '/app/redux/shell/remote'
 
 import type { Dispatch } from '/app/redux/types'
 
@@ -38,21 +39,23 @@ export function ProtocolUploadInput(
   const trackEvent = useTrackEvent()
   const { makeToast } = useToaster()
 
-  const handleUpload = (file: File): void => {
-    if (file.path === null) {
-      logger.warn('Failed to upload file, path not found')
-    }
-    if (isValidProtocolFileName(file.name)) {
-      dispatch(addProtocol(file.path))
-    } else {
-      makeToast(t('incompatible_file_type') as string, ERROR_TOAST, {
-        closeButton: true,
+  const handleUpload = (file: File): Promise<void> => {
+    return remote.getFilePathFrom(file).then(filePath => {
+      if (filePath == null) {
+        logger.warn('Failed to upload file, path not found')
+      }
+      if (isValidProtocolFileName(file.name)) {
+        dispatch(addProtocol(filePath))
+      } else {
+        makeToast(t('incompatible_file_type') as string, ERROR_TOAST, {
+          closeButton: true,
+        })
+      }
+      props.onUpload?.()
+      trackEvent({
+        name: ANALYTICS_IMPORT_PROTOCOL_TO_APP,
+        properties: { protocolFileName: file.name },
       })
-    }
-    props.onUpload?.()
-    trackEvent({
-      name: ANALYTICS_IMPORT_PROTOCOL_TO_APP,
-      properties: { protocolFileName: file.name },
     })
   }
 
@@ -64,7 +67,7 @@ export function ProtocolUploadInput(
     >
       <UploadInput
         onUpload={(file: File) => {
-          handleUpload(file)
+          void handleUpload(file)
         }}
         uploadText={t('valid_file_types')}
         dragAndDropText={

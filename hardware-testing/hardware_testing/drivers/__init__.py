@@ -4,7 +4,7 @@ from serial.tools.list_ports import comports  # type: ignore[import]
 from .radwag import RadwagScaleBase, RadwagScale, SimRadwagScale
 
 
-def list_ports_and_select(device_name: str = "", port_substr: str = None) -> str:
+def list_ports_and_select(device_name: str = "", port_substr: str = "") -> str:
     """List serial ports and display list for user to select from."""
     ports = comports()
     assert ports, "no serial ports found"

@@ -29,7 +29,9 @@ export function SkipStepNewTips(
       case SKIP_STEP_WITH_NEW_TIPS.STEPS.SKIP:
         return <SkipStepInfo {...props} />
       default:
-        console.warn(`${step} in ${route} not explicitly handled. Rerouting.`)
+        console.warn(
+          `SkipStepNewTips: ${step} in ${route} not explicitly handled. Rerouting.`
+        )
         return <SelectRecoveryOption {...props} />
     }
   }

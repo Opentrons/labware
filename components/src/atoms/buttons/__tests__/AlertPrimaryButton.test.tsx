@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, beforeEach, expect } from 'vitest'
 import { screen } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
@@ -8,12 +7,14 @@ import { TYPOGRAPHY, SPACING } from '../../../ui-style-constants'
 
 import { AlertPrimaryButton } from '../AlertPrimaryButton'
 
-const render = (props: React.ComponentProps<typeof AlertPrimaryButton>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof AlertPrimaryButton>) => {
   return renderWithProviders(<AlertPrimaryButton {...props} />)[0]
 }
 
 describe('AlertPrimaryButton', () => {
-  let props: React.ComponentProps<typeof AlertPrimaryButton>
+  let props: ComponentProps<typeof AlertPrimaryButton>
 
   beforeEach(() => {
     props = {

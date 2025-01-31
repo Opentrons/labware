@@ -1,5 +1,5 @@
 from typing import Optional, List
-from pydantic import BaseModel, Field
+from pydantic import ConfigDict, BaseModel, Field
 
 from ..helper_classes import AttachedPipette, RequiredLabware, NextSteps
 
@@ -18,9 +18,8 @@ class TipCalibrationSessionStatus(BaseModel):
     supportedCommands: List[str] = Field(
         ..., description="A list of supported commands for this user flow"
     )
-
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "examples": [
                 {
                     "instrument": {
@@ -53,3 +52,4 @@ class TipCalibrationSessionStatus(BaseModel):
                 }
             ]
         }
+    )

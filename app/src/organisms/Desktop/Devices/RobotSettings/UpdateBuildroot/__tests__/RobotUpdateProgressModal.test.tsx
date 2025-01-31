@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { i18n } from '/app/i18n'
 import { act, fireEvent, screen } from '@testing-library/react'
 import { describe, it, vi, beforeEach, expect } from 'vitest'
@@ -21,6 +20,7 @@ import {
   INIT_STATUS,
 } from '/app/resources/health/hooks'
 
+import type { ComponentProps } from 'react'
 import type { SetStatusBarCreateCommand } from '@opentrons/shared-data'
 import type { RobotUpdateSession } from '/app/redux/robot-update/types'
 
@@ -30,9 +30,7 @@ vi.mock('/app/redux/robot-update')
 vi.mock('/app/redux/robot-update/hooks')
 vi.mock('/app/resources/health/hooks')
 
-const render = (
-  props: React.ComponentProps<typeof RobotUpdateProgressModal>
-) => {
+const render = (props: ComponentProps<typeof RobotUpdateProgressModal>) => {
   return renderWithProviders(<RobotUpdateProgressModal {...props} />, {
     i18nInstance: i18n,
   })
@@ -50,8 +48,9 @@ describe('DownloadUpdateModal', () => {
     error: null,
   }
 
-  let props: React.ComponentProps<typeof RobotUpdateProgressModal>
+  let props: ComponentProps<typeof RobotUpdateProgressModal>
   const mockCreateLiveCommand = vi.fn()
+  const mockDispatchStartRobotUpdate = vi.fn()
 
   beforeEach(() => {
     mockCreateLiveCommand.mockResolvedValue(null)
@@ -68,7 +67,9 @@ describe('DownloadUpdateModal', () => {
       progressPercent: 50,
     })
     vi.mocked(getRobotSessionIsManualFile).mockReturnValue(false)
-    vi.mocked(useDispatchStartRobotUpdate).mockReturnValue(vi.fn)
+    vi.mocked(useDispatchStartRobotUpdate).mockReturnValue(
+      mockDispatchStartRobotUpdate
+    )
     vi.mocked(getRobotUpdateDownloadError).mockReturnValue(null)
   })
 

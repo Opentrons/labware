@@ -1,12 +1,16 @@
 """Tests for the /system router."""
+from typing import Iterator
+
 import pytest
 from mock import MagicMock, patch
 from datetime import datetime, timezone
 from starlette.testclient import TestClient
-from typing import Iterator
+from pydantic import TypeAdapter
 
 from robot_server.service.json_api import ResourceLink, ResourceLinks, ResourceLinkKey
 from robot_server.system import errors, router
+
+from tests.conftest import datetime_to_zulu_iso8601
 
 
 @pytest.fixture
@@ -22,10 +26,13 @@ def mock_set_system_time(mock_system_time: datetime) -> Iterator[MagicMock]:
         yield p
 
 
+ResourceLinksAdapter: TypeAdapter[ResourceLinks] = TypeAdapter(ResourceLinks)
+
+
 @pytest.fixture
 def response_links() -> ResourceLinks:
     """Get expected /system/time resource links."""
-    return {ResourceLinkKey.self: ResourceLink(href="/system/time")}
+    return {ResourceLinkKey.self.value: ResourceLink(href="/system/time")}
 
 
 def test_raise_system_synchronized_error(
@@ -103,7 +110,10 @@ def test_set_system_time(
         },
     )
     assert response.json() == {
-        "data": {"systemTime": mock_system_time.isoformat(), "id": "time"},
-        "links": response_links,
+        "data": {
+            "systemTime": datetime_to_zulu_iso8601(mock_system_time),
+            "id": "time",
+        },
+        "links": ResourceLinksAdapter.dump_python(response_links),
     }
     assert response.status_code == 200

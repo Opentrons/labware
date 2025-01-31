@@ -1,26 +1,27 @@
 import mapValues from 'lodash/mapValues'
 import {
-  MAGNETIC_MODULE_TYPE,
-  TEMPERATURE_MODULE_TYPE,
-  THERMOCYCLER_MODULE_TYPE,
-  HEATERSHAKER_MODULE_TYPE,
-  MAGNETIC_MODULE_V1,
-  MAGNETIC_MODULE_V2,
-  TEMPERATURE_MODULE_V1,
-  TEMPERATURE_MODULE_V2,
-  THERMOCYCLER_MODULE_V1,
-  HEATERSHAKER_MODULE_V1,
-  THERMOCYCLER_MODULE_V2,
-  MAGNETIC_BLOCK_TYPE,
-  MAGNETIC_BLOCK_V1,
   ABSORBANCE_READER_TYPE,
   ABSORBANCE_READER_V1,
+  HEATERSHAKER_MODULE_TYPE,
+  HEATERSHAKER_MODULE_V1,
+  MAGNETIC_BLOCK_TYPE,
+  MAGNETIC_BLOCK_V1,
+  MAGNETIC_MODULE_TYPE,
+  MAGNETIC_MODULE_V1,
+  MAGNETIC_MODULE_V2,
+  TEMPERATURE_MODULE_TYPE,
+  TEMPERATURE_MODULE_V1,
+  TEMPERATURE_MODULE_V2,
+  THERMOCYCLER_MODULE_TYPE,
+  THERMOCYCLER_MODULE_V1,
+  THERMOCYCLER_MODULE_V2,
 } from '@opentrons/shared-data'
 import type {
-  LabwareDefinition2,
+  CutoutId,
   DeckSlot as DeckDefSlot,
-  ModuleType,
+  LabwareDefinition2,
   ModuleModel,
+  ModuleType,
 } from '@opentrons/shared-data'
 import type { DeckSlot, WellVolumes } from './types'
 
@@ -167,3 +168,10 @@ export const DND_TYPES = {
 // Values for TC fields
 export const THERMOCYCLER_STATE: 'thermocyclerState' = 'thermocyclerState'
 export const THERMOCYCLER_PROFILE: 'thermocyclerProfile' = 'thermocyclerProfile'
+// Priority for fixtures
+export const STAGING_AREA_CUTOUTS_ORDERED: CutoutId[] = [
+  'cutoutB3',
+  'cutoutC3',
+  'cutoutD3',
+  'cutoutA3',
+]

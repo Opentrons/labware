@@ -1,4 +1,4 @@
-import { describe, it, vi, beforeEach } from 'vitest'
+import { describe, it, vi, beforeEach, expect } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 import {
   HEATERSHAKER_MODULE_TYPE,
@@ -20,18 +20,25 @@ import {
 } from '../../../../../step-forms/selectors'
 import { getIsMultiSelectMode } from '../../../../../ui/steps'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('../../../../../feature-flags/selectors')
 vi.mock('../../../../../ui/steps')
 vi.mock('../../../../../step-forms/selectors')
 
-const render = () => {
-  return renderWithProviders(<AddStepButton />, {
+const render = (props: ComponentProps<typeof AddStepButton>) => {
+  return renderWithProviders(<AddStepButton {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('AddStepButton', () => {
+  let props: ComponentProps<typeof AddStepButton>
+
   beforeEach(() => {
+    props = {
+      hasText: true,
+    }
     vi.mocked(getEnableComment).mockReturnValue(true)
     vi.mocked(getCurrentFormIsPresaved).mockReturnValue(false)
     vi.mocked(getIsMultiSelectMode).mockReturnValue(false)
@@ -73,8 +80,8 @@ describe('AddStepButton', () => {
   })
 
   it('renders add step button and clicking on it renders the overflow menu with all modules', () => {
-    render()
-    fireEvent.click(screen.getByText('+ Add Step'))
+    render(props)
+    fireEvent.click(screen.getByText('Add Step'))
     screen.getByText('Comment')
     screen.getByText('Transfer')
     screen.getByText('Mix')
@@ -83,5 +90,12 @@ describe('AddStepButton', () => {
     screen.getByText('Heater-shaker')
     screen.getByText('Temperature')
     screen.getByText('Magnet')
+  })
+
+  it('should not render texts if hasText is false', () => {
+    props.hasText = false
+    render(props)
+    const text = screen.queryByText('Add Step')
+    expect(text).toBeNull()
   })
 })

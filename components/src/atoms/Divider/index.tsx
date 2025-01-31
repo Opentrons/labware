@@ -1,7 +1,8 @@
-import type * as React from 'react'
 import { Box, COLORS, SPACING } from '../..'
 
-type Props = React.ComponentProps<typeof Box>
+import type { ComponentProps } from 'react'
+
+type Props = ComponentProps<typeof Box>
 
 export function Divider(props: Props): JSX.Element {
   return (

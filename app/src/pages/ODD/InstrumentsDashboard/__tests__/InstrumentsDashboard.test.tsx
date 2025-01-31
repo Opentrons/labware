@@ -183,7 +183,7 @@ describe('InstrumentsDashboard', () => {
       },
     } as any)
     render('/instruments')
-    screen.getByText('Left+Right Mounts')
+    screen.getByText('Left + Right Mounts')
     screen.getByText('extension Mount')
   })
 })

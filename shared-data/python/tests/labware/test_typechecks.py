@@ -8,6 +8,6 @@ from . import get_ot_defs
 
 
 @pytest.mark.parametrize("loadname,version", get_ot_defs())
-def test_opentrons_definition_types(loadname, version):
+def test_opentrons_definition_types(loadname: str, version: int) -> None:
     defdict = load_definition(loadname, version)
     typeguard.check_type(defdict, LabwareDefinition)

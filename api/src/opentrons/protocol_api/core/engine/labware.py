@@ -1,5 +1,6 @@
 """ProtocolEngine-based Labware core implementations."""
-from typing import List, Optional, cast
+
+from typing import List, Optional, cast, Dict
 
 from opentrons_shared_data.labware.types import (
     LabwareParameters as LabwareParametersDict,
@@ -19,11 +20,12 @@ from opentrons.protocol_engine.types import (
     LabwareOffsetCreate,
     LabwareOffsetVector,
 )
-from opentrons.types import DeckSlotName, Point, StagingSlotName
-from opentrons.hardware_control.nozzle_manager import NozzleMap
+from opentrons.types import DeckSlotName, NozzleMapInterface, Point, StagingSlotName
 
 
+from ..._liquid import Liquid
 from ..labware import AbstractLabware, LabwareLoadParams
+
 from .well import WellCore
 
 
@@ -90,12 +92,14 @@ class LabwareCore(AbstractLabware[WellCore]):
 
     def get_definition(self) -> LabwareDefinitionDict:
         """Get the labware's definition as a plain dictionary."""
-        return cast(LabwareDefinitionDict, self._definition.dict(exclude_none=True))
+        return cast(
+            LabwareDefinitionDict, self._definition.model_dump(exclude_none=True)
+        )
 
     def get_parameters(self) -> LabwareParametersDict:
         return cast(
             LabwareParametersDict,
-            self._definition.parameters.dict(exclude_none=True),
+            self._definition.parameters.model_dump(exclude_none=True),
         )
 
     def get_quirks(self) -> List[str]:
@@ -116,7 +120,7 @@ class LabwareCore(AbstractLabware[WellCore]):
                 details={"kind": "labware-not-in-slot"},
             )
 
-        request = LabwareOffsetCreate.construct(
+        request = LabwareOffsetCreate.model_construct(
             definitionUri=self.get_uri(),
             location=offset_location,
             vector=LabwareOffsetVector(x=delta.x, y=delta.y, z=delta.z),
@@ -162,7 +166,7 @@ class LabwareCore(AbstractLabware[WellCore]):
         self,
         num_tips: int,
         starting_tip: Optional[WellCore],
-        nozzle_map: Optional[NozzleMap],
+        nozzle_map: Optional[NozzleMapInterface],
     ) -> Optional[str]:
         return self._engine_client.state.tips.get_next_tip(
             labware_id=self._labware_id,
@@ -203,3 +207,21 @@ class LabwareCore(AbstractLabware[WellCore]):
             LocationIsStagingSlotError,
         ):
             return None
+
+    def load_liquid(self, volumes: Dict[str, float], liquid: Liquid) -> None:
+        """Load liquid into wells of the labware."""
+        self._engine_client.execute_command(
+            cmd.LoadLiquidParams(
+                labwareId=self._labware_id, liquidId=liquid._id, volumeByWell=volumes
+            )
+        )
+
+    def load_empty(self, wells: List[str]) -> None:
+        """Mark wells of the labware as empty."""
+        self._engine_client.execute_command(
+            cmd.LoadLiquidParams(
+                labwareId=self._labware_id,
+                liquidId="EMPTY",
+                volumeByWell={well: 0.0 for well in wells},
+            )
+        )

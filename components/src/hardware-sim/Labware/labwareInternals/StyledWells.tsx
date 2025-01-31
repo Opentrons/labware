@@ -1,6 +1,8 @@
-import * as React from 'react'
+import { memo } from 'react'
 import { Well } from './Well'
 import { COLORS } from '../../../helix-design-system'
+
+import type { CSSProperties, MemoExoticComponent } from 'react'
 import type { LabwareDefinition2 } from '@opentrons/shared-data'
 import type { WellGroup } from './types'
 
@@ -19,9 +21,9 @@ export interface StyledWellProps {
 
 export const STYLE_BY_WELL_CONTENTS: {
   [wellContents in WellContents]: {
-    stroke: React.CSSProperties['stroke']
-    fill: React.CSSProperties['fill']
-    strokeWidth: React.CSSProperties['strokeWidth']
+    stroke: CSSProperties['stroke']
+    fill: CSSProperties['fill']
+    strokeWidth: CSSProperties['strokeWidth']
   }
 } = {
   highlightedWell: {
@@ -72,6 +74,6 @@ function StyledWellsComponent(props: StyledWellProps): JSX.Element {
   )
 }
 
-export const StyledWells: React.MemoExoticComponent<
+export const StyledWells: MemoExoticComponent<
   typeof StyledWellsComponent
-> = React.memo(StyledWellsComponent)
+> = memo(StyledWellsComponent)

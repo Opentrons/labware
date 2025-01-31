@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, vi, beforeEach, expect } from 'vitest'
 import { renderWithProviders } from '/app/__testing-utils__'
@@ -7,20 +6,22 @@ import { i18n } from '/app/i18n'
 import { GripperWizardFlows } from '/app/organisms/GripperWizardFlows'
 import { AboutGripperSlideout } from '../AboutGripperSlideout'
 import { GripperCard } from '../'
+
+import type { ComponentProps } from 'react'
 import type { GripperData } from '@opentrons/api-client'
 
 vi.mock('/app/organisms/GripperWizardFlows')
 vi.mock('../AboutGripperSlideout')
 vi.mock('@opentrons/react-api-client')
 
-const render = (props: React.ComponentProps<typeof GripperCard>) => {
+const render = (props: ComponentProps<typeof GripperCard>) => {
   return renderWithProviders(<GripperCard {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('GripperCard', () => {
-  let props: React.ComponentProps<typeof GripperCard>
+  let props: ComponentProps<typeof GripperCard>
   beforeEach(() => {
     props = {
       attachedGripper: {

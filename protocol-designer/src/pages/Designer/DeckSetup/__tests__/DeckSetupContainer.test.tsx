@@ -8,14 +8,19 @@ import { renderWithProviders } from '../../../../__testing-utils__'
 
 import { selectors } from '../../../../labware-ingred/selectors'
 import { getDeckSetupForActiveItem } from '../../../../top-selectors/labware-locations'
-import { DeckSetupTools } from '../DeckSetupTools'
-import { DeckSetupContainer } from '../DeckSetupContainer'
+import {
+  getHoveredDropdownItem,
+  getSelectedDropdownItem,
+} from '../../../../ui/steps/selectors'
 import { getSelectedTerminalItemId } from '../../../../ui/steps'
 import { getDisableModuleRestrictions } from '../../../../feature-flags/selectors'
 import { getRobotType } from '../../../../file-data/selectors'
 import { DeckSetupDetails } from '../DeckSetupDetails'
+import { DeckSetupTools } from '../DeckSetupTools'
+import { DeckSetupContainer } from '../DeckSetupContainer'
 import type * as OpentronsComponents from '@opentrons/components'
 
+vi.mock('../../../../ui/steps/selectors')
 vi.mock('../../../../top-selectors/labware-locations')
 vi.mock('../../../../feature-flags/selectors')
 vi.mock('../DeckSetupTools')
@@ -41,6 +46,10 @@ describe('DeckSetupContainer', () => {
       slot: 'D3',
       cutout: 'cutoutD3',
     })
+    vi.mocked(getSelectedDropdownItem).mockReturnValue([
+      { id: null, text: null },
+    ])
+    vi.mocked(getHoveredDropdownItem).mockReturnValue({ id: null, text: null })
     vi.mocked(DeckSetupTools).mockReturnValue(<div>mock DeckSetupTools</div>)
     vi.mocked(DeckSetupDetails).mockReturnValue(
       <div>mock DeckSetupDetails</div>

@@ -4,13 +4,14 @@
 from typing import Annotated
 
 import fastapi
+from server_utils.fastapi_utils.light_router import LightRouter
 
 from robot_server.service.json_api import PydanticResponse, RequestModel, SimpleBody
 from .models import RequestData, ResponseData
 from .store import ErrorRecoverySettingStore, get_error_recovery_setting_store
 
 
-router = fastapi.APIRouter()
+router = LightRouter()
 _PATH = "/errorRecovery/settings"
 
 
@@ -62,5 +63,7 @@ async def _get_current_response(
 ) -> PydanticResponse[SimpleBody[ResponseData]]:
     is_enabled = store.get_is_enabled()
     return await PydanticResponse.create(
-        SimpleBody.construct(data=ResponseData.construct(enabled=is_enabled))
+        SimpleBody.model_construct(
+            data=ResponseData.model_construct(enabled=is_enabled)
+        )
     )

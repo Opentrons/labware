@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -8,16 +7,18 @@ import { StatusLabel } from '/app/atoms/StatusLabel'
 import { TemperatureModuleData } from '../TemperatureModuleData'
 import { mockTemperatureModuleGen2 } from '/app/redux/modules/__fixtures__'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/atoms/StatusLabel')
 
-const render = (props: React.ComponentProps<typeof TemperatureModuleData>) => {
+const render = (props: ComponentProps<typeof TemperatureModuleData>) => {
   return renderWithProviders(<TemperatureModuleData {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('TemperatureModuleData', () => {
-  let props: React.ComponentProps<typeof TemperatureModuleData>
+  let props: ComponentProps<typeof TemperatureModuleData>
   beforeEach(() => {
     props = {
       moduleStatus: mockTemperatureModuleGen2.data.status,

@@ -8,6 +8,8 @@ import { LiquidDefinitions } from '../LiquidDefinitions'
 import type { ComponentProps } from 'react'
 import type { InfoScreen } from '@opentrons/components'
 
+vi.mock('../../../feature-flags/selectors')
+
 vi.mock('@opentrons/components', async importOriginal => {
   const actual = await importOriginal<typeof InfoScreen>()
   return {
@@ -21,6 +23,7 @@ const mockAllIngredientGroupFields = {
     name: 'EtOH',
     displayColor: '#b925ff',
     description: 'Immer fisch Hergestllter EtOH',
+    liquidClass: null,
     serialize: false,
     liquidGroupId: '0',
   },
@@ -28,6 +31,7 @@ const mockAllIngredientGroupFields = {
     name: '10mM Tris pH8,5',
     displayColor: '#ffd600',
     description: null,
+    liquidClass: null,
     serialize: false,
     liquidGroupId: '1',
   },
@@ -35,6 +39,7 @@ const mockAllIngredientGroupFields = {
     name: 'Amplicon PCR sample + AMPure XP beads',
     displayColor: '#9dffd8',
     description: '25µl Amplicon PCR + 20 µl AMPure XP beads',
+    liquidClass: 'Water',
     serialize: false,
     liquidGroupId: '2',
   },

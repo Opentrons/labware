@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { css } from 'styled-components'
 
 import {
@@ -20,6 +19,7 @@ import {
   TYPOGRAPHY,
 } from '@opentrons/components'
 
+import type { MouseEventHandler, ReactNode } from 'react'
 import type { IconName } from '@opentrons/components'
 
 const SETTING_BUTTON_STYLE = css`
@@ -36,10 +36,10 @@ const SETTING_BUTTON_STYLE = css`
 
 interface RobotSettingButtonProps {
   settingName: string
-  onClick: React.MouseEventHandler
+  onClick: MouseEventHandler
   iconName?: IconName
   settingInfo?: string
-  rightElement?: React.ReactNode
+  rightElement?: ReactNode
   dataTestId?: string
 }
 

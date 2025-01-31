@@ -10,21 +10,20 @@ import {
   getInitialDeckSetup,
   getSavedStepForms,
 } from '../../../step-forms/selectors'
+import { getDismissedHints } from '../../../tutorial/selectors'
 import { MaterialsListModal } from '../../../organisms/MaterialsListModal'
 import { selectors as labwareIngredSelectors } from '../../../labware-ingred/selectors'
 import { ProtocolOverview } from '../index'
-import { DeckThumbnail } from '../DeckThumbnail'
-import { OffDeckThumbnail } from '../OffdeckThumbnail'
 import { ProtocolMetadata } from '../ProtocolMetadata'
 import { InstrumentsInfo } from '../InstrumentsInfo'
 import { LiquidDefinitions } from '../LiquidDefinitions'
 import { StepsInfo } from '../StepsInfo'
+import { StartingDeck } from '../StartingDeck'
 
 import type { NavigateFunction } from 'react-router-dom'
 
-vi.mock('../OffdeckThumbnail')
-vi.mock('../DeckThumbnail')
 vi.mock('../../../step-forms/selectors')
+vi.mock('../../../tutorial/selectors')
 vi.mock('../../../file-data/selectors')
 vi.mock('../../../organisms/MaterialsListModal')
 vi.mock('../../../labware-ingred/selectors')
@@ -35,6 +34,7 @@ vi.mock('../ProtocolMetadata')
 vi.mock('../LiquidDefinitions')
 vi.mock('../InstrumentsInfo')
 vi.mock('../StepsInfo')
+vi.mock('../StartingDeck')
 
 const mockNavigate = vi.fn()
 
@@ -61,6 +61,7 @@ describe('ProtocolOverview', () => {
     vi.mocked(labwareIngredSelectors.allIngredientGroupFields).mockReturnValue(
       {}
     )
+    vi.mocked(getDismissedHints).mockReturnValue([])
     vi.mocked(getRobotType).mockReturnValue(FLEX_ROBOT_TYPE)
     vi.mocked(getInitialDeckSetup).mockReturnValue({
       pipettes: {},
@@ -77,10 +78,6 @@ describe('ProtocolOverview', () => {
     vi.mocked(MaterialsListModal).mockReturnValue(
       <div>mock MaterialsListModal</div>
     )
-    vi.mocked(DeckThumbnail).mockReturnValue(<div>mock DeckThumbnail</div>)
-    vi.mocked(OffDeckThumbnail).mockReturnValue(
-      <div>mock OffdeckThumbnail</div>
-    )
     vi.mocked(LiquidDefinitions).mockReturnValue(
       <div>mock LiquidDefinitions</div>
     )
@@ -89,6 +86,7 @@ describe('ProtocolOverview', () => {
     vi.mocked(ProtocolMetadata).mockReturnValue(
       <div>mock ProtocolMetadata</div>
     )
+    vi.mocked(StartingDeck).mockReturnValue(<div>mock StartingDeck</div>)
   })
 
   it('renders each section with text', () => {
@@ -96,7 +94,6 @@ describe('ProtocolOverview', () => {
     // buttons
     screen.getByRole('button', { name: 'Edit protocol' })
     screen.getByRole('button', { name: 'Export protocol' })
-    screen.getByText('Materials list')
 
     //  metadata
     screen.getByText('mockName')
@@ -110,13 +107,9 @@ describe('ProtocolOverview', () => {
 
     //  steps
     screen.getByText('mock StepsInfo')
-  })
 
-  it('should render the deck thumbnail and offdeck thumbnail', () => {
-    render()
-    screen.getByText('mock DeckThumbnail')
-    fireEvent.click(screen.getByText('Off-deck'))
-    screen.getByText('mock OffdeckThumbnail')
+    // starting deck
+    screen.getByText('mock StartingDeck')
   })
 
   it('navigates to starting deck state', () => {
@@ -124,11 +117,5 @@ describe('ProtocolOverview', () => {
     const button = screen.getByRole('button', { name: 'Edit protocol' })
     fireEvent.click(button)
     expect(mockNavigate).toHaveBeenCalledWith('/designer')
-  })
-
-  it('render mock materials list modal when clicking materials list', () => {
-    render()
-    fireEvent.click(screen.getByText('Materials list'))
-    screen.getByText('mock MaterialsListModal')
   })
 })

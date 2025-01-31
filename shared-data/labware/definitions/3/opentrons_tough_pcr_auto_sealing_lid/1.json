@@ -1,0 +1,128 @@
+{
+  "allowedRoles": ["labware", "lid"],
+  "ordering": [],
+  "brand": {
+    "brand": "Opentrons",
+    "brandId": []
+  },
+  "metadata": {
+    "displayName": "Opentrons Tough PCR Auto-Sealing Lid",
+    "displayCategory": "lid",
+    "displayVolumeUnits": "\u00b5L",
+    "tags": []
+  },
+  "dimensions": {
+    "xDimension": 127.7,
+    "yDimension": 85.48,
+    "zDimension": 12.8
+  },
+  "wells": {},
+  "groups": [
+    {
+      "metadata": {},
+      "wells": []
+    }
+  ],
+  "cornerOffsetFromSlot": {
+    "x": 0,
+    "y": 0,
+    "z": -0.71
+  },
+  "parameters": {
+    "format": "irregular",
+    "quirks": [],
+    "isTiprack": false,
+    "isMagneticModuleCompatible": false,
+    "loadName": "opentrons_tough_pcr_auto_sealing_lid"
+  },
+  "namespace": "opentrons",
+  "version": 1,
+  "schemaVersion": 3,
+  "stackingOffsetWithModule": {
+    "thermocyclerModuleV2": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    }
+  },
+  "stackingOffsetWithLabware": {
+    "default": {
+      "x": 0,
+      "y": 0,
+      "z": 8.193
+    },
+    "opentrons_tough_pcr_auto_sealing_lid": {
+      "x": 0,
+      "y": 0,
+      "z": 6.492
+    },
+    "armadillo_96_wellplate_200ul_pcr_full_skirt": {
+      "x": 0,
+      "y": 0,
+      "z": 8.193
+    },
+    "opentrons_96_wellplate_200ul_pcr_full_skirt": {
+      "x": 0,
+      "y": 0,
+      "z": 8.193
+    },
+    "biorad_96_wellplate_200ul_pcr": {
+      "x": 0,
+      "y": 0,
+      "z": 8.08
+    },
+    "opentrons_flex_deck_riser": {
+      "x": 0,
+      "y": 0,
+      "z": 34
+    }
+  },
+  "stackLimit": 5,
+  "compatibleParentLabware": [
+    "armadillo_96_wellplate_200ul_pcr_full_skirt",
+    "opentrons_96_wellplate_200ul_pcr_full_skirt",
+    "opentrons_tough_pcr_auto_sealing_lid",
+    "biorad_96_wellplate_200ul_pcr",
+    "opentrons_flex_deck_riser"
+  ],
+  "gripForce": 15,
+  "gripHeightFromLabwareBottom": 7.91,
+  "gripperOffsets": {
+    "default": {
+      "pickUpOffset": {
+        "x": 0,
+        "y": 0,
+        "z": 1.5
+      },
+      "dropOffset": {
+        "x": 0,
+        "y": 0.52,
+        "z": -6
+      }
+    },
+    "lidOffsets": {
+      "pickUpOffset": {
+        "x": 0.5,
+        "y": 0,
+        "z": -5
+      },
+      "dropOffset": {
+        "x": 0.5,
+        "y": 0,
+        "z": -1
+      }
+    },
+    "lidDisposalOffsets": {
+      "pickUpOffset": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "dropOffset": {
+        "x": 0,
+        "y": 5.0,
+        "z": 50.0
+      }
+    }
+  }
+}

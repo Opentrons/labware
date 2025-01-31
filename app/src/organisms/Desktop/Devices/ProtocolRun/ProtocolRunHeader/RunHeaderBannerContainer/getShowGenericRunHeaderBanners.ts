@@ -31,10 +31,10 @@ export function getShowGenericRunHeaderBanners({
 
   const showDoorOpenBeforeRunBanner =
     isDoorOpen &&
+    isCancellableStatus(runStatus) &&
     runStatus !== RUN_STATUS_BLOCKED_BY_OPEN_DOOR &&
     runStatus !== RUN_STATUS_AWAITING_RECOVERY_BLOCKED_BY_OPEN_DOOR &&
     runStatus !== RUN_STATUS_AWAITING_RECOVERY_PAUSED
-  isCancellableStatus(runStatus)
 
   const showDoorOpenDuringRunBanner =
     runStatus === RUN_STATUS_BLOCKED_BY_OPEN_DOOR

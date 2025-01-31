@@ -1,9 +1,10 @@
-import type * as React from 'react'
 import { Box } from '../primitives'
 import { SPACING } from '../ui-style-constants'
 import { COLORS } from '../helix-design-system'
 import { ModalHeader } from './ModalHeader'
 import { ModalShell } from './ModalShell'
+
+import type { MouseEventHandler, ReactNode } from 'react'
 import type { IconProps } from '../icons'
 import type { StyleProps } from '../primitives'
 import type { Position } from './ModalShell'
@@ -12,18 +13,19 @@ type ModalType = 'info' | 'warning' | 'error'
 
 export interface ModalProps extends StyleProps {
   type?: ModalType
-  onClose?: React.MouseEventHandler
+  onClose?: MouseEventHandler
   closeOnOutsideClick?: boolean
-  title?: React.ReactNode
+  title?: ReactNode
   titleElement1?: JSX.Element
   titleElement2?: JSX.Element
   fullPage?: boolean
   childrenPadding?: string | number
-  children?: React.ReactNode
-  footer?: React.ReactNode
+  children?: ReactNode
+  footer?: ReactNode
   zIndexOverlay?: number
   showOverlay?: boolean
   position?: Position
+  hasHeader?: boolean
 }
 
 /**
@@ -43,6 +45,7 @@ export const Modal = (props: ModalProps): JSX.Element => {
     zIndexOverlay,
     position,
     showOverlay,
+    hasHeader = true,
     ...styleProps
   } = props
 
@@ -83,7 +86,7 @@ export const Modal = (props: ModalProps): JSX.Element => {
       showOverlay={showOverlay}
       zIndexOverlay={zIndexOverlay}
       width={styleProps.width ?? '31.25rem'}
-      header={modalHeader}
+      header={hasHeader ? modalHeader : undefined}
       onOutsideClick={closeOnOutsideClick ?? false ? onClose : undefined}
       // center within viewport aside from nav
       marginLeft={styleProps.marginLeft ?? '5.656rem'}

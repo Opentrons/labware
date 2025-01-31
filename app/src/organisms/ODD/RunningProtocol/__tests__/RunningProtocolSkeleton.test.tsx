@@ -1,18 +1,17 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import { renderWithProviders } from '/app/__testing-utils__'
 import { RunningProtocolSkeleton } from '../RunningProtocolSkeleton'
 
-const render = (
-  props: React.ComponentProps<typeof RunningProtocolSkeleton>
-) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof RunningProtocolSkeleton>) => {
   return renderWithProviders(<RunningProtocolSkeleton {...props} />)
 }
 
 describe('RunningProtocolSkeleton', () => {
-  let props: React.ComponentProps<typeof RunningProtocolSkeleton>
+  let props: ComponentProps<typeof RunningProtocolSkeleton>
 
   beforeEach(() => {
     props = {

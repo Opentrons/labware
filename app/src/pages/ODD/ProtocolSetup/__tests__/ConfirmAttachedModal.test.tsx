@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, describe, expect, beforeEach } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 
@@ -7,17 +6,19 @@ import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { ConfirmAttachedModal } from '../ConfirmAttachedModal'
 
+import type { ComponentProps } from 'react'
+
 const mockOnCloseClick = vi.fn()
 const mockOnConfirmClick = vi.fn()
 
-const render = (props: React.ComponentProps<typeof ConfirmAttachedModal>) => {
+const render = (props: ComponentProps<typeof ConfirmAttachedModal>) => {
   return renderWithProviders(<ConfirmAttachedModal {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('ConfirmAttachedModal', () => {
-  let props: React.ComponentProps<typeof ConfirmAttachedModal>
+  let props: ComponentProps<typeof ConfirmAttachedModal>
 
   beforeEach(() => {
     props = {

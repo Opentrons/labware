@@ -1,8 +1,8 @@
-import type * as React from 'react'
+import type { MouseEvent } from 'react'
 
 export interface WellMouseEvent {
   wellName: string
-  event: React.MouseEvent
+  event: MouseEvent
 }
 
 // wellName to CSS color, eg {'A1': '#123456'}

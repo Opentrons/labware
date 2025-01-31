@@ -13,6 +13,8 @@ import {
   TYPOGRAPHY,
 } from '@opentrons/components'
 
+import { ANALYTICS_LANGUAGE_UPDATED_ODD_UNBOXING_FLOW } from '/app/redux/analytics'
+import { useTrackEventWithRobotSerial } from '/app/redux-resources/analytics'
 import { MediumButton } from '/app/atoms/buttons'
 import { LANGUAGES, US_ENGLISH } from '/app/i18n'
 import { RobotSetupHeader } from '/app/organisms/ODD/RobotSetupHeader'
@@ -24,6 +26,7 @@ export function ChooseLanguage(): JSX.Element {
   const { i18n, t } = useTranslation(['app_settings', 'shared'])
   const navigate = useNavigate()
   const dispatch = useDispatch<Dispatch>()
+  const { trackEventWithRobotSerial } = useTrackEventWithRobotSerial()
 
   const appLanguage = useSelector(getAppLanguage)
 
@@ -69,6 +72,12 @@ export function ChooseLanguage(): JSX.Element {
         <MediumButton
           buttonText={i18n.format(t('shared:continue'), 'capitalize')}
           onClick={() => {
+            trackEventWithRobotSerial({
+              name: ANALYTICS_LANGUAGE_UPDATED_ODD_UNBOXING_FLOW,
+              properties: {
+                language: appLanguage,
+              },
+            })
             navigate('/welcome')
           }}
           width="100%"

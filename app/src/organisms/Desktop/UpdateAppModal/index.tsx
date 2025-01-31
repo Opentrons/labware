@@ -93,7 +93,14 @@ export function UpdateAppModal(props: UpdateAppModalProps): JSX.Element {
     error,
     info: updateInfo,
   } = updateState
-  const releaseNotes = updateInfo?.releaseNotes
+  let releaseNotesText = updateInfo?.releaseNotes
+  if (Array.isArray(releaseNotesText)) {
+    // it is unclear to me why/how electron-updater would ever expose
+    // release notes this way, but this should never happen...
+    // this string representation should always be returned
+    releaseNotesText = releaseNotesText[0].note
+  }
+
   const { t } = useTranslation(['app_settings', 'branded'])
   const navigate = useNavigate()
   const { removeActiveAppUpdateToast } = useRemoveActiveAppUpdateToast()
@@ -192,7 +199,7 @@ export function UpdateAppModal(props: UpdateAppModalProps): JSX.Element {
             <UpdateAppBanner type="informing" marginBottom={SPACING.spacing8}>
               {t('branded:update_requires_restarting_app')}
             </UpdateAppBanner>
-            <ReleaseNotes source={releaseNotes} />
+            <ReleaseNotes source={releaseNotesText} />
           </Flex>
         </Modal>
       ) : null}

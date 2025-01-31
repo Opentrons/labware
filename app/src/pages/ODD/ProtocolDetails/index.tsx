@@ -46,7 +46,7 @@ import {
   getPinnedProtocolIds,
   updateConfigValue,
 } from '/app/redux/config'
-import { useOffsetCandidatesForAnalysis } from '/app/organisms/ApplyHistoricOffsets/hooks/useOffsetCandidatesForAnalysis'
+import { useOffsetCandidatesForAnalysis } from '/app/organisms/LegacyApplyHistoricOffsets/hooks/useOffsetCandidatesForAnalysis'
 import { useRunTimeParameters } from '/app/resources/protocols'
 import { useMissingProtocolHardware } from '/app/transformations/commands'
 import { ProtocolSetupParameters } from '/app/organisms/ODD/ProtocolSetup/ProtocolSetupParameters'
@@ -164,19 +164,19 @@ const ProtocolHeader = ({
 }
 
 const protocolSectionTabOptions = [
-  'Summary',
-  'Parameters',
-  'Hardware',
-  'Labware',
-  'Liquids',
-  'Deck',
+  'summary',
+  'parameters',
+  'hardware',
+  'labware',
+  'liquids',
+  'deck',
 ] as const
 const protocolSectionTabOptionsWithoutParameters = [
-  'Summary',
-  'Hardware',
-  'Labware',
-  'Liquids',
-  'Deck',
+  'summary',
+  'hardware',
+  'labware',
+  'liquids',
+  'deck',
 ] as const
 
 type TabOption =
@@ -192,11 +192,12 @@ const ProtocolSectionTabs = ({
   currentOption,
   setCurrentOption,
 }: ProtocolSectionTabsProps): JSX.Element => {
+  const { t, i18n } = useTranslation('protocol_details')
   return (
     <Flex gridGap={SPACING.spacing8}>
       <Tabs
         tabs={protocolSectionTabOptions.map(option => ({
-          text: option,
+          text: i18n.format(t(option), 'capitalize'),
           onClick: () => {
             setCurrentOption(option)
           },
@@ -266,7 +267,7 @@ const ProtocolSectionContent = ({
 
   let protocolSection: JSX.Element | null = null
   switch (currentOption) {
-    case 'Summary':
+    case 'summary':
       protocolSection = (
         <Summary
           author={protocolData.data.metadata.author ?? null}
@@ -275,26 +276,26 @@ const ProtocolSectionContent = ({
         />
       )
       break
-    case 'Parameters':
+    case 'parameters':
       protocolSection = <Parameters protocolId={protocolId} />
       break
-    case 'Hardware':
+    case 'hardware':
       protocolSection = <Hardware protocolId={protocolId} />
       break
-    case 'Labware':
+    case 'labware':
       protocolSection = <Labware protocolId={protocolId} />
       break
-    case 'Liquids':
+    case 'liquids':
       protocolSection = <Liquids protocolId={protocolId} />
       break
-    case 'Deck':
+    case 'deck':
       protocolSection = <Deck protocolId={protocolId} />
       break
   }
   return (
     <Flex
       paddingTop={SPACING.spacing32}
-      justifyContent={currentOption === 'Deck' ? JUSTIFY_CENTER : undefined}
+      justifyContent={currentOption === 'deck' ? JUSTIFY_CENTER : undefined}
     >
       {protocolSection}
     </Flex>

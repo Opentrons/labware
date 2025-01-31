@@ -1,6 +1,6 @@
 import { format } from 'date-fns'
 
-import type * as React from 'react'
+import type { Dispatch, SetStateAction } from 'react'
 import type { UseMutateAsyncFunction } from 'react-query'
 import type { CommandData } from '@opentrons/api-client'
 import type { CreateCommand } from '@opentrons/shared-data'
@@ -11,7 +11,7 @@ export const chainRunCommandsRecursive = (
   commands: CreateCommand[],
   createRunCommand: CreateRunCommand,
   continuePastCommandFailure: boolean = true,
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
+  setIsLoading: Dispatch<SetStateAction<boolean>>
 ): Promise<CommandData[]> => {
   if (commands.length < 1) {
     return Promise.reject(new Error('no commands to execute'))
@@ -57,7 +57,7 @@ export const chainLiveCommandsRecursive = (
     CreateLiveCommandMutateParams
   >,
   continuePastCommandFailure: boolean = true,
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
+  setIsLoading: Dispatch<SetStateAction<boolean>>
 ): Promise<CommandData[]> => {
   if (commands.length < 1) {
     return Promise.reject(new Error('no commands to execute'))
@@ -100,7 +100,7 @@ export const chainMaintenanceCommandsRecursive = (
   commands: CreateCommand[],
   createMaintenanceCommand: CreateMaintenanceCommand,
   continuePastCommandFailure: boolean = true,
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
+  setIsLoading: Dispatch<SetStateAction<boolean>>
 ): Promise<CommandData[]> => {
   if (commands.length < 1) {
     return Promise.reject(new Error('no commands to execute'))

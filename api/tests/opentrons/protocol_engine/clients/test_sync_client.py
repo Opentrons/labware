@@ -12,6 +12,7 @@ the subject's methods in a synchronous context in a child thread to ensure:
 import pytest
 from decoy import Decoy
 
+
 from opentrons_shared_data.labware.types import LabwareUri
 from opentrons_shared_data.labware.labware_definition import LabwareDefinition
 
@@ -61,7 +62,7 @@ def test_execute_command_without_recovery(
         result_from_transport
     )
     result_from_subject = subject.execute_command_without_recovery(params)
-    assert result_from_subject == result_from_transport
+    assert result_from_subject == result_from_transport  # type: ignore[comparison-overlap]
 
 
 def test_add_labware_definition(
@@ -70,7 +71,7 @@ def test_add_labware_definition(
     subject: SyncClient,
 ) -> None:
     """It should add a labware definition."""
-    labware_definition = LabwareDefinition.construct(namespace="hello")  # type: ignore[call-arg]
+    labware_definition = LabwareDefinition.model_construct(namespace="hello")  # type: ignore[call-arg]
     expected_labware_uri = LabwareUri("hello/world/123")
 
     decoy.when(
@@ -108,7 +109,7 @@ def test_add_liquid(
     subject: SyncClient,
 ) -> None:
     """It should add a liquid to engine state."""
-    liquid = Liquid.construct(displayName="water")  # type: ignore[call-arg]
+    liquid = Liquid.model_construct(displayName="water")  # type: ignore[call-arg]
 
     decoy.when(
         transport.call_method(

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, beforeEach, afterEach, expect } from 'vitest'
 import { screen } from '@testing-library/react'
 import { when } from 'vitest-when'
@@ -16,6 +15,7 @@ import {
 } from '/app/resources/runs/__fixtures__'
 import { ProtocolRunRuntimeParameters } from '../ProtocolRunRunTimeParameters'
 
+import type { ComponentProps } from 'react'
 import type { UseQueryResult } from 'react-query'
 import type { Run } from '@opentrons/api-client'
 import type {
@@ -100,16 +100,14 @@ const mockCsvRtp = {
   },
 }
 
-const render = (
-  props: React.ComponentProps<typeof ProtocolRunRuntimeParameters>
-) => {
+const render = (props: ComponentProps<typeof ProtocolRunRuntimeParameters>) => {
   return renderWithProviders(<ProtocolRunRuntimeParameters {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('ProtocolRunRuntimeParameters', () => {
-  let props: React.ComponentProps<typeof ProtocolRunRuntimeParameters>
+  let props: ComponentProps<typeof ProtocolRunRuntimeParameters>
   beforeEach(() => {
     props = {
       runId: RUN_ID,

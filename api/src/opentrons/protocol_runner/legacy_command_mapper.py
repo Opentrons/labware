@@ -177,11 +177,13 @@ class LegacyCommandMapper:
             completed_command: pe_commands.Command
             if command_error is None:
                 if isinstance(running_command, pe_commands.PickUpTip):
-                    completed_command = running_command.copy(
+                    completed_command = running_command.model_copy(
                         update={
-                            "result": pe_commands.PickUpTipResult.construct(
+                            "result": pe_commands.PickUpTipResult.model_construct(
                                 tipVolume=command["payload"]["location"].max_volume,  # type: ignore[typeddict-item]
-                                tipLength=command["payload"]["instrument"].hw_pipette["tip_length"],  # type: ignore[typeddict-item]
+                                tipLength=command["payload"]["instrument"].hw_pipette[  # type: ignore[typeddict-item]
+                                    "tip_length"
+                                ],
                                 position=pe_types.DeckPoint(x=0, y=0, z=0),
                             ),
                             "status": pe_commands.CommandStatus.SUCCEEDED,
@@ -190,9 +192,9 @@ class LegacyCommandMapper:
                         }
                     )
                 elif isinstance(running_command, pe_commands.DropTip):
-                    completed_command = running_command.copy(
+                    completed_command = running_command.model_copy(
                         update={
-                            "result": pe_commands.DropTipResult.construct(
+                            "result": pe_commands.DropTipResult.model_construct(
                                 position=pe_types.DeckPoint(x=0, y=0, z=0)
                             ),
                             "status": pe_commands.CommandStatus.SUCCEEDED,
@@ -201,9 +203,9 @@ class LegacyCommandMapper:
                         }
                     )
                 elif isinstance(running_command, pe_commands.Aspirate):
-                    completed_command = running_command.copy(
+                    completed_command = running_command.model_copy(
                         update={
-                            # Don't .construct() result, because we want to validate
+                            # Don't .model_construct() result, because we want to validate
                             # volume.
                             "result": pe_commands.AspirateResult(
                                 volume=running_command.params.volume,
@@ -215,9 +217,9 @@ class LegacyCommandMapper:
                         }
                     )
                 elif isinstance(running_command, pe_commands.Dispense):
-                    completed_command = running_command.copy(
+                    completed_command = running_command.model_copy(
                         update={
-                            # Don't .construct() result, because we want to validate
+                            # Don't .model_construct() result, because we want to validate
                             # volume.
                             "result": pe_commands.DispenseResult(
                                 volume=running_command.params.volume,
@@ -229,9 +231,9 @@ class LegacyCommandMapper:
                         }
                     )
                 elif isinstance(running_command, pe_commands.BlowOut):
-                    completed_command = running_command.copy(
+                    completed_command = running_command.model_copy(
                         update={
-                            "result": pe_commands.BlowOutResult.construct(
+                            "result": pe_commands.BlowOutResult.model_construct(
                                 position=pe_types.DeckPoint(x=0, y=0, z=0)
                             ),
                             "status": pe_commands.CommandStatus.SUCCEEDED,
@@ -240,18 +242,18 @@ class LegacyCommandMapper:
                         }
                     )
                 elif isinstance(running_command, pe_commands.Comment):
-                    completed_command = running_command.copy(
+                    completed_command = running_command.model_copy(
                         update={
-                            "result": pe_commands.CommentResult.construct(),
+                            "result": pe_commands.CommentResult.model_construct(),
                             "status": pe_commands.CommandStatus.SUCCEEDED,
                             "completedAt": now,
                             "notes": [],
                         }
                     )
                 elif isinstance(running_command, pe_commands.Custom):
-                    completed_command = running_command.copy(
+                    completed_command = running_command.model_copy(
                         update={
-                            "result": pe_commands.CustomResult.construct(),
+                            "result": pe_commands.CustomResult.model_construct(),
                             "status": pe_commands.CommandStatus.SUCCEEDED,
                             "completedAt": now,
                             "notes": [],
@@ -261,7 +263,7 @@ class LegacyCommandMapper:
                     # TODO(mm, 2024-06-13): This looks potentially wrong.
                     # We're creating a `SUCCEEDED` command that does not have a `result`,
                     # which is not normally possible.
-                    completed_command = running_command.copy(
+                    completed_command = running_command.model_copy(
                         update={
                             "status": pe_commands.CommandStatus.SUCCEEDED,
                             "completedAt": now,
@@ -331,51 +333,51 @@ class LegacyCommandMapper:
         elif command["name"] == legacy_command_types.BLOW_OUT:
             return self._build_blow_out(command=command, command_id=command_id, now=now)
         elif command["name"] == legacy_command_types.PAUSE:
-            wait_for_resume_running = pe_commands.WaitForResume.construct(
+            wait_for_resume_running = pe_commands.WaitForResume.model_construct(
                 id=command_id,
                 key=command_id,
                 status=pe_commands.CommandStatus.RUNNING,
                 createdAt=now,
                 startedAt=now,
-                params=pe_commands.WaitForResumeParams.construct(
+                params=pe_commands.WaitForResumeParams.model_construct(
                     message=command["payload"]["userMessage"],
                 ),
             )
             wait_for_resume_create: pe_commands.CommandCreate = (
-                pe_commands.WaitForResumeCreate.construct(
+                pe_commands.WaitForResumeCreate.model_construct(
                     key=wait_for_resume_running.key,
                     params=wait_for_resume_running.params,
                 )
             )
             return wait_for_resume_create, wait_for_resume_running
         elif command["name"] == legacy_command_types.COMMENT:
-            comment_running = pe_commands.Comment.construct(
+            comment_running = pe_commands.Comment.model_construct(
                 id=command_id,
                 key=command_id,
                 status=pe_commands.CommandStatus.RUNNING,
                 createdAt=now,
                 startedAt=now,
-                params=pe_commands.CommentParams.construct(
+                params=pe_commands.CommentParams.model_construct(
                     message=command["payload"]["text"],
                 ),
             )
-            comment_create = pe_commands.CommentCreate.construct(
+            comment_create = pe_commands.CommentCreate.model_construct(
                 key=comment_running.key, params=comment_running.params
             )
             return comment_create, comment_running
         else:
-            custom_running = pe_commands.Custom.construct(
+            custom_running = pe_commands.Custom.model_construct(
                 id=command_id,
                 key=command_id,
                 status=pe_commands.CommandStatus.RUNNING,
                 createdAt=now,
                 startedAt=now,
-                params=LegacyCommandParams.construct(
+                params=LegacyCommandParams.model_construct(
                     legacyCommandType=command["name"],
                     legacyCommandText=command["payload"]["text"],
                 ),
             )
-            custom_create = pe_commands.CustomCreate.construct(
+            custom_create = pe_commands.CustomCreate.model_construct(
                 key=custom_running.key,
                 params=custom_running.params,
             )
@@ -396,19 +398,19 @@ class LegacyCommandMapper:
         labware_id = self._labware_id_by_slot[slot]
         pipette_id = self._pipette_id_by_mount[mount]
 
-        running = pe_commands.DropTip.construct(
+        running = pe_commands.DropTip.model_construct(
             id=command_id,
             key=command_id,
             status=pe_commands.CommandStatus.RUNNING,
             createdAt=now,
             startedAt=now,
-            params=pe_commands.DropTipParams.construct(
+            params=pe_commands.DropTipParams.model_construct(
                 pipetteId=pipette_id,
                 labwareId=labware_id,
                 wellName=well_name,
             ),
         )
-        create = pe_commands.DropTipCreate.construct(
+        create = pe_commands.DropTipCreate.model_construct(
             key=running.key,
             params=running.params,
         )
@@ -430,19 +432,19 @@ class LegacyCommandMapper:
         labware_id = self._labware_id_by_slot[slot]
         pipette_id = self._pipette_id_by_mount[mount]
 
-        running = pe_commands.PickUpTip.construct(
+        running = pe_commands.PickUpTip.model_construct(
             id=command_id,
             key=command_id,
             status=pe_commands.CommandStatus.RUNNING,
             createdAt=now,
             startedAt=now,
-            params=pe_commands.PickUpTipParams.construct(
+            params=pe_commands.PickUpTipParams.model_construct(
                 pipetteId=pipette_id,
                 labwareId=labware_id,
                 wellName=well_name,
             ),
         )
-        create = pe_commands.PickUpTipCreate.construct(
+        create = pe_commands.PickUpTipCreate.model_construct(
             key=running.key, params=running.params
         )
         return create, running
@@ -482,31 +484,31 @@ class LegacyCommandMapper:
                 # TODO(mm, 2024-03-22): I don't think this has been true since
                 # https://github.com/Opentrons/opentrons/pull/14211. Can we just use
                 # aspirate and dispense commands now?
-                move_to_well_running = pe_commands.MoveToWell.construct(
+                move_to_well_running = pe_commands.MoveToWell.model_construct(
                     id=command_id,
                     key=command_id,
                     status=pe_commands.CommandStatus.RUNNING,
                     createdAt=now,
                     startedAt=now,
-                    params=pe_commands.MoveToWellParams.construct(
+                    params=pe_commands.MoveToWellParams.model_construct(
                         pipetteId=pipette_id,
                         labwareId=labware_id,
                         wellName=well_name,
                     ),
                 )
-                move_to_well_create = pe_commands.MoveToWellCreate.construct(
+                move_to_well_create = pe_commands.MoveToWellCreate.model_construct(
                     key=move_to_well_running.key, params=move_to_well_running.params
                 )
                 return move_to_well_create, move_to_well_running
             elif command["name"] == legacy_command_types.ASPIRATE:
                 flow_rate = command["payload"]["rate"] * pipette.flow_rate.aspirate
-                aspirate_running = pe_commands.Aspirate.construct(
+                aspirate_running = pe_commands.Aspirate.model_construct(
                     id=command_id,
                     key=command_id,
                     status=pe_commands.CommandStatus.RUNNING,
                     createdAt=now,
                     startedAt=now,
-                    # Don't .construct() params, because we want to validate
+                    # Don't .model_construct() params, because we want to validate
                     # volume and flowRate.
                     params=pe_commands.AspirateParams(
                         pipetteId=pipette_id,
@@ -516,19 +518,19 @@ class LegacyCommandMapper:
                         flowRate=flow_rate,
                     ),
                 )
-                aspirate_create = pe_commands.AspirateCreate.construct(
+                aspirate_create = pe_commands.AspirateCreate.model_construct(
                     key=aspirate_running.key, params=aspirate_running.params
                 )
                 return aspirate_create, aspirate_running
             else:
                 flow_rate = command["payload"]["rate"] * pipette.flow_rate.dispense
-                dispense_running = pe_commands.Dispense.construct(
+                dispense_running = pe_commands.Dispense.model_construct(
                     id=command_id,
                     key=command_id,
                     status=pe_commands.CommandStatus.RUNNING,
                     createdAt=now,
                     startedAt=now,
-                    # Don't .construct params, because we want to validate
+                    # Don't .model_construct params, because we want to validate
                     # volume and flowRate.
                     params=pe_commands.DispenseParams(
                         pipetteId=pipette_id,
@@ -538,24 +540,24 @@ class LegacyCommandMapper:
                         flowRate=flow_rate,
                     ),
                 )
-                dispense_create = pe_commands.DispenseCreate.construct(
+                dispense_create = pe_commands.DispenseCreate.model_construct(
                     key=dispense_running.key, params=dispense_running.params
                 )
                 return dispense_create, dispense_running
 
         else:
-            running = pe_commands.Custom.construct(
+            running = pe_commands.Custom.model_construct(
                 id=command_id,
                 key=command_id,
                 status=pe_commands.CommandStatus.RUNNING,
                 createdAt=now,
                 startedAt=now,
-                params=LegacyCommandParams.construct(
+                params=LegacyCommandParams.model_construct(
                     legacyCommandType=command["name"],
                     legacyCommandText=command["payload"]["text"],
                 ),
             )
-            create = pe_commands.CustomCreate.construct(
+            create = pe_commands.CustomCreate.model_construct(
                 key=running.key, params=running.params
             )
             return create, running
@@ -584,13 +586,13 @@ class LegacyCommandMapper:
             well_name = well.well_name
             pipette_id = self._pipette_id_by_mount[mount]
 
-            blow_out_running = pe_commands.BlowOut.construct(
+            blow_out_running = pe_commands.BlowOut.model_construct(
                 id=command_id,
                 key=command_id,
                 status=pe_commands.CommandStatus.RUNNING,
                 createdAt=now,
                 startedAt=now,
-                # Don't .construct() params, because we want to validate flowRate.
+                # Don't .model_construct() params, because we want to validate flowRate.
                 params=pe_commands.BlowOutParams(
                     pipetteId=pipette_id,
                     labwareId=labware_id,
@@ -598,7 +600,7 @@ class LegacyCommandMapper:
                     flowRate=flow_rate,
                 ),
             )
-            blow_out_create = pe_commands.BlowOutCreate.construct(
+            blow_out_create = pe_commands.BlowOutCreate.model_construct(
                 key=blow_out_running.key, params=blow_out_running.params
             )
             return blow_out_create, blow_out_running
@@ -606,18 +608,18 @@ class LegacyCommandMapper:
         #   TODO:(jr, 15.08.2022): blow_out commands with no specified labware get filtered
         #   into custom. Refactor this in followup legacy command mapping
         else:
-            custom_running = pe_commands.Custom.construct(
+            custom_running = pe_commands.Custom.model_construct(
                 id=command_id,
                 key=command_id,
                 status=pe_commands.CommandStatus.RUNNING,
                 createdAt=now,
                 startedAt=now,
-                params=LegacyCommandParams.construct(
+                params=LegacyCommandParams.model_construct(
                     legacyCommandType=command["name"],
                     legacyCommandText=command["payload"]["text"],
                 ),
             )
-            custom_create = pe_commands.CustomCreate.construct(
+            custom_create = pe_commands.CustomCreate.model_construct(
                 key=custom_running.key, params=custom_running.params
             )
             return custom_create, custom_running
@@ -631,23 +633,23 @@ class LegacyCommandMapper:
         slot = labware_load_info.deck_slot
         location: pe_types.LabwareLocation
         if labware_load_info.on_module:
-            location = pe_types.ModuleLocation.construct(
+            location = pe_types.ModuleLocation.model_construct(
                 moduleId=self._module_id_by_slot[slot]
             )
         else:
-            location = pe_types.DeckSlotLocation.construct(slotName=slot)
+            location = pe_types.DeckSlotLocation.model_construct(slotName=slot)
 
         command_id = f"commands.LOAD_LABWARE-{count}"
         labware_id = f"labware-{count}"
 
-        succeeded_command = pe_commands.LoadLabware.construct(
+        succeeded_command = pe_commands.LoadLabware.model_construct(
             id=command_id,
             key=command_id,
             status=pe_commands.CommandStatus.SUCCEEDED,
             createdAt=now,
             startedAt=now,
             completedAt=now,
-            params=pe_commands.LoadLabwareParams.construct(
+            params=pe_commands.LoadLabwareParams.model_construct(
                 location=location,
                 loadName=labware_load_info.labware_load_name,
                 namespace=labware_load_info.labware_namespace,
@@ -655,9 +657,9 @@ class LegacyCommandMapper:
                 displayName=labware_load_info.labware_display_name,
             ),
             notes=[],
-            result=pe_commands.LoadLabwareResult.construct(
+            result=pe_commands.LoadLabwareResult.model_construct(
                 labwareId=labware_id,
-                definition=LabwareDefinition.parse_obj(
+                definition=LabwareDefinition.model_validate(
                     labware_load_info.labware_definition
                 ),
                 offsetId=labware_load_info.offset_id,
@@ -666,7 +668,7 @@ class LegacyCommandMapper:
         queue_action = pe_actions.QueueCommandAction(
             command_id=succeeded_command.id,
             created_at=succeeded_command.createdAt,
-            request=pe_commands.LoadLabwareCreate.construct(
+            request=pe_commands.LoadLabwareCreate.model_construct(
                 key=succeeded_command.key, params=succeeded_command.params
             ),
             request_hash=None,
@@ -714,19 +716,19 @@ class LegacyCommandMapper:
         pipette_id = f"pipette-{count}"
         mount = MountType(str(instrument_load_info.mount).lower())
 
-        succeeded_command = pe_commands.LoadPipette.construct(
+        succeeded_command = pe_commands.LoadPipette.model_construct(
             id=command_id,
             key=command_id,
             status=pe_commands.CommandStatus.SUCCEEDED,
             createdAt=now,
             startedAt=now,
             completedAt=now,
-            params=pe_commands.LoadPipetteParams.construct(
+            params=pe_commands.LoadPipetteParams.model_construct(
                 pipetteName=PipetteNameType(instrument_load_info.instrument_load_name),
                 mount=mount,
             ),
             notes=[],
-            result=pe_commands.LoadPipetteResult.construct(pipetteId=pipette_id),
+            result=pe_commands.LoadPipetteResult.model_construct(pipetteId=pipette_id),
         )
         serial = instrument_load_info.pipette_dict.get("pipette_id", None) or ""
         state_update = StateUpdate()
@@ -749,7 +751,7 @@ class LegacyCommandMapper:
         queue_action = pe_actions.QueueCommandAction(
             command_id=succeeded_command.id,
             created_at=succeeded_command.createdAt,
-            request=pe_commands.LoadPipetteCreate.construct(
+            request=pe_commands.LoadPipetteCreate.model_construct(
                 key=succeeded_command.key, params=succeeded_command.params
             ),
             request_hash=None,
@@ -791,14 +793,14 @@ class LegacyCommandMapper:
             loaded_model
         ) or self._module_data_provider.get_definition(loaded_model)
 
-        succeeded_command = pe_commands.LoadModule.construct(
+        succeeded_command = pe_commands.LoadModule.model_construct(
             id=command_id,
             key=command_id,
             status=pe_commands.CommandStatus.SUCCEEDED,
             createdAt=now,
             startedAt=now,
             completedAt=now,
-            params=pe_commands.LoadModuleParams.construct(
+            params=pe_commands.LoadModuleParams.model_construct(
                 model=requested_model,
                 location=pe_types.DeckSlotLocation(
                     slotName=module_load_info.deck_slot,
@@ -806,7 +808,7 @@ class LegacyCommandMapper:
                 moduleId=module_id,
             ),
             notes=[],
-            result=pe_commands.LoadModuleResult.construct(
+            result=pe_commands.LoadModuleResult.model_construct(
                 moduleId=module_id,
                 serialNumber=module_load_info.module_serial,
                 definition=loaded_definition,
@@ -816,7 +818,7 @@ class LegacyCommandMapper:
         queue_action = pe_actions.QueueCommandAction(
             command_id=succeeded_command.id,
             created_at=succeeded_command.createdAt,
-            request=pe_commands.LoadModuleCreate.construct(
+            request=pe_commands.LoadModuleCreate.model_construct(
                 key=succeeded_command.key, params=succeeded_command.params
             ),
             request_hash=None,

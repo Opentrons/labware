@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { when } from 'vitest-when'
 import { vi, it, describe, expect, beforeEach, afterEach } from 'vitest'
@@ -11,6 +10,8 @@ import * as Sessions from '/app/redux/sessions'
 import { mockCalibrationCheckSessionAttributes } from '/app/redux/sessions/__fixtures__'
 
 import { CheckCalibration } from '../index'
+
+import type { ComponentProps, ComponentType } from 'react'
 import type { RobotCalibrationCheckStep } from '/app/redux/sessions/types'
 
 vi.mock('/app/redux/calibration/selectors')
@@ -36,14 +37,14 @@ describe('CheckCalibration', () => {
   }
 
   const render = (
-    props: Partial<React.ComponentProps<typeof CheckCalibration>> = {}
+    props: Partial<ComponentProps<typeof CheckCalibration>> = {}
   ) => {
     const {
       showSpinner = false,
       isJogging = false,
       session = mockCalibrationCheckSession,
     } = props
-    return renderWithProviders<React.ComponentType<typeof CheckCalibration>>(
+    return renderWithProviders<ComponentType<typeof CheckCalibration>>(
       <CheckCalibration
         robotName="robot-name"
         session={session}

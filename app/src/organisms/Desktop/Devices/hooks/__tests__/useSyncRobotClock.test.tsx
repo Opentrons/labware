@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, expect, describe, beforeEach, afterEach } from 'vitest'
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
@@ -7,6 +6,8 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 
 import { syncSystemTime } from '/app/redux/robot-admin'
 import { useSyncRobotClock } from '..'
+
+import type { FunctionComponent, ReactNode } from 'react'
 import type { Store } from 'redux'
 
 vi.mock('/app/redux/discovery')
@@ -14,7 +15,7 @@ vi.mock('/app/redux/discovery')
 const store: Store<any> = createStore(vi.fn(), {})
 
 describe('useSyncRobotClock hook', () => {
-  let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+  let wrapper: FunctionComponent<{ children: ReactNode }>
   beforeEach(() => {
     store.dispatch = vi.fn()
     const queryClient = new QueryClient()

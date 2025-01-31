@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { renderHook } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from 'react-query'
@@ -13,6 +12,7 @@ import {
 import { useCloneRun } from '../useCloneRun'
 import { useNotifyRunQuery } from '../useNotifyRunQuery'
 
+import type { FunctionComponent, ReactNode } from 'react'
 import type { HostConfig } from '@opentrons/api-client'
 
 vi.mock('@opentrons/react-api-client')
@@ -23,7 +23,7 @@ const RUN_ID_NO_RTP: string = 'run_id_no_rtp'
 const RUN_ID_RTP: string = 'run_id_rtp'
 
 describe('useCloneRun hook', () => {
-  let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+  let wrapper: FunctionComponent<{ children: ReactNode }>
 
   beforeEach(() => {
     when(vi.mocked(useHost)).calledWith().thenReturn(HOST_CONFIG)
@@ -90,8 +90,8 @@ describe('useCloneRun hook', () => {
     } as any)
 
     const queryClient = new QueryClient()
-    const clientProvider: React.FunctionComponent<{
-      children: React.ReactNode
+    const clientProvider: FunctionComponent<{
+      children: ReactNode
     }> = ({ children }) => (
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     )

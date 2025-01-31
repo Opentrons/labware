@@ -109,7 +109,7 @@ async def test_create_engine_with_labware_offsets(
     )
 
     assert result.labwareOffsets == [
-        pe_types.LabwareOffset.construct(
+        pe_types.LabwareOffset.model_construct(
             id=matchers.IsA(str),
             createdAt=matchers.IsA(datetime),
             definitionUri="namespace/load_name/version",

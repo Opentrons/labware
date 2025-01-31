@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useEffect } from 'react'
 import { css } from 'styled-components'
 import {
   Box,
@@ -11,6 +11,7 @@ import {
   useDeckLocationSelect,
 } from '@opentrons/components'
 
+import type { ComponentProps } from 'react'
 import type {
   LabwareDefinition2,
   RobotType,
@@ -22,7 +23,7 @@ export type MapKind = 'intervention' | 'deck-config'
 
 export interface InterventionStyleDeckMapContentProps
   extends Pick<
-    React.ComponentProps<typeof BaseDeck>,
+    ComponentProps<typeof BaseDeck>,
     'deckConfig' | 'robotType' | 'labwareOnDeck' | 'modulesOnDeck'
   > {
   kind: 'intervention'
@@ -107,7 +108,7 @@ function DeckConfigStyleDeckMapContent({
     robotType,
     'default'
   )
-  React.useEffect(() => {
+  useEffect(() => {
     setSelectedLocation != null && setSelectedLocation(selectedLocation)
   }, [selectedLocation, setSelectedLocation])
   return <>{DeckLocationSelect}</>

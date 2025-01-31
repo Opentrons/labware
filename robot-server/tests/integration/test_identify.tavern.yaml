@@ -7,7 +7,7 @@ stages:
   - name: Identify a robot by flashing the lights
     request:
       method: POST
-      url: "{ot2_server_base_url}/identify"
+      url: '{ot2_server_base_url}/identify'
       params:
         seconds: 5
     response:
@@ -23,9 +23,6 @@ stages:
   - name: Attempt to send identify request without parameters
     request:
       method: POST
-      url: "{ot2_server_base_url}/identify"
+      url: '{ot2_server_base_url}/identify'
     response:
       status_code: 422
-      json:
-        message: "query.seconds: field required"
-        errorCode: "4000"

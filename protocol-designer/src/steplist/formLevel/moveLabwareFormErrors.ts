@@ -32,7 +32,7 @@ const getMoveLabwareError = (
       invariantContext.moduleEntities[newLocation.moduleId].type
     const modAllowList = COMPATIBLE_LABWARE_ALLOWLIST_BY_MODULE_TYPE[moduleType]
     errorString = !modAllowList.includes(loadName)
-      ? 'labware incompatible with this module'
+      ? 'Labware incompatible with this module'
       : null
   } else if ('labwareId' in newLocation) {
     const adapterValueDefUri =
@@ -41,7 +41,7 @@ const getMoveLabwareError = (
     const adapterAllowList =
       COMPATIBLE_LABWARE_ALLOWLIST_FOR_ADAPTER[adapterValueDefUri]
     errorString = !adapterAllowList?.includes(selectedLabwareDefUri)
-      ? 'labware incompatible with this adapter'
+      ? 'Labware incompatible with this adapter'
       : null
   }
   return errorString
@@ -68,7 +68,7 @@ export const getMoveLabwareFormErrors = (
     ? ([
         {
           title: errorString,
-          dependentProfileFields: [],
+          dependentProfileFields: ['newLocation'],
         },
       ] as ProfileFormError[])
     : []

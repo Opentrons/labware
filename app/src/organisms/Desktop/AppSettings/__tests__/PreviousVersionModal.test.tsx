@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import '@testing-library/jest-dom/vitest'
@@ -10,12 +9,14 @@ import {
   PREVIOUS_RELEASES_URL,
 } from '../PreviousVersionModal'
 
-const render = (props: React.ComponentProps<typeof PreviousVersionModal>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof PreviousVersionModal>) => {
   return renderWithProviders(<PreviousVersionModal {...props} />, {
     i18nInstance: i18n,
   })
 }
-const props: React.ComponentProps<typeof PreviousVersionModal> = {
+const props: ComponentProps<typeof PreviousVersionModal> = {
   closeModal: vi.fn(),
 }
 

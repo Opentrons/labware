@@ -1,5 +1,4 @@
 /* eslint-disable testing-library/prefer-presence-queries */
-import type * as React from 'react'
 import { describe, it, vi, expect, beforeEach } from 'vitest'
 import { screen, fireEvent, waitFor } from '@testing-library/react'
 
@@ -9,9 +8,10 @@ import { i18n } from '/app/i18n'
 import { RecoveryError } from '../RecoveryError'
 import { RECOVERY_MAP } from '../constants'
 
+import type { ComponentProps } from 'react'
 import type { Mock } from 'vitest'
 
-const render = (props: React.ComponentProps<typeof RecoveryError>) => {
+const render = (props: ComponentProps<typeof RecoveryError>) => {
   return renderWithProviders(<RecoveryError {...props} />, {
     i18nInstance: i18n,
   })[0]
@@ -20,7 +20,7 @@ const render = (props: React.ComponentProps<typeof RecoveryError>) => {
 const { ERROR_WHILE_RECOVERING } = RECOVERY_MAP
 
 describe('RecoveryError', () => {
-  let props: React.ComponentProps<typeof RecoveryError>
+  let props: ComponentProps<typeof RecoveryError>
   let proceedToRouteAndStepMock: Mock
   let getRecoverOptionCopyMock: Mock
   let handleMotionRoutingMock: Mock

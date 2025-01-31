@@ -1,21 +1,23 @@
-import * as React from 'react'
+import { createContext, useRef } from 'react'
 import { AlertsModal } from '.'
 import { useToaster } from '/app/organisms/ToasterOven'
+
+import type { ReactNode } from 'react'
 
 export interface AlertsContextProps {
   removeActiveAppUpdateToast: () => void
 }
 
-export const AlertsContext = React.createContext<AlertsContextProps>({
+export const AlertsContext = createContext<AlertsContextProps>({
   removeActiveAppUpdateToast: () => null,
 })
 
 interface AlertsProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export function Alerts({ children }: AlertsProps): JSX.Element {
-  const toastRef = React.useRef<string | null>(null)
+  const toastRef = useRef<string | null>(null)
   const { eatToast } = useToaster()
 
   const removeActiveAppUpdateToast = (): void => {

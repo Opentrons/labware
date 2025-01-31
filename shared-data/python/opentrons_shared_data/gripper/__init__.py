@@ -45,7 +45,7 @@ def load_definition(
     """Load gripper definition based on schema version and gripper model."""
     try:
         path = Path("gripper") / "definitions" / f"{version}" / f"{model.value}.json"
-        return GripperDefinition.parse_obj(json.loads(load_shared_data(path)))
+        return GripperDefinition.model_validate(json.loads(load_shared_data(path)))
     except FileNotFoundError:
         raise InvalidGripperDefinition(
             f"Gripper model {model} definition in schema version {version} does not exist."

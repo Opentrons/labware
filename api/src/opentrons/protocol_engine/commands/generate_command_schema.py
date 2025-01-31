@@ -1,24 +1,17 @@
 """Generate a JSON schema against which all create commands statically validate."""
+
 import json
-import pydantic
 import argparse
 import sys
-from opentrons.protocol_engine.commands.command_unions import CommandCreate
-
-
-class CreateCommandUnion(pydantic.BaseModel):
-    """Model that validates a union of all CommandCreate models."""
-
-    __root__: CommandCreate
+from opentrons.protocol_engine.commands.command_unions import CommandCreateAdapter
 
 
 def generate_command_schema(version: str) -> str:
     """Generate a JSON Schema that all valid create commands can validate against."""
-    raw_json_schema = CreateCommandUnion.schema_json()
-    schema_as_dict = json.loads(raw_json_schema)
+    schema_as_dict = CommandCreateAdapter.json_schema(mode="validation")
     schema_as_dict["$id"] = f"opentronsCommandSchemaV{version}"
     schema_as_dict["$schema"] = "http://json-schema.org/draft-07/schema#"
-    return json.dumps(schema_as_dict, indent=2)
+    return json.dumps(schema_as_dict, indent=2, sort_keys=True)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 {
   "incompatible_modules_attached": "检测到不适用模块,",
-  "remove_before_running_protocol": "运行协议前请移除以下硬件：",
+  "is_not_compatible": "{{module_name}}不适用于{{robot_type}},",
   "needs_your_assistance": "{{robot_name}}需要您的协助",
-  "remove_before_using": "使用此工作站前，请移除不适用模块.",
-  "is_not_compatible": "{{module_name}}不适用于{{robot_type}},"
+  "remove_before_running_protocol": "运行协议前请移除以下硬件：",
+  "remove_before_using": "使用此工作站前，请移除不适用模块."
 }

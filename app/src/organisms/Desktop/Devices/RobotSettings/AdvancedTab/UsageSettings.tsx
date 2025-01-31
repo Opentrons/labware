@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 
@@ -15,6 +14,7 @@ import {
 import { ToggleButton } from '/app/atoms/buttons'
 import { updateSetting } from '/app/redux/robot-settings'
 
+import type { MouseEventHandler } from 'react'
 import type { Dispatch } from '/app/redux/types'
 import type { RobotSettingsField } from '/app/redux/robot-settings/types'
 
@@ -34,7 +34,7 @@ export function UsageSettings({
   const value = settings?.value ? settings.value : false
   const id = settings?.id ? settings.id : 'enableDoorSafetySwitch'
 
-  const handleClick: React.MouseEventHandler<Element> = () => {
+  const handleClick: MouseEventHandler<Element> = () => {
     if (!isRobotBusy) {
       dispatch(updateSetting(robotName, id, !value))
     }

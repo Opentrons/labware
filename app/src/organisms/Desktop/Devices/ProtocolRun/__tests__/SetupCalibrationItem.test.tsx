@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { when } from 'vitest-when'
 import { describe, it, beforeEach, vi, afterEach } from 'vitest'
@@ -8,6 +7,8 @@ import { i18n } from '/app/i18n'
 import { useRunHasStarted } from '/app/resources/runs'
 import { formatTimestamp } from '/app/transformations/runs'
 import { SetupCalibrationItem } from '../SetupCalibrationItem'
+
+import type { ComponentProps } from 'react'
 
 vi.mock('/app/resources/runs')
 vi.mock('/app/transformations/runs')
@@ -21,7 +22,7 @@ describe('SetupCalibrationItem', () => {
     title = 'stub title',
     button = <button>stub button</button>,
     runId = RUN_ID,
-  }: Partial<React.ComponentProps<typeof SetupCalibrationItem>> = {}) => {
+  }: Partial<ComponentProps<typeof SetupCalibrationItem>> = {}) => {
     return renderWithProviders(
       <SetupCalibrationItem
         {...{ subText, calibratedDate, title, button, runId }}

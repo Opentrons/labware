@@ -17,17 +17,16 @@ import type { AdditionalEquipmentName } from '@opentrons/step-generation'
 import type {
   StepItemSourceDestRow,
   SubstepIdentifier,
-  WellIngredientNames,
 } from '../../../../steplist'
 
 interface MultichannelSubstepProps {
   trashName: AdditionalEquipmentName | null
   rowGroup: StepItemSourceDestRow[]
-  ingredNames: WellIngredientNames
   stepId: string
   substepIndex: number
   selectSubstep: (substepIdentifier: SubstepIdentifier) => void
   highlighted?: boolean
+  isSameLabware?: boolean
 }
 
 export function MultichannelSubstep(
@@ -38,8 +37,8 @@ export function MultichannelSubstep(
     stepId,
     selectSubstep,
     substepIndex,
-    ingredNames,
     trashName,
+    isSameLabware,
   } = props
   const { t } = useTranslation('application')
   const [collapsed, setCollapsed] = useState<Boolean>(true)
@@ -105,11 +104,11 @@ export function MultichannelSubstep(
                     trashName={trashName}
                     key={rowKey}
                     volume={row.volume}
-                    ingredNames={ingredNames}
                     source={row.source}
                     dest={row.dest}
                     stepId={stepId}
                     substepIndex={substepIndex}
+                    isSameLabware={isSameLabware}
                   />
                 )
               })}

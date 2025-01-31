@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 
@@ -21,6 +21,7 @@ import { getNetworkInterfaces, fetchStatus } from '/app/redux/networking'
 import { useIsUnboxingFlowOngoing } from '/app/redux-resources/config'
 import { AlternativeSecurityTypeModal } from './AlternativeSecurityTypeModal'
 
+import type { ChangeEvent } from 'react'
 import type { WifiSecurityType } from '@opentrons/api-client'
 import type { Dispatch, State } from '/app/redux/types'
 
@@ -44,7 +45,7 @@ export function SelectAuthenticationType({
   const [
     showAlternativeSecurityTypeModal,
     setShowAlternativeSecurityTypeModal,
-  ] = React.useState<boolean>(false)
+  ] = useState<boolean>(false)
 
   const securityButtons = [
     {
@@ -59,11 +60,11 @@ export function SelectAuthenticationType({
     },
   ]
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSelectedAuthType(event.target.value as WifiSecurityType)
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(fetchStatus(robotName))
   }, [robotName, dispatch])
 

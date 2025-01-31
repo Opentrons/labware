@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useSelector } from 'react-redux'
 import { css } from 'styled-components'
 import {
@@ -21,13 +20,15 @@ import SuccessIcon from '/app/assets/images/icon_success.png'
 import { getIsOnDevice } from '/app/redux/config'
 
 import { Skeleton } from '/app/atoms/Skeleton'
+
+import type { ReactNode } from 'react'
 import type { RobotType } from '@opentrons/shared-data'
 
 interface Props {
   iconColor: string
   header: string
   isSuccess: boolean
-  children?: React.ReactNode
+  children?: ReactNode
   subHeader?: string | JSX.Element
   isPending?: boolean
   robotType?: RobotType

@@ -14,9 +14,18 @@ from opentrons.protocol_engine.resources import labware_validation as subject
 @pytest.mark.parametrize(
     ("definition", "expected_result"),
     [
-        (LabwareDefinition.construct(allowedRoles=[LabwareRole.labware]), True),  # type: ignore[call-arg]
-        (LabwareDefinition.construct(allowedRoles=[]), True),  # type: ignore[call-arg]
-        (LabwareDefinition.construct(allowedRoles=[LabwareRole.adapter]), False),  # type: ignore[call-arg]
+        (
+            LabwareDefinition.model_construct(allowedRoles=[LabwareRole.labware]),  # type: ignore[call-arg]
+            True,
+        ),
+        (
+            LabwareDefinition.model_construct(allowedRoles=[]),  # type: ignore[call-arg]
+            True,
+        ),
+        (
+            LabwareDefinition.model_construct(allowedRoles=[LabwareRole.adapter]),  # type: ignore[call-arg]
+            False,
+        ),
     ],
 )
 def test_validate_definition_is_labware(
@@ -29,9 +38,18 @@ def test_validate_definition_is_labware(
 @pytest.mark.parametrize(
     ("definition", "expected_result"),
     [
-        (LabwareDefinition.construct(allowedRoles=[LabwareRole.adapter]), True),  # type: ignore[call-arg]
-        (LabwareDefinition.construct(allowedRoles=[]), False),  # type: ignore[call-arg]
-        (LabwareDefinition.construct(allowedRoles=[LabwareRole.labware]), False),  # type: ignore[call-arg]
+        (
+            LabwareDefinition.model_construct(allowedRoles=[LabwareRole.adapter]),  # type: ignore[call-arg]
+            True,
+        ),
+        (
+            LabwareDefinition.model_construct(allowedRoles=[]),  # type: ignore[call-arg]
+            False,
+        ),
+        (
+            LabwareDefinition.model_construct(allowedRoles=[LabwareRole.labware]),  # type: ignore[call-arg]
+            False,
+        ),
     ],
 )
 def test_validate_definition_is_adapter(
@@ -44,9 +62,22 @@ def test_validate_definition_is_adapter(
 @pytest.mark.parametrize(
     ("definition", "expected_result"),
     [
-        (LabwareDefinition.construct(stackingOffsetWithLabware={"labware123": OverlapOffset(x=4, y=5, z=6)}), True),  # type: ignore[call-arg]
-        (LabwareDefinition.construct(stackingOffsetWithLabware={"labwareXYZ": OverlapOffset(x=4, y=5, z=6)}), False),  # type: ignore[call-arg]
-        (LabwareDefinition.construct(stackingOffsetWithLabware={}), False),  # type: ignore[call-arg]
+        (
+            LabwareDefinition.model_construct(  # type: ignore[call-arg]
+                stackingOffsetWithLabware={"labware123": OverlapOffset(x=4, y=5, z=6)}
+            ),
+            True,
+        ),
+        (
+            LabwareDefinition.model_construct(  # type: ignore[call-arg]
+                stackingOffsetWithLabware={"labwareXYZ": OverlapOffset(x=4, y=5, z=6)}
+            ),
+            False,
+        ),
+        (
+            LabwareDefinition.model_construct(stackingOffsetWithLabware={}),  # type: ignore[call-arg]
+            False,
+        ),
     ],
 )
 def test_validate_labware_can_be_stacked(
@@ -62,9 +93,24 @@ def test_validate_labware_can_be_stacked(
 @pytest.mark.parametrize(
     ("definition", "expected_result"),
     [
-        (LabwareDefinition.construct(parameters=Parameters.construct(quirks=None)), True),  # type: ignore[call-arg]
-        (LabwareDefinition.construct(parameters=Parameters.construct(quirks=["foo"])), True),  # type: ignore[call-arg]
-        (LabwareDefinition.construct(parameters=Parameters.construct(quirks=["gripperIncompatible"])), False),  # type: ignore[call-arg]
+        (
+            LabwareDefinition.model_construct(  # type: ignore[call-arg]
+                parameters=Parameters.model_construct(quirks=None)  # type: ignore[call-arg]
+            ),
+            True,
+        ),
+        (
+            LabwareDefinition.model_construct(  # type: ignore[call-arg]
+                parameters=Parameters.model_construct(quirks=["foo"])  # type: ignore[call-arg]
+            ),
+            True,
+        ),
+        (
+            LabwareDefinition.model_construct(  # type: ignore[call-arg]
+                parameters=Parameters.model_construct(quirks=["gripperIncompatible"])  # type: ignore[call-arg]
+            ),
+            False,
+        ),
     ],
 )
 def test_validate_gripper_compatible(

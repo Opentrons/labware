@@ -284,7 +284,7 @@ When used in a protocol, loops automate repetitive steps such as aspirating and 
                 # etc...
                 # range() starts at 0 and stops before 8, creating a range of 0-7
                 for i in range(8):
-                    pipette.distribute(200, reservoir.wells()[i], plate.rows()[i])
+                    pipette.distribute(20, reservoir.wells()[i], plate.rows()[i])
 
     .. tab:: OT-2
 
@@ -315,7 +315,7 @@ When used in a protocol, loops automate repetitive steps such as aspirating and 
                 # etc...
                 # range() starts at 0 and stops before 8, creating a range of 0-7
                 for i in range(8):
-                    p300.distribute(200, reservoir.wells()[i], plate.rows()[i])
+                    p300.distribute(20, reservoir.wells()[i], plate.rows()[i])
 
 Notice here how Python's :py:class:`range` class (e.g., ``range(8)``) determines how many times the code loops. Also, in Python, a range of numbers is *exclusive* of the end value and counting starts at 0, not 1. For the Corning 96-well plate used here, this means well A1=0, B1=1, C1=2, and so on to the last well in the row, which is H1=7.
 

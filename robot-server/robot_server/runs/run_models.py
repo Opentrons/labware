@@ -18,6 +18,7 @@ from opentrons.protocol_engine import (
     LabwareOffset,
     LabwareOffsetCreate,
     Liquid,
+    LiquidClassRecordWithId,
     CommandNote,
 )
 from opentrons.protocol_engine.types import (
@@ -134,6 +135,10 @@ class Run(ResourceModel):
         ...,
         description="Liquids loaded to the run.",
     )
+    liquidClasses: List[LiquidClassRecordWithId] = Field(
+        ...,
+        description="Liquid classes loaded to the run.",
+    )
     labwareOffsets: List[LabwareOffset] = Field(
         ...,
         description="Labware offsets to apply as labware are loaded.",
@@ -214,6 +219,10 @@ class BadRun(ResourceModel):
     liquids: List[Liquid] = Field(
         ...,
         description="Liquids loaded to the run.",
+    )
+    liquidClasses: List[LiquidClassRecordWithId] = Field(
+        ...,
+        description="Liquid classes loaded to the run.",
     )
     labwareOffsets: List[LabwareOffset] = Field(
         ...,

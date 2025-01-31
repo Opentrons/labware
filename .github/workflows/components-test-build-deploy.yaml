@@ -43,10 +43,10 @@ jobs:
     timeout-minutes: 30
     runs-on: 'ubuntu-22.04'
     steps:
-      - uses: 'actions/checkout@v3'
-      - uses: 'actions/setup-node@v3'
+      - uses: 'actions/checkout@v4'
+      - uses: 'actions/setup-node@v4'
         with:
-          node-version: '18.19.0'
+          node-version: '22.11.0'
       - name: 'install udev for usb-detection'
         run: |
           # WORKAROUND: Remove microsoft debian repo due to https://github.com/microsoft/linux-package-repositories/issues/130. Remove line below after it is resolved
@@ -79,10 +79,10 @@ jobs:
     if: github.event_name != 'pull_request'
     needs: ['js-unit-test']
     steps:
-      - uses: 'actions/checkout@v3'
-      - uses: 'actions/setup-node@v3'
+      - uses: 'actions/checkout@v4'
+      - uses: 'actions/setup-node@v4'
         with:
-          node-version: '18.19.0'
+          node-version: '22.11.0'
       - name: 'install udev for usb-detection'
         run: |
           # WORKAROUND: Remove microsoft debian repo due to https://github.com/microsoft/linux-package-repositories/issues/130. Remove line below after it is resolved
@@ -140,16 +140,16 @@ jobs:
       ['js-unit-test', 'build-components-storybook', 'determine-build-type']
     if: needs.determine-build-type.outputs.type != 'none'
     steps:
-      - uses: 'actions/checkout@v3'
+      - uses: 'actions/checkout@v4'
       # https://github.com/actions/checkout/issues/290
       - name: 'Fix actions/checkout odd handling of tags'
         if: startsWith(github.ref, 'refs/tags')
         run: |
           git fetch -f origin ${{ github.ref }}:${{ github.ref }}
           git checkout ${{ github.ref }}
-      - uses: 'actions/setup-node@v3'
+      - uses: 'actions/setup-node@v4'
         with:
-          node-version: '18.19.0'
+          node-version: '22.11.0'
       - name: 'set complex environment variables'
         id: 'set-vars'
         uses: actions/github-script@v6
@@ -180,16 +180,16 @@ jobs:
     needs: ['js-unit-test', 'determine-build-type']
     if: needs.determine-build-type.outputs.type == 'publish'
     steps:
-      - uses: 'actions/checkout@v3'
+      - uses: 'actions/checkout@v4'
       # https://github.com/actions/checkout/issues/290
       - name: 'Fix actions/checkout odd handling of tags'
         if: startsWith(github.ref, 'refs/tags')
         run: |
           git fetch -f origin ${{ github.ref }}:${{ github.ref }}
           git checkout ${{ github.ref }}
-      - uses: 'actions/setup-node@v3'
+      - uses: 'actions/setup-node@v4'
         with:
-          node-version: '18.19.0'
+          node-version: '22.11.0'
           registry-url: 'https://registry.npmjs.org'
       - name: 'install udev for usb-detection'
         run: |
@@ -203,9 +203,6 @@ jobs:
           make setup-js
       - name: 'build typescript types'
         run: make -C components build-ts
-      - name: 'build js bundle'
-        run: |
-          make -C components lib
       # replace package.json stub version number with version from tag
       - name: 'set version number'
         run: |
@@ -213,12 +210,15 @@ jobs:
           VERSION_STRING=$(echo ${{ github.ref }} | sed 's/refs\/tags\/components@//')
           json -I -f ./components/package.json -e "this.version=\"$VERSION_STRING\""
           json -I -f ./components/package.json -e "this.dependencies['@opentrons/shared-data']=\"$VERSION_STRING\""
-      - uses: 'actions/setup-node@v3'
+      - uses: 'actions/setup-node@v4'
         with:
-          node-version: '18.19.0'
+          node-version: '22.11.0'
           registry-url: 'https://registry.npmjs.org'
       - name: 'publish to npm registry'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          cd ./components && echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ./.npmrc && npm publish --access public
+          cd ./components
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ./.npmrc
+          ls -R # Debug: View contents of ./components
+          npm publish --access public

@@ -1,6 +1,7 @@
 """Translation of JSON protocol commands into ProtocolEngine commands."""
-from typing import cast, List, Union, Iterator
-from pydantic import parse_obj_as, ValidationError as PydanticValidationError
+
+from typing import List, Union, Iterator
+from pydantic import ValidationError as PydanticValidationError, TypeAdapter
 
 from opentrons_shared_data.pipette.types import PipetteNameType
 from opentrons_shared_data.protocol.models import (
@@ -10,6 +11,8 @@ from opentrons_shared_data.protocol.models import (
     protocol_schema_v7,
     ProtocolSchemaV8,
     protocol_schema_v8,
+    Location,
+    #    CommandSchemaId,
 )
 from opentrons_shared_data import command as command_schema
 from opentrons_shared_data.errors.exceptions import InvalidProtocolData, PythonException
@@ -22,13 +25,22 @@ from opentrons.protocol_engine import (
     DeckSlotLocation,
     Liquid,
 )
-from opentrons.protocol_engine.types import HexColor
+from opentrons.protocol_engine.types import HexColor, CommandAnnotation
 
 
 class CommandTranslatorError(Exception):
     """An error raised to indicate an internal programmer error."""
 
     pass
+
+
+# Each time a TypeAdapter is instantiated, it will construct a new validator and
+# serializer. To improve performance, TypeAdapters are instantiated once.
+# See https://docs.pydantic.dev/latest/concepts/performance/#typeadapter-instantiated-once
+LabwareLocationAdapter: TypeAdapter[LabwareLocation] = TypeAdapter(LabwareLocation)
+CommandAnnotationAdapter: TypeAdapter[CommandAnnotation] = TypeAdapter(
+    CommandAnnotation
+)
 
 
 def _translate_labware_command(
@@ -41,6 +53,8 @@ def _translate_labware_command(
     assert labware_id is not None
     definition_id = protocol.labware[labware_id].definitionId
     assert definition_id is not None
+
+    location = command.params.location
     labware_command = pe_commands.LoadLabwareCreate(
         params=pe_commands.LoadLabwareParams(
             labwareId=command.params.labwareId,
@@ -48,10 +62,8 @@ def _translate_labware_command(
             version=protocol.labwareDefinitions[definition_id].version,
             namespace=protocol.labwareDefinitions[definition_id].namespace,
             loadName=protocol.labwareDefinitions[definition_id].parameters.loadName,
-            location=parse_obj_as(
-                # https://github.com/samuelcolvin/pydantic/issues/1847
-                LabwareLocation,  # type: ignore[arg-type]
-                command.params.location,
+            location=LabwareLocationAdapter.validate_python(
+                location.model_dump() if isinstance(location, Location) else location
             ),
         ),
         key=command.key,
@@ -70,6 +82,7 @@ def _translate_v7_labware_command(
     assert command.params.namespace is not None
     assert command.params.loadName is not None
 
+    location = command.params.location
     labware_command = pe_commands.LoadLabwareCreate(
         params=pe_commands.LoadLabwareParams(
             labwareId=command.params.labwareId,
@@ -77,10 +90,8 @@ def _translate_v7_labware_command(
             version=command.params.version,
             namespace=command.params.namespace,
             loadName=command.params.loadName,
-            location=parse_obj_as(
-                # https://github.com/samuelcolvin/pydantic/issues/1847
-                LabwareLocation,  # type: ignore[arg-type]
-                command.params.location,
+            location=LabwareLocationAdapter.validate_python(
+                location.model_dump() if isinstance(location, Location) else location
             ),
         ),
         key=command.key,
@@ -98,10 +109,14 @@ def _translate_module_command(
     # load module command must contain module_id. modules cannot be None.
     assert module_id is not None
     assert modules is not None
+
+    location = command.params.location
     translated_obj = pe_commands.LoadModuleCreate(
         params=pe_commands.LoadModuleParams(
             model=ModuleModel(modules[module_id].model),
-            location=DeckSlotLocation.parse_obj(command.params.location),
+            location=DeckSlotLocation.model_validate(
+                location.model_dump() if isinstance(location, Location) else location
+            ),
             moduleId=command.params.moduleId,
         ),
         key=command.key,
@@ -117,10 +132,13 @@ def _translate_v7_module_command(
     # load module command must contain module_id. modules cannot be None.
     assert module_id is not None
     assert command.params.model is not None
+    location = command.params.location
     translated_obj = pe_commands.LoadModuleCreate(
         params=pe_commands.LoadModuleParams(
             model=ModuleModel(command.params.model),
-            location=DeckSlotLocation.parse_obj(command.params.location),
+            location=DeckSlotLocation.model_validate(
+                location.model_dump() if isinstance(location, Location) else location
+            ),
             moduleId=command.params.moduleId,
         ),
         key=command.key,
@@ -171,9 +189,9 @@ def _translate_simple_command(
         protocol_schema_v6.Command,
         protocol_schema_v7.Command,
         protocol_schema_v8.Command,
-    ]
+    ],
 ) -> pe_commands.CommandCreate:
-    dict_command = command.dict(exclude_none=True)
+    dict_command = command.model_dump(exclude_none=True)
 
     # map deprecated `delay` commands to `waitForResume` / `waitForDuration`
     if dict_command["commandType"] == "delay":
@@ -182,15 +200,7 @@ def _translate_simple_command(
         else:
             dict_command["commandType"] = "waitForDuration"
 
-    translated_obj = cast(
-        pe_commands.CommandCreate,
-        parse_obj_as(
-            # https://github.com/samuelcolvin/pydantic/issues/1847
-            pe_commands.CommandCreate,  # type: ignore[arg-type]
-            dict_command,
-        ),
-    )
-    return translated_obj
+    return pe_commands.CommandCreateAdapter.validate_python(dict_command)
 
 
 class JsonTranslator:
@@ -207,7 +217,7 @@ class JsonTranslator:
                 id=liquid_id,
                 displayName=liquid.displayName,
                 description=liquid.description,
-                displayColor=HexColor(__root__=liquid.displayColor)
+                displayColor=HexColor(liquid.displayColor)
                 if liquid.displayColor is not None
                 else None,
             )
@@ -284,3 +294,19 @@ class JsonTranslator:
                     )
 
         return list(translate_all_commands())
+
+    def translate_command_annotations(
+        self,
+        protocol: Union[ProtocolSchemaV8, ProtocolSchemaV7, ProtocolSchemaV6],
+    ) -> List[CommandAnnotation]:
+        """Translate command annotations in json protocol schema v8."""
+        if isinstance(protocol, (ProtocolSchemaV6, ProtocolSchemaV7)):
+            return []
+        else:
+            command_annotations: List[CommandAnnotation] = [
+                CommandAnnotationAdapter.validate_python(
+                    command_annotation.model_dump(),
+                )
+                for command_annotation in protocol.commandAnnotations
+            ]
+            return command_annotations

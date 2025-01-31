@@ -10,13 +10,19 @@ import {
 import {
   getSelectedStepId,
   getSelectedSubstep,
+  getSelectedTerminalItemId,
 } from '../../../../ui/steps/selectors'
-import { getDesignerTab } from '../../../../file-data/selectors'
+import {
+  getDesignerTab,
+  getRobotStateTimeline,
+} from '../../../../file-data/selectors'
 import { getEnableHotKeysDisplay } from '../../../../feature-flags/selectors'
 import { DeckSetupContainer } from '../../DeckSetup'
 import { OffDeck } from '../../Offdeck'
+import { SubStepsToolbox } from '../Timeline'
+import { DraggableSidebar } from '../DraggableSidebar'
 import { ProtocolSteps } from '..'
-import { SubstepsToolbox, TimelineToolbox } from '../Timeline'
+
 import type { SavedStepFormState } from '../../../../step-forms'
 
 vi.mock('../../Offdeck')
@@ -27,6 +33,7 @@ vi.mock('../StepForm')
 vi.mock('../../DeckSetup')
 vi.mock('../StepSummary.tsx')
 vi.mock('../Timeline')
+vi.mock('../DraggableSidebar')
 vi.mock('../../../../feature-flags/selectors')
 vi.mock('../../../../file-data/selectors')
 vi.mock('../../../../organisms/Alerts')
@@ -56,14 +63,21 @@ const MOCK_STEP_FORMS = {
 describe('ProtocolSteps', () => {
   beforeEach(() => {
     vi.mocked(getDesignerTab).mockReturnValue('protocolSteps')
-    vi.mocked(TimelineToolbox).mockReturnValue(<div>mock TimelineToolbox</div>)
+    vi.mocked(getRobotStateTimeline).mockReturnValue({
+      timeline: [],
+      errors: [],
+    })
+    vi.mocked(DraggableSidebar).mockReturnValue(
+      <div>mock DraggableSidebar</div>
+    )
     vi.mocked(DeckSetupContainer).mockReturnValue(
       <div>mock DeckSetupContainer</div>
     )
+    vi.mocked(getSelectedTerminalItemId).mockReturnValue(null)
     vi.mocked(OffDeck).mockReturnValue(<div>mock OffDeck</div>)
     vi.mocked(getUnsavedForm).mockReturnValue(null)
     vi.mocked(getSelectedSubstep).mockReturnValue(null)
-    vi.mocked(SubstepsToolbox).mockReturnValue(<div>mock SubstepsToolbox</div>)
+    vi.mocked(SubStepsToolbox).mockReturnValue(<div>mock SubStepsToolbox</div>)
     vi.mocked(getEnableHotKeysDisplay).mockReturnValue(true)
     vi.mocked(getSavedStepForms).mockReturnValue(
       MOCK_STEP_FORMS as SavedStepFormState
@@ -75,28 +89,28 @@ describe('ProtocolSteps', () => {
 
   it('renders each component in ProtocolSteps', () => {
     render()
-    screen.getByText('mock TimelineToolbox')
+    screen.getByText('mock DraggableSidebar')
     screen.getByText('mock DeckSetupContainer')
   })
 
   it('renders the toggle when formData is null', () => {
     render()
     screen.getByText('mock DeckSetupContainer')
-    fireEvent.click(screen.getByText('Off-deck'))
+    fireEvent.click(screen.getByText('Off deck'))
     screen.getByText('mock OffDeck')
   })
 
   it('renders the substepToolbox when selectedSubstep is not null', () => {
     vi.mocked(getSelectedSubstep).mockReturnValue('mockId')
     render()
-    screen.getByText('mock SubstepsToolbox')
+    screen.getByText('mock SubStepsToolbox')
   })
 
   it('renders the hot keys display', () => {
     render()
     screen.getByText('Double-click to edit')
-    screen.getByText('Shift + Click to select all')
-    screen.getByText('Command + Click for multi-select')
+    screen.getByText('Shift + click to select range')
+    screen.getByText('Command + click to select multiple')
   })
 
   it('renders the current step name', () => {

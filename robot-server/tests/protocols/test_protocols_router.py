@@ -392,7 +392,7 @@ async def test_get_protocol_by_id(
         key="dummy-key-111",
     )
 
-    assert result.content.links == ProtocolLinks.construct(referencingRuns=[])
+    assert result.content.links == ProtocolLinks.model_construct(referencingRuns=[])
     assert result.status_code == 200
 
 
@@ -1495,6 +1495,7 @@ async def test_get_protocol_analyses(
         commands=[],
         errors=[],
         liquids=[],
+        liquidClasses=[],
     )
 
     decoy.when(protocol_store.has("protocol-id")).then_return(True)

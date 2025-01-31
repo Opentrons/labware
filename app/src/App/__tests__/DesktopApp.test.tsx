@@ -81,6 +81,7 @@ describe('DesktopApp', () => {
     ).mockImplementation((props: LocalizationProviderProps) => (
       <>{props.children}</>
     ))
+    when(vi.mocked(useFeatureFlag)).calledWith('reactScan').thenReturn(false)
   })
   afterEach(() => {
     vi.resetAllMocks()

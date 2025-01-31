@@ -2,10 +2,10 @@ import { useTranslation } from 'react-i18next'
 import {
   DIRECTION_COLUMN,
   Flex,
-  Link,
   SPACING,
   StyledText,
 } from '@opentrons/components'
+import { KnowledgeLink } from '../../../organisms'
 
 export function MagnetModuleChangeContent(): JSX.Element {
   const { t } = useTranslation('starting_deck_state')
@@ -26,13 +26,7 @@ export function MagnetModuleChangeContent(): JSX.Element {
       </StyledText>
       <Flex>
         <StyledText desktopStyle="bodyDefaultRegular">
-          {t('read_more_gen1_gen2')}{' '}
-          <Link
-            external
-            href="http://support.opentrons.com/en/articles/1820112-magnetic-module"
-          >
-            {t('here')}
-          </Link>
+          {t('read_more_gen1_gen2')} <KnowledgeLink>{t('here')}</KnowledgeLink>
         </StyledText>
       </Flex>
     </Flex>

@@ -72,7 +72,7 @@ class DeactivateTemperature(
     commandType: DeactivateTemperatureCommandType = "temperatureModule/deactivate"
 
     params: DeactivateTemperatureParams
-    result: Optional[DeactivateTemperatureResult]
+    result: Optional[DeactivateTemperatureResult] = None
 
     _ImplementationCls: Type[DeactivateTemperatureImpl] = DeactivateTemperatureImpl
 

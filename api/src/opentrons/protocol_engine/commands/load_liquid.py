@@ -5,6 +5,8 @@ from typing import Optional, Type, Dict, TYPE_CHECKING
 from typing_extensions import Literal
 
 from opentrons.protocol_engine.state.update_types import StateUpdate
+from opentrons.protocol_engine.types import LiquidId
+from opentrons.protocol_engine.errors import InvalidLiquidError
 
 from .command import AbstractCommandImpl, BaseCommand, BaseCommandCreate, SuccessData
 from ..errors.error_occurrence import ErrorOccurrence
@@ -19,9 +21,9 @@ LoadLiquidCommandType = Literal["loadLiquid"]
 class LoadLiquidParams(BaseModel):
     """Payload required to load a liquid into a well."""
 
-    liquidId: str = Field(
+    liquidId: LiquidId = Field(
         ...,
-        description="Unique identifier of the liquid to load.",
+        description="Unique identifier of the liquid to load. If this is the sentinel value EMPTY, all values of volumeByWell must be 0.",
     )
     labwareId: str = Field(
         ...,
@@ -29,7 +31,7 @@ class LoadLiquidParams(BaseModel):
     )
     volumeByWell: Dict[str, float] = Field(
         ...,
-        description="Volume of liquid, in µL, loaded into each well by name, in this labware.",
+        description="Volume of liquid, in µL, loaded into each well by name, in this labware. If the liquid id is the sentinel value EMPTY, all volumes must be 0.",
     )
 
 
@@ -57,6 +59,12 @@ class LoadLiquidImplementation(
         self._state_view.labware.validate_liquid_allowed_in_labware(
             labware_id=params.labwareId, wells=params.volumeByWell
         )
+        if params.liquidId == "EMPTY":
+            for well_name, volume in params.volumeByWell.items():
+                if volume != 0.0:
+                    raise InvalidLiquidError(
+                        'loadLiquid commands that specify the special liquid "EMPTY" must set volume to be 0.0, but the volume for {well_name} is {volume}'
+                    )
 
         state_update = StateUpdate()
         state_update.set_liquid_loaded(
@@ -73,7 +81,7 @@ class LoadLiquid(BaseCommand[LoadLiquidParams, LoadLiquidResult, ErrorOccurrence
 
     commandType: LoadLiquidCommandType = "loadLiquid"
     params: LoadLiquidParams
-    result: Optional[LoadLiquidResult]
+    result: Optional[LoadLiquidResult] = None
 
     _ImplementationCls: Type[LoadLiquidImplementation] = LoadLiquidImplementation
 

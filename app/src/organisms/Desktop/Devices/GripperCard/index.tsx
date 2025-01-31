@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState, useEffect } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { css } from 'styled-components'
 import {
@@ -15,6 +15,7 @@ import { GripperWizardFlows } from '/app/organisms/GripperWizardFlows'
 import { AboutGripperSlideout } from './AboutGripperSlideout'
 import { GRIPPER_FLOW_TYPES } from '/app/organisms/GripperWizardFlows/constants'
 
+import type { MouseEventHandler } from 'react'
 import type { BadGripper, GripperData } from '@opentrons/api-client'
 import type { GripperModel } from '@opentrons/shared-data'
 import type { GripperWizardFlowType } from '/app/organisms/GripperWizardFlows/types'
@@ -53,26 +54,24 @@ export function GripperCard({
   const [
     openWizardFlowType,
     setOpenWizardFlowType,
-  ] = React.useState<GripperWizardFlowType | null>(null)
+  ] = useState<GripperWizardFlowType | null>(null)
   const [
     showAboutGripperSlideout,
     setShowAboutGripperSlideout,
-  ] = React.useState<boolean>(false)
+  ] = useState<boolean>(false)
 
-  const handleAttach: React.MouseEventHandler<HTMLButtonElement> = () => {
+  const handleAttach: MouseEventHandler<HTMLButtonElement> = () => {
     setOpenWizardFlowType(GRIPPER_FLOW_TYPES.ATTACH)
   }
 
-  const handleDetach: React.MouseEventHandler<HTMLButtonElement> = () => {
+  const handleDetach: MouseEventHandler<HTMLButtonElement> = () => {
     setOpenWizardFlowType(GRIPPER_FLOW_TYPES.DETACH)
   }
 
-  const handleCalibrate: React.MouseEventHandler<HTMLButtonElement> = () => {
+  const handleCalibrate: MouseEventHandler<HTMLButtonElement> = () => {
     setOpenWizardFlowType(GRIPPER_FLOW_TYPES.RECALIBRATE)
   }
-  const [pollForSubsystemUpdate, setPollForSubsystemUpdate] = React.useState(
-    false
-  )
+  const [pollForSubsystemUpdate, setPollForSubsystemUpdate] = useState(false)
   const { data: subsystemUpdateData } = useCurrentSubsystemUpdateQuery(
     'gripper',
     {
@@ -84,7 +83,7 @@ export function GripperCard({
   // detected until the update has been done for 5 seconds
   // this gives the instruments endpoint time to start reporting
   // a good instrument
-  React.useEffect(() => {
+  useEffect(() => {
     if (attachedGripper?.ok === false) {
       setPollForSubsystemUpdate(true)
     } else if (

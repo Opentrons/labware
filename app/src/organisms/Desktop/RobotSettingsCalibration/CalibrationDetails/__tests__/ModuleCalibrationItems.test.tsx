@@ -1,6 +1,6 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { ABSORBANCE_READER_TYPE } from '@opentrons/shared-data'
 import { i18n } from '/app/i18n'
 import { renderWithProviders } from '/app/__testing-utils__'
 import { mockFetchModulesSuccessActionPayloadModules } from '/app/redux/modules/__fixtures__'
@@ -8,8 +8,8 @@ import { ModuleCalibrationOverflowMenu } from '../ModuleCalibrationOverflowMenu'
 import { formatLastCalibrated } from '../utils'
 import { ModuleCalibrationItems } from '../ModuleCalibrationItems'
 
+import type { ComponentProps } from 'react'
 import type { AttachedModule } from '@opentrons/api-client'
-import { ABSORBANCE_READER_TYPE } from '@opentrons/shared-data'
 
 vi.mock('../ModuleCalibrationOverflowMenu')
 
@@ -55,7 +55,7 @@ const mockCalibratedModule = {
 const ROBOT_NAME = 'mockRobot'
 
 const render = (
-  props: React.ComponentProps<typeof ModuleCalibrationItems>
+  props: ComponentProps<typeof ModuleCalibrationItems>
 ): ReturnType<typeof renderWithProviders> => {
   return renderWithProviders(<ModuleCalibrationItems {...props} />, {
     i18nInstance: i18n,
@@ -63,7 +63,7 @@ const render = (
 }
 
 describe('ModuleCalibrationItems', () => {
-  let props: React.ComponentProps<typeof ModuleCalibrationItems>
+  let props: ComponentProps<typeof ModuleCalibrationItems>
 
   beforeEach(() => {
     props = {

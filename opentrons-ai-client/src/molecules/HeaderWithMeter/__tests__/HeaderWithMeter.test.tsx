@@ -1,8 +1,18 @@
 import { renderWithProviders } from '../../../__testing-utils__'
 import { i18n } from '../../../i18n'
 import { HeaderWithMeter } from '../index'
-import { describe, expect, it } from 'vitest'
-import { screen, render as rtlRender } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
+import {
+  screen,
+  render as rtlRender,
+  waitFor,
+  fireEvent,
+} from '@testing-library/react'
+import { ExitConfirmModal } from '../../ExitConfirmModal'
+
+vi.mock('react-router-dom', () => ({
+  useNavigate: vi.fn(),
+}))
 
 const render = (): ReturnType<typeof renderWithProviders> => {
   return renderWithProviders(<HeaderWithMeter progressPercentage={0.3} />, {
@@ -47,5 +57,30 @@ describe('HeaderWithMeter', () => {
 
     rerender(<HeaderWithMeter progressPercentage={0.2} />)
     expect(progressBar).toHaveAttribute('value', '0.2')
+  })
+
+  it('should display the exit button instead of the logout button', () => {
+    render()
+    screen.getByText('Exit')
+  })
+
+  it('should display the exit confirm modal when exit button is clicked', async () => {
+    renderWithProviders(
+      <>
+        <HeaderWithMeter progressPercentage={0.3} />
+        <ExitConfirmModal />
+      </>,
+      {
+        i18nInstance: i18n,
+      }
+    )
+
+    const exitButton = screen.getByText('Exit')
+
+    fireEvent.click(exitButton)
+
+    await waitFor(() => {
+      screen.getByText('Are you sure you want to exit?')
+    })
   })
 })

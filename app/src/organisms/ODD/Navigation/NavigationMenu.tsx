@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
@@ -21,10 +21,11 @@ import { useLights } from '/app/resources/devices'
 import { getTopPortalEl } from '/app/App/portal'
 import { RestartRobotConfirmationModal } from './RestartRobotConfirmationModal'
 
+import type { MouseEventHandler } from 'react'
 import type { Dispatch } from '/app/redux/types'
 
 interface NavigationMenuProps {
-  onClick: React.MouseEventHandler
+  onClick: MouseEventHandler
   robotName: string
   setShowNavMenu: (showNavMenu: boolean) => void
 }
@@ -37,7 +38,7 @@ export function NavigationMenu(props: NavigationMenuProps): JSX.Element {
   const [
     showRestartRobotConfirmationModal,
     setShowRestartRobotConfirmationModal,
-  ] = React.useState<boolean>(false)
+  ] = useState<boolean>(false)
 
   const navigate = useNavigate()
 

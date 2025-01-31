@@ -4,11 +4,11 @@ import { renderWithProviders } from '../../../../../__testing-utils__'
 import { i18n } from '../../../../../assets/localization'
 import { getSavedStepForms } from '../../../../../step-forms/selectors'
 import { ThermocyclerProfileSubsteps } from '../ThermocyclerProfileSubsteps'
+
+import type { ComponentProps } from 'react'
 import type { FormData } from '../../../../../form-types'
 
-const render = (
-  props: React.ComponentProps<typeof ThermocyclerProfileSubsteps>
-) => {
+const render = (props: ComponentProps<typeof ThermocyclerProfileSubsteps>) => {
   return renderWithProviders(<ThermocyclerProfileSubsteps {...props} />, {
     i18nInstance: i18n,
   })[0]
@@ -55,7 +55,7 @@ const MOCK_THERMOCYCLER_SUBSTEP_ITEMS = {
 }
 
 describe('TimelineToolbox', () => {
-  let props: React.ComponentProps<typeof ThermocyclerProfileSubsteps>
+  let props: ComponentProps<typeof ThermocyclerProfileSubsteps>
   beforeEach(() => {
     props = { stepId: THERMOCYCLER_STEP_ID }
     vi.mocked(getSavedStepForms).mockReturnValue({

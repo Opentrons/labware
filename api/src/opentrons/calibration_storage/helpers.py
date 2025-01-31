@@ -31,7 +31,9 @@ def convert_to_dict(obj: Any) -> Dict[str, Any]:
     # https://github.com/python/mypy/issues/6568
     # Unfortunately, since it's not currently supported I have an
     # assert check instead.
-    assert is_dataclass(obj), "This function is intended for dataclasses only"
+    assert is_dataclass(obj) and not isinstance(
+        obj, type
+    ), "This function is intended for dataclasses only"
     return asdict(obj, dict_factory=dict_filter_none)
 
 

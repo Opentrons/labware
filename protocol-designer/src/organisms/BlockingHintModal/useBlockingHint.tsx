@@ -1,6 +1,8 @@
 import { useSelector } from 'react-redux'
 import { getDismissedHints } from '../../tutorial/selectors'
 import { BlockingHintModal } from './index'
+
+import type { ReactNode } from 'react'
 import type { HintKey } from '../../tutorial'
 
 export interface HintProps {
@@ -8,16 +10,20 @@ export interface HintProps {
    * If the hint is enabled but has been dismissed, it will automatically call `handleContinue` when enabled.
    * useBlockingHint expects the parent to disable the hint on cancel/continue */
   enabled: boolean
-  hintKey: HintKey
-  content: React.ReactNode
+  hintKey: HintKey | null
+  content: ReactNode
   handleCancel: () => void
   handleContinue: () => void
 }
 
 export const useBlockingHint = (args: HintProps): JSX.Element | null => {
   const { enabled, hintKey, handleCancel, handleContinue, content } = args
-  const isDismissed = useSelector(getDismissedHints).includes(hintKey)
+  const dismissedHints = useSelector(getDismissedHints)
+  const isDismissed = hintKey != null && dismissedHints.includes(hintKey)
 
+  if (enabled && hintKey == null) {
+    handleContinue()
+  }
   if (isDismissed) {
     if (enabled) {
       handleContinue()
@@ -25,7 +31,7 @@ export const useBlockingHint = (args: HintProps): JSX.Element | null => {
     return null
   }
 
-  if (!enabled) {
+  if (!enabled || hintKey == null) {
     return null
   }
 

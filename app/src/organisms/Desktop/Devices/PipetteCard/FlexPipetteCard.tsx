@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState, useEffect } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { css } from 'styled-components'
 import {
@@ -29,6 +29,7 @@ import {
 
 import { AboutPipetteSlideout } from './AboutPipetteSlideout'
 
+import type { MouseEventHandler } from 'react'
 import type {
   BadPipette,
   HostConfig,
@@ -79,12 +80,11 @@ export function FlexPipetteCard({
   const [
     showAboutPipetteSlideout,
     setShowAboutPipetteSlideout,
-  ] = React.useState<boolean>(false)
-  const [showChoosePipette, setShowChoosePipette] = React.useState(false)
-  const [
-    selectedPipette,
-    setSelectedPipette,
-  ] = React.useState<SelectablePipettes>(SINGLE_MOUNT_PIPETTES)
+  ] = useState<boolean>(false)
+  const [showChoosePipette, setShowChoosePipette] = useState(false)
+  const [selectedPipette, setSelectedPipette] = useState<SelectablePipettes>(
+    SINGLE_MOUNT_PIPETTES
+  )
   const attachedPipetteIs96Channel =
     attachedPipette?.ok && attachedPipette.instrumentName === 'p1000_96'
   const selectedPipetteForWizard = attachedPipetteIs96Channel
@@ -107,7 +107,7 @@ export function FlexPipetteCard({
       host,
     })
   }
-  const handleChoosePipette: React.MouseEventHandler<HTMLButtonElement> = () => {
+  const handleChoosePipette: MouseEventHandler<HTMLButtonElement> = () => {
     setShowChoosePipette(true)
   }
   const handleAttach = (): void => {
@@ -115,17 +115,15 @@ export function FlexPipetteCard({
     handleLaunchPipetteWizardFlows(FLOWS.ATTACH)
   }
 
-  const handleDetach: React.MouseEventHandler<HTMLButtonElement> = () => {
+  const handleDetach: MouseEventHandler<HTMLButtonElement> = () => {
     handleLaunchPipetteWizardFlows(FLOWS.DETACH)
   }
 
-  const handleCalibrate: React.MouseEventHandler<HTMLButtonElement> = () => {
+  const handleCalibrate: MouseEventHandler<HTMLButtonElement> = () => {
     handleLaunchPipetteWizardFlows(FLOWS.CALIBRATE)
   }
 
-  const [pollForSubsystemUpdate, setPollForSubsystemUpdate] = React.useState(
-    false
-  )
+  const [pollForSubsystemUpdate, setPollForSubsystemUpdate] = useState(false)
   const subsystem = attachedPipette?.subsystem ?? null
   const { data: subsystemUpdateData } = useCurrentSubsystemUpdateQuery(
     subsystem,
@@ -139,7 +137,7 @@ export function FlexPipetteCard({
   // detected until the update has been done for 5 seconds
   // this gives the instruments endpoint time to start reporting
   // a good instrument
-  React.useEffect(() => {
+  useEffect(() => {
     if (attachedPipette?.ok === false) {
       setPollForSubsystemUpdate(true)
     } else if (

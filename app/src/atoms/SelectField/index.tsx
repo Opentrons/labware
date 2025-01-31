@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import find from 'lodash/find'
 import { Select } from './Select'
 import {
@@ -11,6 +10,7 @@ import {
 } from '@opentrons/components'
 import { css } from 'styled-components'
 
+import type { ReactNode } from 'react'
 import type { SelectProps, SelectOption } from './Select'
 import type { ActionMeta, MultiValue, SingleValue } from 'react-select'
 
@@ -32,9 +32,9 @@ export interface SelectFieldProps {
   /** render function for the option label passed to react-select */
   formatOptionLabel?: SelectProps['formatOptionLabel']
   /** optional title */
-  title?: React.ReactNode
+  title?: ReactNode
   /** optional caption. hidden when `error` is given */
-  caption?: React.ReactNode
+  caption?: ReactNode
   /** if included, use error style and display error instead of caption */
   error?: string | null
   /** change handler called with (name, value, actionMeta) */

@@ -11,7 +11,7 @@ opentrons-shared-data = { editable = true, path = "../shared-data/python" }
 opentrons_hardware = { editable = true, path = "../hardware" }
 g-code-testing = { editable = true, path = "." }
 anyio = "==3.7.1"
-pydantic = "==1.10.12"
+pydantic = "==2.6.4"
 # opentrons dependency on linux, spec'd here to force lockfile inclusion
 # https://github.com/pypa/pipenv/issues/4408#issuecomment-668324177
 systemd-python = { version = "==234", markers="sys_platform=='linux'" }

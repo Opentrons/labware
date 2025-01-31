@@ -1,7 +1,8 @@
 """Tests for CommandView.
 
 DEPRECATED: Testing CommandView independently of CommandStore is no longer helpful.
-Add new tests to test_command_state.py, where they can be tested together.
+Try to add new tests to test_command_state.py, where they can be tested together,
+treating CommandState as a private implementation detail.
 """
 
 
@@ -28,19 +29,17 @@ from opentrons.protocol_engine.state.commands import (
     CommandState,
     CommandView,
     CommandSlice,
-    CommandErrorSlice,
     CommandPointer,
     RunResult,
     QueueStatus,
 )
 
-from opentrons.protocol_engine.state.command_history import CommandEntry
+from opentrons.protocol_engine.state.command_history import CommandEntry, CommandHistory
 
 from opentrons.protocol_engine.errors import ProtocolCommandFailedError, ErrorOccurrence
 
 from opentrons_shared_data.errors.codes import ErrorCodes
 
-from opentrons.protocol_engine.state.command_history import CommandHistory
 from opentrons.protocol_engine.state.update_types import StateUpdate
 
 from .command_fixtures import (
@@ -77,7 +76,6 @@ def get_command_view(  # noqa: C901
     finish_error: Optional[errors.ErrorOccurrence] = None,
     commands: Sequence[cmd.Command] = (),
     latest_command_hash: Optional[str] = None,
-    failed_command_errors: Optional[List[ErrorOccurrence]] = None,
     has_entered_error_recovery: bool = False,
 ) -> CommandView:
     """Get a command view test subject."""
@@ -121,7 +119,6 @@ def get_command_view(  # noqa: C901
         run_started_at=run_started_at,
         latest_protocol_command_hash=latest_command_hash,
         stopped_by_estop=False,
-        failed_command_errors=failed_command_errors or [],
         has_entered_error_recovery=has_entered_error_recovery,
         error_recovery_policy=_placeholder_error_recovery_policy,
     )
@@ -896,7 +893,7 @@ def test_get_current() -> None:
         created_at=datetime(year=2022, month=2, day=2),
     )
     subject = get_command_view(commands=[command_1, command_2])
-    subject.state.command_history._set_most_recently_completed_command_id(command_1.id)
+    subject._state.command_history._set_most_recently_completed_command_id(command_1.id)
 
     assert subject.get_current() == CommandPointer(
         index=1,
@@ -916,7 +913,7 @@ def test_get_current() -> None:
         created_at=datetime(year=2022, month=2, day=2),
     )
     subject = get_command_view(commands=[command_1, command_2])
-    subject.state.command_history._set_most_recently_completed_command_id(command_1.id)
+    subject._state.command_history._set_most_recently_completed_command_id(command_1.id)
 
     assert subject.get_current() == CommandPointer(
         index=1,
@@ -1028,42 +1025,6 @@ def test_get_slice_default_cursor_running() -> None:
         commands=[command_3, command_4],
         cursor=2,
         total_length=5,
-    )
-
-
-def test_get_errors_slice_empty() -> None:
-    """It should return a slice from the tail if no current command."""
-    subject = get_command_view(failed_command_errors=[])
-    result = subject.get_errors_slice(cursor=0, length=2)
-
-    assert result == CommandErrorSlice(commands_errors=[], cursor=0, total_length=0)
-
-
-def test_get_errors_slice() -> None:
-    """It should return a slice of all command errors."""
-    error_1 = ErrorOccurrence.construct(id="error-id-1")  # type: ignore[call-arg]
-    error_2 = ErrorOccurrence.construct(id="error-id-2")  # type: ignore[call-arg]
-    error_3 = ErrorOccurrence.construct(id="error-id-3")  # type: ignore[call-arg]
-    error_4 = ErrorOccurrence.construct(id="error-id-4")  # type: ignore[call-arg]
-
-    subject = get_command_view(
-        failed_command_errors=[error_1, error_2, error_3, error_4]
-    )
-
-    result = subject.get_errors_slice(cursor=1, length=3)
-
-    assert result == CommandErrorSlice(
-        commands_errors=[error_2, error_3, error_4],
-        cursor=1,
-        total_length=4,
-    )
-
-    result = subject.get_errors_slice(cursor=-3, length=10)
-
-    assert result == CommandErrorSlice(
-        commands_errors=[error_1, error_2, error_3, error_4],
-        cursor=0,
-        total_length=4,
     )
 
 

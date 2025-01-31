@@ -78,7 +78,7 @@ def ot3_standard_deck_def() -> DeckDefinitionV5:
 @pytest.fixture(scope="session")
 def ot2_fixed_trash_def() -> LabwareDefinition:
     """Get the definition of the OT-2 standard fixed trash."""
-    return LabwareDefinition.parse_obj(
+    return LabwareDefinition.model_validate(
         load_definition("opentrons_1_trash_1100ml_fixed", 1)
     )
 
@@ -86,7 +86,7 @@ def ot2_fixed_trash_def() -> LabwareDefinition:
 @pytest.fixture(scope="session")
 def ot2_short_fixed_trash_def() -> LabwareDefinition:
     """Get the definition of the OT-2 short fixed trash."""
-    return LabwareDefinition.parse_obj(
+    return LabwareDefinition.model_validate(
         load_definition("opentrons_1_trash_850ml_fixed", 1)
     )
 
@@ -94,7 +94,7 @@ def ot2_short_fixed_trash_def() -> LabwareDefinition:
 @pytest.fixture(scope="session")
 def ot3_fixed_trash_def() -> LabwareDefinition:
     """Get the definition of the OT-3 fixed trash."""
-    return LabwareDefinition.parse_obj(
+    return LabwareDefinition.model_validate(
         load_definition("opentrons_1_trash_3200ml_fixed", 1)
     )
 
@@ -102,7 +102,7 @@ def ot3_fixed_trash_def() -> LabwareDefinition:
 @pytest.fixture(scope="session")
 def ot3_absorbance_reader_lid() -> LabwareDefinition:
     """Get the definition of the OT-3 plate reader lid."""
-    return LabwareDefinition.parse_obj(
+    return LabwareDefinition.model_validate(
         load_definition("opentrons_flex_lid_absorbance_plate_reader_module", 1)
     )
 
@@ -110,7 +110,7 @@ def ot3_absorbance_reader_lid() -> LabwareDefinition:
 @pytest.fixture(scope="session")
 def well_plate_def() -> LabwareDefinition:
     """Get the definition of a 96 well plate."""
-    return LabwareDefinition.parse_obj(
+    return LabwareDefinition.model_validate(
         load_definition("corning_96_wellplate_360ul_flat", 2)
     )
 
@@ -118,7 +118,7 @@ def well_plate_def() -> LabwareDefinition:
 @pytest.fixture(scope="session")
 def flex_50uL_tiprack() -> LabwareDefinition:
     """Get the definition of a Flex 50uL tiprack."""
-    return LabwareDefinition.parse_obj(
+    return LabwareDefinition.model_validate(
         load_definition("opentrons_flex_96_filtertiprack_50ul", 1)
     )
 
@@ -126,7 +126,7 @@ def flex_50uL_tiprack() -> LabwareDefinition:
 @pytest.fixture(scope="session")
 def adapter_plate_def() -> LabwareDefinition:
     """Get the definition of a h/s adapter plate."""
-    return LabwareDefinition.parse_obj(
+    return LabwareDefinition.model_validate(
         load_definition("opentrons_universal_flat_adapter", 1)
     )
 
@@ -134,25 +134,31 @@ def adapter_plate_def() -> LabwareDefinition:
 @pytest.fixture(scope="session")
 def reservoir_def() -> LabwareDefinition:
     """Get the definition of single-row reservoir."""
-    return LabwareDefinition.parse_obj(load_definition("nest_12_reservoir_15ml", 1))
+    return LabwareDefinition.model_validate(
+        load_definition("nest_12_reservoir_15ml", 1)
+    )
 
 
 @pytest.fixture(scope="session")
 def tip_rack_def() -> LabwareDefinition:
     """Get the definition of Opentrons 300 uL tip rack."""
-    return LabwareDefinition.parse_obj(load_definition("opentrons_96_tiprack_300ul", 1))
+    return LabwareDefinition.model_validate(
+        load_definition("opentrons_96_tiprack_300ul", 1)
+    )
 
 
 @pytest.fixture(scope="session")
 def adapter_def() -> LabwareDefinition:
     """Get the definition of Opentrons 96 PCR adapter."""
-    return LabwareDefinition.parse_obj(load_definition("opentrons_96_pcr_adapter", 1))
+    return LabwareDefinition.model_validate(
+        load_definition("opentrons_96_pcr_adapter", 1)
+    )
 
 
 @pytest.fixture(scope="session")
 def falcon_tuberack_def() -> LabwareDefinition:
     """Get the definition of the 6-well Falcon tuberack."""
-    return LabwareDefinition.parse_obj(
+    return LabwareDefinition.model_validate(
         load_definition("opentrons_6_tuberack_falcon_50ml_conical", 1)
     )
 
@@ -160,7 +166,7 @@ def falcon_tuberack_def() -> LabwareDefinition:
 @pytest.fixture(scope="session")
 def magdeck_well_plate_def() -> LabwareDefinition:
     """Get the definition of a well place compatible with magdeck."""
-    return LabwareDefinition.parse_obj(
+    return LabwareDefinition.model_validate(
         load_definition("nest_96_wellplate_100ul_pcr_full_skirt", 1)
     )
 
@@ -169,63 +175,63 @@ def magdeck_well_plate_def() -> LabwareDefinition:
 def tempdeck_v1_def() -> ModuleDefinition:
     """Get the definition of a V1 tempdeck."""
     definition = load_shared_data("module/definitions/3/temperatureModuleV1.json")
-    return ModuleDefinition.parse_raw(definition)
+    return ModuleDefinition.model_validate_json(definition)
 
 
 @pytest.fixture(scope="session")
 def tempdeck_v2_def() -> ModuleDefinition:
     """Get the definition of a V2 tempdeck."""
     definition = load_shared_data("module/definitions/3/temperatureModuleV2.json")
-    return ModuleDefinition.parse_raw(definition)
+    return ModuleDefinition.model_validate_json(definition)
 
 
 @pytest.fixture(scope="session")
 def magdeck_v1_def() -> ModuleDefinition:
     """Get the definition of a V1 magdeck."""
     definition = load_shared_data("module/definitions/3/magneticModuleV1.json")
-    return ModuleDefinition.parse_raw(definition)
+    return ModuleDefinition.model_validate_json(definition)
 
 
 @pytest.fixture(scope="session")
 def magdeck_v2_def() -> ModuleDefinition:
     """Get the definition of a V2 magdeck."""
     definition = load_shared_data("module/definitions/3/magneticModuleV2.json")
-    return ModuleDefinition.parse_raw(definition)
+    return ModuleDefinition.model_validate_json(definition)
 
 
 @pytest.fixture(scope="session")
 def thermocycler_v1_def() -> ModuleDefinition:
     """Get the definition of a V2 thermocycler."""
     definition = load_shared_data("module/definitions/3/thermocyclerModuleV1.json")
-    return ModuleDefinition.parse_raw(definition)
+    return ModuleDefinition.model_validate_json(definition)
 
 
 @pytest.fixture(scope="session")
 def thermocycler_v2_def() -> ModuleDefinition:
     """Get the definition of a V2 thermocycler."""
     definition = load_shared_data("module/definitions/3/thermocyclerModuleV2.json")
-    return ModuleDefinition.parse_raw(definition)
+    return ModuleDefinition.model_validate_json(definition)
 
 
 @pytest.fixture(scope="session")
 def heater_shaker_v1_def() -> ModuleDefinition:
     """Get the definition of a V1 heater-shaker."""
     definition = load_shared_data("module/definitions/3/heaterShakerModuleV1.json")
-    return ModuleDefinition.parse_raw(definition)
+    return ModuleDefinition.model_validate_json(definition)
 
 
 @pytest.fixture(scope="session")
 def mag_block_v1_def() -> ModuleDefinition:
     """Get the definition of a V1 Mag Block."""
     definition = load_shared_data("module/definitions/3/magneticBlockV1.json")
-    return ModuleDefinition.parse_raw(definition)
+    return ModuleDefinition.model_validate_json(definition)
 
 
 @pytest.fixture(scope="session")
 def abs_reader_v1_def() -> ModuleDefinition:
     """Get the definition of a V1 absorbance plate reader."""
     definition = load_shared_data("module/definitions/3/absorbanceReaderV1.json")
-    return ModuleDefinition.parse_raw(definition)
+    return ModuleDefinition.model_validate_json(definition)
 
 
 @pytest.fixture(scope="session")

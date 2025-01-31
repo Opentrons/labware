@@ -1,4 +1,4 @@
-import { useState, useEffect, useLayoutEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { css } from 'styled-components'
 
@@ -19,6 +19,7 @@ import {
   IgnoreErrorSkipStep,
   ManualMoveLwAndSkip,
   ManualReplaceLwAndRetry,
+  HomeAndRetry,
 } from './RecoveryOptions'
 import {
   useErrorDetailsModal,
@@ -29,7 +30,6 @@ import {
 import { RecoveryInProgress } from './RecoveryInProgress'
 import { getErrorKind } from './utils'
 import { RECOVERY_MAP } from './constants'
-import { useHomeGripper } from './hooks'
 
 import type { LabwareDefinition2, RobotType } from '@opentrons/shared-data'
 import type { RecoveryRoute, RouteStep, RecoveryContentProps } from './types'
@@ -76,23 +76,12 @@ export type ErrorRecoveryWizardProps = ErrorRecoveryFlowsProps &
 export function ErrorRecoveryWizard(
   props: ErrorRecoveryWizardProps
 ): JSX.Element {
-  const {
-    hasLaunchedRecovery,
-    failedCommand,
-    recoveryCommands,
-    routeUpdateActions,
-  } = props
-  const errorKind = getErrorKind(failedCommand)
-
-  useInitialPipetteHome({
-    hasLaunchedRecovery,
-    recoveryCommands,
-    routeUpdateActions,
-  })
-
-  useHomeGripper(props)
-
-  return <ErrorRecoveryComponent errorKind={errorKind} {...props} />
+  return (
+    <ErrorRecoveryComponent
+      errorKind={getErrorKind(props.failedCommand)}
+      {...props}
+    />
+  )
 }
 
 export function ErrorRecoveryComponent(
@@ -237,6 +226,10 @@ export function ErrorRecoveryContent(props: RecoveryContentProps): JSX.Element {
     return <RecoveryDoorOpenSpecial {...props} />
   }
 
+  const buildHomeAndRetry = (): JSX.Element => {
+    return <HomeAndRetry {...props} />
+  }
+
   switch (props.recoveryMap.route) {
     case RECOVERY_MAP.OPTION_SELECTION.ROUTE:
       return buildSelectRecoveryOption()
@@ -276,30 +269,9 @@ export function ErrorRecoveryContent(props: RecoveryContentProps): JSX.Element {
       return buildRecoveryInProgress()
     case RECOVERY_MAP.ROBOT_DOOR_OPEN.ROUTE:
       return buildManuallyRouteToDoorOpen()
+    case RECOVERY_MAP.HOME_AND_RETRY.ROUTE:
+      return buildHomeAndRetry()
     default:
       return buildSelectRecoveryOption()
   }
-}
-interface UseInitialPipetteHomeParams {
-  hasLaunchedRecovery: ErrorRecoveryWizardProps['hasLaunchedRecovery']
-  recoveryCommands: ErrorRecoveryWizardProps['recoveryCommands']
-  routeUpdateActions: ErrorRecoveryWizardProps['routeUpdateActions']
-}
-// Home the Z-axis of all attached pipettes on Error Recovery launch.
-export function useInitialPipetteHome({
-  hasLaunchedRecovery,
-  recoveryCommands,
-  routeUpdateActions,
-}: UseInitialPipetteHomeParams): void {
-  const { homePipetteZAxes } = recoveryCommands
-  const { handleMotionRouting } = routeUpdateActions
-
-  // Synchronously set the recovery route to "robot in motion" before initial render to prevent screen flicker on ER launch.
-  useLayoutEffect(() => {
-    if (hasLaunchedRecovery) {
-      void handleMotionRouting(true)
-        .then(() => homePipetteZAxes())
-        .finally(() => handleMotionRouting(false))
-    }
-  }, [hasLaunchedRecovery])
 }

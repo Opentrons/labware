@@ -526,6 +526,7 @@ def get_completed_analysis_resource(
             commands=[],
             errors=[],
             liquids=[],
+            liquidClasses=[],
         ),
     )
 
@@ -566,6 +567,7 @@ async def test_get_referenced_data_files(
             commands=[],
             errors=[],
             liquids=[],
+            liquidClasses=[],
         ),
     )
     analysis_resource2 = CompletedAnalysisResource(
@@ -582,6 +584,7 @@ async def test_get_referenced_data_files(
             commands=[],
             errors=[],
             liquids=[],
+            liquidClasses=[],
         ),
     )
 

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import { createStore } from 'redux'
 import { renderHook } from '@testing-library/react'
@@ -9,11 +8,12 @@ import { i18n } from '/app/i18n'
 import { useDispatchStartRobotUpdate } from '../hooks'
 import { startRobotUpdate, clearRobotUpdateSession } from '../actions'
 
+import type { FunctionComponent, ReactNode } from 'react'
 import type { Store } from 'redux'
 import type { State } from '../../types'
 
 describe('useDispatchStartRobotUpdate', () => {
-  let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+  let wrapper: FunctionComponent<{ children: ReactNode }>
   let store: Store<State>
   const mockRobotName = 'robotName'
   const mockSystemFile = 'systemFile'

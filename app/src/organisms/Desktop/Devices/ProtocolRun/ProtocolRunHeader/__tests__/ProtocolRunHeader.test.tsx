@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, expect, beforeEach, afterEach } from 'vitest'
 import { screen } from '@testing-library/react'
 import { useNavigate } from 'react-router-dom'
@@ -26,6 +25,8 @@ import {
   useRunHeaderRunControls,
 } from '../hooks'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('react-router-dom')
 vi.mock('@opentrons/react-api-client')
 vi.mock('/app/redux-resources/robots')
@@ -43,7 +44,7 @@ const MOCK_RUN_ID = 'MOCK_RUN_ID'
 const MOCK_ROBOT = 'MOCK_ROBOT'
 
 describe('ProtocolRunHeader', () => {
-  let props: React.ComponentProps<typeof ProtocolRunHeader>
+  let props: ComponentProps<typeof ProtocolRunHeader>
   const mockNavigate = vi.fn()
 
   beforeEach(() => {
@@ -92,7 +93,7 @@ describe('ProtocolRunHeader', () => {
     vi.resetAllMocks()
   })
 
-  const render = (props: React.ComponentProps<typeof ProtocolRunHeader>) => {
+  const render = (props: ComponentProps<typeof ProtocolRunHeader>) => {
     return renderWithProviders(<ProtocolRunHeader {...props} />, {
       i18nInstance: i18n,
     })[0]

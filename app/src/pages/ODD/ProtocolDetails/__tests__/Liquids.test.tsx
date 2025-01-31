@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, describe, beforeEach } from 'vitest'
 import { when } from 'vitest-when'
 import { screen } from '@testing-library/react'
@@ -16,6 +15,7 @@ import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { Liquids } from '../Liquids'
 
+import type { ComponentProps } from 'react'
 import type { UseQueryResult } from 'react-query'
 import type { Protocol } from '@opentrons/api-client'
 import type * as SharedData from '@opentrons/shared-data'
@@ -180,14 +180,14 @@ const MOCK_LABWARE_INFO_BY_LIQUID_ID = {
   ],
 }
 
-const render = (props: React.ComponentProps<typeof Liquids>) => {
+const render = (props: ComponentProps<typeof Liquids>) => {
   return renderWithProviders(<Liquids {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('Liquids', () => {
-  let props: React.ComponentProps<typeof Liquids>
+  let props: ComponentProps<typeof Liquids>
   beforeEach(() => {
     props = {
       protocolId: MOCK_PROTOCOL_ID,

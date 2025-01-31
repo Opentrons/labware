@@ -7,7 +7,9 @@ import { TwoColTextAndFailedStepNextStep } from './TwoColTextAndFailedStepNextSt
 
 import type { RecoveryContentProps } from '../types'
 
-export function RetryStepInfo(props: RecoveryContentProps): JSX.Element {
+export function RetryStepInfo(
+  props: RecoveryContentProps & { secondaryBtnOnClickOverride?: () => void }
+): JSX.Element {
   const { routeUpdateActions, recoveryCommands, errorKind } = props
   const { ROBOT_RETRYING_STEP } = RECOVERY_MAP
   const { t } = useTranslation('error_recovery')

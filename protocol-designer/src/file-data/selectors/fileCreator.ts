@@ -20,14 +20,15 @@ import { uuid } from '../../utils'
 import { selectors as ingredSelectors } from '../../labware-ingred/selectors'
 import { selectors as stepFormSelectors } from '../../step-forms'
 import { selectors as uiLabwareSelectors } from '../../ui/labware'
+import { swatchColors } from '../../organisms/DefineLiquidsModal/swatchColors'
 import { getLoadLiquidCommands } from '../../load-file/migration/utils/getLoadLiquidCommands'
-import { swatchColors } from '../../components/swatchColors'
 import {
   DEFAULT_MM_FROM_BOTTOM_ASPIRATE,
   DEFAULT_MM_FROM_BOTTOM_DISPENSE,
   DEFAULT_MM_TOUCH_TIP_OFFSET_FROM_TOP,
   DEFAULT_MM_BLOWOUT_OFFSET_FROM_TOP,
 } from '../../constants'
+import { getStepGroups } from '../../step-forms/selectors'
 import { getFileMetadata, getRobotType } from './fileFields'
 import { getInitialRobotState, getRobotStateTimeline } from './commands'
 
@@ -57,6 +58,7 @@ import type {
 import type { LabwareDefByDefURI } from '../../labware-defs'
 import type { Selector } from '../../types'
 import type { DesignerApplicationData } from '../../load-file/migration/utils/getLoadLiquidCommands'
+import type { SecondOrderCommandAnnotation } from '@opentrons/shared-data/commandAnnotation/types'
 
 // TODO: BC: 2018-02-21 uncomment this assert, causes test failures
 // console.assert(!isEmpty(process.env.OT_PD_VERSION), 'Could not find application version!')
@@ -111,6 +113,7 @@ export const createFile: Selector<ProtocolFile> = createSelector(
   stepFormSelectors.getPipetteEntities,
   uiLabwareSelectors.getLabwareNicknamesById,
   labwareDefSelectors.getLabwareDefsByURI,
+  getStepGroups,
   (
     fileMetadata,
     initialRobotState,
@@ -125,9 +128,11 @@ export const createFile: Selector<ProtocolFile> = createSelector(
     moduleEntities,
     pipetteEntities,
     labwareNicknamesById,
-    labwareDefsByURI
+    labwareDefsByURI,
+    stepGroups
   ) => {
     const { author, description, created } = fileMetadata
+
     const name = fileMetadata.protocolName || 'untitled'
     const lastModified = fileMetadata.lastModified
     // TODO: Ian 2018-07-10 allow user to save steps in JSON file, even if those
@@ -381,9 +386,33 @@ export const createFile: Selector<ProtocolFile> = createSelector(
       commands,
     }
 
+    const commandAnnotations: SecondOrderCommandAnnotation[] = Object.entries(
+      stepGroups
+    ).map(([name, groupStepIds]) => {
+      // map stepIds from group to orderedStepIds and return indices from orderedStepIds
+      const stepIndices = groupStepIds
+        .map(groupStepId => orderedStepIds.indexOf(groupStepId))
+        .filter(index => index !== -1)
+
+      //  return commands assosciated with the indices
+      const commands = stepIndices.flatMap(
+        index => robotStateTimeline.timeline[index].commands
+      )
+      const commandKeys = commands.map(command => command.key ?? '')
+
+      const annotation: SecondOrderCommandAnnotation = {
+        annotationType: 'secondOrderCommand',
+        machineReadableName: name,
+        params: {}, // what is this used for?
+        commandKeys,
+      }
+
+      return annotation
+    })
+
     const commandAnnotionaV1Mixin: CommandAnnotationV1Mixin = {
       commandAnnotationSchemaId: 'opentronsCommandAnnotationSchemaV1',
-      commandAnnotations: [],
+      commandAnnotations,
     }
 
     const protocolBase: ProtocolBase<DesignerApplicationData> = {

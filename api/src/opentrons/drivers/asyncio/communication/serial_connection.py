@@ -6,7 +6,7 @@ from typing import Optional, List
 
 from opentrons.drivers.command_builder import CommandBuilder
 
-from .errors import NoResponse, AlarmResponse, ErrorResponse
+from .errors import NoResponse, AlarmResponse, ErrorResponse, UnhandledGcode, ErrorCodes
 from .async_serial import AsyncSerial
 
 log = logging.getLogger(__name__)
@@ -199,7 +199,7 @@ class SerialConnection:
                 str_response = self.process_raw_response(
                     command=data, response=response.decode()
                 )
-                self.raise_on_error(response=str_response)
+                self.raise_on_error(response=str_response, request=data)
                 return str_response
 
             log.info(f"{self.name}: retry number {retry}/{retries}")
@@ -232,11 +232,12 @@ class SerialConnection:
     def send_data_lock(self) -> asyncio.Lock:
         return self._send_data_lock
 
-    def raise_on_error(self, response: str) -> None:
+    def raise_on_error(self, response: str, request: str) -> None:
         """
         Raise an error if the response contains an error
 
         Args:
+            gcode: the requesting gocde
             response: response
 
         Returns: None
@@ -248,8 +249,13 @@ class SerialConnection:
         if self._alarm_keyword in lower:
             raise AlarmResponse(port=self._port, response=response)
 
-        if self._error_keyword in lower:
-            raise ErrorResponse(port=self._port, response=response)
+        if self._error_keyword.lower() in lower:
+            if ErrorCodes.UNHANDLED_GCODE.value.lower() in lower:
+                raise UnhandledGcode(
+                    port=self._port, response=response, command=request
+                )
+            else:
+                raise ErrorResponse(port=self._port, response=response)
 
     async def on_retry(self) -> None:
         """
@@ -292,6 +298,7 @@ class AsyncResponseSerialConnection(SerialConnection):
         alarm_keyword: Optional[str] = None,
         reset_buffer_before_write: bool = False,
         async_error_ack: Optional[str] = None,
+        number_of_retries: int = 0,
     ) -> AsyncResponseSerialConnection:
         """
         Create a connection.
@@ -334,6 +341,7 @@ class AsyncResponseSerialConnection(SerialConnection):
             error_keyword=error_keyword or "err",
             alarm_keyword=alarm_keyword or "alarm",
             async_error_ack=async_error_ack or "async",
+            number_of_retries=number_of_retries,
         )
 
     def __init__(
@@ -346,6 +354,7 @@ class AsyncResponseSerialConnection(SerialConnection):
         error_keyword: str,
         alarm_keyword: str,
         async_error_ack: str,
+        number_of_retries: int = 0,
     ) -> None:
         """
         Constructor
@@ -377,6 +386,7 @@ class AsyncResponseSerialConnection(SerialConnection):
         self._name = name
         self._ack = ack.encode()
         self._retry_wait_time_seconds = retry_wait_time_seconds
+        self._number_of_retries = number_of_retries
         self._error_keyword = error_keyword.lower()
         self._alarm_keyword = alarm_keyword.lower()
         self._async_error_ack = async_error_ack.lower()
@@ -397,7 +407,9 @@ class AsyncResponseSerialConnection(SerialConnection):
         Raises: SerialException
         """
         return await self.send_data(
-            data=command.build(), retries=retries, timeout=timeout
+            data=command.build(),
+            retries=retries or self._number_of_retries,
+            timeout=timeout,
         )
 
     async def send_data(
@@ -418,7 +430,9 @@ class AsyncResponseSerialConnection(SerialConnection):
         async with super().send_data_lock, self._serial.timeout_override(
             "timeout", timeout
         ):
-            return await self._send_data(data=data, retries=retries)
+            return await self._send_data(
+                data=data, retries=retries or self._number_of_retries
+            )
 
     async def _send_data(self, data: str, retries: int = 0) -> str:
         """
@@ -433,6 +447,7 @@ class AsyncResponseSerialConnection(SerialConnection):
         Raises: SerialException
         """
         data_encode = data.encode()
+        retries = retries or self._number_of_retries
 
         for retry in range(retries + 1):
             log.debug(f"{self._name}: Write -> {data_encode!r}")
@@ -454,7 +469,7 @@ class AsyncResponseSerialConnection(SerialConnection):
                     str_response = self.process_raw_response(
                         command=data, response=ackless_response.decode()
                     )
-                    self.raise_on_error(response=str_response)
+                    self.raise_on_error(response=str_response, request=data)
 
             if self._ack in response[-1]:
                 # Remove ack from response
@@ -462,7 +477,7 @@ class AsyncResponseSerialConnection(SerialConnection):
                 str_response = self.process_raw_response(
                     command=data, response=ackless_response.decode()
                 )
-                self.raise_on_error(response=str_response)
+                self.raise_on_error(response=str_response, request=data)
                 return str_response
 
             log.info(f"{self._name}: retry number {retry}/{retries}")

@@ -1,20 +1,7 @@
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
-import {
-  COLORS,
-  DeckInfoLabel,
-  DIRECTION_COLUMN,
-  Divider,
-  Flex,
-  ListItem,
-  ListItemDescriptor,
-  SPACING,
-  StyledText,
-} from '@opentrons/components'
-import {
-  MAGNETIC_MODULE_TYPE,
-  MAGNETIC_MODULE_V1,
-} from '@opentrons/shared-data'
+import { DIRECTION_COLUMN, Divider, Flex, SPACING } from '@opentrons/components'
+import { MAGNETIC_MODULE_V1 } from '@opentrons/shared-data'
 import {
   MAX_ENGAGE_HEIGHT_V1,
   MAX_ENGAGE_HEIGHT_V2,
@@ -25,29 +12,23 @@ import {
   getMagnetLabwareEngageHeight,
   getMagneticLabwareOptions,
 } from '../../../../../../ui/modules/selectors'
-import { ToggleExpandStepFormField } from '../../../../../../molecules'
 import {
-  getInitialDeckSetup,
-  getModuleEntities,
-} from '../../../../../../step-forms/selectors'
-import { getModulesOnDeckByType } from '../../../../../../ui/modules/utils'
-import { LINE_CLAMP_TEXT_STYLE } from '../../../../../../atoms'
+  DropdownStepFormField,
+  ToggleExpandStepFormField,
+} from '../../../../../../molecules'
+import { getModuleEntities } from '../../../../../../step-forms/selectors'
+import { getFormErrorsMappedToField, getFormLevelError } from '../../utils'
 
 import type { StepFormProps } from '../../types'
 
 export function MagnetTools(props: StepFormProps): JSX.Element {
-  const { propsForFields, formData } = props
+  const { propsForFields, formData, visibleFormErrors } = props
   const { t } = useTranslation(['application', 'form', 'protocol_steps'])
   const moduleLabwareOptions = useSelector(getMagneticLabwareOptions)
   const moduleEntities = useSelector(getModuleEntities)
   const defaultEngageHeight = useSelector(getMagnetLabwareEngageHeight)
-  const deckSetup = useSelector(getInitialDeckSetup)
-  const modulesOnDeck = getModulesOnDeckByType(deckSetup, MAGNETIC_MODULE_TYPE)
 
   const moduleModel = moduleEntities[formData.moduleId].model
-
-  const slotInfo = moduleLabwareOptions[0].name.split('in')
-  const slotLocation = modulesOnDeck != null ? modulesOnDeck[0].slot : ''
 
   const mmUnits = t('units.millimeter')
   const isGen1 = moduleModel === MAGNETIC_MODULE_V1
@@ -69,44 +50,16 @@ export function MagnetTools(props: StepFormProps): JSX.Element {
           })
       : ''
   const engageHeightCaption = `${engageHeightMinMax} ${engageHeightDefault}`
+
+  const mappedErrorsToField = getFormErrorsMappedToField(visibleFormErrors)
+
   return (
     <Flex flexDirection={DIRECTION_COLUMN}>
-      <Flex
-        flexDirection={DIRECTION_COLUMN}
-        padding={`${SPACING.spacing16} ${SPACING.spacing16} ${SPACING.spacing12}`}
-        gridGap={SPACING.spacing12}
-        width="100%"
-      >
-        <StyledText desktopStyle="bodyDefaultRegular" color={COLORS.grey60}>
-          {t('protocol_steps:module')}
-        </StyledText>
-        <ListItem type="noActive">
-          <ListItemDescriptor
-            type="large"
-            content={
-              <Flex flexDirection={DIRECTION_COLUMN} gridGap={SPACING.spacing4}>
-                <StyledText
-                  desktopStyle="bodyDefaultRegular"
-                  css={LINE_CLAMP_TEXT_STYLE(2)}
-                >
-                  {slotInfo[0]}
-                </StyledText>
-                <StyledText
-                  desktopStyle="bodyDefaultRegular"
-                  color={COLORS.grey60}
-                >
-                  {slotInfo[1]}
-                </StyledText>
-              </Flex>
-            }
-            description={
-              <Flex width="2.875rem">
-                <DeckInfoLabel deckLabel={slotLocation} />
-              </Flex>
-            }
-          />
-        </ListItem>
-      </Flex>
+      <DropdownStepFormField
+        {...propsForFields.moduleId}
+        options={moduleLabwareOptions}
+        title={t('protocol_steps:module')}
+      />
       <Divider marginY="0" />
       <Flex flexDirection={DIRECTION_COLUMN} padding={SPACING.spacing16}>
         <ToggleExpandStepFormField
@@ -122,6 +75,7 @@ export function MagnetTools(props: StepFormProps): JSX.Element {
             'form:step_edit_form.field.magnetAction.options.disengage'
           )}
           caption={engageHeightCaption}
+          errorToShow={getFormLevelError('engageHeight', mappedErrorsToField)}
         />
       </Flex>
     </Flex>

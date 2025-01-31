@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { describe, it, vi, beforeEach } from 'vitest'
 import { screen } from '@testing-library/react'
@@ -18,6 +17,7 @@ import { useIsFlex } from '/app/redux-resources/robots'
 import { RobotSettingsPipetteOffsetCalibration } from '../RobotSettingsPipetteOffsetCalibration'
 import { PipetteOffsetCalibrationItems } from '../CalibrationDetails/PipetteOffsetCalibrationItems'
 
+import type { ComponentProps } from 'react'
 import type { FormattedPipetteOffsetCalibration } from '..'
 
 vi.mock('/app/organisms/Desktop/Devices/hooks')
@@ -29,9 +29,7 @@ const mockFormattedPipetteOffsetCalibrations: FormattedPipetteOffsetCalibration[
 const mockUpdateRobotStatus = vi.fn()
 
 const render = (
-  props?: Partial<
-    React.ComponentProps<typeof RobotSettingsPipetteOffsetCalibration>
-  >
+  props?: Partial<ComponentProps<typeof RobotSettingsPipetteOffsetCalibration>>
 ) => {
   return renderWithProviders(
     <RobotSettingsPipetteOffsetCalibration

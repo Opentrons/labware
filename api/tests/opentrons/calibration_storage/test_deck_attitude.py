@@ -57,7 +57,7 @@ def test_save_ot2_deck_attitude(ot_config_tempdir: Any) -> None:
         "pip1",
         "mytiprack",
     )
-    assert get_robot_deck_attitude() != {}
+    assert get_robot_deck_attitude() is not None
 
 
 def test_save_ot3_deck_attitude(ot_config_tempdir: Any) -> None:

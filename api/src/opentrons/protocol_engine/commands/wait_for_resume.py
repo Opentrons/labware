@@ -1,7 +1,9 @@
 """Wait for resume command request, result, and implementation models."""
 from __future__ import annotations
+from typing import TYPE_CHECKING, Optional, Type, Any
+
 from pydantic import BaseModel, Field
-from typing import TYPE_CHECKING, Optional, Type
+from pydantic.json_schema import SkipJsonSchema
 from typing_extensions import Literal
 
 from .command import AbstractCommandImpl, BaseCommand, BaseCommandCreate, SuccessData
@@ -16,12 +18,17 @@ if TYPE_CHECKING:
 WaitForResumeCommandType = Literal["waitForResume", "pause"]
 
 
+def _remove_default(s: dict[str, Any]) -> None:
+    s.pop("default", None)
+
+
 class WaitForResumeParams(BaseModel):
     """Payload required to pause the protocol."""
 
-    message: Optional[str] = Field(
+    message: str | SkipJsonSchema[None] = Field(
         None,
         description="A user-facing message associated with the pause",
+        json_schema_extra=_remove_default,
     )
 
 
@@ -54,7 +61,7 @@ class WaitForResume(
 
     commandType: WaitForResumeCommandType = "waitForResume"
     params: WaitForResumeParams
-    result: Optional[WaitForResumeResult]
+    result: Optional[WaitForResumeResult] = None
 
     _ImplementationCls: Type[WaitForResumeImplementation] = WaitForResumeImplementation
 

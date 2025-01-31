@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { when } from 'vitest-when'
 import { describe, it, beforeEach, vi, afterEach } from 'vitest'
@@ -23,6 +22,7 @@ import {
   useNotifyDeckConfigurationQuery,
 } from '/app/resources/deck_configuration'
 
+import type { ComponentProps } from 'react'
 import type { UseQueryResult } from 'react-query'
 import type { MaintenanceRun } from '@opentrons/api-client'
 import type { DeckConfiguration } from '@opentrons/shared-data'
@@ -62,7 +62,7 @@ const mockCurrnetMaintenanceRun = {
 } as MaintenanceRun
 
 const render = (
-  props: React.ComponentProps<typeof DeviceDetailsDeckConfiguration>
+  props: ComponentProps<typeof DeviceDetailsDeckConfiguration>
 ) => {
   return renderWithProviders(<DeviceDetailsDeckConfiguration {...props} />, {
     i18nInstance: i18n,
@@ -70,7 +70,7 @@ const render = (
 }
 
 describe('DeviceDetailsDeckConfiguration', () => {
-  let props: React.ComponentProps<typeof DeviceDetailsDeckConfiguration>
+  let props: ComponentProps<typeof DeviceDetailsDeckConfiguration>
 
   beforeEach(() => {
     props = {

@@ -76,6 +76,7 @@ def test_load_old_overrides_regression(
             pipette_type=types.PipetteModelType.p20,
             pipette_channels=types.PipetteChannelType.SINGLE_CHANNEL,
             pipette_version=types.PipetteVersionType(2, 2),
+            oem_type=types.PipetteOEMType.OT,
         ),
         override_configuration_path,
         "P20SV222021040709",
@@ -269,10 +270,11 @@ def test_load_with_overrides(
         pipette_model.pipette_type,
         pipette_model.pipette_channels,
         pipette_model.pipette_version,
+        pipette_model.oem_type,
     )
 
     if serial_number == TEST_SERIAL_NUMBER:
-        dict_loaded_configs = loaded_base_configurations.dict(by_alias=True)
+        dict_loaded_configs = loaded_base_configurations.model_dump(by_alias=True)
         for map_key in dict_loaded_configs["pickUpTipConfigurations"]["pressFit"][
             "configurationsByNozzleMap"
         ]:
@@ -283,7 +285,7 @@ def test_load_with_overrides(
                     "configurationsByNozzleMap"
                 ][map_key][tip_key]["speed"] = 5.0
 
-        updated_configurations_dict = updated_configurations.dict(by_alias=True)
+        updated_configurations_dict = updated_configurations.model_dump(by_alias=True)
         assert set(dict_loaded_configs.pop("quirks")) == set(
             updated_configurations_dict.pop("quirks")
         )
@@ -454,7 +456,9 @@ def test_loading_does_not_log_warnings(
     load_with_mutable_configurations() suppresses and logs internal exceptions to
     protect its caller, but those are still bugs, and we still want tests to catch them.
     """
-    model = pipette_definition.PipetteModelVersionType(type, channels, version)
+    model = pipette_definition.PipetteModelVersionType(
+        type, channels, version, types.PipetteOEMType.OT
+    )
     (override_configuration_path / filename).write_text(file_contents)
     with caplog.at_level(logging.WARNING):
         mutable_configurations.load_with_mutable_configurations(

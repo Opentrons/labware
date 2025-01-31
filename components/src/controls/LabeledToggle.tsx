@@ -1,14 +1,14 @@
-import type * as React from 'react'
-
 import { LabeledControl } from './LabeledControl'
 import { ToggleButton } from './ToggleButton'
 import styles from './styles.module.css'
+
+import type { ReactNode } from 'react'
 
 export interface LabeledToggleProps {
   label: string
   toggledOn: boolean
   disabled?: boolean
-  children?: React.ReactNode
+  children?: ReactNode
   onClick: () => unknown
   /** optional data test id for the container */
   'data-test'?: string

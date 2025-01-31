@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { beforeEach, describe, it, vi, afterEach, expect } from 'vitest'
 import { act, renderHook, screen } from '@testing-library/react'
 
@@ -12,7 +11,9 @@ import {
 } from '../RecoveryInProgress'
 import { RECOVERY_MAP } from '../constants'
 
-const render = (props: React.ComponentProps<typeof RecoveryInProgress>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof RecoveryInProgress>) => {
   return renderWithProviders(<RecoveryInProgress {...props} />, {
     i18nInstance: i18n,
   })[0]
@@ -28,7 +29,7 @@ describe('RecoveryInProgress', () => {
     ROBOT_SKIPPING_STEP,
     ROBOT_RELEASING_LABWARE,
   } = RECOVERY_MAP
-  let props: React.ComponentProps<typeof RecoveryInProgress>
+  let props: ComponentProps<typeof RecoveryInProgress>
 
   beforeEach(() => {
     props = {
@@ -39,10 +40,12 @@ describe('RecoveryInProgress', () => {
       },
       recoveryCommands: {
         releaseGripperJaws: vi.fn(() => Promise.resolve()),
+        homeExceptPlungers: vi.fn(() => Promise.resolve()),
       } as any,
       routeUpdateActions: {
         handleMotionRouting: vi.fn(() => Promise.resolve()),
         proceedNextStep: vi.fn(() => Promise.resolve()),
+        proceedToRouteAndStep: vi.fn(() => Promise.resolve()),
       } as any,
     }
   })
@@ -166,14 +169,12 @@ describe('useGripperRelease', () => {
     },
     recoveryCommands: {
       releaseGripperJaws: vi.fn().mockResolvedValue(undefined),
+      homeExceptPlungers: vi.fn().mockResolvedValue(undefined),
     },
     routeUpdateActions: {
-      proceedToRouteAndStep: vi.fn(),
-      proceedNextStep: vi.fn(),
-      handleMotionRouting: vi.fn(),
-      stashedMap: {
-        route: RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.ROUTE,
-      },
+      proceedToRouteAndStep: vi.fn().mockResolvedValue(undefined),
+      proceedNextStep: vi.fn().mockResolvedValue(undefined),
+      handleMotionRouting: vi.fn().mockResolvedValue(undefined),
     },
     currentRecoveryOptionUtils: {
       selectedRecoveryOption: RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.ROUTE,
@@ -183,6 +184,7 @@ describe('useGripperRelease', () => {
 
   beforeEach(() => {
     vi.useFakeTimers()
+    vi.clearAllMocks()
   })
 
   afterEach(() => {
@@ -207,118 +209,143 @@ describe('useGripperRelease', () => {
     expect(result.current).toBe(0)
   })
 
-  const IS_DOOR_OPEN = [false, true]
-
-  IS_DOOR_OPEN.forEach(doorStatus => {
-    it(`releases gripper jaws and proceeds to next step after countdown for ${RECOVERY_MAP.MANUAL_REPLACE_AND_RETRY.ROUTE} when the isDoorOpen is ${doorStatus}`, async () => {
-      renderHook(() =>
-        useGripperRelease({
+  describe('when door is closed', () => {
+    it.each([
+      {
+        recoveryOption: RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.ROUTE,
+        nextStep: RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.STEPS.MANUAL_MOVE,
+      },
+      {
+        recoveryOption: RECOVERY_MAP.MANUAL_REPLACE_AND_RETRY.ROUTE,
+        nextStep: RECOVERY_MAP.MANUAL_REPLACE_AND_RETRY.STEPS.MANUAL_REPLACE,
+      },
+    ])(
+      'executes the full sequence of commands for $recoveryOption',
+      async ({ recoveryOption, nextStep }) => {
+        const props = {
           ...mockProps,
-          doorStatusUtils: { isDoorOpen: doorStatus },
-        })
-      )
-
-      act(() => {
-        vi.advanceTimersByTime(GRIPPER_RELEASE_COUNTDOWN_S * 1000)
-      })
-
-      await vi.runAllTimersAsync()
-
-      expect(mockProps.recoveryCommands.releaseGripperJaws).toHaveBeenCalled()
-      expect(
-        mockProps.routeUpdateActions.handleMotionRouting
-      ).toHaveBeenCalledWith(false)
-      if (!doorStatus) {
-        expect(
-          mockProps.routeUpdateActions.proceedToRouteAndStep
-        ).toHaveBeenCalledWith(
-          RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.ROUTE,
-          RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.STEPS.MANUAL_MOVE
-        )
-      } else {
-        expect(
-          mockProps.routeUpdateActions.proceedToRouteAndStep
-        ).toHaveBeenCalledWith(
-          RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.ROUTE,
-          RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.STEPS.CLOSE_DOOR_GRIPPER_Z_HOME
-        )
-      }
-    })
-  })
-
-  IS_DOOR_OPEN.forEach(doorStatus => {
-    it(`releases gripper jaws and proceeds to next step after countdown for ${RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.ROUTE} when the isDoorOpen is ${doorStatus}`, async () => {
-      const modifiedProps = {
-        ...mockProps,
-        routeUpdateActions: {
-          ...mockProps.routeUpdateActions,
-          stashedMap: {
-            route: RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.ROUTE,
+          currentRecoveryOptionUtils: {
+            selectedRecoveryOption: recoveryOption,
           },
+          doorStatusUtils: { isDoorOpen: false },
+        }
+
+        renderHook(() => useGripperRelease(props))
+
+        act(() => {
+          vi.advanceTimersByTime(GRIPPER_RELEASE_COUNTDOWN_S * 1000)
+        })
+        await vi.runAllTimersAsync()
+
+        const {
+          releaseGripperJaws,
+          homeExceptPlungers,
+        } = props.recoveryCommands
+        const {
+          handleMotionRouting,
+          proceedToRouteAndStep,
+        } = props.routeUpdateActions
+
+        expect(releaseGripperJaws).toHaveBeenCalledTimes(1)
+        expect(handleMotionRouting).toHaveBeenNthCalledWith(1, true)
+        expect(homeExceptPlungers).toHaveBeenCalledTimes(1)
+        expect(handleMotionRouting).toHaveBeenNthCalledWith(2, false)
+        expect(proceedToRouteAndStep).toHaveBeenCalledWith(
+          recoveryOption,
+          nextStep
+        )
+      }
+    )
+
+    describe('when door is open', () => {
+      it.each([
+        {
+          recoveryOption: RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.ROUTE,
+          doorStep:
+            RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.STEPS.CLOSE_DOOR_GRIPPER_Z_HOME,
         },
+        {
+          recoveryOption: RECOVERY_MAP.MANUAL_REPLACE_AND_RETRY.ROUTE,
+          doorStep:
+            RECOVERY_MAP.MANUAL_REPLACE_AND_RETRY.STEPS
+              .CLOSE_DOOR_GRIPPER_Z_HOME,
+        },
+      ])(
+        'executes proceed to door step for $recoveryOption',
+        async ({ recoveryOption, doorStep }) => {
+          const props = {
+            ...mockProps,
+            currentRecoveryOptionUtils: {
+              selectedRecoveryOption: recoveryOption,
+            },
+            doorStatusUtils: { isDoorOpen: true },
+          }
+
+          const {
+            releaseGripperJaws,
+            homeExceptPlungers,
+          } = props.recoveryCommands
+          const {
+            handleMotionRouting,
+            proceedToRouteAndStep,
+          } = props.routeUpdateActions
+
+          renderHook(() => useGripperRelease(props))
+
+          act(() => {
+            vi.advanceTimersByTime(GRIPPER_RELEASE_COUNTDOWN_S * 1000)
+          })
+          await vi.runAllTimersAsync()
+
+          expect(releaseGripperJaws).toHaveBeenCalledTimes(1)
+          expect(handleMotionRouting).toHaveBeenNthCalledWith(1, false)
+          expect(homeExceptPlungers).not.toHaveBeenCalled()
+          expect(proceedToRouteAndStep).toHaveBeenCalledWith(
+            recoveryOption,
+            doorStep
+          )
+        }
+      )
+    })
+
+    it('falls back to option selection for unhandled routes when door is open', async () => {
+      const props = {
+        ...mockProps,
         currentRecoveryOptionUtils: {
-          selectedRecoveryOption: RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.ROUTE,
+          selectedRecoveryOption: 'UNHANDLED_ROUTE',
         },
+        doorStatusUtils: { isDoorOpen: true },
       }
 
-      renderHook(() =>
-        useGripperRelease({
-          ...modifiedProps,
-          doorStatusUtils: { isDoorOpen: doorStatus },
-        })
-      )
+      renderHook(() => useGripperRelease(props))
 
       act(() => {
         vi.advanceTimersByTime(GRIPPER_RELEASE_COUNTDOWN_S * 1000)
       })
-
       await vi.runAllTimersAsync()
 
-      expect(mockProps.recoveryCommands.releaseGripperJaws).toHaveBeenCalled()
       expect(
-        mockProps.routeUpdateActions.handleMotionRouting
-      ).toHaveBeenCalledWith(false)
-      if (!doorStatus) {
-        expect(
-          mockProps.routeUpdateActions.proceedToRouteAndStep
-        ).toHaveBeenCalledWith(
-          RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.ROUTE,
-          RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.STEPS.MANUAL_MOVE
-        )
-      } else {
-        expect(
-          mockProps.routeUpdateActions.proceedToRouteAndStep
-        ).toHaveBeenCalledWith(
-          RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.ROUTE,
-          RECOVERY_MAP.MANUAL_MOVE_AND_SKIP.STEPS.CLOSE_DOOR_GRIPPER_Z_HOME
-        )
-      }
+        props.routeUpdateActions.proceedToRouteAndStep
+      ).toHaveBeenCalledWith(RECOVERY_MAP.OPTION_SELECTION.ROUTE)
     })
-  })
 
-  it('calls proceedNextStep for unhandled routes', async () => {
-    const modifiedProps = {
-      ...mockProps,
-      routeUpdateActions: {
-        ...mockProps.routeUpdateActions,
-        stashedMap: {
-          route: 'UNHANDLED_ROUTE',
+    it('falls back to proceedNextStep for unhandled routes when door is closed', async () => {
+      const props = {
+        ...mockProps,
+        currentRecoveryOptionUtils: {
+          selectedRecoveryOption: 'UNHANDLED_ROUTE',
         },
-      },
-      currentRecoveryOptionUtils: {
-        selectedRecoveryOption: RECOVERY_MAP.MANUAL_FILL_AND_SKIP.ROUTE,
-      },
-      doorStatusUtils: { isDoorOpen: false },
-    }
+        doorStatusUtils: { isDoorOpen: false },
+      }
 
-    renderHook(() => useGripperRelease(modifiedProps))
+      renderHook(() => useGripperRelease(props))
 
-    act(() => {
-      vi.advanceTimersByTime(GRIPPER_RELEASE_COUNTDOWN_S * 1000)
+      act(() => {
+        vi.advanceTimersByTime(GRIPPER_RELEASE_COUNTDOWN_S * 1000)
+      })
+      await vi.runAllTimersAsync()
+
+      expect(props.routeUpdateActions.proceedNextStep).toHaveBeenCalled()
     })
-
-    await vi.runAllTimersAsync()
-
-    expect(modifiedProps.routeUpdateActions.proceedNextStep).toHaveBeenCalled()
   })
 })

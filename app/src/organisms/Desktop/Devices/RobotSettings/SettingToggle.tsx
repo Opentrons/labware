@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useDispatch } from 'react-redux'
 
 import {
@@ -13,6 +12,8 @@ import {
 
 import { ToggleButton } from '/app/atoms/buttons'
 import { updateSetting } from '/app/redux/robot-settings'
+
+import type { MouseEventHandler } from 'react'
 import type { Dispatch } from '/app/redux/types'
 import type { RobotSettingsField } from '/app/redux/robot-settings/types'
 
@@ -38,7 +39,7 @@ export function SettingToggle({
 
   if (id == null) return null
 
-  const handleClick: React.MouseEventHandler<Element> = () => {
+  const handleClick: MouseEventHandler<Element> = () => {
     dispatch(updateSetting(robotName, id, !value))
   }
 

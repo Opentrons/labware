@@ -84,6 +84,11 @@ describe('capitalizeFirstLetter', () => {
       'Move labware to D3 on top of Magnetic Block'
     )
   })
+
+  it('should capitalize the first letter of a step name and leave the rest unchanged', () => {
+    const moduleName = 'Heater-shaker'
+    expect(capitalizeFirstLetter(moduleName)).toBe('Heater-Shaker')
+  })
 })
 
 describe('getFormErrorsMappedToField', () => {
@@ -122,26 +127,16 @@ describe('getFormErrorsMappedToField', () => {
 })
 
 describe('getFormLevelError', () => {
-  it('shows form-level error at field when field is not focused and showAtField is true', () => {
-    const result = getFormLevelError(true, 'field1', MAPPED_ERRORS)
+  it('shows form-level error at field when showAtField is true', () => {
+    const result = getFormLevelError('field1', MAPPED_ERRORS)
     expect(result).toEqual('form level error title')
   })
 
-  it('shows no form-level error at field when field is focused and showAtField is true', () => {
-    const result = getFormLevelError(true, 'field1', MAPPED_ERRORS, 'field1')
-    expect(result).toBeNull()
-  })
-
-  it('shows no form-level error at field when field is not focused and showAtField is false', () => {
-    const result = getFormLevelError(
-      true,
-      'field1',
-      {
-        ...MAPPED_ERRORS,
-        field1: { ...MAPPED_ERRORS.field1, showAtField: false },
-      },
-      'field2'
-    )
+  it('shows no form-level error at field when showAtField is false', () => {
+    const result = getFormLevelError('field1', {
+      ...MAPPED_ERRORS,
+      field1: { ...MAPPED_ERRORS.field1, showAtField: false },
+    })
     expect(result).toBeNull()
   })
 })

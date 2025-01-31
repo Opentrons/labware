@@ -153,9 +153,7 @@ def get_most_recent_run_and_record(
         most_recent_run_id,
         storage_directory,
         "",
-        labware,
-        accuracy,
-        hellma_plate_standards=hellma_file_values,
+        hellma_file_values,
     )
     google_sheet_abr_data = google_sheets_tool.google_sheet(
         credentials_path, "ABR-run-data", tab_number=0

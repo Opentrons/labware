@@ -36,11 +36,11 @@ jobs:
     runs-on: 'windows-latest'
     steps:
       - name: Checkout opentrons repo
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
         with:
           fetch-depth: 0
       - name: Setup Node
-        uses: 'actions/setup-node@v3'
+        uses: 'actions/setup-node@v4'
         with:
           node-version: '12'
       - name: Setup Python
@@ -52,8 +52,6 @@ jobs:
         with:
           project: 'abr-testing'
       - name: lint
-        run:
-          make -C abr-testing lint
+        run: make -C abr-testing lint
       - name: test
-        run:
-          make -C abr-testing test
+        run: make -C abr-testing test

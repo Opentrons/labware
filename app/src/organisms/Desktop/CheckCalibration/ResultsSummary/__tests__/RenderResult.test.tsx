@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { it, describe, expect, beforeEach } from 'vitest'
 import { screen } from '@testing-library/react'
 
@@ -9,14 +8,16 @@ import { i18n } from '/app/i18n'
 
 import { RenderResult } from '../RenderResult'
 
-const render = (props: React.ComponentProps<typeof RenderResult>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof RenderResult>) => {
   return renderWithProviders(<RenderResult {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('RenderResult', () => {
-  let props: React.ComponentProps<typeof RenderResult>
+  let props: ComponentProps<typeof RenderResult>
 
   beforeEach(() => {
     props = {

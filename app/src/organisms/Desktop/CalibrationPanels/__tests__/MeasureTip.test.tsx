@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { vi, it, describe, expect } from 'vitest'
 
@@ -12,12 +11,12 @@ import * as Sessions from '/app/redux/sessions'
 
 import { MeasureTip } from '../MeasureTip'
 
+import type { ComponentProps } from 'react'
+
 describe('MeasureTip', () => {
   const mockSendCommands = vi.fn()
   const mockDeleteSession = vi.fn()
-  const render = (
-    props: Partial<React.ComponentProps<typeof MeasureTip>> = {}
-  ) => {
+  const render = (props: Partial<ComponentProps<typeof MeasureTip>> = {}) => {
     const {
       mount = 'left',
       isMulti = false,

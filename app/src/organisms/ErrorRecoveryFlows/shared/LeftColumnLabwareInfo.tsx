@@ -1,11 +1,11 @@
 import { InterventionContent } from '/app/molecules/InterventionModal/InterventionContent'
 
-import type * as React from 'react'
+import type { ComponentProps } from 'react'
 import type { RecoveryContentProps } from '../types'
 
 type LeftColumnLabwareInfoProps = RecoveryContentProps & {
   title: string
-  type: React.ComponentProps<typeof InterventionContent>['infoProps']['type']
+  type: ComponentProps<typeof InterventionContent>['infoProps']['type']
   /* Renders a warning InlineNotification if provided. */
   bannerText?: string
 }
@@ -24,7 +24,7 @@ export function LeftColumnLabwareInfo({
   } = failedLabwareUtils
   const { displayNameNewLoc, displayNameCurrentLoc } = failedLabwareLocations
 
-  const buildNewLocation = (): React.ComponentProps<
+  const buildNewLocation = (): ComponentProps<
     typeof InterventionContent
   >['infoProps']['newLocationProps'] =>
     displayNameNewLoc != null

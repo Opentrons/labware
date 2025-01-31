@@ -61,24 +61,18 @@ export function BatchEditMoveLiquidTools(
     const labwareId = propsForFields[labwareField]?.value
     return labwareId ? String(labwareId) : null
   }
-  const getWellOrderFieldValue = (
-    name: string
-  ): WellOrderOption | null | undefined => {
-    const val = propsForFields[name]?.value
-    if (val === 'l2r' || val === 'r2l' || val === 't2b' || val === 'b2t') {
-      return val
-    } else {
-      return null
-    }
-  }
 
   return (
-    <Flex flexDirection={DIRECTION_COLUMN} width="100%">
+    <Flex
+      flexDirection={DIRECTION_COLUMN}
+      width="100%"
+      gridGap={SPACING.spacing12}
+    >
       <Flex padding={SPACING.spacing16}>
         <Tabs tabs={[aspirateTab, dispenseTab]} />
       </Flex>
       <Divider marginY="0" />
-      <Flex padding={SPACING.spacing16} width="100%">
+      <Flex width="100%">
         <FlowRateField
           {...propsForFields[addFieldNamePrefix('flowRate')]}
           pipetteId={getPipetteIdForForm()}
@@ -96,12 +90,12 @@ export function BatchEditMoveLiquidTools(
         updateSecondWellOrder={
           propsForFields[addFieldNamePrefix('wellOrder_second')].updateValue
         }
-        firstValue={getWellOrderFieldValue(
-          addFieldNamePrefix('wellOrder_first')
-        )}
-        secondValue={getWellOrderFieldValue(
-          addFieldNamePrefix('wellOrder_second')
-        )}
+        firstValue={
+          (propsForFields.wellOrder_first?.value ?? 't2b') as WellOrderOption
+        }
+        secondValue={
+          (propsForFields.wellOrder_second?.value ?? 'l2r') as WellOrderOption
+        }
         firstName={addFieldNamePrefix('wellOrder_first')}
         secondName={addFieldNamePrefix('wellOrder_second')}
       />
@@ -119,7 +113,7 @@ export function BatchEditMoveLiquidTools(
       <Divider marginY="0" />
       <Flex
         flexDirection={DIRECTION_COLUMN}
-        padding={SPACING.spacing12}
+        padding={`0 ${SPACING.spacing16}`}
         gridGap={SPACING.spacing8}
       >
         <StyledText desktopStyle="bodyDefaultSemiBold">
@@ -227,6 +221,7 @@ export function BatchEditMoveLiquidTools(
                     path: propsForFields.path.value as any,
                     stepType: 'moveLiquid',
                   })}
+                  padding="0"
                 />
                 <FlowRateField
                   {...propsForFields.blowout_flowRate}
@@ -234,6 +229,7 @@ export function BatchEditMoveLiquidTools(
                   flowRateType="blowout"
                   volume={propsForFields.volume?.value ?? 0}
                   tiprack={propsForFields.tipRack.value}
+                  padding="0"
                 />
                 <BlowoutOffsetField
                   {...propsForFields.blowout_z_offset}

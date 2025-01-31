@@ -256,11 +256,11 @@ async def test_add_command_and_wait_for_interval(
     verify_calls: int,
 ) -> None:
     """Should add a command a wait for it to complete."""
-    load_command = pe_commands.HomeCreate.construct(
-        params=pe_commands.HomeParams.construct()
+    load_command = pe_commands.HomeCreate.model_construct(
+        params=pe_commands.HomeParams.model_construct()
     )
     added_command = pe_commands.Home(
-        params=pe_commands.HomeParams.construct(),
+        params=pe_commands.HomeParams.model_construct(),
         id="test-123",
         createdAt=datetime(year=2024, month=1, day=1),
         key="123",

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
 import { describe, it, vi, beforeEach, expect } from 'vitest'
@@ -6,16 +5,16 @@ import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { HowCalibrationWorksModal } from '..'
 
-const render = (
-  props: React.ComponentProps<typeof HowCalibrationWorksModal>
-) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof HowCalibrationWorksModal>) => {
   return renderWithProviders(<HowCalibrationWorksModal {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('HowCalibrationWorksModal', () => {
-  let props: React.ComponentProps<typeof HowCalibrationWorksModal>
+  let props: ComponentProps<typeof HowCalibrationWorksModal>
   beforeEach(() => {
     props = { onCloseClick: vi.fn() }
   })

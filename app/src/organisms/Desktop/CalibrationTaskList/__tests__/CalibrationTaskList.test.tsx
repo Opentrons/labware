@@ -82,7 +82,7 @@ describe('CalibrationTaskList', () => {
     rerender(
       <MemoryRouter>
         <CalibrationTaskList
-          robotName={'otie'}
+          robotName="otie"
           pipOffsetCalLauncher={mockPipOffsetCalLauncher}
           tipLengthCalLauncher={mockTipLengthCalLauncher}
           deckCalLauncher={mockDeckCalLauncher}
@@ -108,7 +108,7 @@ describe('CalibrationTaskList', () => {
     rerender(
       <MemoryRouter>
         <CalibrationTaskList
-          robotName={'otie'}
+          robotName="otie"
           pipOffsetCalLauncher={mockPipOffsetCalLauncher}
           tipLengthCalLauncher={mockTipLengthCalLauncher}
           deckCalLauncher={mockDeckCalLauncher}
@@ -133,7 +133,7 @@ describe('CalibrationTaskList', () => {
     rerender(
       <MemoryRouter>
         <CalibrationTaskList
-          robotName={'otie'}
+          robotName="otie"
           pipOffsetCalLauncher={mockPipOffsetCalLauncher}
           tipLengthCalLauncher={mockTipLengthCalLauncher}
           deckCalLauncher={mockDeckCalLauncher}
@@ -158,7 +158,7 @@ describe('CalibrationTaskList', () => {
     rerender(
       <MemoryRouter>
         <CalibrationTaskList
-          robotName={'otie'}
+          robotName="otie"
           pipOffsetCalLauncher={mockPipOffsetCalLauncher}
           tipLengthCalLauncher={mockTipLengthCalLauncher}
           deckCalLauncher={mockDeckCalLauncher}
@@ -182,7 +182,7 @@ describe('CalibrationTaskList', () => {
     rerender(
       <MemoryRouter>
         <CalibrationTaskList
-          robotName={'otie'}
+          robotName="otie"
           pipOffsetCalLauncher={mockPipOffsetCalLauncher}
           tipLengthCalLauncher={mockTipLengthCalLauncher}
           deckCalLauncher={mockDeckCalLauncher}
@@ -206,7 +206,7 @@ describe('CalibrationTaskList', () => {
     rerender(
       <MemoryRouter>
         <CalibrationTaskList
-          robotName={'otie'}
+          robotName="otie"
           pipOffsetCalLauncher={mockPipOffsetCalLauncher}
           tipLengthCalLauncher={mockTipLengthCalLauncher}
           deckCalLauncher={mockDeckCalLauncher}
@@ -228,7 +228,7 @@ describe('CalibrationTaskList', () => {
     rerender(
       <MemoryRouter>
         <CalibrationTaskList
-          robotName={'otie'}
+          robotName="otie"
           pipOffsetCalLauncher={mockPipOffsetCalLauncher}
           tipLengthCalLauncher={mockTipLengthCalLauncher}
           deckCalLauncher={mockDeckCalLauncher}
@@ -253,7 +253,7 @@ describe('CalibrationTaskList', () => {
     rerender(
       <MemoryRouter>
         <CalibrationTaskList
-          robotName={'otie'}
+          robotName="otie"
           pipOffsetCalLauncher={mockPipOffsetCalLauncher}
           tipLengthCalLauncher={mockTipLengthCalLauncher}
           deckCalLauncher={mockDeckCalLauncher}
@@ -281,7 +281,7 @@ describe('CalibrationTaskList', () => {
     rerender(
       <MemoryRouter>
         <CalibrationTaskList
-          robotName={'otie'}
+          robotName="otie"
           pipOffsetCalLauncher={mockPipOffsetCalLauncher}
           tipLengthCalLauncher={mockTipLengthCalLauncher}
           deckCalLauncher={mockDeckCalLauncher}

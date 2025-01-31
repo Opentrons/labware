@@ -68,7 +68,7 @@ The maximum supported API version for your robot is listed in the Opentrons App 
 
 If you upload a protocol that specifies a higher API level than the maximum supported, your robot won't be able to analyze or run your protocol. You can increase the maximum supported version by updating your robot software and Opentrons App. 
 
-Opentrons robots running the latest software (8.0.0) support the following version ranges: 
+Opentrons robots running the latest software (8.2.0) support the following version ranges: 
 
     * **Flex:** version 2.15–|apiLevel|.
     * **OT-2:** versions 2.0–|apiLevel|.
@@ -84,6 +84,8 @@ This table lists the correspondence between Protocol API versions and robot soft
 +-------------+------------------------------+
 | API Version | Introduced in Robot Software |
 +=============+==============================+
+|     2.21    |          8.2.0               |
++-------------+------------------------------+
 |     2.20    |          8.0.0               |
 +-------------+------------------------------+
 |     2.19    |          7.3.1               |
@@ -133,6 +135,12 @@ This table lists the correspondence between Protocol API versions and robot soft
 
 Changes in API Versions
 =======================
+
+Version 2.21
+------------
+- Adds :py:class:`.AbsorbanceReaderContext` to support the :ref:`Absorbance Plate Reader Module <absorbance-plate-reader-module>`. Use the load name ``absorbanceReaderV1`` with :py:meth:`.ProtocolContext.load_module` to add an Absorbance Plate Reader to a protocol.
+- :ref:`Liquid presence detection <lpd>` now only checks on the first aspiration of the :py:meth:`.mix` cycle.
+- Improved the run log output of :py:meth:`.ThermocyclerContext.execute_profile`.
 
 Version 2.20
 ------------

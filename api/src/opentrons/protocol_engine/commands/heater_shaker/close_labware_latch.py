@@ -69,7 +69,7 @@ class CloseLabwareLatch(
 
     commandType: CloseLabwareLatchCommandType = "heaterShaker/closeLabwareLatch"
     params: CloseLabwareLatchParams
-    result: Optional[CloseLabwareLatchResult]
+    result: Optional[CloseLabwareLatchResult] = None
 
     _ImplementationCls: Type[CloseLabwareLatchImpl] = CloseLabwareLatchImpl
 

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, beforeEach, expect } from 'vitest'
 import { renderWithProviders } from '../../../testing/utils'
 import { screen } from '@testing-library/react'
@@ -7,12 +6,14 @@ import { BORDERS, COLORS } from '../../../helix-design-system'
 
 import { DeckInfoLabel } from '..'
 
-const render = (props: React.ComponentProps<typeof DeckInfoLabel>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof DeckInfoLabel>) => {
   return renderWithProviders(<DeckInfoLabel {...props} />)
 }
 
 describe('DeckInfoLabel', () => {
-  let props: React.ComponentProps<typeof DeckInfoLabel>
+  let props: ComponentProps<typeof DeckInfoLabel>
 
   beforeEach(() => {
     props = {

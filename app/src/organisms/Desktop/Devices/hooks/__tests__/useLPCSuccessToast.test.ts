@@ -1,11 +1,10 @@
-import * as React from 'react'
+import { useContext } from 'react'
 import { vi, it, expect, describe } from 'vitest'
 import { renderHook } from '@testing-library/react'
 import { useLPCSuccessToast } from '..'
-import type * as ReactType from 'react'
 
 vi.mock('react', async importOriginal => {
-  const actualReact = await importOriginal<typeof ReactType>()
+  const actualReact = await importOriginal<typeof useContext>()
   return {
     ...actualReact,
     useContext: vi.fn(),
@@ -14,7 +13,7 @@ vi.mock('react', async importOriginal => {
 
 describe('useLPCSuccessToast', () => {
   it('return true when useContext returns true', () => {
-    vi.mocked(React.useContext).mockReturnValue({
+    vi.mocked(useContext).mockReturnValue({
       setIsShowingLPCSuccessToast: true,
     })
     const { result } = renderHook(() => useLPCSuccessToast())
@@ -23,7 +22,7 @@ describe('useLPCSuccessToast', () => {
     })
   })
   it('return false when useContext returns false', () => {
-    vi.mocked(React.useContext).mockReturnValue({
+    vi.mocked(useContext).mockReturnValue({
       setIsShowingLPCSuccessToast: false,
     })
     const { result } = renderHook(() => useLPCSuccessToast())

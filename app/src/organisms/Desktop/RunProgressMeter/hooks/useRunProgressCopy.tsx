@@ -4,7 +4,6 @@ import {
   RUN_STATUS_BLOCKED_BY_OPEN_DOOR,
   RUN_STATUS_IDLE,
 } from '@opentrons/api-client'
-import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { getCommandTextData } from '/app/local-resources/commands'
@@ -13,6 +12,7 @@ import { LegacyStyledText } from '@opentrons/components'
 import { CommandText } from '/app/molecules/Command'
 import { TERMINAL_RUN_STATUSES } from '../constants'
 
+import type { ReactNode } from 'react'
 import type { CommandDetail, RunStatus } from '@opentrons/api-client'
 import type {
   CompletedProtocolAnalysis,
@@ -21,7 +21,7 @@ import type {
 } from '@opentrons/shared-data'
 
 interface UseRunProgressResult {
-  currentStepContents: React.ReactNode
+  currentStepContents: ReactNode
   stepCountStr: string | null
   progressPercentage: number
 }

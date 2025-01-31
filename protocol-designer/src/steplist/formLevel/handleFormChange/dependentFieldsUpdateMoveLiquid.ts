@@ -248,7 +248,40 @@ const updatePatchOnPipetteChange = (
         'dispense_mix_volume',
         'disposalVolume_volume',
         'aspirate_mmFromBottom',
-        'dispense_mmFromBottom'
+        'dispense_mmFromBottom',
+        'nozzles',
+        'tipRack'
+      ),
+      aspirate_airGap_volume: airGapVolume,
+      dispense_airGap_volume: airGapVolume,
+    }
+  }
+
+  return patch
+}
+
+const updatePatchOnTiprackChange = (
+  patch: FormPatch,
+  rawForm: FormData,
+  pipetteEntities: PipetteEntities
+): FormPatch => {
+  if (fieldHasChanged(rawForm, patch, 'tipRack')) {
+    const pipette = patch.pipette
+    let airGapVolume: string | null = null
+
+    if (typeof pipette === 'string' && pipette in pipetteEntities) {
+      const minVolume = getMinPipetteVolume(pipetteEntities[pipette])
+      airGapVolume = minVolume.toString()
+    }
+
+    return {
+      ...patch,
+      ...getDefaultFields(
+        'aspirate_flowRate',
+        'dispense_flowRate',
+        'aspirate_mix_volume',
+        'dispense_mix_volume',
+        'disposalVolume_volume'
       ),
       aspirate_airGap_volume: airGapVolume,
       dispense_airGap_volume: airGapVolume,
@@ -395,6 +428,7 @@ const updatePatchDisposalVolumeFields = (
       ...patch,
       disposalVolume_checkbox: true,
       disposalVolume_volume: recommendedMinimumDisposalVol,
+      blowout_checkbox: false,
     }
   }
 
@@ -481,10 +515,10 @@ const updatePatchOnPipetteChannelChange = (
   const multiToSingle =
     (prevChannels === 8 || prevChannels === 96) && nextChannels === 1
 
+  const pipetteId: string = appliedPatch.pipette as string
+
   if (patch.pipette === null || singleToMulti) {
     // reset all well selection
-    // @ts-expect-error(sa, 2021-6-14): appliedPatch.pipette does not exist. Address in #3161
-    const pipetteId: string = appliedPatch.pipette
     update = {
       aspirate_wells: getDefaultWells({
         // @ts-expect-error(sa, 2021-6-14): appliedPatch.aspirate_labware does not exist. Address in #3161
@@ -510,20 +544,30 @@ const updatePatchOnPipetteChannelChange = (
     const sourceLabwareId: string = appliedPatch.aspirate_labware as string
     const destLabwareId: string = appliedPatch.dispense_labware as string
     const sourceLabware = labwareEntities[sourceLabwareId]
-    const sourceLabwareDef = sourceLabware.def
     const destLabware = labwareEntities[destLabwareId]
-    const destLabwareDef = destLabware.def
-    update = {
-      aspirate_wells: getAllWellsFromPrimaryWells(
-        appliedPatch.aspirate_wells as string[],
-        sourceLabwareDef,
-        channels as 8 | 96
-      ),
-      dispense_wells: getAllWellsFromPrimaryWells(
-        appliedPatch.dispense_wells as string[],
-        destLabwareDef,
-        channels as 8 | 96
-      ),
+
+    if (sourceLabwareId != null && destLabwareId != null) {
+      update = {
+        aspirate_wells: getAllWellsFromPrimaryWells(
+          appliedPatch.aspirate_wells as string[],
+          sourceLabware.def,
+          channels as 8 | 96
+        ),
+        dispense_wells:
+          destLabwareId.includes('trashBin') ||
+          destLabwareId.includes('wasteChute')
+            ? getDefaultWells({
+                labwareId: destLabwareId,
+                pipetteId,
+                labwareEntities,
+                pipetteEntities,
+              })
+            : getAllWellsFromPrimaryWells(
+                appliedPatch.dispense_wells as string[],
+                destLabware.def,
+                channels as 8 | 96
+              ),
+      }
     }
   }
 
@@ -535,13 +579,21 @@ function updatePatchOnWellRatioChange(
   rawForm: FormData
 ): FormPatch {
   const appliedPatch = { ...rawForm, ...patch }
+  const isDisposalLocation =
+    rawForm.dispense_labware?.includes('wasteChute') ||
+    rawForm.dispense_labware?.includes('trashBin') ||
+    rawForm.dispense_labware?.includes('movableTrash') ||
+    rawForm.dispense_labware?.includes('fixedTrash')
+
   const prevWellRatio = getWellRatio(
     rawForm.aspirate_wells as string[],
-    rawForm.dispense_wells as string[]
+    rawForm.dispense_wells as string[],
+    isDisposalLocation as boolean
   )
   const nextWellRatio = getWellRatio(
     appliedPatch.aspirate_wells as string[],
-    appliedPatch.dispense_wells as string[]
+    appliedPatch.dispense_wells as string[],
+    isDisposalLocation as boolean
   )
 
   if (nextWellRatio == null || prevWellRatio == null) {
@@ -621,6 +673,24 @@ export function updatePatchBlowoutFields(
 
   return patch
 }
+
+const updatePatchOnNozzleChange = (
+  patch: FormPatch,
+  rawForm: FormData,
+  pipetteEntities: PipetteEntities
+): FormPatch => {
+  if (
+    Object.values(pipetteEntities).find(pip => pip.spec.channels === 96) &&
+    fieldHasChanged(rawForm, patch, 'nozzles')
+  ) {
+    return {
+      ...patch,
+      ...getDefaultFields('aspirate_wells', 'dispense_wells'),
+    }
+  }
+  return patch
+}
+
 export function dependentFieldsUpdateMoveLiquid(
   originalPatch: FormPatch,
   rawForm: FormData, // raw = NOT hydrated
@@ -656,5 +726,9 @@ export function dependentFieldsUpdateMoveLiquid(
     chainPatch => updatePatchBlowoutFields(chainPatch, rawForm),
     chainPatch =>
       clampDispenseAirGapVolume(chainPatch, rawForm, pipetteEntities),
+    chainPatch =>
+      updatePatchOnTiprackChange(chainPatch, rawForm, pipetteEntities),
+    chainPatch =>
+      updatePatchOnNozzleChange(chainPatch, rawForm, pipetteEntities),
   ])
 }

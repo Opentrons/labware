@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useDispatch } from 'react-redux'
 import { useTranslation, Trans } from 'react-i18next'
 
@@ -13,9 +12,11 @@ import {
   TYPOGRAPHY,
   WRAP_REVERSE,
 } from '@opentrons/components'
-
-import type { Dispatch } from '/app/redux/types'
 import { analyzeProtocol } from '/app/redux/protocol-storage'
+
+import type { MouseEventHandler } from 'react'
+import type { Dispatch } from '/app/redux/types'
+
 interface ProtocolAnalysisStaleProps {
   protocolKey: string
 }
@@ -27,7 +28,7 @@ export function ProtocolAnalysisStale(
   const { t } = useTranslation(['protocol_list', 'shared'])
   const dispatch = useDispatch<Dispatch>()
 
-  const handleClickReanalyze: React.MouseEventHandler = e => {
+  const handleClickReanalyze: MouseEventHandler = e => {
     e.preventDefault()
     e.stopPropagation()
     dispatch(analyzeProtocol(protocolKey))

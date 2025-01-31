@@ -1,5 +1,6 @@
-import * as React from 'react'
+import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
+
 import {
   ALIGN_CENTER,
   BORDERS,
@@ -23,9 +24,11 @@ import type {
   RobotType,
 } from '@opentrons/shared-data'
 
+import type { Dispatch, SetStateAction } from 'react'
+
 interface SlotHoverProps {
   hover: string | null
-  setHover: React.Dispatch<React.SetStateAction<string | null>>
+  setHover: Dispatch<SetStateAction<string | null>>
   slotId: DeckSlotId
   slotPosition: CoordinateTuple | null
   robotType: RobotType
@@ -36,7 +39,7 @@ export function SlotHover(props: SlotHoverProps): JSX.Element | null {
   const { hover, setHover, slotId, slotPosition, robotType } = props
   const deckSetup = useSelector(getInitialDeckSetup)
   const { additionalEquipmentOnDeck, modules } = deckSetup
-  const deckDef = React.useMemo(() => getDeckDefFromRobotType(robotType), [])
+  const deckDef = useMemo(() => getDeckDefFromRobotType(robotType), [])
   const hasTCOnSlot = Object.values(modules).find(
     module => module.slot === slotId && module.type === THERMOCYCLER_MODULE_TYPE
   )

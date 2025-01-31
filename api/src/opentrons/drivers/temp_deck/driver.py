@@ -17,7 +17,7 @@ from enum import Enum
 from opentrons.drivers import utils
 from opentrons.drivers.types import Temperature
 from opentrons.drivers.command_builder import CommandBuilder
-from opentrons.drivers.asyncio.communication import SerialConnection
+from opentrons.drivers.asyncio.communication import SerialConnection, UnhandledGcode
 from opentrons.drivers.temp_deck.abstract import AbstractTempDeckDriver
 
 log = logging.getLogger(__name__)
@@ -31,6 +31,7 @@ class GCODE(str, Enum):
     GET_TEMP = "M105"
     SET_TEMP = "M104"
     DEVICE_INFO = "M115"
+    GET_RESET_REASON = "M114"
     DISENGAGE = "M18"
     PROGRAMMING_MODE = "dfu"
 
@@ -154,10 +155,19 @@ class TempDeckDriver(AbstractTempDeckDriver):
         Example input from Temp-Deck's serial response:
             "serial:aa11bb22 model:aa11bb22 version:aa11bb22"
         """
-        c = CommandBuilder(terminator=TEMP_DECK_COMMAND_TERMINATOR).add_gcode(
+        device_info = CommandBuilder(terminator=TEMP_DECK_COMMAND_TERMINATOR).add_gcode(
             gcode=GCODE.DEVICE_INFO
         )
-        response = await self._send_command(command=c)
+        response = await self._send_command(command=device_info)
+
+        reset_reason = CommandBuilder(
+            terminator=TEMP_DECK_COMMAND_TERMINATOR
+        ).add_gcode(gcode=GCODE.GET_RESET_REASON)
+        try:
+            await self._send_command(command=reset_reason)
+        except UnhandledGcode:
+            pass
+
         return utils.parse_device_information(device_info_string=response)
 
     async def enter_programming_mode(self) -> None:

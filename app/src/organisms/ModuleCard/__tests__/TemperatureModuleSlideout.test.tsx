@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -12,18 +11,18 @@ import {
 } from '/app/redux/modules/__fixtures__'
 import { TemperatureModuleSlideout } from '../TemperatureModuleSlideout'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('@opentrons/react-api-client')
 
-const render = (
-  props: React.ComponentProps<typeof TemperatureModuleSlideout>
-) => {
+const render = (props: ComponentProps<typeof TemperatureModuleSlideout>) => {
   return renderWithProviders(<TemperatureModuleSlideout {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('TemperatureModuleSlideout', () => {
-  let props: React.ComponentProps<typeof TemperatureModuleSlideout>
+  let props: ComponentProps<typeof TemperatureModuleSlideout>
   let mockCreateLiveCommand = vi.fn()
 
   beforeEach(() => {

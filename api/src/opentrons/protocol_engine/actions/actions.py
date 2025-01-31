@@ -27,7 +27,6 @@ from ..types import (
     ModuleDefinition,
     Liquid,
     DeckConfigurationType,
-    AddressableAreaLocation,
 )
 
 
@@ -235,12 +234,12 @@ class SetDeckConfigurationAction:
 class AddAddressableAreaAction:
     """Add a single addressable area to state.
 
-    This differs from the deck configuration in ProvideDeckConfigurationAction which
+    This differs from the deck configuration in SetDeckConfigurationAction which
     sends over a mapping of cutout fixtures. This action will only load one addressable
     area and that should be pre-validated before being sent via the action.
     """
 
-    addressable_area: AddressableAreaLocation
+    addressable_area_name: str
 
 
 @dataclasses.dataclass(frozen=True)

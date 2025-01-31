@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Trans, useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
@@ -36,6 +36,7 @@ import { OddModal } from '/app/molecules/OddModal'
 import { LongPressModal } from './LongPressModal'
 import { formatTimeWithUtcLabel } from '/app/resources/runs'
 
+import type { Dispatch, SetStateAction } from 'react'
 import type { UseLongPressResult } from '@opentrons/components'
 import type { ProtocolResource } from '@opentrons/shared-data'
 import type { OddModalHeaderBaseProps } from '/app/molecules/OddModal/types'
@@ -44,7 +45,7 @@ const REFETCH_INTERVAL = 5000
 
 export function QuickTransferCard(props: {
   quickTransfer: ProtocolResource
-  longPress: React.Dispatch<React.SetStateAction<boolean>>
+  longPress: Dispatch<SetStateAction<boolean>>
   setShowDeleteConfirmationModal: (showDeleteConfirmationModal: boolean) => void
   setTargetTransferId: (targetTransferId: string) => void
 }): JSX.Element {
@@ -55,11 +56,11 @@ export function QuickTransferCard(props: {
     setTargetTransferId,
   } = props
   const navigate = useNavigate()
-  const [showIcon, setShowIcon] = React.useState<boolean>(false)
+  const [showIcon, setShowIcon] = useState<boolean>(false)
   const [
     showFailedAnalysisModal,
     setShowFailedAnalysisModal,
-  ] = React.useState<boolean>(false)
+  ] = useState<boolean>(false)
   const { t, i18n } = useTranslation(['quick_transfer', 'branded'])
   const transferName =
     quickTransfer.metadata.protocolName ?? quickTransfer.files[0].name
@@ -113,7 +114,7 @@ export function QuickTransferCard(props: {
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (longpress.isLongPressed) {
       longPress(true)
       setTargetTransferId(quickTransfer.id)

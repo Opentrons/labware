@@ -51,7 +51,7 @@ export function FailedToConnect({
             name="ot-alert"
             size="3rem"
             color={COLORS.red50}
-            aria-label={'failed_to_connect_invalidPassword'}
+            aria-label="failed_to_connect_invalidPassword"
           />
           <Flex
             flexDirection={DIRECTION_COLUMN}
@@ -83,13 +83,13 @@ export function FailedToConnect({
       </Flex>
       <Flex gridGap={SPACING.spacing8}>
         <MediumButton
-          flex={'1'}
+          flex="1"
           buttonType="secondary"
           buttonText={t('change_network')}
           onClick={handleChangeNetwork}
         />
         <MediumButton
-          flex={'1'}
+          flex="1"
           buttonText={i18n.format(t('shared:try_again'), 'capitalize')}
           onClick={handleTryAgain}
         />

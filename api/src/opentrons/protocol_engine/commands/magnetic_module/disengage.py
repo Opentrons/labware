@@ -83,7 +83,7 @@ class Disengage(BaseCommand[DisengageParams, DisengageResult, ErrorOccurrence]):
 
     commandType: DisengageCommandType = "magneticModule/disengage"
     params: DisengageParams
-    result: Optional[DisengageResult]
+    result: Optional[DisengageResult] = None
 
     _ImplementationCls: Type[DisengageImplementation] = DisengageImplementation
 

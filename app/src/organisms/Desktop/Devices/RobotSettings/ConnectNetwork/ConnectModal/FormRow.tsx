@@ -1,12 +1,13 @@
 // presentational components for the wifi connect form
-import type * as React from 'react'
 import styled from 'styled-components'
 import { FONT_WEIGHT_SEMIBOLD, SPACING } from '@opentrons/components'
+
+import type { ReactNode } from 'react'
 
 export interface FormRowProps {
   label: string
   labelFor: string
-  children: React.ReactNode
+  children: ReactNode
 }
 
 const StyledRow = styled.div`

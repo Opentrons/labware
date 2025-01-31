@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import styled from 'styled-components'
 
 import {
@@ -21,6 +20,7 @@ import { ODD_FOCUS_VISIBLE } from '/app/atoms/buttons/constants'
 import { SmallButton } from '/app/atoms/buttons'
 import { InlineNotification } from '/app/atoms/InlineNotification'
 
+import type { ComponentProps, MouseEventHandler, ReactNode } from 'react'
 import type { IconName, StyleProps } from '@opentrons/components'
 import type { InlineNotificationProps } from '/app/atoms/InlineNotification'
 import type {
@@ -30,15 +30,15 @@ import type {
 
 interface ChildNavigationProps extends StyleProps {
   header: string
-  onClickBack?: React.MouseEventHandler
-  buttonText?: React.ReactNode
+  onClickBack?: MouseEventHandler
+  buttonText?: ReactNode
   inlineNotification?: InlineNotificationProps
-  onClickButton?: React.MouseEventHandler
+  onClickButton?: MouseEventHandler
   buttonType?: SmallButtonTypes
   buttonIsDisabled?: boolean
   iconName?: IconName
   iconPlacement?: IconPlacement
-  secondaryButtonProps?: React.ComponentProps<typeof SmallButton>
+  secondaryButtonProps?: ComponentProps<typeof SmallButton>
   ariaDisabled?: boolean
 }
 

@@ -1,8 +1,8 @@
 // mock portal for enzyme tests
-import type * as React from 'react'
+import type { ReactNode } from 'react'
 
 interface Props {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 // replace Portal with a pass-through React.Fragment

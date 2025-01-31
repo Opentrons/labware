@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { describe, it, beforeEach, expect, vi } from 'vitest'
@@ -27,6 +26,7 @@ import { UnMatchedModuleWarning } from '../UnMatchedModuleWarning'
 import { SetupModulesList } from '../SetupModulesList'
 import { LocationConflictModal } from '/app/organisms/LocationConflictModal'
 
+import type { ComponentProps } from 'react'
 import type { ModuleModel, ModuleType } from '@opentrons/shared-data'
 import type { DiscoveredRobot } from '/app/redux/discovery/types'
 
@@ -77,14 +77,14 @@ const mockCalibratedData = {
   last_modified: '2023-06-01T14:42:20.131798+00:00',
 }
 
-const render = (props: React.ComponentProps<typeof SetupModulesList>) => {
+const render = (props: ComponentProps<typeof SetupModulesList>) => {
   return renderWithProviders(<SetupModulesList {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('SetupModulesList', () => {
-  let props: React.ComponentProps<typeof SetupModulesList>
+  let props: ComponentProps<typeof SetupModulesList>
   let mockChainLiveCommands = vi.fn()
   beforeEach(() => {
     props = {

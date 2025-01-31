@@ -1,7 +1,7 @@
 """Basic addressable area data state and store."""
 from dataclasses import dataclass
 from functools import cached_property
-from typing import Dict, List, Optional, Set, Union
+from typing import Dict, List, Optional, Set
 
 from opentrons_shared_data.robot.types import RobotType, RobotDefinition
 from opentrons_shared_data.deck.types import (
@@ -12,14 +12,6 @@ from opentrons_shared_data.deck.types import (
 
 from opentrons.types import Point, DeckSlotName
 
-from ..commands import (
-    Command,
-    LoadLabwareResult,
-    LoadModuleResult,
-    MoveLabwareResult,
-    MoveToAddressableAreaResult,
-    MoveToAddressableAreaForDropTipResult,
-)
 from ..errors import (
     IncompatibleAddressableAreaError,
     AreaNotInDeckConfigurationError,
@@ -29,19 +21,18 @@ from ..errors import (
 )
 from ..resources import deck_configuration_provider
 from ..types import (
-    DeckSlotLocation,
-    AddressableAreaLocation,
     AddressableArea,
     PotentialCutoutFixture,
     DeckConfigurationType,
     Dimensions,
 )
+from ..actions.get_state_update import get_state_updates
 from ..actions import (
     Action,
-    SucceedCommandAction,
     SetDeckConfigurationAction,
     AddAddressableAreaAction,
 )
+from . import update_types
 from .config import Config
 from ._abstract_store import HasState, HandlesActions
 
@@ -193,10 +184,14 @@ class AddressableAreaStore(HasState[AddressableAreaState], HandlesActions):
 
     def handle_action(self, action: Action) -> None:
         """Modify state in reaction to an action."""
-        if isinstance(action, SucceedCommandAction):
-            self._handle_command(action.command)
-        elif isinstance(action, AddAddressableAreaAction):
-            self._check_location_is_addressable_area(action.addressable_area)
+        for state_update in get_state_updates(action):
+            if state_update.addressable_area_used != update_types.NO_CHANGE:
+                self._add_addressable_area(
+                    state_update.addressable_area_used.addressable_area_name
+                )
+
+        if isinstance(action, AddAddressableAreaAction):
+            self._add_addressable_area(action.addressable_area_name)
         elif isinstance(action, SetDeckConfigurationAction):
             current_state = self._state
             if (
@@ -210,28 +205,6 @@ class AddressableAreaStore(HasState[AddressableAreaState], HandlesActions):
                         deck_definition=current_state.deck_definition,
                     )
                 )
-
-    def _handle_command(self, command: Command) -> None:
-        """Modify state in reaction to a command."""
-        if isinstance(command.result, LoadLabwareResult):
-            location = command.params.location
-            if isinstance(location, (DeckSlotLocation, AddressableAreaLocation)):
-                self._check_location_is_addressable_area(location)
-
-        elif isinstance(command.result, MoveLabwareResult):
-            location = command.params.newLocation
-            if isinstance(location, (DeckSlotLocation, AddressableAreaLocation)):
-                self._check_location_is_addressable_area(location)
-
-        elif isinstance(command.result, LoadModuleResult):
-            self._check_location_is_addressable_area(command.params.location)
-
-        elif isinstance(
-            command.result,
-            (MoveToAddressableAreaResult, MoveToAddressableAreaForDropTipResult),
-        ):
-            addressable_area_name = command.params.addressableAreaName
-            self._check_location_is_addressable_area(addressable_area_name)
 
     @staticmethod
     def _get_addressable_areas_from_deck_configuration(
@@ -260,16 +233,7 @@ class AddressableAreaStore(HasState[AddressableAreaState], HandlesActions):
                 )
         return {area.area_name: area for area in addressable_areas}
 
-    def _check_location_is_addressable_area(
-        self, location: Union[DeckSlotLocation, AddressableAreaLocation, str]
-    ) -> None:
-        if isinstance(location, DeckSlotLocation):
-            addressable_area_name = location.slotName.id
-        elif isinstance(location, AddressableAreaLocation):
-            addressable_area_name = location.addressableAreaName
-        else:
-            addressable_area_name = location
-
+    def _add_addressable_area(self, addressable_area_name: str) -> None:
         if addressable_area_name not in self._state.loaded_addressable_areas_by_name:
             cutout_id = self._validate_addressable_area_for_simulation(
                 addressable_area_name
@@ -323,7 +287,7 @@ class AddressableAreaStore(HasState[AddressableAreaState], HandlesActions):
         return cutout_id
 
 
-class AddressableAreaView(HasState[AddressableAreaState]):
+class AddressableAreaView:
     """Read-only addressable area state view."""
 
     _state: AddressableAreaState
@@ -345,8 +309,8 @@ class AddressableAreaView(HasState[AddressableAreaState]):
     @cached_property
     def mount_offsets(self) -> Dict[str, Point]:
         """The left and right mount offsets of the robot."""
-        left_offset = self.state.robot_definition["mountOffsets"]["left"]
-        right_offset = self.state.robot_definition["mountOffsets"]["right"]
+        left_offset = self._state.robot_definition["mountOffsets"]["left"]
+        right_offset = self._state.robot_definition["mountOffsets"]["right"]
         return {
             "left": Point(x=left_offset[0], y=left_offset[1], z=left_offset[2]),
             "right": Point(x=right_offset[0], y=right_offset[1], z=right_offset[2]),
@@ -355,10 +319,10 @@ class AddressableAreaView(HasState[AddressableAreaState]):
     @cached_property
     def padding_offsets(self) -> Dict[str, float]:
         """The padding offsets to be applied to the deck extents of the robot."""
-        rear_offset = self.state.robot_definition["paddingOffsets"]["rear"]
-        front_offset = self.state.robot_definition["paddingOffsets"]["front"]
-        left_side_offset = self.state.robot_definition["paddingOffsets"]["leftSide"]
-        right_side_offset = self.state.robot_definition["paddingOffsets"]["rightSide"]
+        rear_offset = self._state.robot_definition["paddingOffsets"]["rear"]
+        front_offset = self._state.robot_definition["paddingOffsets"]["front"]
+        left_side_offset = self._state.robot_definition["paddingOffsets"]["leftSide"]
+        right_side_offset = self._state.robot_definition["paddingOffsets"]["rightSide"]
         return {
             "rear": rear_offset,
             "front": front_offset,
@@ -420,12 +384,12 @@ class AddressableAreaView(HasState[AddressableAreaState]):
                     _get_conflicting_addressable_areas_error_string(
                         self._state.potential_cutout_fixtures_by_cutout_id[cutout_id],
                         self._state.loaded_addressable_areas_by_name,
-                        self.state.deck_definition,
+                        self._state.deck_definition,
                     )
                 )
                 area_display_name = (
                     deck_configuration_provider.get_addressable_area_display_name(
-                        area_name, self.state.deck_definition
+                        area_name, self._state.deck_definition
                     )
                 )
                 raise IncompatibleAddressableAreaError(
@@ -504,7 +468,7 @@ class AddressableAreaView(HasState[AddressableAreaState]):
         addressable_area_name: str,
     ) -> Point:
         """Get the offset form cutout fixture of an addressable area."""
-        for addressable_area in self.state.deck_definition["locations"][
+        for addressable_area in self._state.deck_definition["locations"][
             "addressableAreas"
         ]:
             if addressable_area["id"] == addressable_area_name:
@@ -568,7 +532,7 @@ class AddressableAreaView(HasState[AddressableAreaState]):
         self, slot_name: DeckSlotName
     ) -> Optional[CutoutFixture]:
         """Get the Cutout Fixture currently loaded where a specific Deck Slot would be."""
-        deck_config = self.state.deck_configuration
+        deck_config = self._state.deck_configuration
         if deck_config:
             slot_cutout_id = DECK_SLOT_TO_CUTOUT_MAP[slot_name]
             slot_cutout_fixture = None
@@ -581,7 +545,7 @@ class AddressableAreaView(HasState[AddressableAreaState]):
                 if cutout_id == slot_cutout_id:
                     slot_cutout_fixture = (
                         deck_configuration_provider.get_cutout_fixture(
-                            cutout_fixture_id, self.state.deck_definition
+                            cutout_fixture_id, self._state.deck_definition
                         )
                     )
                     return slot_cutout_fixture
@@ -605,7 +569,7 @@ class AddressableAreaView(HasState[AddressableAreaState]):
         self, slot_name: DeckSlotName
     ) -> Optional[str]:
         """Get the serial number provided by the deck configuration for a Fixture at a given location."""
-        deck_config = self.state.deck_configuration
+        deck_config = self._state.deck_configuration
         if deck_config:
             slot_cutout_id = DECK_SLOT_TO_CUTOUT_MAP[slot_name]
             # This will only ever be one under current assumptions

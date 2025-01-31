@@ -18,7 +18,7 @@ import {
   InputField,
 } from '@opentrons/components'
 import { capitalizeFirstLetter } from '../../pages/Designer/ProtocolSteps/StepForm/utils'
-import { getTopPortalEl } from '../../components/portals/TopPortal'
+import { getMainPagePortalEl } from '../Portal'
 import { renameStep } from '../../labware-ingred/actions'
 import type { FormData } from '../../form-types'
 
@@ -53,6 +53,7 @@ export function RenameStepModal(props: RenameStepModalProps): JSX.Element {
 
   return createPortal(
     <Modal
+      marginLeft="0"
       title={t('shared:name_step')}
       type="info"
       closeOnOutsideClick
@@ -114,7 +115,7 @@ export function RenameStepModal(props: RenameStepModalProps): JSX.Element {
         </Flex>
       </form>
     </Modal>,
-    getTopPortalEl()
+    getMainPagePortalEl()
   )
 }
 

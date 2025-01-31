@@ -4,6 +4,7 @@
   "discriminator": {
     "propertyName": "commandType",
     "mapping": {
+      "airGapInPlace": "#/definitions/AirGapInPlaceCreate",
       "aspirate": "#/definitions/AspirateCreate",
       "aspirateInPlace": "#/definitions/AspirateInPlaceCreate",
       "comment": "#/definitions/CommentCreate",
@@ -81,6 +82,9 @@
     }
   },
   "oneOf": [
+    {
+      "$ref": "#/definitions/AirGapInPlaceCreate"
+    },
     {
       "$ref": "#/definitions/AspirateCreate"
     },
@@ -302,6 +306,67 @@
     }
   ],
   "definitions": {
+    "AirGapInPlaceParams": {
+      "title": "AirGapInPlaceParams",
+      "description": "Payload required to air gap in place.",
+      "type": "object",
+      "properties": {
+        "flowRate": {
+          "title": "Flowrate",
+          "description": "Speed in \u00b5L/s configured for the pipette",
+          "exclusiveMinimum": 0,
+          "type": "number"
+        },
+        "volume": {
+          "title": "Volume",
+          "description": "The amount of liquid to aspirate, in \u00b5L. Must not be greater than the remaining available amount, which depends on the pipette (see `loadPipette`), its configuration (see `configureForVolume`), the tip (see `pickUpTip`), and the amount you've aspirated so far. There is some tolerance for floating point rounding errors.",
+          "minimum": 0,
+          "type": "number"
+        },
+        "pipetteId": {
+          "title": "Pipetteid",
+          "description": "Identifier of pipette to use for liquid handling.",
+          "type": "string"
+        }
+      },
+      "required": ["flowRate", "volume", "pipetteId"]
+    },
+    "CommandIntent": {
+      "title": "CommandIntent",
+      "description": "Run intent for a given command.\n\nProps:\n    PROTOCOL: the command is part of the protocol run itself.\n    SETUP: the command is part of the setup phase of a run.",
+      "enum": ["protocol", "setup", "fixit"],
+      "type": "string"
+    },
+    "AirGapInPlaceCreate": {
+      "title": "AirGapInPlaceCreate",
+      "description": "AirGapInPlace command request model.",
+      "type": "object",
+      "properties": {
+        "commandType": {
+          "title": "Commandtype",
+          "default": "airGapInPlace",
+          "enum": ["airGapInPlace"],
+          "type": "string"
+        },
+        "params": {
+          "$ref": "#/definitions/AirGapInPlaceParams"
+        },
+        "intent": {
+          "description": "The reason the command was added. If not specified or `protocol`, the command will be treated as part of the protocol run itself, and added to the end of the existing command queue.\n\nIf `setup`, the command will be treated as part of run setup. A setup command may only be enqueued if the run has not started.\n\nUse setup commands for activities like pre-run calibration checks and module setup, like pre-heating.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CommandIntent"
+            }
+          ]
+        },
+        "key": {
+          "title": "Key",
+          "description": "A key value, unique in this run, that can be used to track the same logical command across multiple runs of the same protocol. If a value is not provided, one will be generated.",
+          "type": "string"
+        }
+      },
+      "required": ["params"]
+    },
     "WellOrigin": {
       "title": "WellOrigin",
       "description": "Origin of WellLocation offset.\n\nProps:\n    TOP: the top-center of the well\n    BOTTOM: the bottom-center of the well\n    CENTER: the middle-center of the well\n    MENISCUS: the meniscus-center of the well",
@@ -405,12 +470,6 @@
         }
       },
       "required": ["labwareId", "wellName", "flowRate", "volume", "pipetteId"]
-    },
-    "CommandIntent": {
-      "title": "CommandIntent",
-      "description": "Run intent for a given command.\n\nProps:\n    PROTOCOL: the command is part of the protocol run itself.\n    SETUP: the command is part of the setup phase of a run.",
-      "enum": ["protocol", "setup", "fixit"],
-      "type": "string"
     },
     "AspirateCreate": {
       "title": "AspirateCreate",
@@ -1562,8 +1621,16 @@
       "properties": {
         "liquidId": {
           "title": "Liquidid",
-          "description": "Unique identifier of the liquid to load.",
-          "type": "string"
+          "description": "Unique identifier of the liquid to load. If this is the sentinel value EMPTY, all values of volumeByWell must be 0.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "enum": ["EMPTY"],
+              "type": "string"
+            }
+          ]
         },
         "labwareId": {
           "title": "Labwareid",
@@ -1572,7 +1639,7 @@
         },
         "volumeByWell": {
           "title": "Volumebywell",
-          "description": "Volume of liquid, in \u00b5L, loaded into each well by name, in this labware.",
+          "description": "Volume of liquid, in \u00b5L, loaded into each well by name, in this labware. If the liquid id is the sentinel value EMPTY, all volumes must be 0.",
           "type": "object",
           "additionalProperties": {
             "type": "number"
@@ -1707,7 +1774,9 @@
         "p1000_single_gen2",
         "p1000_single_flex",
         "p1000_multi_flex",
-        "p1000_96"
+        "p1000_multi_em_flex",
+        "p1000_96",
+        "p200_96"
       ],
       "type": "string"
     },

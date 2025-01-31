@@ -1,7 +1,8 @@
-import * as React from 'react'
+import { Fragment, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
+import uuidv1 from 'uuid/v4'
 
 import {
   BORDERS,
@@ -14,9 +15,12 @@ import {
 } from '@opentrons/components'
 
 import { LANGUAGES } from '/app/i18n'
+import { ANALYTICS_LANGUAGE_UPDATED_ODD_SETTINGS } from '/app/redux/analytics'
+import { useTrackEventWithRobotSerial } from '/app/redux-resources/analytics'
 import { ChildNavigation } from '/app/organisms/ODD/ChildNavigation'
 import { getAppLanguage, updateConfigValue } from '/app/redux/config'
 
+import type { ChangeEvent } from 'react'
 import type { Dispatch } from '/app/redux/types'
 import type { SetSettingOption } from './types'
 
@@ -41,16 +45,31 @@ interface LanguageSettingProps {
   setCurrentOption: SetSettingOption
 }
 
+const uuid: () => string = uuidv1
+
 export function LanguageSetting({
   setCurrentOption,
 }: LanguageSettingProps): JSX.Element {
   const { t } = useTranslation('app_settings')
   const dispatch = useDispatch<Dispatch>()
+  const { trackEventWithRobotSerial } = useTrackEventWithRobotSerial()
+
+  let transactionId = ''
+  useEffect(() => {
+    transactionId = uuid()
+  }, [])
 
   const appLanguage = useSelector(getAppLanguage)
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     dispatch(updateConfigValue('language.appLanguage', event.target.value))
+    trackEventWithRobotSerial({
+      name: ANALYTICS_LANGUAGE_UPDATED_ODD_SETTINGS,
+      properties: {
+        language: event.target.value,
+        transactionId,
+      },
+    })
   }
 
   return (
@@ -68,7 +87,7 @@ export function LanguageSetting({
         padding={`${SPACING.spacing16} ${SPACING.spacing40} ${SPACING.spacing40} ${SPACING.spacing40}`}
       >
         {LANGUAGES.map(lng => (
-          <React.Fragment key={`language_setting_${lng.name}`}>
+          <Fragment key={`language_setting_${lng.name}`}>
             <SettingButton
               id={lng.name}
               type="radio"
@@ -84,7 +103,7 @@ export function LanguageSetting({
                 {lng.name}
               </StyledText>
             </SettingButtonLabel>
-          </React.Fragment>
+          </Fragment>
         ))}
       </Flex>
     </Flex>

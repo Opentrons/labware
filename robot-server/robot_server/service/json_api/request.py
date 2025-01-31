@@ -1,12 +1,11 @@
 from typing import Generic, TypeVar
-from pydantic import Field
-from pydantic.generics import GenericModel
+from pydantic import BaseModel, Field
 
 
 RequestDataT = TypeVar("RequestDataT")
 
 
-class RequestModel(GenericModel, Generic[RequestDataT]):
+class RequestModel(BaseModel, Generic[RequestDataT]):
     """ """
 
     data: RequestDataT = Field(..., description="the document’s 'primary data'")

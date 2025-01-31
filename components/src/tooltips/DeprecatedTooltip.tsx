@@ -1,19 +1,25 @@
-import type * as React from 'react'
 import { Manager, Reference, Popper } from 'react-popper'
 import cx from 'classnames'
 import styles from './tooltips.module.css'
 
+import type {
+  ComponentProps,
+  ComponentType,
+  PropsWithRef,
+  ReactNode,
+} from 'react'
+
 const DISTANCE_FROM_REFERENCE = 8
 
-type PopperProps = React.ComponentProps<typeof Popper>
+type PopperProps = ComponentProps<typeof Popper>
 
 export interface DeprecatedTooltipProps {
   /** show or hide the tooltip */
   open?: boolean
   /** contents of the tooltip */
-  tooltipComponent: React.ReactNode
+  tooltipComponent: ReactNode
   /** optional portal to place the tooltipComponent inside */
-  portal?: React.ComponentType<any>
+  portal?: ComponentType<any>
   /** <https://github.com/FezVrasta/react-popper#placement> */
   placement?: PopperProps['placement']
   /** <https://github.com/FezVrasta/react-popper#positionfixed> */
@@ -21,9 +27,9 @@ export interface DeprecatedTooltipProps {
   /** <https://github.com/FezVrasta/react-popper#modifiers> */
   modifiers?: PopperProps['modifiers']
   /** render function for tooltip'd component */
-  children: (props?: React.PropsWithRef<any>) => JSX.Element | null
+  children: (props?: PropsWithRef<any>) => JSX.Element | null
   /** extra props to pass to the children render function */
-  childProps?: React.PropsWithRef<any>
+  childProps?: PropsWithRef<any>
 }
 
 /**

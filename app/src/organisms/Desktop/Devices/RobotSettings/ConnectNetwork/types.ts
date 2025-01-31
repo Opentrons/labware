@@ -1,3 +1,4 @@
+import type { ChangeEventHandler, FocusEventHandler } from 'react'
 import type { FieldError } from 'react-hook-form'
 import type {
   WifiNetwork,
@@ -80,8 +81,8 @@ export type ConnectFormField =
 export type ConnectFormFieldProps = Readonly<{
   value: string | null
   error: string | null
-  onChange: React.ChangeEventHandler
-  onBlur: React.FocusEventHandler
+  onChange: ChangeEventHandler
+  onBlur: FocusEventHandler
   setValue: (value: string) => unknown
   setTouched: (touched: boolean) => unknown
 }>

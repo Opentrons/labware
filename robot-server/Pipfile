@@ -22,7 +22,7 @@ pytest-xdist = "~=2.5.0"
 requests = "==2.27.1"
 graphviz = "==0.19"
 mock = "~=5.0.1"
-mypy = "==1.8.0"
+mypy = "==1.11.0"
 flake8 = "==7.0.0"
 flake8-annotations = "~=3.0.1"
 flake8-docstrings = "~=1.7.0"
@@ -37,18 +37,14 @@ sqlalchemy2-stubs = "==0.0.2a21"
 python-box = "==6.1.0"
 types-paho-mqtt = "==1.6.0.20240106"
 pyusb = "==1.2.1"
-performance-metrics = {file = "../performance-metrics", editable = true}
 
 [packages]
 anyio = "==3.7.1"
 aiohttp = "==3.8.1"
-# fastapi >=0.100.0 is intended for use with pydantic 2.x, and while it theoretically is
-# backwards compatible, best to be sure
-fastapi = "==0.99.1"
+fastapi = "==0.100.0"
 python-dotenv = "==1.0.1"
 python-multipart = "==0.0.6"
-# pydantic 2.x has many breaking api changes
-pydantic = "==1.10.12"
+pydantic = "==2.9.0"
 typing-extensions = ">=4.0.0,<5"
 uvicorn = "==0.27.0.post1"
 wsproto = "==1.2.0"
@@ -63,4 +59,10 @@ opentrons-hardware = {editable = true, path='../hardware', extras=['FLEX']}
 opentrons = { editable = true, path = "../api"}
 opentrons-shared-data = { editable = true, path = "../shared-data/python" }
 server-utils = {editable = true, path = "./../server-utils"}
+performance-metrics = {editable = true, path = "../performance-metrics" }
 robot-server = { editable = true, path = "."}
+pydantic-settings = "==2.4.0"
+# this is a dependency of jsonschema (which requires just >0.7.0).
+# versions above 0.18.1 require a version of triomphe that requires a version of
+# rust too new for openembedded
+rpds-py = "==0.18.1"

@@ -1,0 +1,19 @@
+ARG BASE_IMAGE_NAME=opentrons-python-base:3.10
+
+FROM ${BASE_IMAGE_NAME}
+
+# Set the working directory in the container
+WORKDIR /opentrons
+
+# Copy everything from the build context into the /opentrons directory
+# root directory .dockerignore file is respected
+COPY . /opentrons
+
+# Install required packages from the copied code
+RUN python -m pip install -U ./shared-data/python
+RUN python -m pip install -U ./hardware[flex]
+RUN python -m pip install -U ./api
+RUN python -m pip install -U pandas==1.4.3
+
+# The default command to keep the container running
+CMD ["tail", "-f", "/dev/null"]

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
 import { describe, it, expect, beforeEach } from 'vitest'
@@ -7,7 +6,9 @@ import { SPACING, COLORS, TYPOGRAPHY, BORDERS } from '@opentrons/components'
 import { renderWithProviders } from '/app/__testing-utils__'
 import { NavTab } from '..'
 
-const render = (props: React.ComponentProps<typeof NavTab>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof NavTab>) => {
   return renderWithProviders(
     <MemoryRouter>
       <NavTab {...props} />
@@ -16,7 +17,7 @@ const render = (props: React.ComponentProps<typeof NavTab>) => {
 }
 
 describe('NavTab', () => {
-  let props: React.ComponentProps<typeof NavTab>
+  let props: ComponentProps<typeof NavTab>
 
   beforeEach(() => {
     props = {

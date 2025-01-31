@@ -112,7 +112,7 @@ export function ConfirmCancelRunModal({
         setShowConfirmCancelRunModal(false)
       }}
     >
-      <Flex flexDirection={DIRECTION_COLUMN}>
+      <Flex flexDirection={DIRECTION_COLUMN} width="100%">
         <Flex
           flexDirection={DIRECTION_COLUMN}
           gridGap={SPACING.spacing12}

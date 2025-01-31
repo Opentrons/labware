@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, beforeEach, vi, expect } from 'vitest'
 
@@ -6,12 +5,14 @@ import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { DeckFixtureSetupInstructionsModal } from '../DeckFixtureSetupInstructionsModal'
 
+import type { ComponentProps } from 'react'
+
 const mockFunc = vi.fn()
 const PNG_FILE_NAME =
   '/app/src/assets/images/on-device-display/deck_fixture_setup_qrcode.png'
 
 const render = (
-  props: React.ComponentProps<typeof DeckFixtureSetupInstructionsModal>
+  props: ComponentProps<typeof DeckFixtureSetupInstructionsModal>
 ) => {
   return renderWithProviders(<DeckFixtureSetupInstructionsModal {...props} />, {
     i18nInstance: i18n,
@@ -19,7 +20,7 @@ const render = (
 }
 
 describe('Touchscreen DeckFixtureSetupInstructionsModal', () => {
-  let props: React.ComponentProps<typeof DeckFixtureSetupInstructionsModal>
+  let props: ComponentProps<typeof DeckFixtureSetupInstructionsModal>
 
   beforeEach(() => {
     props = {
@@ -49,7 +50,7 @@ describe('Touchscreen DeckFixtureSetupInstructionsModal', () => {
 })
 
 describe('Desktop DeckFixtureSetupInstructionsModal', () => {
-  let props: React.ComponentProps<typeof DeckFixtureSetupInstructionsModal>
+  let props: ComponentProps<typeof DeckFixtureSetupInstructionsModal>
 
   beforeEach(() => {
     props = {

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
@@ -36,6 +36,7 @@ import {
   openCustomLabwareDirectory,
 } from '/app/redux/custom-labware'
 
+import type { MouseEventHandler } from 'react'
 import type { Dispatch } from '/app/redux/types'
 
 const LABWARE_CREATOR_HREF = 'https://labware.opentrons.com/create/'
@@ -51,7 +52,7 @@ export function CustomLabwareOverflowMenu(
   const { filename, onDelete } = props
   const { t } = useTranslation(['labware_landing', 'shared'])
   const dispatch = useDispatch<Dispatch>()
-  const [showOverflowMenu, setShowOverflowMenu] = React.useState<boolean>(false)
+  const [showOverflowMenu, setShowOverflowMenu] = useState<boolean>(false)
   const overflowMenuRef = useOnClickOutside<HTMLDivElement>({
     onClickOutside: () => {
       setShowOverflowMenu(false)
@@ -67,24 +68,24 @@ export function CustomLabwareOverflowMenu(
     dispatch(deleteCustomLabwareFile(filename))
     onDelete?.()
   }, true)
-  const handleOpenInFolder: React.MouseEventHandler<HTMLButtonElement> = e => {
+  const handleOpenInFolder: MouseEventHandler<HTMLButtonElement> = e => {
     e.preventDefault()
     e.stopPropagation()
     setShowOverflowMenu(false)
     dispatch(openCustomLabwareDirectory())
   }
-  const handleClickDelete: React.MouseEventHandler<HTMLButtonElement> = e => {
+  const handleClickDelete: MouseEventHandler<HTMLButtonElement> = e => {
     e.preventDefault()
     e.stopPropagation()
     setShowOverflowMenu(false)
     confirmDeleteLabware()
   }
-  const handleOverflowClick: React.MouseEventHandler<HTMLButtonElement> = e => {
+  const handleOverflowClick: MouseEventHandler<HTMLButtonElement> = e => {
     e.preventDefault()
     e.stopPropagation()
     setShowOverflowMenu(currentShowOverflowMenu => !currentShowOverflowMenu)
   }
-  const handleClickLabwareCreator: React.MouseEventHandler<HTMLButtonElement> = e => {
+  const handleClickLabwareCreator: MouseEventHandler<HTMLButtonElement> = e => {
     e.preventDefault()
     e.stopPropagation()
     trackEvent({
@@ -95,7 +96,7 @@ export function CustomLabwareOverflowMenu(
     window.open(LABWARE_CREATOR_HREF, '_blank')
   }
 
-  const handleCancelModal: React.MouseEventHandler<HTMLButtonElement> = e => {
+  const handleCancelModal: MouseEventHandler<HTMLButtonElement> = e => {
     e.preventDefault()
     e.stopPropagation()
     cancelDeleteLabware()

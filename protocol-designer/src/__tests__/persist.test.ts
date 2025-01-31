@@ -4,12 +4,14 @@ import type { MockInstance } from 'vitest'
 import * as persist from '../persist'
 
 describe('persist', () => {
-  let getItemSpy: MockInstance<unknown[], unknown>
-  let setItemSpy: MockInstance<unknown[], unknown>
+  let getItemSpy: MockInstance<(key: string) => string | null>
+  let setItemSpy: MockInstance<(key: string, value: string) => void>
 
   beforeEach(() => {
     const LocalStorageProto = Object.getPrototypeOf(global.localStorage)
-    getItemSpy = vi.spyOn(LocalStorageProto, 'getItem')
+    getItemSpy = vi.spyOn(LocalStorageProto, 'getItem') as MockInstance<
+      (key: string) => string | null
+    >
     setItemSpy = vi.spyOn(LocalStorageProto, 'setItem')
   })
 

@@ -11,7 +11,6 @@ from opentrons.protocol_engine.state.frustum_helpers import (
     _cross_section_area_rectangular,
     _cross_section_area_circular,
     _reject_unacceptable_heights,
-    _circular_frustum_polynomial_roots,
     _rectangular_frustum_polynomial_roots,
     _volume_from_height_rectangular,
     _volume_from_height_circular,
@@ -211,39 +210,25 @@ def test_volume_and_height_circular(well: List[Any]) -> None:
     """Test both volume and height calculations for circular frusta."""
     if well[-1].shape == "spherical":
         return
-    total_height = well[0].topHeight
     for segment in well:
         if segment.shape == "conical":
-            top_radius = segment.topDiameter / 2
-            bottom_radius = segment.bottomDiameter / 2
-            a = pi * ((top_radius - bottom_radius) ** 2) / (3 * total_height**2)
-            b = pi * bottom_radius * (top_radius - bottom_radius) / total_height
-            c = pi * bottom_radius**2
-            assert _circular_frustum_polynomial_roots(
-                top_radius=top_radius,
-                bottom_radius=bottom_radius,
-                total_frustum_height=total_height,
-            ) == (a, b, c)
+            a = segment.topDiameter / 2
+            b = segment.bottomDiameter / 2
             # test volume within a bunch of arbitrary heights
-            for target_height in range(round(total_height)):
-                expected_volume = (
-                    a * (target_height**3)
-                    + b * (target_height**2)
-                    + c * target_height
+            segment_height = segment.topHeight - segment.bottomHeight
+            for target_height in range(round(segment_height)):
+                r_y = (target_height / segment_height) * (a - b) + b
+                expected_volume = (pi * target_height / 3) * (
+                    b**2 + b * r_y + r_y**2
                 )
                 found_volume = _volume_from_height_circular(
                     target_height=target_height,
-                    total_frustum_height=total_height,
-                    bottom_radius=bottom_radius,
-                    top_radius=top_radius,
+                    segment=segment,
                 )
-                assert found_volume == expected_volume
+                assert isclose(found_volume, expected_volume)
                 # test going backwards to get height back
                 found_height = _height_from_volume_circular(
-                    volume=found_volume,
-                    total_frustum_height=total_height,
-                    bottom_radius=bottom_radius,
-                    top_radius=top_radius,
+                    target_volume=found_volume, segment=segment
                 )
                 assert isclose(found_height, target_height)
 

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { SINGLE_MOUNT_PIPETTES } from '@opentrons/shared-data'
@@ -12,6 +12,7 @@ import { FLOWS } from '/app/organisms/PipetteWizardFlows/constants'
 import { GRIPPER_FLOW_TYPES } from '/app/organisms/GripperWizardFlows/constants'
 import { LabeledMount } from './LabeledMount'
 
+import type { ComponentProps, MouseEventHandler } from 'react'
 import type { InstrumentData } from '@opentrons/api-client'
 import type { GripperModel, PipetteModel } from '@opentrons/shared-data'
 import type { Mount } from '/app/redux/pipettes/types'
@@ -24,8 +25,8 @@ interface AttachedInstrumentMountItemProps {
   attachedInstrument: InstrumentData | null
   setWizardProps: (
     props:
-      | React.ComponentProps<typeof GripperWizardFlows>
-      | React.ComponentProps<typeof PipetteWizardFlows>
+      | ComponentProps<typeof GripperWizardFlows>
+      | ComponentProps<typeof PipetteWizardFlows>
       | null
   ) => void
 }
@@ -36,15 +37,12 @@ export function AttachedInstrumentMountItem(
   const navigate = useNavigate()
   const { mount, attachedInstrument, setWizardProps } = props
 
-  const [showChoosePipetteModal, setShowChoosePipetteModal] = React.useState(
-    false
+  const [showChoosePipetteModal, setShowChoosePipetteModal] = useState(false)
+  const [selectedPipette, setSelectedPipette] = useState<SelectablePipettes>(
+    SINGLE_MOUNT_PIPETTES
   )
-  const [
-    selectedPipette,
-    setSelectedPipette,
-  ] = React.useState<SelectablePipettes>(SINGLE_MOUNT_PIPETTES)
 
-  const handleClick: React.MouseEventHandler = () => {
+  const handleClick: MouseEventHandler = () => {
     if (attachedInstrument == null && mount !== 'extension') {
       setShowChoosePipetteModal(true)
     } else if (attachedInstrument == null && mount === 'extension') {

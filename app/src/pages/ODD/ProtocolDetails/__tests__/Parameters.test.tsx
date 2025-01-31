@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { it, describe, beforeEach, vi } from 'vitest'
 import { screen } from '@testing-library/react'
@@ -9,17 +8,19 @@ import { useRunTimeParameters } from '/app/resources/protocols'
 import { Parameters } from '../Parameters'
 import { mockRunTimeParameterData } from '/app/organisms/ODD/ProtocolSetup/__fixtures__'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/organisms/ToasterOven')
 vi.mock('/app/resources/protocols')
 
-const render = (props: React.ComponentProps<typeof Parameters>) => {
+const render = (props: ComponentProps<typeof Parameters>) => {
   return renderWithProviders(<Parameters {...props} />, {
     i18nInstance: i18n,
   })
 }
 const MOCK_MAKE_SNACK_BAR = vi.fn()
 describe('Parameters', () => {
-  let props: React.ComponentProps<typeof Parameters>
+  let props: ComponentProps<typeof Parameters>
 
   beforeEach(() => {
     props = {

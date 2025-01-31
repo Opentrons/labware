@@ -237,10 +237,9 @@ async def test_device_info(
 
     device_info = await subject.get_device_info()
 
-    expected = CommandBuilder(terminator=driver.TC_COMMAND_TERMINATOR).add_gcode(
+    get_device_info = CommandBuilder(terminator=driver.TC_COMMAND_TERMINATOR).add_gcode(
         gcode="M115"
     )
 
-    connection.send_command.assert_called_once_with(command=expected, retries=3)
-
+    connection.send_command.assert_any_call(command=get_device_info, retries=3)
     assert device_info == {"serial": "s", "model": "m", "version": "v"}

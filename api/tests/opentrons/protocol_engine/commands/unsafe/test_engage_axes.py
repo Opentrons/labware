@@ -22,21 +22,28 @@ async def test_engage_axes_implementation(
     )
 
     data = UnsafeEngageAxesParams(
-        axes=[MotorAxis.LEFT_Z, MotorAxis.LEFT_PLUNGER, MotorAxis.X, MotorAxis.Y]
-    )
-
-    decoy.when(gantry_mover.motor_axis_to_hardware_axis(MotorAxis.LEFT_Z)).then_return(
-        Axis.Z_L
+        axes=[
+            MotorAxis.LEFT_Z,
+            MotorAxis.LEFT_PLUNGER,
+            MotorAxis.X,
+            MotorAxis.Y,
+            MotorAxis.RIGHT_Z,
+            MotorAxis.RIGHT_PLUNGER,
+        ]
     )
     decoy.when(
-        gantry_mover.motor_axis_to_hardware_axis(MotorAxis.LEFT_PLUNGER)
-    ).then_return(Axis.P_L)
-    decoy.when(gantry_mover.motor_axis_to_hardware_axis(MotorAxis.X)).then_return(
-        Axis.X
-    )
-    decoy.when(gantry_mover.motor_axis_to_hardware_axis(MotorAxis.Y)).then_return(
-        Axis.Y
-    )
+        gantry_mover.motor_axes_to_present_hardware_axes(
+            [
+                MotorAxis.LEFT_Z,
+                MotorAxis.LEFT_PLUNGER,
+                MotorAxis.X,
+                MotorAxis.Y,
+                MotorAxis.RIGHT_Z,
+                MotorAxis.RIGHT_PLUNGER,
+            ]
+        )
+    ).then_return([Axis.Z_L, Axis.P_L, Axis.X, Axis.Y])
+
     decoy.when(
         await ot3_hardware_api.update_axis_position_estimations(
             [Axis.Z_L, Axis.P_L, Axis.X, Axis.Y]

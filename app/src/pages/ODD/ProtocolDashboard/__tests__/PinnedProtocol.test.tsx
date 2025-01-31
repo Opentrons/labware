@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, describe, expect, beforeEach } from 'vitest'
 import { act, fireEvent, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
@@ -10,9 +9,10 @@ import { i18n } from '/app/i18n'
 import { useFeatureFlag } from '/app/redux/config'
 import { PinnedProtocol } from '../PinnedProtocol'
 
+import type { ComponentProps } from 'react'
+import type { NavigateFunction } from 'react-router-dom'
 import type { Chip } from '@opentrons/components'
 import type { ProtocolResource } from '@opentrons/shared-data'
-import type { NavigateFunction } from 'react-router-dom'
 
 const mockNavigate = vi.fn()
 
@@ -50,7 +50,7 @@ const mockProtocol: ProtocolResource = {
   key: '26ed5a82-502f-4074-8981-57cdda1d066d',
 }
 
-const render = (props: React.ComponentProps<typeof PinnedProtocol>) => {
+const render = (props: ComponentProps<typeof PinnedProtocol>) => {
   return renderWithProviders(
     <MemoryRouter>
       <PinnedProtocol {...props} />
@@ -62,7 +62,7 @@ const render = (props: React.ComponentProps<typeof PinnedProtocol>) => {
 }
 
 describe('Pinned Protocol', () => {
-  let props: React.ComponentProps<typeof PinnedProtocol>
+  let props: ComponentProps<typeof PinnedProtocol>
   vi.useFakeTimers()
 
   beforeEach(() => {

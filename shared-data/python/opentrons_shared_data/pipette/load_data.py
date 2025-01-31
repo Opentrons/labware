@@ -22,6 +22,7 @@ from .types import (
     PipetteModelMajorVersion,
     PipetteModelMinorVersion,
     LiquidClasses,
+    PipetteOEMType,
 )
 
 
@@ -35,8 +36,10 @@ def _get_configuration_dictionary(
     channels: PipetteChannelType,
     model: PipetteModelType,
     version: PipetteVersionType,
+    oem: PipetteOEMType,
     liquid_class: Optional[LiquidClasses] = None,
 ) -> LoadedConfiguration:
+    oem_extension = f"_{oem.value}" if oem != PipetteOEMType.OT else ""
     if liquid_class:
         config_path = (
             get_shared_data_root()
@@ -44,7 +47,7 @@ def _get_configuration_dictionary(
             / "definitions"
             / "2"
             / config_type
-            / channels.name.lower()
+            / f"{channels.name.lower()}{oem_extension}"
             / model.value
             / liquid_class.name
             / f"{version.major}_{version.minor}.json"
@@ -56,7 +59,7 @@ def _get_configuration_dictionary(
             / "definitions"
             / "2"
             / config_type
-            / channels.name.lower()
+            / f"{channels.name.lower()}{oem_extension}"
             / model.value
             / f"{version.major}_{version.minor}.json"
         )
@@ -68,8 +71,9 @@ def _geometry(
     channels: PipetteChannelType,
     model: PipetteModelType,
     version: PipetteVersionType,
+    oem: PipetteOEMType,
 ) -> LoadedConfiguration:
-    return _get_configuration_dictionary("geometry", channels, model, version)
+    return _get_configuration_dictionary("geometry", channels, model, version, oem)
 
 
 @lru_cache(maxsize=None)
@@ -77,12 +81,13 @@ def _liquid(
     channels: PipetteChannelType,
     model: PipetteModelType,
     version: PipetteVersionType,
+    oem: PipetteOEMType,
 ) -> Dict[str, LoadedConfiguration]:
     liquid_dict = {}
     for liquid_class in LiquidClasses:
         try:
             liquid_dict[liquid_class.name] = _get_configuration_dictionary(
-                "liquid", channels, model, version, liquid_class
+                "liquid", channels, model, version, oem, liquid_class
             )
         except FileNotFoundError:
             continue
@@ -95,8 +100,9 @@ def _physical(
     channels: PipetteChannelType,
     model: PipetteModelType,
     version: PipetteVersionType,
+    oem: PipetteOEMType,
 ) -> LoadedConfiguration:
-    return _get_configuration_dictionary("general", channels, model, version)
+    return _get_configuration_dictionary("general", channels, model, version, oem)
 
 
 def _dirs_in(path: Path) -> Iterator[Path]:
@@ -114,11 +120,13 @@ def load_serial_lookup_table() -> Dict[str, str]:
         "eight_channel": "M",
         "single_channel": "S",
         "ninety_six_channel": "H",
+        "eight_channel_em": "P",
     }
     _channel_model_str = {
         "single_channel": "single",
         "ninety_six_channel": "96",
         "eight_channel": "multi",
+        "eight_channel_em": "multi_em",
     }
     _model_shorthand = {"p1000": "p1k", "p300": "p3h"}
     for channel_dir in _dirs_in(config_path):
@@ -150,10 +158,11 @@ def load_liquid_model(
     model: PipetteModelType,
     channels: PipetteChannelType,
     version: PipetteVersionType,
+    oem: PipetteOEMType,
 ) -> Dict[str, PipetteLiquidPropertiesDefinition]:
-    liquid_dict = _liquid(channels, model, version)
+    liquid_dict = _liquid(channels, model, version, oem)
     return {
-        k: PipetteLiquidPropertiesDefinition.parse_obj(v)
+        k: PipetteLiquidPropertiesDefinition.model_validate(v)
         for k, v in liquid_dict.items()
     }
 
@@ -211,7 +220,7 @@ def update_pipette_configuration(
     Given an input of v1 mutable configs, look up the equivalent keyed
     value of that configuration."""
     quirks_list = []
-    dict_of_base_model = base_configurations.dict(by_alias=True)
+    dict_of_base_model = base_configurations.model_dump(by_alias=True)
 
     for c, v in v1_configuration_changes.items():
         lookup_key = _change_to_camel_case(c)
@@ -243,13 +252,14 @@ def update_pipette_configuration(
         k.name: v
         for k, v in dict_of_base_model["plungerPositionsConfigurations"].items()
     }
-    return PipetteConfigurations.parse_obj(dict_of_base_model)
+    return PipetteConfigurations.model_validate(dict_of_base_model)
 
 
 def load_definition(
     model: PipetteModelType,
     channels: PipetteChannelType,
     version: PipetteVersionType,
+    oem: PipetteOEMType,
 ) -> PipetteConfigurations:
     if (
         version.major not in PipetteModelMajorVersion
@@ -257,14 +267,14 @@ def load_definition(
     ):
         raise KeyError("Pipette version not found.")
 
-    geometry_dict = _geometry(channels, model, version)
-    physical_dict = _physical(channels, model, version)
-    liquid_dict = _liquid(channels, model, version)
+    geometry_dict = _geometry(channels, model, version, oem)
+    physical_dict = _physical(channels, model, version, oem)
+    liquid_dict = _liquid(channels, model, version, oem)
 
     generation = PipetteGenerationType(physical_dict["displayCategory"])
     mount_configs = MOUNT_CONFIG_LOOKUP_TABLE[generation][channels]
 
-    return PipetteConfigurations.parse_obj(
+    return PipetteConfigurations.model_validate(
         {
             **geometry_dict,
             **physical_dict,
@@ -279,6 +289,7 @@ def load_valid_nozzle_maps(
     model: PipetteModelType,
     channels: PipetteChannelType,
     version: PipetteVersionType,
+    oem: PipetteOEMType,
 ) -> ValidNozzleMaps:
     if (
         version.major not in PipetteModelMajorVersion
@@ -286,5 +297,5 @@ def load_valid_nozzle_maps(
     ):
         raise KeyError("Pipette version not found.")
 
-    physical_dict = _physical(channels, model, version)
-    return ValidNozzleMaps.parse_obj(physical_dict["validNozzleMaps"])
+    physical_dict = _physical(channels, model, version, oem)
+    return ValidNozzleMaps.model_validate(physical_dict["validNozzleMaps"])

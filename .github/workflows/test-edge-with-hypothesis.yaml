@@ -2,8 +2,8 @@ name: 'Testing Edge with Hypothesis'
 
 on:
   schedule:
-  - cron: '45 22 * * 1-5'
-  
+    - cron: '45 22 * * 1-5'
+
   workflow_dispatch:
 
 concurrency:
@@ -20,23 +20,23 @@ jobs:
     timeout-minutes: 120
     runs-on: 'ubuntu-latest'
     steps:
-    - name: 'Checkout opentrons repo'
-      uses: 'actions/checkout@v3'
-      with:
-        ref: 'edge'
-        fetch-depth: 0
+      - name: 'Checkout opentrons repo'
+        uses: 'actions/checkout@v4'
+        with:
+          ref: 'edge'
+          fetch-depth: 0
 
-    - name: 'Setup Python'
-      uses: 'actions/setup-python@v5'
-      with:
-        python-version: '3.10'
-        cache: 'pipenv'
-        cache-dependency-path: 'test-data-generation/Pipfile.lock'
+      - name: 'Setup Python'
+        uses: 'actions/setup-python@v5'
+        with:
+          python-version: '3.10'
+          cache: 'pipenv'
+          cache-dependency-path: 'test-data-generation/Pipfile.lock'
 
-    - name: 'Install Python deps'
-      uses: './.github/actions/python/setup'
-      with:
-        project: 'test-data-generation'
+      - name: 'Install Python deps'
+        uses: './.github/actions/python/setup'
+        with:
+          project: 'test-data-generation'
 
-    - name: 'Run Hypothesis tests'
-      run: 'make -C test-data-generation test'
+      - name: 'Run Hypothesis tests'
+        run: 'make -C test-data-generation test'

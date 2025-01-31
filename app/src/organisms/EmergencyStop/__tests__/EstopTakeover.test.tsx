@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, beforeEach, expect, vi } from 'vitest'
 import { screen } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
@@ -19,6 +18,8 @@ import { getLocalRobot } from '/app/redux/discovery'
 import { mockConnectedRobot } from '/app/redux/discovery/__fixtures__'
 import { EstopTakeover } from '../EstopTakeover'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('@opentrons/react-api-client')
 vi.mock('../EstopMissingModal')
 vi.mock('../EstopPressedModal')
@@ -33,14 +34,14 @@ const mockPressed = {
   },
 }
 
-const render = (props: React.ComponentProps<typeof EstopTakeover>) => {
+const render = (props: ComponentProps<typeof EstopTakeover>) => {
   return renderWithProviders(<EstopTakeover {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('EstopTakeover', () => {
-  let props: React.ComponentProps<typeof EstopTakeover>
+  let props: ComponentProps<typeof EstopTakeover>
 
   beforeEach(() => {
     props = {

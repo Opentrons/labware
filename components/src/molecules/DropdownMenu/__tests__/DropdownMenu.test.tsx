@@ -1,9 +1,10 @@
-import type * as React from 'react'
 import { screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 import { renderWithProviders } from '../../../testing/utils'
 import { DropdownMenu } from '..'
+
+import type { ComponentProps } from 'react'
 import type { DropdownOption } from '..'
 
 const mockOptions: DropdownOption[] = [
@@ -14,12 +15,12 @@ const mockOptions: DropdownOption[] = [
 
 const mockOnClick = vi.fn()
 
-const render = (props: React.ComponentProps<typeof DropdownMenu>) => {
+const render = (props: ComponentProps<typeof DropdownMenu>) => {
   return renderWithProviders(<DropdownMenu {...props} />)
 }
 
 describe('DropdownMenu', () => {
-  let props: React.ComponentProps<typeof DropdownMenu>
+  let props: ComponentProps<typeof DropdownMenu>
 
   beforeEach(() => {
     props = {

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, expect, afterEach, vi } from 'vitest'
 import { screen } from '@testing-library/react'
 
@@ -7,6 +6,8 @@ import { OT2_STANDARD_MODEL, FLEX_STANDARD_MODEL } from '@opentrons/shared-data'
 import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { RobotConfigurationDetails } from '../RobotConfigurationDetails'
+
+import type { ComponentProps } from 'react'
 import type { LoadModuleRunTimeCommand } from '@opentrons/shared-data'
 
 const mockRequiredModuleDetails = [
@@ -57,16 +58,14 @@ const mockRequiredModuleDetails = [
   } as LoadModuleRunTimeCommand,
 ]
 
-const render = (
-  props: React.ComponentProps<typeof RobotConfigurationDetails>
-) => {
+const render = (props: ComponentProps<typeof RobotConfigurationDetails>) => {
   return renderWithProviders(<RobotConfigurationDetails {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('RobotConfigurationDetails', () => {
-  let props: React.ComponentProps<typeof RobotConfigurationDetails>
+  let props: ComponentProps<typeof RobotConfigurationDetails>
 
   afterEach(() => {
     vi.clearAllMocks()

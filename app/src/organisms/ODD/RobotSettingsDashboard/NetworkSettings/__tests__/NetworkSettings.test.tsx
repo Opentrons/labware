@@ -1,5 +1,4 @@
 /* eslint-disable testing-library/no-node-access */
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
@@ -12,6 +11,7 @@ import { WifiConnectionDetails } from '../WifiConnectionDetails'
 import { EthernetConnectionDetails } from '../EthernetConnectionDetails'
 import { NetworkSettings } from '..'
 
+import type { ComponentProps } from 'react'
 import type { DiscoveredRobot } from '/app/redux/discovery/types'
 import type { WifiNetwork } from '/app/redux/networking/types'
 
@@ -22,14 +22,14 @@ vi.mock('../EthernetConnectionDetails')
 
 const mockSetCurrentOption = vi.fn()
 
-const render = (props: React.ComponentProps<typeof NetworkSettings>) => {
+const render = (props: ComponentProps<typeof NetworkSettings>) => {
   return renderWithProviders(<NetworkSettings {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('NetworkSettings', () => {
-  let props: React.ComponentProps<typeof NetworkSettings>
+  let props: ComponentProps<typeof NetworkSettings>
 
   beforeEach(() => {
     props = {

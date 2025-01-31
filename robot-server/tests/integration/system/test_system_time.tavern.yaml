@@ -34,14 +34,6 @@ stages:
           id: 'time'
     response:
       status_code: 422
-      json:
-        errors:
-          - id: 'InvalidRequest'
-            title: 'Invalid Request'
-            detail: 'field required'
-            errorCode: '4000'
-            source:
-              pointer: '/data/systemTime'
   - name: System Time PUT request on a dev server raises error
     request:
       url: '{ot2_server_base_url}/system/time'

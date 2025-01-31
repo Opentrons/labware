@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { vi, it, describe, expect, beforeEach, afterEach } from 'vitest'
 import { when } from 'vitest-when'
@@ -15,6 +14,7 @@ import {
   CalibrationError,
 } from '/app/organisms/Desktop/CalibrationError'
 
+import type { ComponentProps, ComponentType } from 'react'
 import type { TipLengthCalibrationStep } from '/app/redux/sessions/types'
 
 vi.mock('@opentrons/shared-data', async importOriginal => {
@@ -41,14 +41,14 @@ describe('CalibrateTipLength', () => {
     ...mockTipLengthCalibrationSessionAttributes,
   }
   const render = (
-    props: Partial<React.ComponentProps<typeof CalibrateTipLength>> = {}
+    props: Partial<ComponentProps<typeof CalibrateTipLength>> = {}
   ) => {
     const {
       showSpinner = false,
       isJogging = false,
       session = mockTipLengthSession,
     } = props
-    return renderWithProviders<React.ComponentType<typeof CalibrateTipLength>>(
+    return renderWithProviders<ComponentType<typeof CalibrateTipLength>>(
       <CalibrateTipLength
         robotName="robot-name"
         session={session}

@@ -75,7 +75,7 @@ class WaitForLidTemperature(
 
     commandType: WaitForLidTemperatureCommandType = "thermocycler/waitForLidTemperature"
     params: WaitForLidTemperatureParams
-    result: Optional[WaitForLidTemperatureResult]
+    result: Optional[WaitForLidTemperatureResult] = None
 
     _ImplementationCls: Type[WaitForLidTemperatureImpl] = WaitForLidTemperatureImpl
 

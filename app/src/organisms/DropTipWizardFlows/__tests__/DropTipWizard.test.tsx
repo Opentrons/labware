@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import { screen } from '@testing-library/react'
 
@@ -31,6 +30,8 @@ import {
   CONFIRM_POSITION,
 } from '../constants'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/molecules/InProgressModal')
 vi.mock('../ExitConfirmation')
 vi.mock('../steps')
@@ -38,7 +39,7 @@ vi.mock('../ErrorInfo')
 vi.mock('../DropTipWizardHeader')
 
 const renderDropTipWizardContainer = (
-  props: React.ComponentProps<typeof DropTipWizardContainer>
+  props: ComponentProps<typeof DropTipWizardContainer>
 ) => {
   return renderWithProviders(<DropTipWizardContainer {...props} />, {
     i18nInstance: i18n,
@@ -46,7 +47,7 @@ const renderDropTipWizardContainer = (
 }
 
 describe('DropTipWizardContainer', () => {
-  let props: React.ComponentProps<typeof DropTipWizardContainer>
+  let props: ComponentProps<typeof DropTipWizardContainer>
 
   beforeEach(() => {
     props = mockDropTipWizardContainerProps
@@ -75,7 +76,7 @@ describe('DropTipWizardContainer', () => {
 })
 
 const renderDropTipWizardContent = (
-  props: React.ComponentProps<typeof DropTipWizardContent>
+  props: ComponentProps<typeof DropTipWizardContent>
 ) => {
   return renderWithProviders(<DropTipWizardContent {...props} />, {
     i18nInstance: i18n,
@@ -83,7 +84,7 @@ const renderDropTipWizardContent = (
 }
 
 describe('DropTipWizardContent', () => {
-  let props: React.ComponentProps<typeof DropTipWizardContent>
+  let props: ComponentProps<typeof DropTipWizardContent>
 
   beforeEach(() => {
     props = mockDropTipWizardContainerProps

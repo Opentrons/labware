@@ -1,18 +1,19 @@
-import type * as React from 'react'
 import { describe, it, vi, beforeEach, expect } from 'vitest'
 import { screen, fireEvent } from '@testing-library/react'
 import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { InlineNotification } from '..'
 
-const render = (props: React.ComponentProps<typeof InlineNotification>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof InlineNotification>) => {
   return renderWithProviders(<InlineNotification {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('InlineNotification', () => {
-  let props: React.ComponentProps<typeof InlineNotification>
+  let props: ComponentProps<typeof InlineNotification>
 
   beforeEach(() => {
     props = {

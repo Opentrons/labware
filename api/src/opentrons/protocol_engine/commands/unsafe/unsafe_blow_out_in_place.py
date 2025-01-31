@@ -10,6 +10,7 @@ from ..command import AbstractCommandImpl, BaseCommand, BaseCommandCreate, Succe
 from ..pipetting_common import PipetteIdMixin, FlowRateMixin
 from ...resources import ensure_ot3_hardware
 from ...errors.error_occurrence import ErrorOccurrence
+from ...state import update_types
 
 from opentrons.hardware_control import HardwareControlAPI
 from opentrons.hardware_control.types import Axis
@@ -66,9 +67,11 @@ class UnsafeBlowOutInPlaceImplementation(
         await self._pipetting.blow_out_in_place(
             pipette_id=params.pipetteId, flow_rate=params.flowRate
         )
+        state_update = update_types.StateUpdate()
+        state_update.set_fluid_empty(pipette_id=params.pipetteId)
 
         return SuccessData(
-            public=UnsafeBlowOutInPlaceResult(),
+            public=UnsafeBlowOutInPlaceResult(), state_update=state_update
         )
 
 
@@ -79,7 +82,7 @@ class UnsafeBlowOutInPlace(
 
     commandType: UnsafeBlowOutInPlaceCommandType = "unsafe/blowOutInPlace"
     params: UnsafeBlowOutInPlaceParams
-    result: Optional[UnsafeBlowOutInPlaceResult]
+    result: Optional[UnsafeBlowOutInPlaceResult] = None
 
     _ImplementationCls: Type[
         UnsafeBlowOutInPlaceImplementation

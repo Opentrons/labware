@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, beforeEach, expect, vi } from 'vitest'
 import { screen, act, renderHook } from '@testing-library/react'
 
@@ -14,7 +13,10 @@ import {
   OverpressureBanner,
   TipNotDetectedBanner,
   GripperErrorBanner,
+  StallErrorBanner,
 } from '../ErrorDetailsModal'
+
+import type { ComponentProps } from 'react'
 
 vi.mock('react-dom', () => ({
   ...vi.importActual('react-dom'),
@@ -46,14 +48,14 @@ describe('useErrorDetailsModal', () => {
   })
 })
 
-const render = (props: React.ComponentProps<typeof ErrorDetailsModal>) => {
+const render = (props: ComponentProps<typeof ErrorDetailsModal>) => {
   return renderWithProviders(<ErrorDetailsModal {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('ErrorDetailsModal', () => {
-  let props: React.ComponentProps<typeof ErrorDetailsModal>
+  let props: ComponentProps<typeof ErrorDetailsModal>
 
   beforeEach(() => {
     props = {
@@ -196,6 +198,28 @@ describe('GripperErrorBanner', () => {
           'Gripper errors occur when the gripper stalls or collides with another object on the deck and are usually caused by improperly placed labware or inaccurate labware offsets',
         message:
           ' If the issue persists, cancel the run and rerun gripper calibration',
+      }),
+      {}
+    )
+  })
+})
+
+describe('StallErrorBanner', () => {
+  beforeEach(() => {
+    vi.mocked(InlineNotification).mockReturnValue(
+      <div>MOCK_INLINE_NOTIFICATION</div>
+    )
+  })
+  it('renders the InlineNotification', () => {
+    renderWithProviders(<StallErrorBanner />, {
+      i18nInstance: i18n,
+    })
+    expect(vi.mocked(InlineNotification)).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: 'alert',
+        heading:
+          "A stall or collision is detected when the robot's motors are blocked",
+        message: 'The robot must return to its home position before proceeding',
       }),
       {}
     )

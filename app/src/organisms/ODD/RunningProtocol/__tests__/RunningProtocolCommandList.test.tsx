@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -10,20 +9,20 @@ import { i18n } from '/app/i18n'
 import { mockRobotSideAnalysis } from '/app/molecules/Command/__fixtures__'
 import { RunningProtocolCommandList } from '../RunningProtocolCommandList'
 
+import type { ComponentProps } from 'react'
+
 const mockPlayRun = vi.fn()
 const mockPauseRun = vi.fn()
 const mockShowModal = vi.fn()
 
-const render = (
-  props: React.ComponentProps<typeof RunningProtocolCommandList>
-) => {
+const render = (props: ComponentProps<typeof RunningProtocolCommandList>) => {
   return renderWithProviders(<RunningProtocolCommandList {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('RunningProtocolCommandList', () => {
-  let props: React.ComponentProps<typeof RunningProtocolCommandList>
+  let props: ComponentProps<typeof RunningProtocolCommandList>
   beforeEach(() => {
     props = {
       runStatus: RUN_STATUS_RUNNING,

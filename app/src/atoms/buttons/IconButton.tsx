@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { css } from 'styled-components'
 import {
   BORDERS,
@@ -10,8 +9,10 @@ import {
 } from '@opentrons/components'
 import { ODD_FOCUS_VISIBLE } from './constants'
 
-interface IconButtonProps extends React.ComponentProps<typeof Btn> {
-  iconName: React.ComponentProps<typeof Icon>['name']
+import type { ComponentProps } from 'react'
+
+interface IconButtonProps extends ComponentProps<typeof Btn> {
+  iconName: ComponentProps<typeof Icon>['name']
   hasBackground?: boolean
 }
 

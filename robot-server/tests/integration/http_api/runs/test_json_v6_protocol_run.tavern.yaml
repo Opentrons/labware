@@ -51,6 +51,7 @@ stages:
               displayName: Water
               description: Liquid H2O
               displayColor: '#7332a8'
+          liquidClasses: []
           runTimeParameters: []
           outputFileIds: []
           protocolId: '{protocol_id}'

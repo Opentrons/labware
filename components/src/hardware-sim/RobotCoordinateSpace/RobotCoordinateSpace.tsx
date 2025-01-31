@@ -1,9 +1,10 @@
 import styled from 'styled-components'
 import { animated } from '@react-spring/web'
-import type * as React from 'react'
 import { Svg } from '../../primitives'
 
-interface RobotCoordinateSpaceProps extends React.ComponentProps<typeof Svg> {
+import type { ComponentProps } from 'react'
+
+interface RobotCoordinateSpaceProps extends ComponentProps<typeof Svg> {
   animated?: boolean
 }
 export function RobotCoordinateSpace(

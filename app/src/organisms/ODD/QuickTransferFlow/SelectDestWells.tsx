@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import without from 'lodash/without'
@@ -24,6 +24,12 @@ import {
   RECTANGULAR_WELL_96_PLATE_DEFINITION_URI,
 } from './SelectSourceWells'
 
+import type {
+  ComponentProps,
+  Dispatch,
+  SetStateAction,
+  MouseEvent,
+} from 'react'
 import type { SmallButton } from '/app/atoms/buttons'
 import type { OddModalHeaderBaseProps } from '/app/molecules/OddModal/types'
 import type {
@@ -35,7 +41,7 @@ interface SelectDestWellsProps {
   onNext: () => void
   onBack: () => void
   state: QuickTransferWizardState
-  dispatch: React.Dispatch<QuickTransferWizardAction>
+  dispatch: Dispatch<QuickTransferWizardAction>
 }
 
 export function SelectDestWells(props: SelectDestWellsProps): JSX.Element {
@@ -53,12 +59,11 @@ export function SelectDestWells(props: SelectDestWellsProps): JSX.Element {
   const [
     showNumberWellsSelectedErrorModal,
     setShowNumberWellsSelectedErrorModal,
-  ] = React.useState(false)
-  const [selectedWells, setSelectedWells] = React.useState(destinationWellGroup)
-  const [
-    isNumberWellsSelectedError,
-    setIsNumberWellsSelectedError,
-  ] = React.useState(false)
+  ] = useState(false)
+  const [selectedWells, setSelectedWells] = useState(destinationWellGroup)
+  const [isNumberWellsSelectedError, setIsNumberWellsSelectedError] = useState(
+    false
+  )
 
   const selectedWellCount = Object.keys(selectedWells).length
   const sourceWellCount = state.sourceWells?.length ?? 0
@@ -88,7 +93,7 @@ export function SelectDestWells(props: SelectDestWellsProps): JSX.Element {
   }
   const is384WellPlate = labwareDefinition?.parameters.format === '384Standard'
 
-  const [analyticsStartTime] = React.useState<Date>(new Date())
+  const [analyticsStartTime] = useState<Date>(new Date())
 
   const handleClickNext = (): void => {
     if (
@@ -130,10 +135,10 @@ export function SelectDestWells(props: SelectDestWellsProps): JSX.Element {
     }
   }
 
-  const resetButtonProps: React.ComponentProps<typeof SmallButton> = {
+  const resetButtonProps: ComponentProps<typeof SmallButton> = {
     buttonType: 'tertiaryLowLight',
     buttonText: t('shared:reset'),
-    onClick: (e: React.MouseEvent<HTMLButtonElement>) => {
+    onClick: (e: MouseEvent<HTMLButtonElement>) => {
       setIsNumberWellsSelectedError(false)
       setSelectedWells({})
       e.currentTarget.blur?.()
@@ -214,9 +219,7 @@ function NumberWellsSelectedErrorModal({
   selectionUnit,
   selectionUnits,
 }: {
-  setShowNumberWellsSelectedErrorModal: React.Dispatch<
-    React.SetStateAction<boolean>
-  >
+  setShowNumberWellsSelectedErrorModal: Dispatch<SetStateAction<boolean>>
   wellCount: number
   selectionUnit: string
   selectionUnits: string

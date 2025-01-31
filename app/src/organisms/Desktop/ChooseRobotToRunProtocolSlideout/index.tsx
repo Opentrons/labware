@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import first from 'lodash/first'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -29,10 +29,13 @@ import {
   getRunTimeParameterFilesForRun,
   getRunTimeParameterValuesForRun,
 } from '/app/transformations/runs'
-import { ApplyHistoricOffsets } from '/app/organisms/ApplyHistoricOffsets'
-import { useOffsetCandidatesForAnalysis } from '/app/organisms/ApplyHistoricOffsets/hooks/useOffsetCandidatesForAnalysis'
+import { LegacyApplyHistoricOffsets } from '/app/organisms/LegacyApplyHistoricOffsets'
+import { useOffsetCandidatesForAnalysis } from '/app/organisms/LegacyApplyHistoricOffsets/hooks/useOffsetCandidatesForAnalysis'
 import { ChooseRobotSlideout } from '../ChooseRobotSlideout'
 import { useCreateRunFromProtocol } from './useCreateRunFromProtocol'
+import { useFeatureFlag } from '/app/redux/config'
+
+import type { MouseEventHandler } from 'react'
 import type { StyleProps } from '@opentrons/components'
 import type { RunTimeParameter } from '@opentrons/shared-data'
 import type { Robot } from '/app/redux/discovery/types'
@@ -65,16 +68,15 @@ export function ChooseRobotToRunProtocolSlideoutComponent(
     setSelectedRobot,
   } = props
   const navigate = useNavigate()
-  const [shouldApplyOffsets, setShouldApplyOffsets] = React.useState<boolean>(
-    true
-  )
+  const isNewLpc = useFeatureFlag('lpcRedesign')
+  const [shouldApplyOffsets, setShouldApplyOffsets] = useState<boolean>(true)
   const {
     protocolKey,
     srcFileNames,
     srcFiles,
     mostRecentAnalysis,
   } = storedProtocolData
-  const [currentPage, setCurrentPage] = React.useState<number>(1)
+  const [currentPage, setCurrentPage] = useState<number>(1)
   const { trackCreateProtocolRunEvent } = useTrackCreateProtocolRunEvent(
     storedProtocolData,
     selectedRobot?.name ?? ''
@@ -82,12 +84,11 @@ export function ChooseRobotToRunProtocolSlideoutComponent(
   const runTimeParameters =
     storedProtocolData.mostRecentAnalysis?.runTimeParameters ?? []
 
-  const [
-    runTimeParametersOverrides,
-    setRunTimeParametersOverrides,
-  ] = React.useState<RunTimeParameter[]>(runTimeParameters)
-  const [hasParamError, setHasParamError] = React.useState<boolean>(false)
-  const [hasMissingFileParam, setHasMissingFileParam] = React.useState<boolean>(
+  const [runTimeParametersOverrides, setRunTimeParametersOverrides] = useState<
+    RunTimeParameter[]
+  >(runTimeParameters)
+  const [hasParamError, setHasParamError] = useState<boolean>(false)
+  const [hasMissingFileParam, setHasMissingFileParam] = useState<boolean>(
     runTimeParameters?.some(parameter => parameter.type === 'csv_file') ?? false
   )
 
@@ -133,7 +134,7 @@ export function ChooseRobotToRunProtocolSlideoutComponent(
         }))
       : []
   )
-  const handleProceed: React.MouseEventHandler<HTMLButtonElement> = () => {
+  const handleProceed: MouseEventHandler<HTMLButtonElement> = () => {
     trackCreateProtocolRunEvent({ name: 'createProtocolRecordRequest' })
     const dataFilesForProtocolMap = runTimeParametersOverrides.reduce<
       Record<string, File>
@@ -220,8 +221,8 @@ export function ChooseRobotToRunProtocolSlideoutComponent(
     </PrimaryButton>
   )
 
-  const offsetsComponent = (
-    <ApplyHistoricOffsets
+  const offsetsComponent = isNewLpc ? null : (
+    <LegacyApplyHistoricOffsets
       offsetCandidates={offsetCandidates}
       shouldApplyOffsets={shouldApplyOffsets}
       setShouldApplyOffsets={setShouldApplyOffsets}
@@ -353,7 +354,7 @@ export function ChooseRobotToRunProtocolSlideoutComponent(
 export function ChooseRobotToRunProtocolSlideout(
   props: ChooseRobotToRunProtocolSlideoutProps
 ): JSX.Element | null {
-  const [selectedRobot, setSelectedRobot] = React.useState<Robot | null>(null)
+  const [selectedRobot, setSelectedRobot] = useState<Robot | null>(null)
   return (
     <ApiHostProvider
       hostname={selectedRobot?.ip ?? null}

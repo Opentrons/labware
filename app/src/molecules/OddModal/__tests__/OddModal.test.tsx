@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -7,14 +6,16 @@ import { renderWithProviders } from '/app/__testing-utils__'
 import { OddModalHeader } from '../OddModalHeader'
 import { OddModal } from '../OddModal'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('../OddModalHeader')
 
-const render = (props: React.ComponentProps<typeof OddModal>) => {
+const render = (props: ComponentProps<typeof OddModal>) => {
   return renderWithProviders(<OddModal {...props} />)[0]
 }
 
 describe('OddModal', () => {
-  let props: React.ComponentProps<typeof OddModal>
+  let props: ComponentProps<typeof OddModal>
   beforeEach(() => {
     props = {
       onOutsideClick: vi.fn(),

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { MemoryRouter } from 'react-router-dom'
 import { fireEvent, screen } from '@testing-library/react'
@@ -21,6 +20,7 @@ import { mockConnectedRobot } from '/app/redux/discovery/__fixtures__'
 import { ConfirmCancelRunModal } from '../ConfirmCancelRunModal'
 import { CancelingRunModal } from '../CancelingRunModal'
 
+import type { ComponentProps } from 'react'
 import type { NavigateFunction } from 'react-router-dom'
 
 vi.mock('@opentrons/react-api-client')
@@ -46,7 +46,7 @@ vi.mock('react-router-dom', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof ConfirmCancelRunModal>) => {
+const render = (props: ComponentProps<typeof ConfirmCancelRunModal>) => {
   return renderWithProviders(
     <MemoryRouter>
       <ConfirmCancelRunModal {...props} />
@@ -63,7 +63,7 @@ const ROBOT_NAME = 'otie'
 const mockFn = vi.fn()
 
 describe('ConfirmCancelRunModal', () => {
-  let props: React.ComponentProps<typeof ConfirmCancelRunModal>
+  let props: ComponentProps<typeof ConfirmCancelRunModal>
 
   beforeEach(() => {
     props = {

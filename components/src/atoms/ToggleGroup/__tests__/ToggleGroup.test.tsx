@@ -1,15 +1,16 @@
-import type * as React from 'react'
 import { describe, it, expect, vi } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 import { renderWithProviders } from '../../../testing/utils'
 import { ToggleGroup } from '../index'
 
-const render = (props: React.ComponentProps<typeof ToggleGroup>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof ToggleGroup>) => {
   return renderWithProviders(<ToggleGroup {...props} />)
 }
 
 describe('ToggleGroup', () => {
-  let props: React.ComponentProps<typeof ToggleGroup>
+  let props: ComponentProps<typeof ToggleGroup>
 
   it('should render text and buttons', () => {
     props = {

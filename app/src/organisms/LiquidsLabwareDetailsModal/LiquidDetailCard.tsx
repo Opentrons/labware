@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useSelector } from 'react-redux'
 import { css } from 'styled-components'
 import {
@@ -26,6 +25,8 @@ import {
 } from '/app/redux/analytics'
 import { getIsOnDevice } from '/app/redux/config'
 import { getWellRangeForLiquidLabwarePair } from '/app/transformations/analysis'
+
+import type { Dispatch, SetStateAction } from 'react'
 
 export const CARD_OUTLINE_BORDER_STYLE = css`
   border-style: ${BORDERS.styleSolid};
@@ -56,7 +57,7 @@ interface LiquidDetailCardProps {
   description: string | null
   displayColor: string
   volumeByWell: { [well: string]: number }
-  setSelectedValue: React.Dispatch<React.SetStateAction<string | undefined>>
+  setSelectedValue: Dispatch<SetStateAction<string | undefined>>
   selectedValue: string | undefined
   labwareWellOrdering: string[][]
 }

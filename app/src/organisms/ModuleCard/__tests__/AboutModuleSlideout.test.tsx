@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -20,16 +19,18 @@ import {
 import { useCurrentRunStatus } from '/app/organisms/RunTimeControl'
 import { AboutModuleSlideout } from '../AboutModuleSlideout'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/organisms/RunTimeControl')
 
-const render = (props: React.ComponentProps<typeof AboutModuleSlideout>) => {
+const render = (props: ComponentProps<typeof AboutModuleSlideout>) => {
   return renderWithProviders(<AboutModuleSlideout {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('AboutModuleSlideout', () => {
-  let props: React.ComponentProps<typeof AboutModuleSlideout>
+  let props: ComponentProps<typeof AboutModuleSlideout>
   beforeEach(() => {
     props = {
       module: mockMagneticModule,

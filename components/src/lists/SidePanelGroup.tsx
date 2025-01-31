@@ -1,10 +1,10 @@
 // SidePanelGroup component
-import type * as React from 'react'
 import cx from 'classnames'
 
 import styles from './lists.module.css'
 import { Icon } from '../icons'
 
+import type { ReactNode } from 'react'
 import type { IconName } from '../icons'
 
 // TODO(bc, 2021-03-31): this component is only used in one place
@@ -15,7 +15,7 @@ export interface SidePanelGroupProps {
   /** optional icon left of the title */
   iconName?: IconName
   /** children, most likely one or more TitledList */
-  children?: React.ReactNode
+  children?: ReactNode
   /** additional classnames */
   className?: string
   /** disables the whole SidePanelGroup if true */

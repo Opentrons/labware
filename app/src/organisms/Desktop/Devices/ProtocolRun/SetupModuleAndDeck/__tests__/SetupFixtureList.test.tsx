@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, beforeEach, vi } from 'vitest'
 import { renderWithProviders } from '/app/__testing-utils__'
@@ -16,6 +15,7 @@ import { NotConfiguredModal } from '../NotConfiguredModal'
 import { LocationConflictModal } from '/app/organisms/LocationConflictModal'
 import { DeckFixtureSetupInstructionsModal } from '/app/organisms/DeviceDetailsDeckConfiguration/DeckFixtureSetupInstructionsModal'
 
+import type { ComponentProps } from 'react'
 import type { CutoutConfigAndCompatibility } from '/app/resources/deck_configuration/hooks'
 
 vi.mock('/app/resources/deck_configuration/hooks')
@@ -61,14 +61,14 @@ const mockConflictDeckConfigCompatibility: CutoutConfigAndCompatibility[] = [
   },
 ]
 
-const render = (props: React.ComponentProps<typeof SetupFixtureList>) => {
+const render = (props: ComponentProps<typeof SetupFixtureList>) => {
   return renderWithProviders(<SetupFixtureList {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('SetupFixtureList', () => {
-  let props: React.ComponentProps<typeof SetupFixtureList>
+  let props: ComponentProps<typeof SetupFixtureList>
   beforeEach(() => {
     props = {
       deckConfigCompatibility: mockDeckConfigCompatibility,

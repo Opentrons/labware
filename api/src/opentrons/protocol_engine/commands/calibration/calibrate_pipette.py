@@ -65,8 +65,8 @@ class CalibratePipetteImplementation(
         await ot3_api.save_instrument_offset(mount=ot3_mount, delta=pipette_offset)
 
         return SuccessData(
-            public=CalibratePipetteResult.construct(
-                pipetteOffset=InstrumentOffsetVector.construct(
+            public=CalibratePipetteResult.model_construct(
+                pipetteOffset=InstrumentOffsetVector.model_construct(
                     x=pipette_offset.x, y=pipette_offset.y, z=pipette_offset.z
                 )
             ),
@@ -80,7 +80,7 @@ class CalibratePipette(
 
     commandType: CalibratePipetteCommandType = "calibration/calibratePipette"
     params: CalibratePipetteParams
-    result: Optional[CalibratePipetteResult]
+    result: Optional[CalibratePipetteResult] = None
 
     _ImplementationCls: Type[
         CalibratePipetteImplementation

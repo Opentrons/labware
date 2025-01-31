@@ -68,7 +68,7 @@ class DeactivateHeater(
 
     commandType: DeactivateHeaterCommandType = "heaterShaker/deactivateHeater"
     params: DeactivateHeaterParams
-    result: Optional[DeactivateHeaterResult]
+    result: Optional[DeactivateHeaterResult] = None
 
     _ImplementationCls: Type[DeactivateHeaterImpl] = DeactivateHeaterImpl
 

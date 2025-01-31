@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -12,12 +11,14 @@ import { useLatchControls } from '../hooks'
 import { TestShakeSlideout } from '../TestShakeSlideout'
 import { ModuleSetupModal } from '../ModuleSetupModal'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/redux/config')
 vi.mock('@opentrons/react-api-client')
 vi.mock('../hooks')
 vi.mock('../ModuleSetupModal')
 
-const render = (props: React.ComponentProps<typeof TestShakeSlideout>) => {
+const render = (props: ComponentProps<typeof TestShakeSlideout>) => {
   return renderWithProviders(<TestShakeSlideout {...props} />, {
     i18nInstance: i18n,
   })[0]
@@ -90,7 +91,7 @@ const mockMovingHeaterShaker = {
 } as any
 
 describe('TestShakeSlideout', () => {
-  let props: React.ComponentProps<typeof TestShakeSlideout>
+  let props: ComponentProps<typeof TestShakeSlideout>
   let mockCreateLiveCommand = vi.fn()
   const mockToggleLatch = vi.fn()
   beforeEach(() => {

@@ -86,9 +86,11 @@ describe('pipette data accessors', () => {
               'opentrons/opentrons_flex_96_tiprack_1000ul/1',
               'opentrons/opentrons_flex_96_tiprack_200ul/1',
               'opentrons/opentrons_flex_96_tiprack_50ul/1',
+              'opentrons/opentrons_flex_96_tiprack_20ul/1',
               'opentrons/opentrons_flex_96_filtertiprack_1000ul/1',
               'opentrons/opentrons_flex_96_filtertiprack_200ul/1',
               'opentrons/opentrons_flex_96_filtertiprack_50ul/1',
+              'opentrons/opentrons_flex_96_filtertiprack_20ul/1',
             ],
             minVolume: 5,
             maxVolume: 1000,
@@ -170,15 +172,52 @@ describe('pipette data accessors', () => {
     })
   })
   it('returns the correct liquid info for a p50 pipette model version with default and lowVolume', () => {
-    const tiprack50uL = 'opentrons/opentrons_flex_96_tiprack_50ul/1'
-    const tiprackFilter50uL = 'opentrons/opentrons_flex_96_filtertiprack_50ul/1'
-
     const mockLiquidDefault = {
       $otSharedSchema: '#/pipette/schemas/2/pipetteLiquidPropertiesSchema.json',
-      defaultTipracks: [tiprack50uL, tiprackFilter50uL],
+      defaultTipracks: [
+        'opentrons/opentrons_flex_96_tiprack_50ul/1',
+        'opentrons/opentrons_flex_96_tiprack_20ul/1',
+        'opentrons/opentrons_flex_96_filtertiprack_50ul/1',
+        'opentrons/opentrons_flex_96_filtertiprack_20ul/1',
+      ],
       maxVolume: 50,
       minVolume: 5,
       supportedTips: {
+        t20: {
+          uiMaxFlowRate: 57,
+          aspirate: {
+            default: {
+              1: expect.anything(),
+            },
+          },
+          defaultAspirateFlowRate: {
+            default: 35,
+            valuesByApiLevel: {
+              '2.14': 35,
+            },
+          },
+          defaultBlowOutFlowRate: {
+            default: 57,
+            valuesByApiLevel: {
+              '2.14': 57,
+            },
+          },
+          defaultDispenseFlowRate: {
+            default: 57,
+            valuesByApiLevel: {
+              '2.14': 57,
+            },
+          },
+          defaultFlowAcceleration: 1200,
+          defaultPushOutVolume: 2,
+          defaultReturnTipHeight: 0.71,
+          defaultTipLength: 52.0,
+          dispense: {
+            default: {
+              1: expect.anything(),
+            },
+          },
+        },
         t50: {
           uiMaxFlowRate: 57,
           aspirate: {
@@ -218,10 +257,50 @@ describe('pipette data accessors', () => {
     } as PipetteV2LiquidSpecs
     const mockLiquidLowVolume = {
       $otSharedSchema: '#/pipette/schemas/2/pipetteLiquidPropertiesSchema.json',
-      defaultTipracks: [tiprack50uL, tiprackFilter50uL],
+      defaultTipracks: [
+        'opentrons/opentrons_flex_96_tiprack_50ul/1',
+        'opentrons/opentrons_flex_96_tiprack_20ul/1',
+        'opentrons/opentrons_flex_96_filtertiprack_50ul/1',
+        'opentrons/opentrons_flex_96_filtertiprack_20ul/1',
+      ],
       maxVolume: 30,
       minVolume: 1,
       supportedTips: {
+        t20: {
+          uiMaxFlowRate: 26.7,
+          aspirate: {
+            default: {
+              1: expect.anything(),
+            },
+          },
+          defaultAspirateFlowRate: {
+            default: 26.7,
+            valuesByApiLevel: {
+              '2.14': 26.7,
+            },
+          },
+          defaultBlowOutFlowRate: {
+            default: 26.7,
+            valuesByApiLevel: {
+              '2.14': 26.7,
+            },
+          },
+          defaultDispenseFlowRate: {
+            default: 26.7,
+            valuesByApiLevel: {
+              '2.14': 26.7,
+            },
+          },
+          defaultFlowAcceleration: 1200,
+          defaultPushOutVolume: 7,
+          defaultReturnTipHeight: 0.71,
+          defaultTipLength: 52.0,
+          dispense: {
+            default: {
+              1: expect.anything(),
+            },
+          },
+        },
         t50: {
           uiMaxFlowRate: 26.7,
           aspirate: {

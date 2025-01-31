@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { describe, it, beforeEach, vi, afterEach } from 'vitest'
 import { screen } from '@testing-library/react'
@@ -15,6 +14,8 @@ import {
   mockThermocycler,
   mockHeaterShaker,
 } from '/app/redux/modules/__fixtures__'
+
+import type { ComponentProps } from 'react'
 import type { ModuleModel, ModuleType } from '@opentrons/shared-data'
 
 vi.mock('@opentrons/react-api-client')
@@ -49,9 +50,7 @@ const mockTCModule = {
 }
 const MOCK_TC_COORDS = [20, 30, 0]
 
-const render = (
-  props: React.ComponentProps<typeof ProtocolRunModuleControls>
-) => {
+const render = (props: ComponentProps<typeof ProtocolRunModuleControls>) => {
   return renderWithProviders(<ProtocolRunModuleControls {...props} />, {
     i18nInstance: i18n,
   })[0]

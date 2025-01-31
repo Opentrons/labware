@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, beforeEach, vi, afterEach, expect } from 'vitest'
 import { screen } from '@testing-library/react'
 
@@ -21,6 +20,7 @@ import {
 import { LiquidsLabwareDetailsModal } from '../LiquidsLabwareDetailsModal'
 import { LiquidDetailCard } from '../LiquidDetailCard'
 
+import type { ComponentProps } from 'react'
 import type * as Components from '@opentrons/components'
 import type * as SharedData from '@opentrons/shared-data'
 
@@ -44,16 +44,14 @@ vi.mock('/app/transformations/commands')
 vi.mock('/app/transformations/analysis')
 vi.mock('../LiquidDetailCard')
 
-const render = (
-  props: React.ComponentProps<typeof LiquidsLabwareDetailsModal>
-) => {
+const render = (props: ComponentProps<typeof LiquidsLabwareDetailsModal>) => {
   return renderWithProviders(<LiquidsLabwareDetailsModal {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('LiquidsLabwareDetailsModal', () => {
-  let props: React.ComponentProps<typeof LiquidsLabwareDetailsModal>
+  let props: ComponentProps<typeof LiquidsLabwareDetailsModal>
   beforeEach(() => {
     window.HTMLElement.prototype.scrollIntoView = function () {}
     props = {

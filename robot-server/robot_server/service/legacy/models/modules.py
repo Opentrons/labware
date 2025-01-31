@@ -1,5 +1,5 @@
 import typing
-from pydantic import BaseModel, Field
+from pydantic import ConfigDict, BaseModel, Field
 
 
 class TemperatureModuleLiveData(BaseModel):
@@ -168,9 +168,8 @@ class Modules(BaseModel):
     """A list of all attached modules and the status of each one"""
 
     modules: typing.List[Module]
-
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "examples": [
                 {"modules": []},
                 {
@@ -270,6 +269,7 @@ class Modules(BaseModel):
                 },
             ]
         }
+    )
 
 
 class ModuleSerial(BaseModel):
@@ -288,9 +288,11 @@ class SerialCommand(BaseModel):
     args: typing.Optional[typing.List[typing.Any]] = Field(
         None, description="The ordered args list for the call"
     )
-
-    class Config:
-        schema_extra = {"examples": [{"command_type": "set_Temperature", "args": [60]}]}
+    model_config = ConfigDict(
+        json_schema_extra={
+            "examples": [{"command_type": "set_Temperature", "args": [60]}]
+        }
+    )
 
 
 class SerialCommandResponse(BaseModel):
@@ -300,6 +302,6 @@ class SerialCommandResponse(BaseModel):
     returnValue: typing.Optional[str] = Field(
         None, description="The return value from the call"
     )
-
-    class Config:
-        schema_extra = {"examples": [{"message": "Success", "returnValue": None}]}
+    model_config = ConfigDict(
+        json_schema_extra={"examples": [{"message": "Success", "returnValue": None}]}
+    )

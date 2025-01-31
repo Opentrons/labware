@@ -75,6 +75,7 @@ async def test_create_run(
         labwareOffsets=[],
         status=pe_types.EngineStatus.IDLE,
         liquids=[],
+        liquidClasses=[],
         hasEverEnteredErrorRecovery=False,
     )
 
@@ -150,6 +151,7 @@ async def test_get_run_data_from_url(
         labware=[],
         labwareOffsets=[],
         liquids=[],
+        liquidClasses=[],
         hasEverEnteredErrorRecovery=False,
     )
 
@@ -200,6 +202,7 @@ async def test_get_run() -> None:
         labware=[],
         labwareOffsets=[],
         liquids=[],
+        liquidClasses=[],
         hasEverEnteredErrorRecovery=False,
     )
 
@@ -226,6 +229,7 @@ async def test_get_current_run(
         labware=[],
         labwareOffsets=[],
         liquids=[],
+        liquidClasses=[],
         hasEverEnteredErrorRecovery=False,
     )
     decoy.when(mock_maintenance_run_data_manager.current_run_id).then_return(

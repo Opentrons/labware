@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { fireEvent, screen } from '@testing-library/react'
@@ -7,16 +6,18 @@ import { renderWithProviders } from '../../../__testing-utils__'
 import { getLabwareDefsByURI } from '../../../labware-defs/selectors'
 import { PipetteInfoItem } from '..'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('../../../labware-defs/selectors')
 
-const render = (props: React.ComponentProps<typeof PipetteInfoItem>) => {
+const render = (props: ComponentProps<typeof PipetteInfoItem>) => {
   return renderWithProviders(<PipetteInfoItem {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('PipetteInfoItem', () => {
-  let props: React.ComponentProps<typeof PipetteInfoItem>
+  let props: ComponentProps<typeof PipetteInfoItem>
 
   beforeEach(() => {
     props = {
@@ -34,7 +35,7 @@ describe('PipetteInfoItem', () => {
   it('renders pipette with edit and remove buttons', () => {
     render(props)
     screen.getByText('P1000 Single-Channel GEN1')
-    screen.getByText('Left Pipette')
+    screen.getByText('Left Mount')
     screen.getByText('mock display name')
     fireEvent.click(screen.getByText('Edit'))
     expect(props.editClick).toHaveBeenCalled()
@@ -49,7 +50,7 @@ describe('PipetteInfoItem', () => {
     }
     render(props)
     screen.getByText('P1000 Single-Channel GEN1')
-    screen.getByText('Right Pipette')
+    screen.getByText('Right Mount')
     screen.getByText('mock display name')
     fireEvent.click(screen.getByText('Edit'))
     expect(props.editClick).toHaveBeenCalled()

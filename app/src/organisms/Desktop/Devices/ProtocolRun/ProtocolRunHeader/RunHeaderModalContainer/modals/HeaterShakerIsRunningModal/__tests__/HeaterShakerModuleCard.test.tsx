@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { describe, it, vi, beforeEach } from 'vitest'
 
@@ -8,16 +7,18 @@ import { i18n } from '/app/i18n'
 import { HeaterShakerModuleCard } from '../HeaterShakerModuleCard'
 import { HeaterShakerModuleData } from '/app/organisms/ModuleCard/HeaterShakerModuleData'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/organisms/ModuleCard/HeaterShakerModuleData')
 
-const render = (props: React.ComponentProps<typeof HeaterShakerModuleCard>) => {
+const render = (props: ComponentProps<typeof HeaterShakerModuleCard>) => {
   return renderWithProviders(<HeaterShakerModuleCard {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('HeaterShakerModuleCard', () => {
-  let props: React.ComponentProps<typeof HeaterShakerModuleCard>
+  let props: ComponentProps<typeof HeaterShakerModuleCard>
   beforeEach(() => {
     props = {
       module: mockHeaterShaker,

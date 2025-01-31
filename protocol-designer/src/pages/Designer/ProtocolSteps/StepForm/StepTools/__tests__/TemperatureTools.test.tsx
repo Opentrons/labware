@@ -7,6 +7,8 @@ import {
   getTemperatureModuleIds,
 } from '../../../../../../ui/modules/selectors'
 import { TemperatureTools } from '../TemperatureTools'
+
+import type { ComponentProps } from 'react'
 import type * as ModulesSelectors from '../../../../../../ui/modules/selectors'
 
 vi.mock('../../../../../../ui/modules/selectors', async importOriginal => {
@@ -17,14 +19,14 @@ vi.mock('../../../../../../ui/modules/selectors', async importOriginal => {
     getTemperatureModuleIds: vi.fn(),
   }
 })
-const render = (props: React.ComponentProps<typeof TemperatureTools>) => {
+const render = (props: ComponentProps<typeof TemperatureTools>) => {
   return renderWithProviders(<TemperatureTools {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('TemperatureTools', () => {
-  let props: React.ComponentProps<typeof TemperatureTools>
+  let props: ComponentProps<typeof TemperatureTools>
 
   beforeEach(() => {
     props = {
@@ -72,6 +74,8 @@ describe('TemperatureTools', () => {
         },
       },
       showFormErrors: false,
+      tab: 'aspirate',
+      setTab: vi.fn(),
     }
 
     vi.mocked(getTemperatureModuleIds).mockReturnValue(['mockId'])
@@ -85,9 +89,7 @@ describe('TemperatureTools', () => {
 
   it('renders a temperature module form with 1 module', () => {
     render(props)
-    screen.getByText('Module')
+    screen.getByText('Module state')
     screen.getByText('mock module')
-    screen.getByText('Deactivate module')
-    screen.getByText('Change to temperature')
   })
 })

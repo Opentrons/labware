@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, beforeEach, vi, expect } from 'vitest'
 
@@ -12,12 +11,14 @@ import {
 } from '/app/redux/analytics'
 import { getIsOnDevice } from '/app/redux/config'
 import { LiquidDetailCard } from '../LiquidDetailCard'
+
+import type { ComponentProps } from 'react'
 import type { Mock } from 'vitest'
 
 vi.mock('/app/redux/analytics')
 vi.mock('/app/redux/config')
 
-const render = (props: React.ComponentProps<typeof LiquidDetailCard>) => {
+const render = (props: ComponentProps<typeof LiquidDetailCard>) => {
   return renderWithProviders(<LiquidDetailCard {...props} />, {
     i18nInstance: i18n,
   })[0]
@@ -25,7 +26,7 @@ const render = (props: React.ComponentProps<typeof LiquidDetailCard>) => {
 let mockTrackEvent: Mock
 
 describe('LiquidDetailCard', () => {
-  let props: React.ComponentProps<typeof LiquidDetailCard>
+  let props: ComponentProps<typeof LiquidDetailCard>
 
   beforeEach(() => {
     mockTrackEvent = vi.fn()

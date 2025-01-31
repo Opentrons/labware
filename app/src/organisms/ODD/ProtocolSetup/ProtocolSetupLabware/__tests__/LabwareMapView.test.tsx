@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { when } from 'vitest-when'
 import { describe, it, vi, beforeEach, afterEach, expect } from 'vitest'
@@ -17,6 +16,7 @@ import { getStandardDeckViewLayerBlockList } from '/app/local-resources/deck_con
 import { mockProtocolModuleInfo } from '../__fixtures__'
 import { LabwareMapView } from '../LabwareMapView'
 
+import type { ComponentProps } from 'react'
 import type {
   getSimplestDeckConfigForProtocol,
   CompletedProtocolAnalysis,
@@ -50,7 +50,7 @@ vi.mock('@opentrons/components', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof LabwareMapView>) => {
+const render = (props: ComponentProps<typeof LabwareMapView>) => {
   return renderWithProviders(
     <MemoryRouter>
       <LabwareMapView {...props} />

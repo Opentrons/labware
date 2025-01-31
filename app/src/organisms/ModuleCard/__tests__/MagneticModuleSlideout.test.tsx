@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { COLORS } from '@opentrons/components'
@@ -13,15 +12,17 @@ import {
   mockMagneticModuleGen2,
 } from '/app/redux/modules/__fixtures__'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('@opentrons/react-api-client')
 
-const render = (props: React.ComponentProps<typeof MagneticModuleSlideout>) => {
+const render = (props: ComponentProps<typeof MagneticModuleSlideout>) => {
   return renderWithProviders(<MagneticModuleSlideout {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 describe('MagneticModuleSlideout', () => {
-  let props: React.ComponentProps<typeof MagneticModuleSlideout>
+  let props: ComponentProps<typeof MagneticModuleSlideout>
   let mockCreateLiveCommand = vi.fn()
   beforeEach(() => {
     mockCreateLiveCommand = vi.fn()

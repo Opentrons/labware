@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, afterEach, vi, beforeEach } from 'vitest'
 
@@ -9,10 +8,12 @@ import { ANALYTICS_QUICK_TRANSFER_SETTING_SAVED } from '/app/redux/analytics'
 import { useTrackEventWithRobotSerial } from '/app/redux-resources/analytics'
 import { TipDropLocation } from '../../TipManagement/TipDropLocation'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/resources/deck_configuration')
 vi.mock('/app/redux-resources/analytics')
 
-const render = (props: React.ComponentProps<typeof TipDropLocation>): any => {
+const render = (props: ComponentProps<typeof TipDropLocation>): any => {
   return renderWithProviders(<TipDropLocation {...props} />, {
     i18nInstance: i18n,
   })
@@ -20,7 +21,7 @@ const render = (props: React.ComponentProps<typeof TipDropLocation>): any => {
 let mockTrackEventWithRobotSerial: any
 
 describe('TipDropLocation', () => {
-  let props: React.ComponentProps<typeof TipDropLocation>
+  let props: ComponentProps<typeof TipDropLocation>
 
   beforeEach(() => {
     props = {

@@ -116,9 +116,9 @@ def test_create_error_recovery_policy_defined_error(
 @pytest.mark.parametrize("enabled", [True, False])
 def test_enabled_boolean(enabled: bool) -> None:
     """enabled=False should override any rules and always fail the run."""
-    command = LiquidProbe.construct()  # type: ignore[call-arg]
+    command = LiquidProbe.model_construct()  # type: ignore[call-arg]
     error_data = DefinedErrorData[LiquidNotFoundError](
-        public=LiquidNotFoundError.construct()  # type: ignore[call-arg]
+        public=LiquidNotFoundError.model_construct()  # type: ignore[call-arg]
     )
 
     rules = [
@@ -160,9 +160,9 @@ def test_enabled_on_flex_disabled_on_ot2(
     robot_type: RobotType, expect_error_recovery_to_be_enabled: bool
 ) -> None:
     """On OT-2s, the run should always fail regardless of any input rules."""
-    command = LiquidProbe.construct()  # type: ignore[call-arg]
+    command = LiquidProbe.model_construct()  # type: ignore[call-arg]
     error_data = DefinedErrorData[LiquidNotFoundError](
-        public=LiquidNotFoundError.construct()  # type: ignore[call-arg]
+        public=LiquidNotFoundError.model_construct()  # type: ignore[call-arg]
     )
 
     rules = [

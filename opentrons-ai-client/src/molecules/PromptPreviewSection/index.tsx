@@ -12,6 +12,7 @@ export interface PromptPreviewSectionProps {
   title: string
   items: string[]
   itemMaxWidth?: string
+  oneItemPerRow?: boolean
 }
 
 const PromptPreviewSectionContainer = styled(Flex)`
@@ -23,14 +24,20 @@ const SectionHeading = styled(StyledText)`
   margin-bottom: ${SPACING.spacing8};
 `
 
-const TagsContainer = styled(Flex)`
+const TagsContainer = styled.div<{
+  oneItemPerRow: boolean
+}>`
+  display: flex;
   grid-gap: ${SPACING.spacing4};
   flex-wrap: ${WRAP};
   justify-content: flex-start;
   width: 100%;
+  flex-direction: ${props => (Boolean(props.oneItemPerRow) ? 'column' : 'row')};
 `
 
-const TagItemWrapper = styled.div<{ itemMaxWidth: string }>`
+const TagItemWrapper = styled.div<{
+  itemMaxWidth: string
+}>`
   display: flex;
   width: auto;
   white-space: nowrap;
@@ -51,11 +58,12 @@ export function PromptPreviewSection({
   title,
   items,
   itemMaxWidth = '35%',
+  oneItemPerRow = false,
 }: PromptPreviewSectionProps): JSX.Element {
   return (
     <PromptPreviewSectionContainer>
       <SectionHeading desktopStyle="bodyLargeSemiBold">{title}</SectionHeading>
-      <TagsContainer>
+      <TagsContainer oneItemPerRow={oneItemPerRow}>
         {items.map(
           (item: string, index: number) =>
             item.trim() !== '' && (
@@ -64,7 +72,7 @@ export function PromptPreviewSection({
                 key={`item-tag-${index}`}
                 itemMaxWidth={itemMaxWidth}
               >
-                <Tag text={item} type={'default'} />
+                <Tag text={item} type="default" />
               </TagItemWrapper>
             )
         )}

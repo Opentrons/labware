@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, beforeEach, vi, afterEach } from 'vitest'
@@ -11,6 +10,8 @@ import { useMostRecentCompletedAnalysis } from '/app/resources/runs'
 import { PipetteWizardFlows } from '/app/organisms/PipetteWizardFlows'
 import { SetupFlexPipetteCalibrationItem } from '../SetupFlexPipetteCalibrationItem'
 import { modifiedSimpleV6Protocol as _uncastedModifiedSimpleV6Protocol } from '/app/resources/runs/__fixtures__'
+
+import type { ComponentProps } from 'react'
 import type { CompletedProtocolAnalysis } from '@opentrons/shared-data'
 
 vi.mock('@opentrons/react-api-client')
@@ -33,9 +34,7 @@ describe('SetupFlexPipetteCalibrationItem', () => {
   const render = ({
     mount = 'left',
     runId = RUN_ID,
-  }: Partial<
-    React.ComponentProps<typeof SetupFlexPipetteCalibrationItem>
-  > = {}) => {
+  }: Partial<ComponentProps<typeof SetupFlexPipetteCalibrationItem>> = {}) => {
     return renderWithProviders(
       <MemoryRouter>
         <SetupFlexPipetteCalibrationItem

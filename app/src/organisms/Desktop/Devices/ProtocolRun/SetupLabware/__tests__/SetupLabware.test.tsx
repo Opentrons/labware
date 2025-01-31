@@ -8,7 +8,7 @@ import { useHoverTooltip } from '@opentrons/components'
 import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { useLPCSuccessToast } from '../../../hooks/useLPCSuccessToast'
-import { LabwarePositionCheck } from '/app/organisms/LabwarePositionCheck'
+import { LegacyLabwarePositionCheck } from '/app/organisms/LegacyLabwarePositionCheck'
 import { getModuleTypesThatRequireExtraAttention } from '../../utils/getModuleTypesThatRequireExtraAttention'
 import { getIsLabwareOffsetCodeSnippetsOn } from '/app/redux/config'
 import { SetupLabwareList } from '../SetupLabwareList'
@@ -31,7 +31,7 @@ vi.mock('@opentrons/components', async () => {
 })
 vi.mock('../SetupLabwareList')
 vi.mock('../SetupLabwareMap')
-vi.mock('/app/organisms/LabwarePositionCheck')
+vi.mock('/app/organisms/LegacyLabwarePositionCheck')
 vi.mock('../../utils/getModuleTypesThatRequireExtraAttention')
 vi.mock('/app/organisms/RunTimeControl/hooks')
 vi.mock('/app/redux/config')
@@ -68,7 +68,7 @@ describe('SetupLabware', () => {
       .calledWith(expect.anything())
       .thenReturn([])
 
-    vi.mocked(LabwarePositionCheck).mockReturnValue(
+    vi.mocked(LegacyLabwarePositionCheck).mockReturnValue(
       <div>mock Labware Position Check</div>
     )
     when(vi.mocked(useUnmatchedModulesForProtocol))

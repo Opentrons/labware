@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { it, describe, beforeEach, vi, expect } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
@@ -19,6 +18,7 @@ import { mockRunTimeParameterData } from '../../__fixtures__'
 import { useToaster } from '/app/organisms/ToasterOven'
 import { ProtocolSetupParameters } from '..'
 
+import type { ComponentProps } from 'react'
 import type { NavigateFunction } from 'react-router-dom'
 import type { HostConfig } from '@opentrons/api-client'
 import type { CompletedProtocolAnalysis } from '@opentrons/shared-data'
@@ -51,16 +51,14 @@ const mockMostRecentAnalysis = ({
 } as unknown) as CompletedProtocolAnalysis
 const mockMakeSnackbar = vi.fn()
 
-const render = (
-  props: React.ComponentProps<typeof ProtocolSetupParameters>
-) => {
+const render = (props: ComponentProps<typeof ProtocolSetupParameters>) => {
   return renderWithProviders(<ProtocolSetupParameters {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('ProtocolSetupParameters', () => {
-  let props: React.ComponentProps<typeof ProtocolSetupParameters>
+  let props: ComponentProps<typeof ProtocolSetupParameters>
 
   beforeEach(() => {
     props = {

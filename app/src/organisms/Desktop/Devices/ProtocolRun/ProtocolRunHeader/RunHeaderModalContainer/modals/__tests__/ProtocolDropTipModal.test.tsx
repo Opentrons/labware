@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, expect, beforeEach } from 'vitest'
 import { renderHook, act, screen, fireEvent } from '@testing-library/react'
 
@@ -10,6 +9,7 @@ import {
   ProtocolDropTipModal,
 } from '../ProtocolDropTipModal'
 
+import type { ComponentProps } from 'react'
 import type { Mock } from 'vitest'
 
 vi.mock('/app/local-resources/instruments')
@@ -104,14 +104,14 @@ describe('useProtocolDropTipModal', () => {
   })
 })
 
-const render = (props: React.ComponentProps<typeof ProtocolDropTipModal>) => {
+const render = (props: ComponentProps<typeof ProtocolDropTipModal>) => {
   return renderWithProviders(<ProtocolDropTipModal {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('ProtocolDropTipModal', () => {
-  let props: React.ComponentProps<typeof ProtocolDropTipModal>
+  let props: ComponentProps<typeof ProtocolDropTipModal>
 
   beforeEach(() => {
     props = {

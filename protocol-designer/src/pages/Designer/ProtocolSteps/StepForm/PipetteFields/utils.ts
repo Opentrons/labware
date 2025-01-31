@@ -15,15 +15,26 @@ export interface DisabledChangeTipArgs {
   dispenseWells?: string[]
   stepType?: StepType
   path?: PathOption | null | undefined
+  isDisposalLocation?: boolean
 }
 export const getDisabledChangeTipOptions = (
   args: DisabledChangeTipArgs
 ): Set<ChangeTipOptions> | null | undefined => {
-  const { path, aspirateWells, dispenseWells, stepType } = args
+  const {
+    path,
+    aspirateWells,
+    dispenseWells,
+    stepType,
+    isDisposalLocation,
+  } = args
 
   switch (stepType) {
     case 'moveLiquid': {
-      const wellRatio = getWellRatio(aspirateWells, dispenseWells)
+      const wellRatio = getWellRatio(
+        aspirateWells,
+        dispenseWells,
+        isDisposalLocation
+      )
 
       //  ensure wells are selected
       if (wellRatio != null && path === 'single') {
@@ -63,6 +74,7 @@ export interface ValuesForPath {
   pipette?: string | null
   volume?: string | null
   tipRack?: string | null
+  isDisposalLocation?: boolean
 }
 export function getDisabledPathMap(
   values: ValuesForPath,
@@ -76,9 +88,15 @@ export function getDisabledPathMap(
     dispense_wells,
     pipette,
     tipRack,
+    isDisposalLocation,
   } = values
   if (!pipette) return null
-  const wellRatio = getWellRatio(aspirate_wells, dispense_wells)
+  const wellRatio = getWellRatio(
+    aspirate_wells,
+    dispense_wells,
+    isDisposalLocation
+  )
+
   let disabledPathMap: Partial<Record<PathOption, string>> = {}
 
   // changeTip is lowest priority disable reasoning

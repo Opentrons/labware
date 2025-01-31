@@ -49,6 +49,7 @@ export const AnnouncementModal = (
     <>
       {showAnnouncementModal && (
         <Modal
+          marginLeft="0"
           title={heading}
           type="info"
           footer={

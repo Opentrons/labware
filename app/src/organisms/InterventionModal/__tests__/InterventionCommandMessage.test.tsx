@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { renderWithProviders } from '/app/__testing-utils__'
@@ -10,16 +9,16 @@ import {
   truncatedCommandMessage,
 } from '../__fixtures__'
 
-const render = (
-  props: React.ComponentProps<typeof InterventionCommandMessage>
-) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof InterventionCommandMessage>) => {
   return renderWithProviders(<InterventionCommandMessage {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('InterventionCommandMessage', () => {
-  let props: React.ComponentProps<typeof InterventionCommandMessage>
+  let props: ComponentProps<typeof InterventionCommandMessage>
 
   it('truncates command text greater than 220 characters long', () => {
     props = { commandMessage: longCommandMessage }

@@ -55,10 +55,10 @@ def tip_rack_dict() -> LabwareDefDict:
 @pytest.fixture
 def tip_rack_model() -> LabwareDefinition:
     """Get a tip rack Pydantic model definition value object."""
-    return LabwareDefinition.construct(  # type: ignore[call-arg]
+    return LabwareDefinition.model_construct(  # type: ignore[call-arg]
         namespace="test",
         version=1,
-        parameters=Parameters.construct(  # type: ignore[call-arg]
+        parameters=Parameters.model_construct(  # type: ignore[call-arg]
             loadName="cool-labware",
             tipOverlap=None,  # add a None value to validate serialization to dictionary
         ),

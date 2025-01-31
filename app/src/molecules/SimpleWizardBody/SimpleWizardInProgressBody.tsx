@@ -1,9 +1,10 @@
-import type * as React from 'react'
-import type { StyleProps } from '@opentrons/components'
 import { InProgressModal } from '../InProgressModal/InProgressModal'
 import { SimpleWizardBodyContainer } from './SimpleWizardBodyContainer'
 
-export type SimpleWizardInProgressBodyProps = React.ComponentProps<
+import type { ComponentProps } from 'react'
+import type { StyleProps } from '@opentrons/components'
+
+export type SimpleWizardInProgressBodyProps = ComponentProps<
   typeof InProgressModal
 > &
   StyleProps

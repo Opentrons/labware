@@ -1,8 +1,7 @@
-import type * as React from 'react'
-
 import { SlotBase } from './SlotBase'
 import { SlotClip } from './SlotClip'
 
+import type { SVGProps } from 'react'
 import type { DeckDefinition, ModuleType } from '@opentrons/shared-data'
 
 export type StagingAreaLocation =
@@ -11,12 +10,12 @@ export type StagingAreaLocation =
   | 'cutoutC3'
   | 'cutoutD3'
 
-interface StagingAreaFixtureProps extends React.SVGProps<SVGGElement> {
+interface StagingAreaFixtureProps extends SVGProps<SVGGElement> {
   cutoutId: StagingAreaLocation
   deckDefinition: DeckDefinition
   moduleType?: ModuleType
-  fixtureBaseColor?: React.SVGProps<SVGPathElement>['fill']
-  slotClipColor?: React.SVGProps<SVGPathElement>['stroke']
+  fixtureBaseColor?: SVGProps<SVGPathElement>['fill']
+  slotClipColor?: SVGProps<SVGPathElement>['stroke']
   showExtensions?: boolean
 }
 

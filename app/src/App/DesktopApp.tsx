@@ -1,7 +1,6 @@
 import { useState, Fragment } from 'react'
 import { Navigate, Route, Routes, useMatch } from 'react-router-dom'
 import { ErrorBoundary } from 'react-error-boundary'
-
 import {
   Box,
   COLORS,
@@ -38,6 +37,8 @@ import { useRobot, useIsFlex } from '/app/redux-resources/robots'
 import { ProtocolTimeline } from '/app/pages/Desktop/Protocols/ProtocolDetails/ProtocolTimeline'
 import { PortalRoot as ModalPortalRoot } from './portal'
 import { DesktopAppFallback } from './DesktopAppFallback'
+import { ReactQueryDevtools } from './tools'
+import { useFeatureFlag } from '../redux/config'
 
 import type { RouteProps } from './types'
 
@@ -47,6 +48,22 @@ export const DesktopApp = (): JSX.Element => {
     isEmergencyStopModalDismissed,
     setIsEmergencyStopModalDismissed,
   ] = useState<boolean>(false)
+
+  // note for react-scan
+  const enableReactScan = useFeatureFlag('reactScan')
+  // Dynamically import `react-scan` to avoid build errors
+  if (typeof window !== 'undefined' && enableReactScan) {
+    import('react-scan')
+      .then(({ scan }) => {
+        scan({
+          enabled: enableReactScan,
+          log: true,
+        })
+      })
+      .catch(error => {
+        console.error('Failed to load react-scan:', error)
+      })
+  }
 
   const desktopRoutes: RouteProps[] = [
     {
@@ -108,6 +125,7 @@ export const DesktopApp = (): JSX.Element => {
     <NiceModal.Provider>
       <LocalizationProvider>
         <ErrorBoundary FallbackComponent={DesktopAppFallback}>
+          <ReactQueryDevtools />
           <SystemLanguagePreferenceModal />
           <Navbar routes={desktopRoutes} />
           <ToasterOven>

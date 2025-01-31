@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, beforeEach, expect } from 'vitest'
 import { fireEvent, screen, waitFor } from '@testing-library/react'
 
@@ -11,6 +10,8 @@ import { i18n } from '/app/i18n'
 import { UnmountGripper } from '../UnmountGripper'
 import { GRIPPER_FLOW_TYPES } from '../constants'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('@opentrons/react-api-client')
 
 const mockRunId = 'fakeRunId'
@@ -21,7 +22,7 @@ describe('UnmountGripper', () => {
   let mockChainRunCommands: any
   let mockSetErrorMessage: any
   const render = (
-    props: Partial<React.ComponentProps<typeof UnmountGripper>> = {}
+    props: Partial<ComponentProps<typeof UnmountGripper>> = {}
   ) => {
     return renderWithProviders(
       <UnmountGripper

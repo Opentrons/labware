@@ -1,4 +1,5 @@
 """Basic well data state and store."""
+
 from dataclasses import dataclass
 from typing import Dict, List, Union, Iterator, Optional, Tuple, overload, TypeVar
 
@@ -54,7 +55,7 @@ class WellStore(HasState[WellState], HandlesActions):
         labware_id = state_update.labware_id
         if labware_id not in self._state.loaded_volumes:
             self._state.loaded_volumes[labware_id] = {}
-        for (well, volume) in state_update.volumes.items():
+        for well, volume in state_update.volumes.items():
             self._state.loaded_volumes[labware_id][well] = LoadedVolumeInfo(
                 volume=_none_from_clear(volume),
                 last_loaded=state_update.last_loaded,
@@ -83,19 +84,28 @@ class WellStore(HasState[WellState], HandlesActions):
     def _handle_liquid_operated_update(
         self, state_update: update_types.LiquidOperatedUpdate
     ) -> None:
-        labware_id = state_update.labware_id
-        well_name = state_update.well_name
+        for well_name in state_update.well_names:
+            self._handle_well_operated(
+                state_update.labware_id, well_name, state_update.volume_added
+            )
+
+    def _handle_well_operated(
+        self,
+        labware_id: str,
+        well_name: str,
+        volume_added: float | update_types.ClearType,
+    ) -> None:
         if (
             labware_id in self._state.loaded_volumes
             and well_name in self._state.loaded_volumes[labware_id]
         ):
-            if state_update.volume_added is update_types.CLEAR:
+            if volume_added is update_types.CLEAR:
                 del self._state.loaded_volumes[labware_id][well_name]
             else:
                 prev_loaded_vol_info = self._state.loaded_volumes[labware_id][well_name]
                 assert prev_loaded_vol_info.volume is not None
                 self._state.loaded_volumes[labware_id][well_name] = LoadedVolumeInfo(
-                    volume=prev_loaded_vol_info.volume + state_update.volume_added,
+                    volume=prev_loaded_vol_info.volume + volume_added,
                     last_loaded=prev_loaded_vol_info.last_loaded,
                     operations_since_load=prev_loaded_vol_info.operations_since_load
                     + 1,
@@ -109,16 +119,14 @@ class WellStore(HasState[WellState], HandlesActions):
             labware_id in self._state.probed_volumes
             and well_name in self._state.probed_volumes[labware_id]
         ):
-            if state_update.volume_added is update_types.CLEAR:
+            if volume_added is update_types.CLEAR:
                 del self._state.probed_volumes[labware_id][well_name]
             else:
                 prev_probed_vol_info = self._state.probed_volumes[labware_id][well_name]
                 if prev_probed_vol_info.volume is None:
                     new_vol_info: float | None = None
                 else:
-                    new_vol_info = (
-                        prev_probed_vol_info.volume + state_update.volume_added
-                    )
+                    new_vol_info = prev_probed_vol_info.volume + volume_added
                 self._state.probed_volumes[labware_id][well_name] = ProbedVolumeInfo(
                     volume=new_vol_info,
                     last_probed=prev_probed_vol_info.last_probed,
@@ -127,7 +135,7 @@ class WellStore(HasState[WellState], HandlesActions):
                 )
 
 
-class WellView(HasState[WellState]):
+class WellView:
     """Read-only well state view."""
 
     _state: WellState
@@ -214,7 +222,7 @@ def _volume_from_info(info: Optional[LoadedVolumeInfo]) -> Optional[float]:
 
 
 def _volume_from_info(
-    info: Union[ProbedVolumeInfo, LoadedVolumeInfo, None]
+    info: Union[ProbedVolumeInfo, LoadedVolumeInfo, None],
 ) -> Optional[float]:
     if info is None:
         return None

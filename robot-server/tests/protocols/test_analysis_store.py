@@ -203,6 +203,8 @@ async def test_returned_in_order_added(
             commands=[],
             errors=[],
             liquids=[],
+            liquidClasses=[],
+            command_annotations=[],
         )
 
     subject.add_pending(
@@ -251,6 +253,7 @@ async def test_update_adds_details_and_completes_analysis(
         value=2.0,
         default=3.0,
     )
+    command_annotation = pe_types.CustomCommandAnnotation(commandKeys=["abc", "xyz"])
     subject.add_pending(
         protocol_id="protocol-id", analysis_id="analysis-id", run_time_parameters=[]
     )
@@ -266,6 +269,8 @@ async def test_update_adds_details_and_completes_analysis(
         commands=[],
         errors=[],
         liquids=[],
+        liquidClasses=[],
+        command_annotations=[command_annotation],
     )
 
     result = await subject.get("analysis-id")
@@ -283,6 +288,8 @@ async def test_update_adds_details_and_completes_analysis(
         commands=[],
         errors=[],
         liquids=[],
+        liquidClasses=[],
+        commandAnnotations=[command_annotation],
     )
     assert await subject.get_by_protocol("protocol-id") == [result]
     assert json.loads(result_as_document) == {
@@ -315,7 +322,11 @@ async def test_update_adds_details_and_completes_analysis(
         "commands": [],
         "errors": [],
         "liquids": [],
+        "liquidClasses": [],
         "modules": [],
+        "commandAnnotations": [
+            {"annotationType": "custom", "commandKeys": ["abc", "xyz"]}
+        ],
     }
 
 
@@ -364,6 +375,7 @@ async def test_update_adds_rtp_values_to_completed_store(
             commands=[],
             errors=[],
             liquids=[],
+            liquidClasses=[],
         ),
     )
 
@@ -384,6 +396,8 @@ async def test_update_adds_rtp_values_to_completed_store(
         commands=[],
         errors=[],
         liquids=[],
+        liquidClasses=[],
+        command_annotations=[],
     )
     decoy.verify(
         await mock_completed_store.make_room_and_add(
@@ -487,6 +501,8 @@ async def test_update_infers_status_from_errors(
         modules=[],
         pipettes=[],
         liquids=[],
+        liquidClasses=[],
+        command_annotations=[],
     )
     analysis = (await subject.get_by_protocol("protocol-id"))[0]
     assert isinstance(analysis, CompletedAnalysis)
@@ -528,6 +544,7 @@ async def test_save_initialization_failed_analysis(
             commands=[],
             errors=[error_occurence],
             liquids=[],
+            liquidClasses=[],
         ),
     )
 

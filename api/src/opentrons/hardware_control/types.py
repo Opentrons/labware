@@ -1,3 +1,4 @@
+from asyncio import Queue
 import enum
 import logging
 from dataclasses import dataclass
@@ -712,3 +713,63 @@ class FailedTipStateCheck(RuntimeError):
         super().__init__(
             f"Expected tip state {expected_state}, but received {actual_state}."
         )
+
+
+@enum.unique
+class PipetteSensorId(int, enum.Enum):
+    """Sensor IDs available.
+
+    Not to be confused with SensorType. This is the ID value that separate
+    two or more of the same type of sensor within a system.
+
+    Note that this is a copy of an enum defined in opentrons_hardware.firmware_bindings.constants. That version
+    is authoritative; this version is here because this data is exposed above the hardware control layer and
+    therefore needs a typing source here so that we don't create a dependency on the internal hardware package.
+    """
+
+    S0 = 0x0
+    S1 = 0x1
+    UNUSED = 0x2
+    BOTH = 0x3
+
+
+@enum.unique
+class PipetteSensorType(int, enum.Enum):
+    """Sensor types available.
+
+    Note that this is a copy of an enum defined in opentrons_hardware.firmware_bindings.constants. That version
+    is authoritative; this version is here because this data is exposed above the hardware control layer and
+    therefore needs a typing source here so that we don't create a dependency on the internal hardware package.
+    """
+
+    tip = 0x00
+    capacitive = 0x01
+    environment = 0x02
+    pressure = 0x03
+    pressure_temperature = 0x04
+    humidity = 0x05
+    temperature = 0x06
+
+
+@dataclass(frozen=True)
+class PipetteSensorData:
+    """Sensor data from a monitored sensor.
+
+    Note that this is a copy of an enum defined in opentrons_hardware.firmware_bindings.constants. That version
+    is authoritative; this version is here because this data is exposed above the hardware control layer and
+    therefore needs a typing source here so that we don't create a dependency on the internal hardware package.
+    """
+
+    sensor_type: PipetteSensorType
+    _as_int: int
+    _as_float: float
+
+    def to_float(self) -> float:
+        return self._as_float
+
+    @property
+    def to_int(self) -> int:
+        return self._as_int
+
+
+PipetteSensorResponseQueue = Queue[Dict[PipetteSensorId, List[PipetteSensorData]]]

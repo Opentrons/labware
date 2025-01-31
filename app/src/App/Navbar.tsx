@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
@@ -26,6 +26,7 @@ import logoSvgThree from '/app/assets/images/logo_nav_three.svg'
 
 import { NAV_BAR_WIDTH } from './constants'
 
+import type { MouseEvent } from 'react'
 import type { RouteProps } from './types'
 
 const SALESFORCE_HELP_LINK = 'https://support.opentrons.com/s/'
@@ -112,13 +113,11 @@ const LogoImg = styled('img')`
 
 export function Navbar({ routes }: { routes: RouteProps[] }): JSX.Element {
   const { t } = useTranslation('top_navigation')
-
   const navigate = useNavigate()
   const navRoutes = routes.filter(
     ({ navLinkTo }: RouteProps) => navLinkTo != null
   )
-
-  const debouncedNavigate = React.useCallback(
+  const debouncedNavigate = useCallback(
     debounce((path: string) => {
       navigate(path)
     }, DEBOUNCE_DURATION_MS),
@@ -164,7 +163,7 @@ export function Navbar({ routes }: { routes: RouteProps[] }): JSX.Element {
         <NavIconLink
           role="button"
           data-testid="Navbar_settingsLink"
-          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+          onClick={(e: MouseEvent<HTMLButtonElement>) => {
             e.preventDefault()
             debouncedNavigate('/app-settings')
           }}

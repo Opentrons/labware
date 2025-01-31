@@ -42,7 +42,7 @@ addrs = {
 class AsairSensorError(Exception):
     """Asair sensor error."""
 
-    def __init__(self, ret_code: str = None) -> None:
+    def __init__(self, ret_code: str = "") -> None:
         """Constructor."""
         super().__init__(ret_code)
 
@@ -75,7 +75,7 @@ class AsairSensorBase(ABC):
 
 
 def BuildAsairSensor(
-    simulate: bool, autosearch: bool = True, port_substr: str = None
+    simulate: bool, autosearch: bool = True, port_substr: str = ""
 ) -> AsairSensorBase:
     """Try to find and return an Asair sensor, if not found return a simulator."""
     ui.print_title("Connecting to Environmental sensor")

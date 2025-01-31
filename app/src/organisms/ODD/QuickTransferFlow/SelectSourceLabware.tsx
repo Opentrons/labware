@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Flex,
@@ -15,6 +15,7 @@ import {
 import { ChildNavigation } from '/app/organisms/ODD/ChildNavigation'
 import { getCompatibleLabwareByCategory } from './utils'
 
+import type { ComponentProps, Dispatch } from 'react'
 import type { LabwareDefinition2 } from '@opentrons/shared-data'
 import type { SmallButton } from '/app/atoms/buttons'
 import type { LabwareFilter } from '/app/local-resources/labware'
@@ -26,9 +27,9 @@ import type {
 interface SelectSourceLabwareProps {
   onNext: () => void
   onBack: () => void
-  exitButtonProps: React.ComponentProps<typeof SmallButton>
+  exitButtonProps: ComponentProps<typeof SmallButton>
   state: QuickTransferWizardState
-  dispatch: React.Dispatch<QuickTransferWizardAction>
+  dispatch: Dispatch<QuickTransferWizardAction>
 }
 
 export function SelectSourceLabware(
@@ -44,11 +45,9 @@ export function SelectSourceLabware(
   if (state.pipette?.channels === 1) {
     labwareDisplayCategoryFilters.push('tubeRack')
   }
-  const [selectedCategory, setSelectedCategory] = React.useState<LabwareFilter>(
-    'all'
-  )
+  const [selectedCategory, setSelectedCategory] = useState<LabwareFilter>('all')
 
-  const [selectedLabware, setSelectedLabware] = React.useState<
+  const [selectedLabware, setSelectedLabware] = useState<
     LabwareDefinition2 | undefined
   >(state.source)
 

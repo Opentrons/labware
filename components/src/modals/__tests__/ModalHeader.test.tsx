@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -9,14 +8,16 @@ import { COLORS } from '../../helix-design-system'
 import { SPACING } from '../../ui-style-constants'
 import { ALIGN_CENTER, JUSTIFY_CENTER } from '../../styles'
 
+import type { ComponentProps } from 'react'
+
 const mockClose = vi.fn()
 
-const render = (props: React.ComponentProps<typeof ModalHeader>) => {
+const render = (props: ComponentProps<typeof ModalHeader>) => {
   return renderWithProviders(<ModalHeader {...props} />)
 }
 
 describe('ModalHeader', () => {
-  let props: React.ComponentProps<typeof ModalHeader>
+  let props: ComponentProps<typeof ModalHeader>
 
   beforeEach(() => {
     props = {

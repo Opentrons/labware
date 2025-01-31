@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -14,6 +13,8 @@ import {
 } from '@opentrons/components'
 
 import { TertiaryButton } from '/app/atoms/buttons'
+
+import type { MouseEventHandler } from 'react'
 interface DisplayRobotNameProps {
   robotName: string
   updateIsExpanded: (
@@ -30,7 +31,7 @@ export function DisplayRobotName({
 }: DisplayRobotNameProps): JSX.Element {
   const { t } = useTranslation('device_settings')
 
-  const handleClick: React.MouseEventHandler<HTMLButtonElement> = () => {
+  const handleClick: MouseEventHandler<HTMLButtonElement> = () => {
     if (!isRobotBusy) {
       updateIsExpanded(true, 'renameRobot')
     }

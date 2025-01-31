@@ -1,7 +1,9 @@
 """Router for /maintenance_runs endpoints dealing with labware offsets and definitions."""
 from typing import Annotated
 import logging
-from fastapi import APIRouter, Depends, status
+
+from fastapi import Depends, status
+from server_utils.fastapi_utils.light_router import LightRouter
 
 from opentrons.protocol_engine import LabwareOffsetCreate, LabwareOffset
 from opentrons.protocols.models import LabwareDefinition
@@ -15,7 +17,7 @@ from ..dependencies import get_maintenance_run_orchestrator_store
 from .base_router import RunNotFound, RunNotIdle, get_run_data_from_url
 
 log = logging.getLogger(__name__)
-labware_router = APIRouter()
+labware_router = LightRouter()
 
 
 @PydanticResponse.wrap_route(
@@ -54,7 +56,7 @@ async def add_labware_offset(
     log.info(f'Added labware offset "{added_offset.id}"' f' to run "{run.id}".')
 
     return await PydanticResponse.create(
-        content=SimpleBody.construct(data=added_offset),
+        content=SimpleBody.model_construct(data=added_offset),
         status_code=status.HTTP_201_CREATED,
     )
 
@@ -93,8 +95,8 @@ async def add_labware_definition(
     log.info(f'Added labware definition "{uri}"' f' to run "{run.id}".')
 
     return PydanticResponse(
-        content=SimpleBody.construct(
-            data=LabwareDefinitionSummary.construct(definitionUri=uri)
+        content=SimpleBody.model_construct(
+            data=LabwareDefinitionSummary.model_construct(definitionUri=uri)
         ),
         status_code=status.HTTP_201_CREATED,
     )

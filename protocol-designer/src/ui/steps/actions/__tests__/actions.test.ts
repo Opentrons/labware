@@ -7,7 +7,7 @@ import * as utils from '../../../../utils'
 import * as stepFormSelectors from '../../../../step-forms/selectors'
 import { getRobotStateTimeline } from '../../../../file-data/selectors'
 import { getMultiSelectLastSelected } from '../../selectors'
-import { selectStep, selectAllSteps, deselectAllSteps } from '../actions'
+import { selectAllSteps, deselectAllSteps } from '../actions'
 import {
   duplicateStep,
   duplicateMultipleSteps,
@@ -52,38 +52,6 @@ const initialRobotState: RobotState = {
 }
 
 describe('steps actions', () => {
-  describe('selectStep', () => {
-    const stepId = 'stepId'
-    beforeEach(() => {
-      when(vi.mocked(stepFormSelectors.getSavedStepForms))
-        .calledWith(expect.anything())
-        .thenReturn({
-          stepId: {
-            foo: 'getSavedStepFormsResult',
-          } as any,
-        })
-    })
-    afterEach(() => {
-      vi.resetAllMocks()
-    })
-    // TODO(IL, 2020-04-17): also test scroll to top behavior
-    it('should select the step and populate the form', () => {
-      const store: any = mockStore()
-      store.dispatch(selectStep(stepId))
-      expect(store.getActions()).toEqual([
-        {
-          type: 'SELECT_STEP',
-          payload: stepId,
-        },
-        {
-          type: 'POPULATE_FORM',
-          payload: {
-            foo: 'getSavedStepFormsResult',
-          },
-        },
-      ])
-    })
-  })
   describe('selectAllSteps', () => {
     let ids: string[]
     beforeEach(() => {

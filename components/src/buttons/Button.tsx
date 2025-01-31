@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import cx from 'classnames'
 import omit from 'lodash/omit'
 
@@ -7,6 +6,7 @@ import styles from './buttons.module.css'
 
 import { BUTTON_TYPE_BUTTON } from '../primitives'
 
+import type { ComponentType, MouseEventHandler, ReactNode } from 'react'
 import type { BUTTON_TYPE_SUBMIT, BUTTON_TYPE_RESET } from '../primitives'
 import type { IconName } from '../icons'
 import type { UseHoverTooltipTargetProps } from '../tooltips'
@@ -15,7 +15,7 @@ export interface ButtonProps {
   /** id attribute */
   id?: string
   /** click handler */
-  onClick?: React.MouseEventHandler
+  onClick?: MouseEventHandler
   /** name attribute */
   name?: string
   /** title attribute */
@@ -31,7 +31,7 @@ export interface ButtonProps {
   /** inverts the default color/background/border of default button style */
   inverted?: boolean
   /** contents of the button */
-  children?: React.ReactNode
+  children?: ReactNode
   /** type of button (default "button") */
   type?:
     | typeof BUTTON_TYPE_SUBMIT
@@ -40,7 +40,7 @@ export interface ButtonProps {
   /** ID of form that button is for */
   form?: string
   /** custom element or component to use instead of `<button>` */
-  Component?: React.ComponentType<any> | keyof JSX.IntrinsicElements
+  Component?: ComponentType<any> | keyof JSX.IntrinsicElements
   /** handlers for HoverTooltipComponent */
   hoverTooltipHandlers?: UseHoverTooltipTargetProps | null | undefined
   /** html tabindex property */

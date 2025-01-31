@@ -3,6 +3,7 @@ from decoy import Decoy
 
 from opentrons.types import MountType
 from opentrons.protocol_engine.state.state import StateView
+from opentrons.protocol_engine.state import update_types
 from opentrons.protocol_engine.commands.unsafe.unsafe_blow_out_in_place import (
     UnsafeBlowOutInPlaceParams,
     UnsafeBlowOutInPlaceResult,
@@ -41,7 +42,14 @@ async def test_blow_out_in_place_implementation(
 
     result = await subject.execute(data)
 
-    assert result == SuccessData(public=UnsafeBlowOutInPlaceResult())
+    assert result == SuccessData(
+        public=UnsafeBlowOutInPlaceResult(),
+        state_update=update_types.StateUpdate(
+            pipette_aspirated_fluid=update_types.PipetteEmptyFluidUpdate(
+                pipette_id="pipette-id"
+            )
+        ),
+    )
 
     decoy.verify(
         await ot3_hardware_api.update_axis_position_estimations([Axis.P_L]),

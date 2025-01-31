@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [dev-packages]
-mypy = "==1.8.0"
+mypy = "==1.11.0"
 flake8 = "~=7.0.0"
 flake8-annotations = "~=3.0.1"
 flake8-docstrings = "~=1.7.0"
@@ -27,5 +27,5 @@ pytest-clarity = "~=1.0.0"
 [packages]
 opentrons-shared-data = { editable = true, path = "." }
 jsonschema = "==4.21.1"
-pydantic = "==1.10.12"
+pydantic = "==2.9.0"
 numpy = "==1.22.3"

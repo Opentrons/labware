@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
 const BREAKPOINT_HEIGHT = 650
-const BREAKPOINT_WIDTH = 600
+const BREAKPOINT_WIDTH = 768
 
 export const useScreenSizeCheck = (): boolean => {
   const [isValidSize, setValidSize] = useState<boolean>(

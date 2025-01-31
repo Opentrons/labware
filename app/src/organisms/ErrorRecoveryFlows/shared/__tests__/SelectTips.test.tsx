@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, expect, beforeEach } from 'vitest'
 import { screen, fireEvent, waitFor } from '@testing-library/react'
 
@@ -9,19 +8,20 @@ import { SelectTips } from '../SelectTips'
 import { RECOVERY_MAP } from '../../constants'
 import { TipSelectionModal } from '../TipSelectionModal'
 
+import type { ComponentProps } from 'react'
 import type { Mock } from 'vitest'
 
 vi.mock('../TipSelectionModal')
 vi.mock('../TipSelection')
 
-const render = (props: React.ComponentProps<typeof SelectTips>) => {
+const render = (props: ComponentProps<typeof SelectTips>) => {
   return renderWithProviders(<SelectTips {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('SelectTips', () => {
-  let props: React.ComponentProps<typeof SelectTips>
+  let props: ComponentProps<typeof SelectTips>
   let mockGoBackPrevStep: Mock
   let mockhandleMotionRouting: Mock
   let mockProceedNextStep: Mock

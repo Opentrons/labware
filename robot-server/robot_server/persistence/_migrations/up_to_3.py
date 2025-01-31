@@ -23,7 +23,6 @@ from logging import getLogger
 from typing import List
 
 from opentrons.protocol_engine import StateSummary
-import pydantic
 import sqlalchemy
 
 from ..pydantic import pydantic_to_json
@@ -138,9 +137,7 @@ def _migrate_run_table_excluding_commands(
             new_state_summary = (
                 None
                 if old_row.state_summary is None
-                else pydantic_to_json(
-                    pydantic.parse_obj_as(StateSummary, old_state_summary)
-                )
+                else pydantic_to_json(StateSummary.model_validate(old_state_summary))
             )
             dest_transaction.execute(
                 insert_new_run,
@@ -194,6 +191,12 @@ def _migrate_db_commands(
     the work across subprocesses. Each subprocess extracts, migrates, and inserts
     all of the commands for a single run.
     """
+    # Performance optimization: If we have nothing to migrate, don't even create the
+    # process pool. This avoids the heavy imports in the preload.
+    # On my laptop, this shaves ~1.5s off of each of our integration tests.
+    if not run_ids:
+        return
+
     mp = multiprocessing.get_context("forkserver")
     mp.set_forkserver_preload(_up_to_3_worker.imports)
 

@@ -399,7 +399,7 @@ The following table summarizes the limitations in place along each side of the d
     * - A1–D1 (left edge)
       - Rightmost column
       - None (all wells accessible)
-    * - A1–D3 (back edge)
+    * - A1–A3 (back edge)
       - Frontmost row
       - Rows A–G
     * - A3–D3 (right edge)

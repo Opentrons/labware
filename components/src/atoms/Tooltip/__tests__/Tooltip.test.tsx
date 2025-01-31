@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { screen } from '@testing-library/react'
@@ -11,7 +10,9 @@ import { POSITION_ABSOLUTE } from '../../../styles'
 import { renderWithProviders } from '../../../testing/utils'
 import { Tooltip } from '..'
 
-const render = (props: React.ComponentProps<typeof Tooltip>) => {
+import type { ComponentProps, ReactNode } from 'react'
+
+const render = (props: ComponentProps<typeof Tooltip>) => {
   return renderWithProviders(<Tooltip {...props} />)[0]
 }
 
@@ -39,11 +40,11 @@ const MockTooltipProps = {
 }
 
 describe('Tooltip', () => {
-  let props: React.ComponentProps<typeof Tooltip>
+  let props: ComponentProps<typeof Tooltip>
 
   beforeEach(() => {
     props = {
-      children: 'mock children' as React.ReactNode,
+      children: 'mock children' as ReactNode,
       tooltipProps: MockTooltipProps,
       key: 'mock key',
     }

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, expect, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { screen } from '@testing-library/react'
@@ -6,12 +5,14 @@ import { SPACING, COLORS } from '@opentrons/components'
 import { Line } from '../index'
 import { renderWithProviders } from '/app/__testing-utils__'
 
-const render = (props: React.ComponentProps<typeof Line>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof Line>) => {
   return renderWithProviders(<Line {...props} />)[0]
 }
 
 describe('Line', () => {
-  let props: React.ComponentProps<typeof Line>
+  let props: ComponentProps<typeof Line>
 
   beforeEach(() => {
     props = {

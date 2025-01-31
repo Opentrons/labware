@@ -1,18 +1,19 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
-  Flex,
-  SPACING,
-  LegacyStyledText,
-  TYPOGRAPHY,
   DIRECTION_COLUMN,
+  Flex,
+  LegacyStyledText,
   RadioButton,
+  SPACING,
+  TYPOGRAPHY,
 } from '@opentrons/components'
 import { useInstrumentsQuery } from '@opentrons/react-api-client'
 import { RIGHT, LEFT } from '@opentrons/shared-data'
 import { usePipetteSpecsV2 } from '/app/local-resources/instruments'
 import { ChildNavigation } from '/app/organisms/ODD/ChildNavigation'
 
+import type { ComponentProps, Dispatch } from 'react'
 import type { PipetteData, Mount } from '@opentrons/api-client'
 import type { SmallButton } from '/app/atoms/buttons'
 import type {
@@ -23,9 +24,9 @@ import type {
 interface SelectPipetteProps {
   onNext: () => void
   onBack: () => void
-  exitButtonProps: React.ComponentProps<typeof SmallButton>
+  exitButtonProps: ComponentProps<typeof SmallButton>
   state: QuickTransferWizardState
-  dispatch: React.Dispatch<QuickTransferWizardAction>
+  dispatch: Dispatch<QuickTransferWizardAction>
 }
 
 export function SelectPipette(props: SelectPipetteProps): JSX.Element {
@@ -44,9 +45,9 @@ export function SelectPipette(props: SelectPipetteProps): JSX.Element {
   const rightPipetteSpecs = usePipetteSpecsV2(rightPipette?.instrumentModel)
 
   // automatically select 96 channel if it is attached
-  const [selectedPipette, setSelectedPipette] = React.useState<
-    Mount | undefined
-  >(leftPipetteSpecs?.channels === 96 ? LEFT : state.mount)
+  const [selectedPipette, setSelectedPipette] = useState<Mount | undefined>(
+    leftPipetteSpecs?.channels === 96 ? LEFT : state.mount
+  )
 
   const handleClickNext = (): void => {
     const selectedPipetteSpecs =

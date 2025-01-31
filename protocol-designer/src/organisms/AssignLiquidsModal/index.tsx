@@ -18,11 +18,10 @@ import { selectors } from '../../labware-ingred/selectors'
 import { selectors as stepFormSelectors } from '../../step-forms'
 import * as wellContentsSelectors from '../../top-selectors/well-contents'
 import { getSelectedWells } from '../../well-selection/selectors'
-import {
-  SelectableLabware,
-  wellFillFromWellContents,
-} from '../../components/labware'
+import { SelectableLabware } from '../Labware/SelectableLabware'
+import { wellFillFromWellContents } from '../LabwareOnDeck/utils'
 import { deselectWells, selectWells } from '../../well-selection/actions'
+import { NAV_BAR_HEIGHT_REM } from '../../atoms'
 import { LiquidToolbox } from './LiquidToolbox'
 
 import type { WellGroup } from '@opentrons/components'
@@ -53,18 +52,19 @@ export function AssignLiquidsModal(): JSX.Element | null {
 
   return (
     <Flex
+      height={`calc(100vh - ${NAV_BAR_HEIGHT_REM}rem)`}
       justifyContent={JUSTIFY_SPACE_BETWEEN}
       backgroundColor={COLORS.grey10}
+      padding={SPACING.spacing12}
+      gridGap={SPACING.spacing12}
     >
       <Flex
+        width="100%"
         justifyContent={JUSTIFY_CENTER}
-        width="80%"
         alignItems={ALIGN_CENTER}
-        height="calc(100vh - 64px)"
       >
         <Box
-          width="80vh"
-          height="max-content"
+          width="50vw"
           padding={SPACING.spacing60}
           backgroundColor={COLORS.white}
           borderRadius={BORDERS.borderRadius12}

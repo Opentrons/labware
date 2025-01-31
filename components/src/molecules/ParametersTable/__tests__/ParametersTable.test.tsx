@@ -1,9 +1,9 @@
-import type * as React from 'react'
 import { renderWithProviders } from '../../../testing/utils'
 import { describe, it, beforeEach } from 'vitest'
 import { screen } from '@testing-library/react'
 import { ParametersTable } from '../index'
 
+import type { ComponentProps } from 'react'
 import type { RunTimeParameter } from '@opentrons/shared-data'
 
 const tMock = (key: string) => key
@@ -70,12 +70,12 @@ const mockRunTimeParameter: RunTimeParameter[] = [
   },
 ]
 
-const render = (props: React.ComponentProps<typeof ParametersTable>) => {
+const render = (props: ComponentProps<typeof ParametersTable>) => {
   return renderWithProviders(<ParametersTable {...props} />)
 }
 
 describe('ParametersTable', () => {
-  let props: React.ComponentProps<typeof ParametersTable>
+  let props: ComponentProps<typeof ParametersTable>
 
   beforeEach(() => {
     props = {

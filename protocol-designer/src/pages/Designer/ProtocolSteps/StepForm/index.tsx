@@ -2,11 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 import { useConditionalConfirm } from '@opentrons/components'
-import {
-  HEATERSHAKER_MODULE_TYPE,
-  TEMPERATURE_MODULE_TYPE,
-  getModuleDisplayName,
-} from '@opentrons/shared-data'
+import { getModuleDisplayName } from '@opentrons/shared-data'
 
 import { actions } from '../../../../steplist'
 import { actions as stepsActions } from '../../../../ui/steps'
@@ -14,15 +10,15 @@ import {
   getHydratedForm,
   selectors as stepFormSelectors,
 } from '../../../../step-forms'
-import { maskField } from '../../../../steplist/fieldLevel'
-import { getInvariantContext } from '../../../../step-forms/selectors'
 import {
+  AutoAddPauseUntilTempStepModal,
   CLOSE_STEP_FORM_WITH_CHANGES,
   CLOSE_UNSAVED_STEP_FORM,
   ConfirmDeleteModal,
   DELETE_STEP_FORM,
-} from '../../../../components/modals/ConfirmDeleteModal'
-import { AutoAddPauseUntilTempStepModal } from '../../../../components/modals/AutoAddPauseUntilTempStepModal'
+} from '../../../../organisms'
+import { maskField } from '../../../../steplist/fieldLevel'
+import { getInvariantContext } from '../../../../step-forms/selectors'
 import { getDirtyFields, makeSingleEditFieldProps } from './utils'
 import { StepFormToolbox } from './StepFormToolbox'
 
@@ -183,11 +179,6 @@ function StepFormManager(props: StepFormManagerProps): JSX.Element | null {
           }
           handleCancelClick={saveStepForm}
           handleContinueClick={handleSave}
-          moduleType={
-            showAddPauseUntilTempStepModal
-              ? TEMPERATURE_MODULE_TYPE
-              : HEATERSHAKER_MODULE_TYPE
-          }
         />
       ) : null}
       <StepFormToolbox

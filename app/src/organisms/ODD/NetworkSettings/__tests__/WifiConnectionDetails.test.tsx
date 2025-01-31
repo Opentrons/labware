@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { fireEvent, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -11,6 +10,7 @@ import * as Fixtures from '/app/redux/networking/__fixtures__'
 import { NetworkDetailsModal } from '../../RobotSettingsDashboard/NetworkSettings/NetworkDetailsModal'
 import { WifiConnectionDetails } from '../WifiConnectionDetails'
 
+import type { ComponentProps } from 'react'
 import type { NavigateFunction } from 'react-router-dom'
 
 vi.mock('/app/resources/networking/hooks')
@@ -27,7 +27,7 @@ vi.mock('react-router-dom', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof WifiConnectionDetails>) => {
+const render = (props: ComponentProps<typeof WifiConnectionDetails>) => {
   return renderWithProviders(
     <MemoryRouter>
       <WifiConnectionDetails {...props} />
@@ -51,7 +51,7 @@ const mockWifiList = [
 ]
 
 describe('WifiConnectionDetails', () => {
-  let props: React.ComponentProps<typeof WifiConnectionDetails>
+  let props: ComponentProps<typeof WifiConnectionDetails>
   beforeEach(() => {
     props = {
       ssid: 'mockWifi',

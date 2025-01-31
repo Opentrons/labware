@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { createStore } from 'redux'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, vi, beforeEach, expect } from 'vitest'
@@ -14,6 +13,7 @@ import { getDiscoverableRobotByName } from '/app/redux/discovery'
 import { UpdateRobotModal, RELEASE_NOTES_URL_BASE } from '../UpdateRobotModal'
 import { useIsRobotBusy } from '/app/redux-resources/robots'
 
+import type { ComponentProps } from 'react'
 import type { Store } from 'redux'
 import type { State } from '/app/redux/types'
 
@@ -21,14 +21,14 @@ vi.mock('/app/redux/robot-update')
 vi.mock('/app/redux/discovery')
 vi.mock('/app/redux-resources/robots')
 
-const render = (props: React.ComponentProps<typeof UpdateRobotModal>) => {
+const render = (props: ComponentProps<typeof UpdateRobotModal>) => {
   return renderWithProviders(<UpdateRobotModal {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('UpdateRobotModal', () => {
-  let props: React.ComponentProps<typeof UpdateRobotModal>
+  let props: ComponentProps<typeof UpdateRobotModal>
   let store: Store<State>
   beforeEach(() => {
     store = createStore(vi.fn(), {})

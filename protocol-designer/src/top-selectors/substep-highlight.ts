@@ -4,7 +4,11 @@ import { ALL, COLUMN, getWellNamePerMultiTip } from '@opentrons/shared-data'
 import * as StepGeneration from '@opentrons/step-generation'
 import { selectors as stepFormSelectors } from '../step-forms'
 import { selectors as fileDataSelectors } from '../file-data'
-import { getHoveredStepId, getHoveredSubstep } from '../ui/steps'
+import {
+  getHoveredStepId,
+  getHoveredSubstep,
+  getSelectedStepId,
+} from '../ui/steps'
 import { getWellSetForMultichannel } from '../utils'
 import type { WellGroup } from '@opentrons/components'
 import type {
@@ -275,6 +279,7 @@ export const wellHighlightsByLabwareId: Selector<
   getHoveredSubstep,
   fileDataSelectors.getSubsteps,
   stepFormSelectors.getOrderedStepIds,
+  getSelectedStepId,
   (
     robotStateTimeline,
     invariantContext,
@@ -282,10 +287,11 @@ export const wellHighlightsByLabwareId: Selector<
     hoveredStepId,
     hoveredSubstep,
     substepsById,
-    orderedStepIds
+    orderedStepIds,
+    selectedStepId
   ) => {
     const timeline = robotStateTimeline.timeline
-    const stepId = hoveredStepId
+    const stepId = hoveredStepId || selectedStepId
     const timelineIndex = orderedStepIds.findIndex(i => i === stepId)
     const frame = timeline[timelineIndex]
     const robotState = frame && frame.robotState

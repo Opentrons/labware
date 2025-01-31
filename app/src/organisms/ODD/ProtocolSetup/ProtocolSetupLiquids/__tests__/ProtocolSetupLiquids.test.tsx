@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, beforeEach, vi } from 'vitest'
 import { screen, fireEvent } from '@testing-library/react'
 
@@ -20,6 +19,7 @@ import {
 } from '../fixtures'
 import { ProtocolSetupLiquids } from '..'
 
+import type { ComponentProps } from 'react'
 import type * as SharedData from '@opentrons/shared-data'
 
 vi.mock('/app/transformations/analysis')
@@ -41,13 +41,13 @@ describe('ProtocolSetupLiquids', () => {
     isConfirmed = confirmed
   })
 
-  const render = (props: React.ComponentProps<typeof ProtocolSetupLiquids>) => {
+  const render = (props: ComponentProps<typeof ProtocolSetupLiquids>) => {
     return renderWithProviders(<ProtocolSetupLiquids {...props} />, {
       i18nInstance: i18n,
     })
   }
 
-  let props: React.ComponentProps<typeof ProtocolSetupLiquids>
+  let props: ComponentProps<typeof ProtocolSetupLiquids>
   beforeEach(() => {
     props = {
       runId: RUN_ID_1,

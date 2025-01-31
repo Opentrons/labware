@@ -12,6 +12,7 @@
 **/CHANGELOG.md
 !api/release-notes.md
 !app-shell/build/release-notes.md
+**/.yarn-cache/**
 
 # components library
 storybook-static
@@ -27,6 +28,9 @@ update-server/**
 robot-server/**
 shared-data/python/**
 hardware-testing/**
+
+# abr-testing don't format the json protocols
+abr-testing/protocols/**
 
 # analyses-snapshot-testing don't format the json protocols
 analyses-snapshot-testing/files

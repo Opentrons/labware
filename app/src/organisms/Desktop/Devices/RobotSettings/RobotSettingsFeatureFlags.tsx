@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import {
@@ -17,6 +17,8 @@ import {
   getRobotSettings,
   fetchSettings,
 } from '/app/redux/robot-settings'
+
+import type { MouseEventHandler } from 'react'
 import type { State, Dispatch } from '/app/redux/types'
 import type {
   RobotSettings,
@@ -50,7 +52,7 @@ export function RobotSettingsFeatureFlags({
 
   const dispatch = useDispatch<Dispatch>()
 
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(fetchSettings(robotName))
   }, [dispatch, robotName])
 
@@ -81,7 +83,7 @@ export function FeatureFlagToggle({
 
   if (id == null) return null
 
-  const handleClick: React.MouseEventHandler<Element> = () => {
+  const handleClick: MouseEventHandler<Element> = () => {
     dispatch(updateSetting(robotName, id, !value))
   }
 

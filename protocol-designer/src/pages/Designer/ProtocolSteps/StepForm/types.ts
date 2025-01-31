@@ -1,3 +1,4 @@
+import type { Dispatch, SetStateAction } from 'react'
 import type { FormData, StepFieldName } from '../../../../form-types'
 import type { StepFormErrors } from '../../../../steplist'
 export interface FocusHandlers {
@@ -16,10 +17,12 @@ export interface FieldProps {
   errorToShow?: string | null
   isIndeterminate?: boolean
   tooltipContent?: string | null
+  padding?: string // needed to accommodate full-width divider in toolbox
 }
 export type FieldPropsByName = Record<StepFieldName, FieldProps>
 
 // Shared props across all step forms
+export type LiquidHandlingTab = 'aspirate' | 'dispense'
 export interface StepFormProps {
   formData: FormData
   focusHandlers: FocusHandlers
@@ -28,5 +31,7 @@ export interface StepFormProps {
   visibleFormErrors: StepFormErrors
   showFormErrors: boolean
   focusedField?: string | null
-  setShowFormErrorsAndWarnings?: React.Dispatch<React.SetStateAction<boolean>>
+  setShowFormErrors?: Dispatch<SetStateAction<boolean>>
+  tab: LiquidHandlingTab
+  setTab: Dispatch<SetStateAction<LiquidHandlingTab>>
 }

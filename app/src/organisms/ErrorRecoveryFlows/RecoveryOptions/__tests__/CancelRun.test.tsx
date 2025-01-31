@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import { screen, waitFor } from '@testing-library/react'
 
@@ -9,11 +8,13 @@ import { CancelRun } from '../CancelRun'
 import { RECOVERY_MAP } from '../../constants'
 import { SelectRecoveryOption } from '../SelectRecoveryOption'
 import { clickButtonLabeled } from '../../__tests__/util'
+
+import type { ComponentProps } from 'react'
 import type { Mock } from 'vitest'
 
 vi.mock('../SelectRecoveryOption')
 
-const render = (props: React.ComponentProps<typeof CancelRun>) => {
+const render = (props: ComponentProps<typeof CancelRun>) => {
   return renderWithProviders(<CancelRun {...props} />, {
     i18nInstance: i18n,
   })[0]
@@ -21,7 +22,7 @@ const render = (props: React.ComponentProps<typeof CancelRun>) => {
 
 describe('RecoveryFooterButtons', () => {
   const { CANCEL_RUN, ROBOT_CANCELING, DROP_TIP_FLOWS } = RECOVERY_MAP
-  let props: React.ComponentProps<typeof CancelRun>
+  let props: ComponentProps<typeof CancelRun>
   let mockGoBackPrevStep: Mock
   let mockhandleMotionRouting: Mock
   let mockProceedToRouteAndStep: Mock

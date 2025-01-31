@@ -5,13 +5,15 @@ name = "pypi"
 
 [packages]
 jsonschema = "==4.17.3"
-pydantic = "==1.10.12"
+pydantic = "==2.9.0"
+pydantic-settings = "==2.4.0"
 anyio = "==3.7.1"
 opentrons-shared-data = { editable = true, path = "../shared-data/python" }
 opentrons = { editable = true, path = "." }
 opentrons-hardware = { editable = true, path = "./../hardware", extras=["FLEX"] }
+performance-metrics = {file = "../performance-metrics", editable = true}
 numpy = "==1.22.3"
-packaging = "==21.3"
+packaging = "==22.0"
 pyusb = "==1.2.1"
 
 [dev-packages]
@@ -21,7 +23,7 @@ pyusb = "==1.2.1"
 atomicwrites = { version = "==1.4.0", markers="sys_platform=='win32'" }
 colorama = { version = "==0.4.4", markers="sys_platform=='win32'" }
 coverage = "==7.4.1"
-mypy = "==1.8.0"
+mypy = "==1.11.0"
 numpydoc = "==0.9.1"
 pytest = "==7.4.4"
 pytest-asyncio = "~=0.23.0"
@@ -50,4 +52,3 @@ pytest-profiling = "~=1.7.0"
 # TODO(mc, 2022-03-31): upgrade sphinx, remove this subdep pin
 jinja2 = ">=2.3,<3.1"
 hypothesis = "==6.96.1"
-performance-metrics = {file = "../performance-metrics", editable = true}

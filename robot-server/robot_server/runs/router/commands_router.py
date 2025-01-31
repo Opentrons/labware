@@ -2,7 +2,8 @@
 import textwrap
 from typing import Annotated, Final, Literal, Optional, Union
 
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import Depends, Query, status
+from server_utils.fastapi_utils.light_router import LightRouter
 
 from opentrons.protocol_engine import (
     CommandPointer,
@@ -17,11 +18,11 @@ from robot_server.service.json_api import (
     MultiBodyMeta,
     PydanticResponse,
     SimpleMultiBody,
+    RequestModel,
 )
 from robot_server.robot.control.dependencies import require_estop_in_good_state
 
 from ..command_models import (
-    RequestModelWithCommandCreate,
     CommandCollectionLinks,
     CommandLink,
     CommandLinkMeta,
@@ -44,7 +45,7 @@ from .base_router import RunNotFound, RunStopped
 
 _DEFAULT_COMMAND_LIST_LENGTH: Final = 20
 
-commands_router = APIRouter()
+commands_router = LightRouter()
 
 
 class CommandNotFound(ErrorDetails):
@@ -155,7 +156,7 @@ async def get_current_run_from_url(
     },
 )
 async def create_run_command(
-    request_body: RequestModelWithCommandCreate,
+    request_body: RequestModel[pe_commands.CommandCreate],
     run_orchestrator_store: Annotated[
         RunOrchestratorStore, Depends(get_run_orchestrator_store)
     ],
@@ -221,7 +222,7 @@ async def create_run_command(
     # TODO(mc, 2022-05-26): increment the HTTP API version so that default
     # behavior is to pass through `command_intent` without overriding it
     command_intent = request_body.data.intent or pe_commands.CommandIntent.SETUP
-    command_create = request_body.data.copy(update={"intent": command_intent})
+    command_create = request_body.data.model_copy(update={"intent": command_intent})
 
     try:
         command = await run_orchestrator_store.add_command_and_wait_for_interval(
@@ -241,7 +242,7 @@ async def create_run_command(
     response_data = run_orchestrator_store.get_command(command.id)
 
     return await PydanticResponse.create(
-        content=SimpleBody.construct(data=response_data),
+        content=SimpleBody.model_construct(data=response_data),
         status_code=status.HTTP_201_CREATED,
     )
 
@@ -315,7 +316,7 @@ async def get_run_commands(
     recovery_target_command = run_data_manager.get_recovery_target_command(run_id=runId)
 
     data = [
-        RunCommandSummary.construct(
+        RunCommandSummary.model_construct(
             id=c.id,
             key=c.key,
             commandType=c.commandType,
@@ -337,13 +338,13 @@ async def get_run_commands(
         totalLength=command_slice.total_length,
     )
 
-    links = CommandCollectionLinks.construct(
+    links = CommandCollectionLinks.model_construct(
         current=_make_command_link(runId, current_command),
         currentlyRecoveringFrom=_make_command_link(runId, recovery_target_command),
     )
 
     return await PydanticResponse.create(
-        content=MultiBody.construct(data=data, meta=meta, links=links),
+        content=MultiBody.model_construct(data=data, meta=meta, links=links),
         status_code=status.HTTP_200_OK,
     )
 
@@ -401,7 +402,7 @@ async def get_run_commands_as_pre_serialized_list(
             status.HTTP_503_SERVICE_UNAVAILABLE
         ) from e
     return await PydanticResponse.create(
-        content=SimpleMultiBody.construct(
+        content=SimpleMultiBody.model_construct(
             data=commands, meta=MultiBodyMeta(cursor=0, totalLength=len(commands))
         )
     )
@@ -442,7 +443,7 @@ async def get_run_command(
         raise CommandNotFound.from_exc(e).as_error(status.HTTP_404_NOT_FOUND) from e
 
     return await PydanticResponse.create(
-        content=SimpleBody.construct(data=command),
+        content=SimpleBody.model_construct(data=command),
         status_code=status.HTTP_200_OK,
     )
 
@@ -451,7 +452,7 @@ def _make_command_link(
     run_id: str, command_pointer: Optional[CommandPointer]
 ) -> Optional[CommandLink]:
     return (
-        CommandLink.construct(
+        CommandLink.model_construct(
             href=f"/runs/{run_id}/commands/{command_pointer.command_id}",
             meta=CommandLinkMeta(
                 runId=run_id,

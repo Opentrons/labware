@@ -28,15 +28,12 @@ export function useRunAnalytics({
 
   useEffect(() => {
     const areReportConditionsValid =
-      isRunCurrent &&
-      runId != null &&
-      robotAnalyticsData != null &&
-      isTerminalRunStatus(runStatus)
+      isRunCurrent && runId != null && isTerminalRunStatus(runStatus)
 
     if (areReportConditionsValid) {
       trackProtocolRunEvent({
         name: ANALYTICS_PROTOCOL_RUN_ACTION.FINISH,
-        properties: robotAnalyticsData,
+        properties: robotAnalyticsData ?? undefined,
       })
     }
   }, [runStatus, isRunCurrent, runId, robotAnalyticsData])

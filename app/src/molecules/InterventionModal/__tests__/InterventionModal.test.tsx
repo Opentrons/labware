@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import { when } from 'vitest-when'
 import '@testing-library/jest-dom/vitest'
@@ -12,6 +11,7 @@ import { getIsOnDevice } from '/app/redux/config'
 
 import { InterventionModal } from '../'
 
+import type { ComponentProps } from 'react'
 import type { ModalType } from '../'
 import type { State } from '/app/redux/types'
 
@@ -23,7 +23,7 @@ const MOCK_STATE: State = {
   },
 } as any
 
-const render = (props: React.ComponentProps<typeof InterventionModal>) => {
+const render = (props: ComponentProps<typeof InterventionModal>) => {
   return renderWithProviders(<InterventionModal {...props} />, {
     i18nInstance: i18n,
     initialState: MOCK_STATE,
@@ -31,7 +31,7 @@ const render = (props: React.ComponentProps<typeof InterventionModal>) => {
 }
 
 describe('InterventionModal', () => {
-  let props: React.ComponentProps<typeof InterventionModal>
+  let props: ComponentProps<typeof InterventionModal>
 
   beforeEach(() => {
     props = {

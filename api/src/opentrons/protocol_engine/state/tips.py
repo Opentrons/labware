@@ -1,11 +1,14 @@
 """Tip state tracking."""
+
 from dataclasses import dataclass
 from enum import Enum
 from typing import Dict, Optional, List, Union
 
+from opentrons.types import NozzleMapInterface
 from opentrons.protocol_engine.state import update_types
 
 from ._abstract_store import HasState, HandlesActions
+from ._well_math import wells_covered_dense
 from ..actions import Action, ResetTipsAction, get_state_updates
 
 from opentrons.hardware_control.nozzle_manager import NozzleMap
@@ -108,49 +111,15 @@ class TipStore(HasState[TipState], HandlesActions):
                     column for column in definition.ordering
                 ]
 
-    def _set_used_tips(  # noqa: C901
-        self, pipette_id: str, well_name: str, labware_id: str
-    ) -> None:
+    def _set_used_tips(self, pipette_id: str, well_name: str, labware_id: str) -> None:
         columns = self._state.column_by_labware_id.get(labware_id, [])
         wells = self._state.tips_by_labware_id.get(labware_id, {})
         nozzle_map = self._state.pipette_info_by_pipette_id[pipette_id].nozzle_map
-
-        # TODO (cb, 02-28-2024): Transition from using partial nozzle map to full instrument map for the set used logic
-        num_nozzle_cols = len(nozzle_map.columns)
-        num_nozzle_rows = len(nozzle_map.rows)
-
-        critical_column = 0
-        critical_row = 0
-        for column in columns:
-            if well_name in column:
-                critical_row = column.index(well_name)
-                critical_column = columns.index(column)
-
-        for i in range(num_nozzle_cols):
-            for j in range(num_nozzle_rows):
-                if nozzle_map.starting_nozzle == "A1":
-                    if (critical_column + i < len(columns)) and (
-                        critical_row + j < len(columns[critical_column])
-                    ):
-                        well = columns[critical_column + i][critical_row + j]
-                        wells[well] = TipRackWellState.USED
-                elif nozzle_map.starting_nozzle == "A12":
-                    if (critical_column - i >= 0) and (
-                        critical_row + j < len(columns[critical_column])
-                    ):
-                        well = columns[critical_column - i][critical_row + j]
-                        wells[well] = TipRackWellState.USED
-                elif nozzle_map.starting_nozzle == "H1":
-                    if (critical_column + i < len(columns)) and (critical_row - j >= 0):
-                        well = columns[critical_column + i][critical_row - j]
-                        wells[well] = TipRackWellState.USED
-                elif nozzle_map.starting_nozzle == "H12":
-                    if (critical_column - i >= 0) and (critical_row - j >= 0):
-                        well = columns[critical_column - i][critical_row - j]
-                        wells[well] = TipRackWellState.USED
+        for well in wells_covered_dense(nozzle_map, well_name, columns):
+            wells[well] = TipRackWellState.USED
 
 
-class TipView(HasState[TipState]):
+class TipView:
     """Read-only tip state view."""
 
     _state: TipState
@@ -168,12 +137,13 @@ class TipView(HasState[TipState]):
         labware_id: str,
         num_tips: int,
         starting_tip_name: Optional[str],
-        nozzle_map: Optional[NozzleMap],
+        nozzle_map: Optional[NozzleMapInterface],
     ) -> Optional[str]:
         """Get the next available clean tip. Does not support use of a starting tip if the pipette used is in a partial configuration."""
         wells = self._state.tips_by_labware_id.get(labware_id, {})
         columns = self._state.column_by_labware_id.get(labware_id, [])
 
+        # TODO(sf): I'm pretty sure this can be replaced with wells_covered_96 but I'm not quite sure how
         def _identify_tip_cluster(
             active_columns: int,
             active_rows: int,
@@ -224,10 +194,7 @@ class TipView(HasState[TipState]):
                 return None
             else:
                 # In the case of an 8ch pipette where a column has mixed state tips we may simply progress to the next column in our search
-                if (
-                    nozzle_map is not None
-                    and len(nozzle_map.full_instrument_map_store) == 8
-                ):
+                if nozzle_map is not None and nozzle_map.physical_nozzle_count == 8:
                     return None
 
                 # In the case of a 96ch we can attempt to index in by singular rows and columns assuming that indexed direction is safe
@@ -357,7 +324,7 @@ class TipView(HasState[TipState]):
             return None
 
         if starting_tip_name is None and nozzle_map is not None and columns:
-            num_channels = len(nozzle_map.full_instrument_map_store)
+            num_channels = nozzle_map.physical_nozzle_count
             num_nozzle_cols = len(nozzle_map.columns)
             num_nozzle_rows = len(nozzle_map.rows)
             # Each pipette's cluster search is determined by the point of entry for a given pipette/configuration:

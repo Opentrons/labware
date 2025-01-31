@@ -198,17 +198,7 @@ describe('getRunCurrentModulesInfo', () => {
     const result = getRunCurrentModulesInfo({
       runRecord: null as any,
       deckDef: mockDeckDef,
-      labwareDefinitionsByUri: {},
-    })
-
-    expect(result).toEqual([])
-  })
-
-  it('should return an empty array if protocolAnalysis is null', () => {
-    const result = getRunCurrentModulesInfo({
-      runRecord: mockRunRecord,
-      deckDef: mockDeckDef,
-      labwareDefinitionsByUri: null,
+      runLwDefsByUri: {},
     })
 
     expect(result).toEqual([])
@@ -219,7 +209,7 @@ describe('getRunCurrentModulesInfo', () => {
     const result = getRunCurrentModulesInfo({
       runRecord: mockRunRecord,
       deckDef: mockDeckDef,
-      labwareDefinitionsByUri: {
+      runLwDefsByUri: {
         'opentrons/opentrons_96_pcr_adapter/1': 'MOCK_LW_DEF',
       } as any,
     })
@@ -242,7 +232,7 @@ describe('getRunCurrentModulesInfo', () => {
         data: { modules: [mockModule], labware: [] },
       },
       deckDef: mockDeckDef,
-      labwareDefinitionsByUri: {},
+      runLwDefsByUri: {},
     })
     expect(result).toEqual([
       {
@@ -261,7 +251,7 @@ describe('getRunCurrentModulesInfo', () => {
     const result = getRunCurrentModulesInfo({
       runRecord: mockRunRecord,
       deckDef: mockDeckDef,
-      labwareDefinitionsByUri: null,
+      runLwDefsByUri: {},
     })
     expect(result).toEqual([])
   })
@@ -286,7 +276,7 @@ describe('getRunCurrentLabwareInfo', () => {
   it('should return an empty array if runRecord is null', () => {
     const result = getRunCurrentLabwareInfo({
       runRecord: undefined,
-      labwareDefinitionsByUri: {} as any,
+      runLwDefsByUri: {} as any,
     })
 
     expect(result).toEqual([])
@@ -295,7 +285,7 @@ describe('getRunCurrentLabwareInfo', () => {
   it('should return an empty array if protocolAnalysis is null', () => {
     const result = getRunCurrentLabwareInfo({
       runRecord: { data: { labware: [] } } as any,
-      labwareDefinitionsByUri: null,
+      runLwDefsByUri: {},
     })
 
     expect(result).toEqual([])
@@ -309,7 +299,7 @@ describe('getRunCurrentLabwareInfo', () => {
 
     const result = getRunCurrentLabwareInfo({
       runRecord: { data: { labware: [mockPickUpTipLwSlotName] } } as any,
-      labwareDefinitionsByUri: {
+      runLwDefsByUri: {
         [mockPickUpTipLabware.definitionUri]: mockLabwareDef,
       },
     })

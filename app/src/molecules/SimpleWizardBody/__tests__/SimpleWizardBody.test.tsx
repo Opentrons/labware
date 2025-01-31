@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { COLORS } from '@opentrons/components'
@@ -7,14 +6,16 @@ import { Skeleton } from '/app/atoms/Skeleton'
 import { getIsOnDevice } from '/app/redux/config'
 import { SimpleWizardBody } from '..'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/atoms/Skeleton')
 vi.mock('/app/redux/config')
 
-const render = (props: React.ComponentProps<typeof SimpleWizardBody>) => {
+const render = (props: ComponentProps<typeof SimpleWizardBody>) => {
   return renderWithProviders(<SimpleWizardBody {...props} />)[0]
 }
 describe('SimpleWizardBody', () => {
-  let props: React.ComponentProps<typeof SimpleWizardBody>
+  let props: ComponentProps<typeof SimpleWizardBody>
   beforeEach(() => {
     props = {
       iconColor: COLORS.red60,

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { css } from 'styled-components'
 import {
   ALIGN_CENTER,
@@ -16,6 +15,7 @@ import {
 } from '@opentrons/components'
 import { ODD_FOCUS_VISIBLE } from './constants'
 
+import type { MouseEventHandler, ReactNode } from 'react'
 import type { IconName, StyleProps } from '@opentrons/components'
 import type { ButtonCategory } from './SmallButton'
 
@@ -28,12 +28,12 @@ type MediumButtonTypes =
   | 'tertiaryLowLight'
 
 interface MediumButtonProps extends StyleProps {
-  buttonText: React.ReactNode
+  buttonText: ReactNode
   buttonType?: MediumButtonTypes
   disabled?: boolean
   iconName?: IconName
   buttonCategory?: ButtonCategory
-  onClick: React.MouseEventHandler
+  onClick: MouseEventHandler
 }
 
 export function MediumButton(props: MediumButtonProps): JSX.Element {

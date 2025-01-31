@@ -119,6 +119,7 @@ class TestConfig:
     num_trials: int
     droplet_wait_seconds: int
     simulate: bool
+    skip_all_pressure: bool
 
 
 @dataclass
@@ -700,9 +701,12 @@ async def _test_for_leak(
             accumulate_raw_data_cb
         ), "pressure fixture requires recording data to disk"
         await _move_to_fixture(api, mount)
-        test_passed = await _fixture_check_pressure(
-            api, mount, test_config, fixture, write_cb, accumulate_raw_data_cb
-        )
+        if not test_config.skip_all_pressure:
+            test_passed = await _fixture_check_pressure(
+                api, mount, test_config, fixture, write_cb, accumulate_raw_data_cb
+            )
+        else:
+            test_passed = True
     else:
         await _pick_up_tip_for_tip_volume(api, mount, tip_volume=tip_volume)
         await _move_to_reservoir_liquid(api, mount)
@@ -1129,7 +1133,9 @@ async def _test_diagnostics_pressure(
     return all(results)
 
 
-async def _test_diagnostics(api: OT3API, mount: OT3Mount, write_cb: Callable) -> bool:
+async def _test_diagnostics(
+    api: OT3API, mount: OT3Mount, write_cb: Callable, cfg: TestConfig
+) -> bool:
     # ENVIRONMENT SENSOR
     environment_pass = await _test_diagnostics_environment(api, mount, write_cb)
     print(f"environment: {_bool_to_pass_fail(environment_pass)}")
@@ -1146,9 +1152,14 @@ async def _test_diagnostics(api: OT3API, mount: OT3Mount, write_cb: Callable) ->
     print(f"capacitance: {_bool_to_pass_fail(capacitance_pass)}")
     write_cb(["diagnostics-capacitance", _bool_to_pass_fail(capacitance_pass)])
     # PRESSURE
-    pressure_pass = await _test_diagnostics_pressure(api, mount, write_cb)
-    print(f"pressure: {_bool_to_pass_fail(pressure_pass)}")
+    if not cfg.skip_all_pressure:
+        pressure_pass = await _test_diagnostics_pressure(api, mount, write_cb)
+        print(f"pressure: {_bool_to_pass_fail(pressure_pass)}")
+    else:
+        print("Skipping pressure")
+        pressure_pass = True
     write_cb(["diagnostics-pressure", _bool_to_pass_fail(pressure_pass)])
+
     return environment_pass and pressure_pass and encoder_pass and capacitance_pass
 
 
@@ -1674,7 +1685,9 @@ async def _main(test_config: TestConfig) -> None:  # noqa: C901
             if not test_config.skip_diagnostics:
                 await api.move_to(mount, hover_over_slot_3)
                 await api.move_rel(mount, Point(z=-20))
-                test_passed = await _test_diagnostics(api, mount, csv_cb.write)
+                test_passed = await _test_diagnostics(
+                    api, mount, csv_cb.write, test_config
+                )
                 await api.retract(mount)
                 csv_cb.results("diagnostics", test_passed)
             if not test_config.skip_plunger:
@@ -1806,6 +1819,7 @@ if __name__ == "__main__":
     arg_parser.add_argument("--skip-plunger", action="store_true")
     arg_parser.add_argument("--skip-tip-presence", action="store_true")
     arg_parser.add_argument("--skip-liquid-probe", action="store_true")
+    arg_parser.add_argument("--skip-all-pressure", action="store_true")
     arg_parser.add_argument("--fixture-side", choices=["left", "right"], default="left")
     arg_parser.add_argument("--port", type=str, default="")
     arg_parser.add_argument("--num-trials", type=int, default=2)
@@ -1841,11 +1855,11 @@ if __name__ == "__main__":
     _cfg = TestConfig(
         operator_name=operator,
         skip_liquid=args.skip_liquid,
-        skip_fixture=args.skip_fixture,
+        skip_fixture=args.skip_fixture or args.skip_all_pressure,
         skip_diagnostics=args.skip_diagnostics,
         skip_plunger=args.skip_plunger,
         skip_tip_presence=args.skip_tip_presence,
-        skip_liquid_probe=args.skip_liquid_probe,
+        skip_liquid_probe=args.skip_liquid_probe or args.skip_all_pressure,
         fixture_port=args.port,
         fixture_side=args.fixture_side,
         fixture_aspirate_sample_count=args.aspirate_sample_count,
@@ -1859,6 +1873,7 @@ if __name__ == "__main__":
         num_trials=args.num_trials,
         droplet_wait_seconds=args.wait,
         simulate=args.simulate,
+        skip_all_pressure=args.skip_all_pressure,
     )
     # NOTE: overwrite default aspirate sample-count from user's input
     # FIXME: this value is being set in a few places, maybe there's a way to clean this up

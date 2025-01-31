@@ -1,5 +1,4 @@
 // tests for the HostConfig context and hook
-import type * as React from 'react'
 import { vi, it, expect, describe, beforeEach, afterEach } from 'vitest'
 import { when } from 'vitest-when'
 import { Provider } from 'react-redux'
@@ -8,6 +7,7 @@ import { renderHook } from '@testing-library/react'
 import { useCurrentProtocol } from '../useCurrentProtocol'
 import { useProtocolMetadata } from '../useProtocolMetadata'
 
+import type { FunctionComponent, ReactNode } from 'react'
 import type { Store } from 'redux'
 import type { State } from '/app/redux/types'
 
@@ -39,7 +39,7 @@ describe('useProtocolMetadata', () => {
   })
 
   it('should return author, lastUpdated, method, description, and robot type', () => {
-    const wrapper: React.FunctionComponent<{ children: React.ReactNode }> = ({
+    const wrapper: FunctionComponent<{ children: ReactNode }> = ({
       children,
     }) => <Provider store={store}>{children}</Provider>
     const { result } = renderHook(useProtocolMetadata, { wrapper })

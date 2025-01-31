@@ -77,7 +77,7 @@ class WaitForBlockTemperature(
         "thermocycler/waitForBlockTemperature"
     )
     params: WaitForBlockTemperatureParams
-    result: Optional[WaitForBlockTemperatureResult]
+    result: Optional[WaitForBlockTemperatureResult] = None
 
     _ImplementationCls: Type[WaitForBlockTemperatureImpl] = WaitForBlockTemperatureImpl
 

@@ -15,6 +15,7 @@ from opentrons.protocol_engine.execution import (
     TipHandler,
     GantryMover,
 )
+from opentrons.protocol_engine.resources import FileProvider
 from opentrons.protocol_engine.resources.model_utils import ModelUtils
 from opentrons.protocol_engine.state.state import StateView
 
@@ -83,3 +84,9 @@ def status_bar(decoy: Decoy) -> StatusBarHandler:
 def gantry_mover(decoy: Decoy) -> GantryMover:
     """Get a mocked out GantryMover."""
     return decoy.mock(cls=GantryMover)
+
+
+@pytest.fixture
+def file_provider(decoy: Decoy) -> FileProvider:
+    """Get a mocked out StateView."""
+    return decoy.mock(cls=FileProvider)

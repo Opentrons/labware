@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { describe, it, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
@@ -10,6 +9,7 @@ import { useRunStatus, useRunTimestamps } from '/app/resources/runs'
 import { HistoricalProtocolRun } from '../HistoricalProtocolRun'
 import { HistoricalProtocolRunOverflowMenu } from '../HistoricalProtocolRunOverflowMenu'
 
+import type { ComponentProps } from 'react'
 import type { RunStatus, RunData } from '@opentrons/api-client'
 import type { RunTimeParameter } from '@opentrons/shared-data'
 
@@ -25,14 +25,14 @@ const run = {
   runTimeParameters: [] as RunTimeParameter[],
 } as RunData
 
-const render = (props: React.ComponentProps<typeof HistoricalProtocolRun>) => {
+const render = (props: ComponentProps<typeof HistoricalProtocolRun>) => {
   return renderWithProviders(<HistoricalProtocolRun {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('RecentProtocolRuns', () => {
-  let props: React.ComponentProps<typeof HistoricalProtocolRun>
+  let props: ComponentProps<typeof HistoricalProtocolRun>
 
   beforeEach(() => {
     props = {

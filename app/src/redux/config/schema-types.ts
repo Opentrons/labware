@@ -12,9 +12,11 @@ export type DevInternalFlag =
   | 'forceHttpPolling'
   | 'protocolStats'
   | 'enableRunNotes'
+  | 'lpcRedesign'
   | 'protocolTimeline'
   | 'enableLabwareCreator'
-  | 'enableLocalization'
+  | 'reactQueryDevtools'
+  | 'reactScan'
 
 export type FeatureFlags = Partial<Record<DevInternalFlag, boolean | undefined>>
 
@@ -283,4 +285,8 @@ export type ConfigV25 = Omit<ConfigV24, 'version'> & {
   }
 }
 
-export type Config = ConfigV25
+export type ConfigV26 = Omit<ConfigV25, 'version'> & {
+  version: 26
+}
+
+export type Config = ConfigV26

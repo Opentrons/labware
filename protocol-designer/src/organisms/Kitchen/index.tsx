@@ -1,5 +1,4 @@
-import * as React from 'react'
-
+import { useState } from 'react'
 import {
   Flex,
   ALIGN_CENTER,
@@ -14,6 +13,7 @@ import {
 import { uuid } from '../../utils'
 import { KitchenContext } from './KitchenContext'
 
+import type { ReactNode } from 'react'
 import type {
   SnackbarProps,
   ToastProps,
@@ -22,7 +22,7 @@ import type {
 import type { BakeOptions, MakeSnackbarOptions } from './KitchenContext'
 
 interface PantryProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 /**
@@ -32,8 +32,8 @@ interface PantryProps {
  * @returns
  */
 export function Kitchen({ children }: PantryProps): JSX.Element {
-  const [toasts, setToasts] = React.useState<ToastProps[]>([])
-  const [snackbar, setSnackbar] = React.useState<SnackbarProps | null>(null)
+  const [toasts, setToasts] = useState<ToastProps[]>([])
+  const [snackbar, setSnackbar] = useState<SnackbarProps | null>(null)
 
   /**
    * makes toast, rendering it in the Kitchen display container

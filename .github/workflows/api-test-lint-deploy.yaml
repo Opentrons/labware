@@ -51,12 +51,12 @@ jobs:
     timeout-minutes: 10
     runs-on: 'ubuntu-22.04'
     steps:
-      - uses: 'actions/checkout@v3'
+      - uses: 'actions/checkout@v4'
         with:
           fetch-depth: 0
-      - uses: 'actions/setup-node@v3'
+      - uses: 'actions/setup-node@v4'
         with:
-          node-version: '18.19.0'
+          node-version: '22.11.0'
       - uses: 'actions/setup-python@v4'
         with:
           python-version: '3.10'
@@ -73,8 +73,6 @@ jobs:
     strategy:
       matrix:
         os: ['windows-2022', 'ubuntu-22.04', 'macos-latest']
-        # TODO(mc, 2022-02-24): expand this matrix to 3.8 and 3.9,
-        # preferably in a nightly cronjob on edge or something
         python: ['3.10']
         with-ot-hardware: ['true', 'false']
         exclude:
@@ -84,7 +82,7 @@ jobs:
             with-ot-hardware: 'true'
     runs-on: '${{ matrix.os }}'
     steps:
-      - uses: 'actions/checkout@v3'
+      - uses: 'actions/checkout@v4'
         with:
           fetch-depth: 0
       # https://github.com/actions/checkout/issues/290
@@ -93,9 +91,9 @@ jobs:
         run: |
           git fetch -f origin ${{ github.ref }}:${{ github.ref }}
           git checkout ${{ github.ref }}
-      - uses: 'actions/setup-node@v3'
+      - uses: 'actions/setup-node@v4'
         with:
-          node-version: '18.19.0'
+          node-version: '22.11.0'
       - uses: 'actions/setup-python@v4'
         with:
           python-version: ${{ matrix.python }}
@@ -128,13 +126,67 @@ jobs:
           files: ./api/coverage.xml
           flags: api
 
+  test-package:
+    name: 'installed package tests on ${{ matrix.os }}'
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        os: ['ubuntu-22.04', 'macos-latest', 'windows-2022']
+    runs-on: '${{ matrix.os }}'
+    steps:
+      - uses: 'actions/checkout@v4'
+      - name: 'Fix actions/checkout odd handling of tags'
+        if: startsWith(github.ref, 'refs/tags')
+        run: |
+          git fetch -f origin ${{ github.ref }}:${{ github.ref }}
+          git checkout ${{ github.ref }}
+      - uses: 'actions/setup-python@v4'
+        with:
+          python-version: '3.10'
+      - name: Set up package-testing
+        id: setup
+        if: ${{ matrix.os != 'windows-2022' }}
+        working-directory: package-testing
+        shell: bash
+        run: make setup
+      - name: Set up package-testing (Windows)
+        id: setup-windows
+        if: ${{ matrix.os == 'windows-2022' }}
+        working-directory: package-testing
+        shell: pwsh
+        run: make setup-windows
+      - name: Run the tests
+        if: ${{ matrix.os != 'windows-2022' }}
+        shell: bash
+        id: test
+        working-directory: package-testing
+        run: make test
+      - name: Run the tests (Windows)
+        shell: pwsh
+        id: test-windows
+        working-directory: package-testing
+        run: make test-windows
+      - name: Save the test results
+        if: ${{ always() && steps.setup.outcome == 'success' || steps.setup-windows.outcome == 'success' }}
+        id: results
+        uses: actions/upload-artifact@v4
+        with:
+          name: package-test-results-${{ matrix.os }}
+          path: package-testing/results
+      - name: Set job summary
+        if: ${{ always() }}
+        run: |
+          echo "## Opentrons Package Test Results ${{matrix.os}}" >> $GITHUB_STEP_SUMMARY
+          echo "### Test Outcome: Unixy ${{ steps.test.outcome }} Windows: ${{ steps.test-windows.outcome }}" >> $GITHUB_STEP_SUMMARY
+          echo "[Download the test results artifact](${{steps.results.outputs.artifact-url}})" >> $GITHUB_STEP_SUMMARY
+
   deploy:
     name: 'deploy opentrons package'
     needs: [test]
     runs-on: 'ubuntu-22.04'
     if: github.event_name == 'push'
     steps:
-      - uses: 'actions/checkout@v3'
+      - uses: 'actions/checkout@v4'
         with:
           fetch-depth: 0
       # https://github.com/actions/checkout/issues/290
@@ -143,9 +195,9 @@ jobs:
         run: |
           git fetch -f origin ${{ github.ref }}:${{ github.ref }}
           git checkout ${{ github.ref }}
-      - uses: 'actions/setup-node@v3'
+      - uses: 'actions/setup-node@v4'
         with:
-          node-version: '18.19.0'
+          node-version: '22.11.0'
       - uses: 'actions/setup-python@v4'
         with:
           python-version: '3.10'

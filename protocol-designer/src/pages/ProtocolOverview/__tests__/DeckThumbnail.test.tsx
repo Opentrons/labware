@@ -1,17 +1,18 @@
-import type * as React from 'react'
 import { describe, it, vi, beforeEach, expect } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { screen } from '@testing-library/react'
 import { FLEX_ROBOT_TYPE, fixture12Trough } from '@opentrons/shared-data'
 import { renderWithProviders } from '../../../__testing-utils__'
 import { getInitialDeckSetup } from '../../../step-forms/selectors'
-import { LabwareOnDeck } from '../../../components/DeckSetup/LabwareOnDeck'
+import { LabwareOnDeck } from '../../../organisms'
 import { getRobotType } from '../../../file-data/selectors'
 import { DeckThumbnail } from '../DeckThumbnail'
+
+import type { ComponentProps } from 'react'
 import type { LabwareDefinition2 } from '@opentrons/shared-data'
 import type * as Components from '@opentrons/components'
 
-vi.mock('../../../components/DeckSetup/LabwareOnDeck')
+vi.mock('../../../organisms')
 vi.mock('../../../file-data/selectors')
 vi.mock('../../../step-forms/selectors')
 vi.mock('@opentrons/components', async importOriginal => {
@@ -23,12 +24,12 @@ vi.mock('@opentrons/components', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof DeckThumbnail>) => {
+const render = (props: ComponentProps<typeof DeckThumbnail>) => {
   return renderWithProviders(<DeckThumbnail {...props} />)[0]
 }
 
 describe('DeckThumbnail', () => {
-  let props: React.ComponentProps<typeof DeckThumbnail>
+  let props: ComponentProps<typeof DeckThumbnail>
 
   beforeEach(() => {
     props = {

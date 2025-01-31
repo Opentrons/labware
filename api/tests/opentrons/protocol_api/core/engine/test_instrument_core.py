@@ -1,16 +1,20 @@
 """Test for the ProtocolEngine-based instrument API core."""
+
 from typing import cast, Optional
 
 from opentrons_shared_data.errors.exceptions import PipetteLiquidNotFoundError
 import pytest
 from decoy import Decoy
 from decoy import errors
+from opentrons_shared_data.liquid_classes.liquid_class_definition import (
+    LiquidClassSchemaV1,
+)
 
 from opentrons_shared_data.pipette.types import PipetteNameType
 
 from opentrons.hardware_control import SyncHardwareAPI
 from opentrons.hardware_control.dev_types import PipetteDict
-from opentrons.hardware_control.nozzle_manager import NozzleConfigurationType
+from opentrons.protocol_api._liquid_properties import TransferProperties
 from opentrons.protocol_engine import (
     DeckPoint,
     LoadedPipette,
@@ -36,6 +40,7 @@ from opentrons.protocol_engine.types import (
     SingleNozzleLayoutConfiguration,
     ColumnNozzleLayoutConfiguration,
     AddressableOffsetVector,
+    LiquidClassRecord,
 )
 from opentrons.protocol_api.disposal_locations import (
     TrashBin,
@@ -43,6 +48,7 @@ from opentrons.protocol_api.disposal_locations import (
     DisposalOffset,
 )
 from opentrons.protocol_api._nozzle_layout import NozzleLayout
+from opentrons.protocol_api._liquid import LiquidClass
 from opentrons.protocol_api.core.engine import (
     InstrumentCore,
     WellCore,
@@ -51,7 +57,7 @@ from opentrons.protocol_api.core.engine import (
 )
 from opentrons.protocols.api_support.definitions import MAX_SUPPORTED_VERSION
 from opentrons.protocols.api_support.types import APIVersion
-from opentrons.types import Location, Mount, MountType, Point
+from opentrons.types import Location, Mount, MountType, Point, NozzleConfigurationType
 
 from ... import versions_below, versions_at_or_above
 
@@ -94,7 +100,7 @@ def subject(
 ) -> InstrumentCore:
     """Get a InstrumentCore test subject with its dependencies mocked out."""
     decoy.when(mock_engine_client.state.pipettes.get("abc123")).then_return(
-        LoadedPipette.construct(mount=MountType.LEFT)  # type: ignore[call-arg]
+        LoadedPipette.model_construct(mount=MountType.LEFT)  # type: ignore[call-arg]
     )
 
     decoy.when(mock_engine_client.state.pipettes.get_flow_rates("abc123")).then_return(
@@ -125,7 +131,7 @@ def test_get_pipette_name(
 ) -> None:
     """It should get the pipette's load name."""
     decoy.when(mock_engine_client.state.pipettes.get("abc123")).then_return(
-        LoadedPipette.construct(pipetteName=PipetteNameType.P300_SINGLE)  # type: ignore[call-arg]
+        LoadedPipette.model_construct(pipetteName=PipetteNameType.P300_SINGLE)  # type: ignore[call-arg]
     )
 
     result = subject.get_pipette_name()
@@ -138,7 +144,7 @@ def test_get_mount(
 ) -> None:
     """It should get the pipette's mount."""
     decoy.when(mock_engine_client.state.pipettes.get("abc123")).then_return(
-        LoadedPipette.construct(mount=MountType.LEFT)  # type: ignore[call-arg]
+        LoadedPipette.model_construct(mount=MountType.LEFT)  # type: ignore[call-arg]
     )
 
     result = subject.get_mount()
@@ -156,7 +162,7 @@ def test_get_hardware_state(
     pipette_dict = cast(PipetteDict, {"display_name": "Cool Pipette", "has_tip": True})
 
     decoy.when(mock_engine_client.state.pipettes.get("abc123")).then_return(
-        LoadedPipette.construct(mount=MountType.LEFT)  # type: ignore[call-arg]
+        LoadedPipette.model_construct(mount=MountType.LEFT)  # type: ignore[call-arg]
     )
     decoy.when(mock_sync_hardware.get_attached_instrument(Mount.LEFT)).then_return(
         pipette_dict
@@ -525,7 +531,7 @@ def test_aspirate_from_well(
             pipette_id="abc123",
             labware_id="123abc",
             well_name="my cool well",
-            well_location=WellLocation(
+            well_location=LiquidHandlingWellLocation(
                 origin=WellOrigin.TOP, offset=WellOffset(x=3, y=2, z=1)
             ),
         ),
@@ -823,7 +829,7 @@ def test_dispense_to_well(
             pipette_id="abc123",
             labware_id="123abc",
             well_name="my cool well",
-            well_location=WellLocation(
+            well_location=LiquidHandlingWellLocation(
                 origin=WellOrigin.TOP, offset=WellOffset(x=3, y=2, z=1)
             ),
         ),
@@ -1433,7 +1439,7 @@ def test_detect_liquid_presence(
             )
         )
     ).then_return(
-        cmd.TryLiquidProbeResult.construct(
+        cmd.TryLiquidProbeResult.model_construct(
             z_position=returned_from_engine,
             position=object(),  # type: ignore[arg-type]
         )
@@ -1495,3 +1501,59 @@ def test_liquid_probe_with_recovery(
             )
         )
     )
+
+
+def test_load_liquid_class(
+    decoy: Decoy,
+    mock_engine_client: EngineClient,
+    subject: InstrumentCore,
+    minimal_liquid_class_def2: LiquidClassSchemaV1,
+) -> None:
+    """It should send the load liquid class command to the engine."""
+    sample_aspirate_data = minimal_liquid_class_def2.byPipette[0].byTipType[0].aspirate
+    sample_single_dispense_data = (
+        minimal_liquid_class_def2.byPipette[0].byTipType[0].singleDispense
+    )
+    sample_multi_dispense_data = (
+        minimal_liquid_class_def2.byPipette[0].byTipType[0].multiDispense
+    )
+
+    test_liq_class = decoy.mock(cls=LiquidClass)
+    test_transfer_props = decoy.mock(cls=TransferProperties)
+
+    decoy.when(
+        test_liq_class.get_for("flex_1channel_50", "opentrons_flex_96_tiprack_50ul")
+    ).then_return(test_transfer_props)
+    decoy.when(test_liq_class.name).then_return("water")
+    decoy.when(
+        mock_engine_client.state.pipettes.get_model_name(subject.pipette_id)
+    ).then_return("flex_1channel_50")
+    decoy.when(test_transfer_props.aspirate.as_shared_data_model()).then_return(
+        sample_aspirate_data
+    )
+    decoy.when(test_transfer_props.dispense.as_shared_data_model()).then_return(
+        sample_single_dispense_data
+    )
+    decoy.when(test_transfer_props.multi_dispense.as_shared_data_model()).then_return(  # type: ignore[union-attr]
+        sample_multi_dispense_data
+    )
+    decoy.when(
+        mock_engine_client.execute_command_without_recovery(
+            cmd.LoadLiquidClassParams(
+                liquidClassRecord=LiquidClassRecord(
+                    liquidClassName="water",
+                    pipetteModel="flex_1channel_50",
+                    tiprack="opentrons_flex_96_tiprack_50ul",
+                    aspirate=sample_aspirate_data,
+                    singleDispense=sample_single_dispense_data,
+                    multiDispense=sample_multi_dispense_data,
+                )
+            )
+        )
+    ).then_return(cmd.LoadLiquidClassResult(liquidClassId="liquid-class-id"))
+    result = subject.load_liquid_class(
+        liquid_class=test_liq_class,
+        pipette_load_name="flex_1channel_50",
+        tiprack_uri="opentrons_flex_96_tiprack_50ul",
+    )
+    assert result == "liquid-class-id"

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, beforeEach, vi, expect, afterEach } from 'vitest'
 import { screen } from '@testing-library/react'
 
@@ -10,16 +9,17 @@ import {
 import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { getIsLabwareOffsetCodeSnippetsOn } from '/app/redux/config'
-import { LabwarePositionCheck } from '/app/organisms/LabwarePositionCheck'
+import { LegacyLabwarePositionCheck } from '/app/organisms/LegacyLabwarePositionCheck'
 import { useLPCDisabledReason } from '/app/resources/runs'
 import { getLatestCurrentOffsets } from '/app/transformations/runs'
 import { CurrentOffsetsTable } from '../CurrentOffsetsTable'
 
+import type { ComponentProps } from 'react'
 import type { CompletedProtocolAnalysis } from '@opentrons/shared-data'
 import type { LabwareOffset } from '@opentrons/api-client'
 
 vi.mock('/app/resources/runs')
-vi.mock('/app/organisms/LabwarePositionCheck')
+vi.mock('/app/organisms/LegacyLabwarePositionCheck')
 vi.mock('/app/redux/config')
 vi.mock('/app/transformations/runs')
 
@@ -31,7 +31,7 @@ vi.mock('@opentrons/shared-data', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof CurrentOffsetsTable>) => {
+const render = (props: ComponentProps<typeof CurrentOffsetsTable>) => {
   return renderWithProviders(<CurrentOffsetsTable {...props} />, {
     i18nInstance: i18n,
   })[0]
@@ -64,7 +64,7 @@ const mockCurrentOffsets: LabwareOffset[] = [
 ]
 
 describe('CurrentOffsetsTable', () => {
-  let props: React.ComponentProps<typeof CurrentOffsetsTable>
+  let props: ComponentProps<typeof CurrentOffsetsTable>
   beforeEach(() => {
     props = {
       currentOffsets: mockCurrentOffsets,
@@ -111,7 +111,7 @@ describe('CurrentOffsetsTable', () => {
         definitionId: 'opentrons/nest_96_wellplate_100ul_pcr_full_skirt/1',
       },
     } as any)
-    vi.mocked(LabwarePositionCheck).mockReturnValue(
+    vi.mocked(LegacyLabwarePositionCheck).mockReturnValue(
       <div>mock labware position check</div>
     )
     vi.mocked(getIsLabwareOffsetCodeSnippetsOn).mockReturnValue(false)

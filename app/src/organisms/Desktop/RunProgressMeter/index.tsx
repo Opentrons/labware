@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { css } from 'styled-components'
@@ -49,6 +48,8 @@ import { useRobotType } from '/app/redux-resources/robots'
 import { useRunningStepCounts } from '/app/resources/protocols/hooks'
 import { useRunProgressCopy } from './hooks'
 
+import type { MouseEventHandler } from 'react'
+
 interface RunProgressMeterProps {
   runId: string
   robotName: string
@@ -92,7 +93,7 @@ export function RunProgressMeter(props: RunProgressMeterProps): JSX.Element {
 
   const { downloadRunLog } = useDownloadRunLog(robotName, runId)
 
-  const onDownloadClick: React.MouseEventHandler<HTMLAnchorElement> = e => {
+  const onDownloadClick: MouseEventHandler<HTMLAnchorElement> = e => {
     if (downloadIsDisabled) return false
     e.preventDefault()
     e.stopPropagation()

@@ -13,6 +13,7 @@ import {
   getAnalyticsSessionExitDetails,
   getSessionInstrumentAnalyticsData,
 } from './selectors'
+import { OT2_ROBOT_TYPE } from '@opentrons/shared-data'
 
 import type { State, Action } from '../types'
 import type { AnalyticsEvent } from './types'
@@ -180,6 +181,7 @@ export function makeEvent(
                   name: `${sessionDetails.sessionType}Exit`,
                   properties: {
                     step: sessionDetails.step,
+                    robotType: OT2_ROBOT_TYPE,
                   },
                 }
               : null
@@ -203,6 +205,7 @@ export function makeEvent(
                         'tiprackDefinition' in commandData
                           ? commandData.tiprackDefinition.metadata.displayName
                           : null,
+                      robotType: OT2_ROBOT_TYPE,
                     },
                   }
                 : null
@@ -234,6 +237,7 @@ export function makeEvent(
         name: 'pipetteOffsetCalibrationStarted',
         properties: {
           ...action.payload,
+          robotType: OT2_ROBOT_TYPE,
         },
       })
     }
@@ -243,6 +247,7 @@ export function makeEvent(
         name: 'tipLengthCalibrationStarted',
         properties: {
           ...action.payload,
+          robotType: OT2_ROBOT_TYPE,
         },
       })
     }

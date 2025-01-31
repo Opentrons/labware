@@ -60,7 +60,7 @@ class FileFormatValidator:
 async def _validate_labware_definition(info: IdentifiedLabwareDefinition) -> None:
     def validate_sync() -> None:
         try:
-            LabwareDefinition.parse_obj(info.unvalidated_json)
+            LabwareDefinition.model_validate(info.unvalidated_json)
         except PydanticValidationError as e:
             raise FileFormatValidationError(
                 message=f"{info.original_file.name} could not be read as a labware definition.",
@@ -133,17 +133,17 @@ async def _validate_json_protocol(info: IdentifiedJsonMain) -> None:
     def validate_sync() -> None:
         if info.schema_version == 8:
             try:
-                JsonProtocolV8.parse_obj(info.unvalidated_json)
+                JsonProtocolV8.model_validate(info.unvalidated_json)
             except PydanticValidationError as pve:
                 _handle_v8_json_protocol_validation_error(info, pve)
         else:
             try:
                 if info.schema_version == 7:
-                    JsonProtocolV7.parse_obj(info.unvalidated_json)
+                    JsonProtocolV7.model_validate(info.unvalidated_json)
                 elif info.schema_version == 6:
-                    JsonProtocolV6.parse_obj(info.unvalidated_json)
+                    JsonProtocolV6.model_validate(info.unvalidated_json)
                 else:
-                    JsonProtocolUpToV5.parse_obj(info.unvalidated_json)
+                    JsonProtocolUpToV5.model_validate(info.unvalidated_json)
             except PydanticValidationError as e:
                 raise FileFormatValidationError._generic_json_failure(info, e) from e
 

@@ -50,6 +50,7 @@ def check_ot3_health_response(response: Response) -> None:
         "board_revision": "UNKNOWN",
         "logs": [
             "/logs/serial.log",
+            "/logs/can_bus.log",
             "/logs/api.log",
             "/logs/server.log",
             "/logs/update_server.log",

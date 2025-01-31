@@ -1,8 +1,10 @@
 import { css } from 'styled-components'
-import { TYPOGRAPHY, SPACING, RESPONSIVENESS } from '../../ui-style-constants'
+import { Tooltip } from '../../atoms'
 import { COLORS, BORDERS } from '../../helix-design-system'
-import { POSITION_RELATIVE, DIRECTION_ROW } from '../../styles'
 import { Btn, Flex } from '../../primitives'
+import { POSITION_RELATIVE, DIRECTION_ROW } from '../../styles'
+import { useHoverTooltip } from '../../tooltips'
+import { TYPOGRAPHY, SPACING, RESPONSIVENESS } from '../../ui-style-constants'
 
 const DEFAULT_TAB_STYLE = css`
   ${TYPOGRAPHY.pSemiBold}
@@ -65,6 +67,7 @@ export interface TabProps {
   onClick: () => void
   isActive?: boolean
   disabled?: boolean
+  disabledReasonForTooltip?: string
 }
 
 export interface TabsProps {
@@ -77,18 +80,36 @@ export function Tabs(props: TabsProps): JSX.Element {
   return (
     <Flex flexDirection={DIRECTION_ROW} css={DEFAULT_CONTAINER_STYLE}>
       {tabs.map((tab, index) => (
-        <Btn
-          data-testid={`tab_${index}_${tab.text}`}
-          key={index}
-          onClick={() => {
-            tab.onClick()
-          }}
-          css={tab.isActive === true ? CURRENT_TAB_STYLE : DEFAULT_TAB_STYLE}
-          disabled={tab.disabled}
-        >
-          {tab.text}
-        </Btn>
+        <Tab {...tab} data-testid={`tab_${index}_${tab.text}`} key={index} />
       ))}
     </Flex>
+  )
+}
+
+function Tab(props: TabProps): JSX.Element {
+  const {
+    text,
+    onClick,
+    isActive,
+    disabled = false,
+    disabledReasonForTooltip,
+  } = props
+  const [targetProps, tooltipProps] = useHoverTooltip()
+  return (
+    <>
+      <Btn
+        onClick={onClick}
+        css={isActive === true ? CURRENT_TAB_STYLE : DEFAULT_TAB_STYLE}
+        disabled={disabled}
+        {...targetProps}
+      >
+        {text}
+      </Btn>
+      {disabled && disabledReasonForTooltip != null ? (
+        <Tooltip tooltipProps={tooltipProps}>
+          {disabledReasonForTooltip}
+        </Tooltip>
+      ) : null}
+    </>
   )
 }

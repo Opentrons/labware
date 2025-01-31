@@ -13,6 +13,8 @@ import {
   SCREWDRIVER_LOADNAME,
   GRIPPER_LOADNAME,
   CAL_PIN_LOADNAME,
+  CALIBRATION_PIN_DISPLAY_NAME,
+  HEX_SCREWDRIVER_DISPLAY_NAME,
 } from './constants'
 
 import type { UseMutateFunction } from 'react-query'
@@ -105,9 +107,9 @@ export const BeforeBeginning = (
   const equipmentInfoByLoadName: {
     [loadName: string]: { displayName: string; subtitle?: string }
   } = {
-    calibration_pin: { displayName: t('calibration_pin') },
+    calibration_pin: { displayName: CALIBRATION_PIN_DISPLAY_NAME },
     hex_screwdriver: {
-      displayName: t('hex_screwdriver'),
+      displayName: HEX_SCREWDRIVER_DISPLAY_NAME,
       subtitle: t('provided_with_robot_use_right_size'),
     },
     [GRIPPER_LOADNAME]: { displayName: t('branded:gripper') },

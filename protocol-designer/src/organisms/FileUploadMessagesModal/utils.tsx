@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import {
   COLORS,
@@ -8,11 +7,12 @@ import {
   StyledText,
 } from '@opentrons/components'
 
+import type { ReactNode } from 'react'
 import type { FileUploadMessage } from '../../load-file'
 
 export interface ModalContents {
   title: string
-  body: React.ReactNode
+  body: ReactNode
 }
 
 interface ModalProps {

@@ -1,9 +1,11 @@
-import * as React from 'react'
+import { memo } from 'react'
 import map from 'lodash/map'
 import { Well } from './Well'
-import type { LabwareDefinition2 } from '@opentrons/shared-data'
-import type { CSSProperties } from 'styled-components'
 import { COLORS } from '../../../helix-design-system'
+
+import type { MemoExoticComponent, ReactNode } from 'react'
+import type { CSSProperties } from 'styled-components'
+import type { LabwareDefinition2 } from '@opentrons/shared-data'
 
 export interface StrokedWellProps {
   definition: LabwareDefinition2
@@ -14,7 +16,7 @@ export function StrokedWellsComponent(props: StrokedWellProps): JSX.Element {
   const { definition, strokeByWell } = props
   return (
     <>
-      {map<Record<string, CSSProperties['stroke']>, React.ReactNode>(
+      {map<Record<string, CSSProperties['stroke']>, ReactNode>(
         strokeByWell,
         (color: CSSProperties['stroke'], wellName: string): JSX.Element => {
           return (
@@ -33,6 +35,6 @@ export function StrokedWellsComponent(props: StrokedWellProps): JSX.Element {
   )
 }
 
-export const StrokedWells: React.MemoExoticComponent<
+export const StrokedWells: MemoExoticComponent<
   typeof StrokedWellsComponent
-> = React.memo(StrokedWellsComponent)
+> = memo(StrokedWellsComponent)

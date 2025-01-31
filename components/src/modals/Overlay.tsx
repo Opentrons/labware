@@ -1,9 +1,10 @@
-import type * as React from 'react'
 import { Flex, POSITION_FIXED } from '..'
 
-export interface OverlayProps extends React.ComponentProps<typeof Flex> {
+import type { ComponentProps, MouseEventHandler } from 'react'
+
+export interface OverlayProps extends ComponentProps<typeof Flex> {
   /** optional onClick handler */
-  onClick?: React.MouseEventHandler
+  onClick?: MouseEventHandler
   alertOverlay?: boolean | null
   backgroundColor?: string
 }

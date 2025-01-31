@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { vi, it, describe, expect, beforeEach } from 'vitest'
 
@@ -19,6 +18,7 @@ import {
 import { getCustomTipRackDefinitions } from '/app/redux/custom-labware'
 import { ChooseTipRack } from '../ChooseTipRack'
 
+import type { ComponentProps } from 'react'
 import type { AttachedPipettesByMount } from '/app/redux/pipettes/types'
 
 vi.mock('@opentrons/react-api-client')
@@ -32,14 +32,14 @@ const mockAttachedPipettes: AttachedPipettesByMount = {
   right: null,
 } as any
 
-const render = (props: React.ComponentProps<typeof ChooseTipRack>) => {
+const render = (props: ComponentProps<typeof ChooseTipRack>) => {
   return renderWithProviders(<ChooseTipRack {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('ChooseTipRack', () => {
-  let props: React.ComponentProps<typeof ChooseTipRack>
+  let props: ComponentProps<typeof ChooseTipRack>
 
   beforeEach(() => {
     vi.mocked(Select).mockReturnValue(<div>mock select</div>)

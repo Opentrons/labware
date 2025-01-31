@@ -14,6 +14,7 @@ config BR2_PACKAGE_PYTHON_OPENTRONS_ROBOT_SERVER
   select BR2_PACKAGE_PYTHON_UVICORN # runtime
   select BR2_PACKAGE_PYTHON_WSPROTO # runtime
   select BR2_PACKAGE_PYTHON_PAHO_MQTT # runtime
+  select BR2_PACKAGE_PYTHON_PYDANTIC_SETTINGS # runtime
 
   help
     Opentrons HTTP server. Controls an OT-2 robot.

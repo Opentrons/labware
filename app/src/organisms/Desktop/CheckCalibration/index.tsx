@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useMemo } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 
@@ -22,7 +22,9 @@ import { WizardHeader } from '/app/molecules/WizardHeader'
 import { getTopPortalEl } from '/app/App/portal'
 import { ReturnTip } from './ReturnTip'
 import { ResultsSummary } from './ResultsSummary'
+import { CHECK_PIPETTE_RANK_FIRST } from '/app/redux/sessions'
 
+import type { ComponentType } from 'react'
 import type { Mount } from '@opentrons/components'
 import type {
   CalibrationLabware,
@@ -30,15 +32,13 @@ import type {
   RobotCalibrationCheckStep,
   SessionCommandParams,
 } from '/app/redux/sessions/types'
-
 import type { CalibrationPanelProps } from '/app/organisms/Desktop/CalibrationPanels/types'
 import type { CalibrationCheckParentProps } from './types'
-import { CHECK_PIPETTE_RANK_FIRST } from '/app/redux/sessions'
 
 const ROBOT_CALIBRATION_CHECK_SUBTITLE = 'Calibration health check'
 
 const PANEL_BY_STEP: {
-  [step in RobotCalibrationCheckStep]?: React.ComponentType<CalibrationPanelProps>
+  [step in RobotCalibrationCheckStep]?: ComponentType<CalibrationPanelProps>
 } = {
   [Sessions.CHECK_STEP_SESSION_STARTED]: Introduction,
   [Sessions.CHECK_STEP_LABWARE_LOADED]: DeckSetup,
@@ -124,7 +124,7 @@ export function CheckCalibration(
     cleanUpAndExit()
   }, true)
 
-  const isMulti = React.useMemo(() => {
+  const isMulti = useMemo(() => {
     const spec = activePipette && getPipetteModelSpecs(activePipette.model)
     return spec ? spec.channels > 1 : false
   }, [activePipette])

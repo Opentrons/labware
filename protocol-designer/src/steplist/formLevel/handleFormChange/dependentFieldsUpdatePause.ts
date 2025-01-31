@@ -21,7 +21,8 @@ const updatePatchOnPauseTemperatureChange = (
         'pauseHour',
         'pauseMinute',
         'pauseSecond',
-        'pauseTime'
+        'pauseTime',
+        'moduleId'
       ),
     }
   }

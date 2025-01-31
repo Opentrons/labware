@@ -75,7 +75,7 @@ export const useDrag = (position: ElementPosition): UseDragResult => {
       transform: `translate3D(${elementPosition.x}px, ${elementPosition.y}px, 0)`,
       width: `${elementPosition.width}px`,
       height: `${elementPosition.height}px`,
-      position: 'absolute' as React.CSSProperties['position'],
+      position: 'absolute' as CSSProperties['position'],
       touchAction: 'none',
     },
     position: elementPosition,

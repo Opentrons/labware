@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Top:_Cover_Well_measurements" data-name="Top: Cover, Well + measurements" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 164.9 188.6">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #f3f3f3;
+        stroke-width: 0px;
+      }
+
+      .cls-2 {
+        stroke: #4a4c4e;
+        stroke-linecap: square;
+        stroke-width: 1.5px;
+      }
+
+      .cls-2, .cls-3 {
+        fill: none;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-3 {
+        stroke: #16212d;
+        stroke-linecap: round;
+        stroke-width: 2px;
+      }
+    </style>
+  </defs>
+  <path id="Cover" class="cls-1" d="M0,.2v188.6h164.9V.2H0ZM82.4,125.2c-22.5,0-40.7-18.3-40.7-40.7s18.3-40.7,40.7-40.7,40.7,18.3,40.7,40.7-18.3,40.7-40.7,40.7Z"/>
+  <g id="width_measurement" data-name="width measurement">
+    <g>
+      <line class="cls-2" x1="122.2" y1="149.5" x2="109.1" y2="149.5"/>
+      <line class="cls-2" x1="122.3" y1="154.1" x2="122.3" y2="144.9"/>
+    </g>
+    <g>
+      <line class="cls-2" x1="42.7" y1="149.5" x2="55.8" y2="149.5"/>
+      <line class="cls-2" x1="42.6" y1="144.9" x2="42.6" y2="154.1"/>
+    </g>
+  </g>
+  <circle id="well" class="cls-3" cx="82.4" cy="84.5" r="39.7"/>
+</svg>

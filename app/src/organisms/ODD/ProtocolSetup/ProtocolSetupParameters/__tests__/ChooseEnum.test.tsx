@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { it, describe, beforeEach, vi, expect } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
@@ -7,14 +6,16 @@ import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { ChooseEnum } from '../ChooseEnum'
 
+import type { ComponentProps } from 'react'
+
 vi.mocked('../../../../ToasterOven')
-const render = (props: React.ComponentProps<typeof ChooseEnum>) => {
+const render = (props: ComponentProps<typeof ChooseEnum>) => {
   return renderWithProviders(<ChooseEnum {...props} />, {
     i18nInstance: i18n,
   })
 }
 describe('ChooseEnum', () => {
-  let props: React.ComponentProps<typeof ChooseEnum>
+  let props: ComponentProps<typeof ChooseEnum>
 
   beforeEach(() => {
     props = {

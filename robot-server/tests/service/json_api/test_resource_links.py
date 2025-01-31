@@ -14,8 +14,8 @@ def test_follows_structure():
             "self": {"href": "/items/1", "meta": None},
         }
     }
-    validated = ThingWithLink.parse_obj(structure_to_validate)
-    assert validated.dict() == structure_to_validate
+    validated = ThingWithLink.model_validate(structure_to_validate)
+    assert validated.model_dump() == structure_to_validate
 
 
 def test_must_be_self_key_with_string_value():
@@ -25,7 +25,13 @@ def test_must_be_self_key_with_string_value():
         }
     }
     with raises(ValidationError) as e:
-        ThingWithLink.parse_obj(invalid_structure_to_validate)
+        ThingWithLink.model_validate(invalid_structure_to_validate)
     assert e.value.errors() == [
-        {"loc": ("links",), "msg": "field required", "type": "value_error.missing"}
+        {
+            "loc": ("links",),
+            "msg": "Field required",
+            "type": "missing",
+            "input": {"invalid": {"key": "value"}},
+            "url": "https://errors.pydantic.dev/2.9/v/missing",
+        }
     ]

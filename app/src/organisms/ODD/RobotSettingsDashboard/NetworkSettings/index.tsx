@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { css } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 
@@ -19,6 +18,7 @@ import {
 
 import { ChildNavigation } from '/app/organisms/ODD/ChildNavigation'
 
+import type { ComponentProps } from 'react'
 import type { IconName, ChipType } from '@opentrons/components'
 import type { NetworkConnection } from '/app/resources/networking/hooks/useNetworkConnection'
 import type { SetSettingOption } from '../types'
@@ -87,7 +87,7 @@ export function NetworkSettings({
   )
 }
 
-interface NetworkSettingButtonProps extends React.ComponentProps<typeof Btn> {
+interface NetworkSettingButtonProps extends ComponentProps<typeof Btn> {
   buttonTitle: string
   iconName: IconName
   chipType: ChipType

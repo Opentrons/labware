@@ -28,7 +28,9 @@ export function ManualMoveLwAndSkip(props: RecoveryContentProps): JSX.Element {
       case MANUAL_MOVE_AND_SKIP.STEPS.SKIP:
         return <SkipStepInfo {...props} />
       default:
-        console.warn(`${step} in ${route} not explicitly handled. Rerouting.`)
+        console.warn(
+          `ManualMoveLwAndSkipStep: ${step} in ${route} not explicitly handled. Rerouting.`
+        )
         return <SelectRecoveryOption {...props} />
     }
   }

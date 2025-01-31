@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { COLORS, SPACING } from '@opentrons/components'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { screen } from '@testing-library/react'
@@ -6,6 +5,7 @@ import '@testing-library/jest-dom/vitest'
 import { renderWithProviders } from '/app/__testing-utils__'
 import { ModuleIcon } from '../'
 
+import type { ComponentProps } from 'react'
 import type { AttachedModule } from '/app/redux/modules/types'
 import type * as OpentronsComponents from '@opentrons/components'
 
@@ -17,7 +17,7 @@ vi.mock('@opentrons/components', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof ModuleIcon>) => {
+const render = (props: ComponentProps<typeof ModuleIcon>) => {
   return renderWithProviders(<ModuleIcon {...props} />)[0]
 }
 
@@ -46,7 +46,7 @@ const mockHeaterShakerModule = {
 } as AttachedModule
 
 describe('ModuleIcon', () => {
-  let props: React.ComponentProps<typeof ModuleIcon>
+  let props: ComponentProps<typeof ModuleIcon>
 
   beforeEach(() => {
     props = {

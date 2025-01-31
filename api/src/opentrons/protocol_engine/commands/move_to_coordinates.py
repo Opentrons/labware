@@ -6,14 +6,25 @@ from typing import Optional, Type, TYPE_CHECKING
 from typing_extensions import Literal
 
 
-from ..state import update_types
 from ..types import DeckPoint
-from .pipetting_common import PipetteIdMixin, MovementMixin, DestinationPositionResult
-from .command import AbstractCommandImpl, BaseCommand, BaseCommandCreate, SuccessData
-from ..errors.error_occurrence import ErrorOccurrence
+from .pipetting_common import PipetteIdMixin
+from .movement_common import (
+    MovementMixin,
+    DestinationPositionResult,
+    move_to_coordinates,
+    StallOrCollisionError,
+)
+from .command import (
+    AbstractCommandImpl,
+    BaseCommand,
+    BaseCommandCreate,
+    SuccessData,
+    DefinedErrorData,
+)
 
 if TYPE_CHECKING:
     from ..execution import MovementHandler
+    from ..resources.model_utils import ModelUtils
 
 
 MoveToCoordinatesCommandType = Literal["moveToCoordinates"]
@@ -34,50 +45,53 @@ class MoveToCoordinatesResult(DestinationPositionResult):
     pass
 
 
+_ExecuteReturn = (
+    SuccessData[MoveToCoordinatesResult] | DefinedErrorData[StallOrCollisionError]
+)
+
+
 class MoveToCoordinatesImplementation(
-    AbstractCommandImpl[MoveToCoordinatesParams, SuccessData[MoveToCoordinatesResult]]
+    AbstractCommandImpl[MoveToCoordinatesParams, _ExecuteReturn]
 ):
     """Move to coordinates command implementation."""
 
     def __init__(
         self,
         movement: MovementHandler,
+        model_utils: ModelUtils,
         **kwargs: object,
     ) -> None:
         self._movement = movement
+        self._model_utils = model_utils
 
-    async def execute(
-        self, params: MoveToCoordinatesParams
-    ) -> SuccessData[MoveToCoordinatesResult]:
+    async def execute(self, params: MoveToCoordinatesParams) -> _ExecuteReturn:
         """Move the requested pipette to the requested coordinates."""
-        state_update = update_types.StateUpdate()
-
-        x, y, z = await self._movement.move_to_coordinates(
+        result = await move_to_coordinates(
+            movement=self._movement,
+            model_utils=self._model_utils,
             pipette_id=params.pipetteId,
             deck_coordinates=params.coordinates,
             direct=params.forceDirect,
             additional_min_travel_z=params.minimumZHeight,
             speed=params.speed,
         )
-        deck_point = DeckPoint.construct(x=x, y=y, z=z)
-        state_update.pipette_location = update_types.PipetteLocationUpdate(
-            pipette_id=params.pipetteId, new_location=None, new_deck_point=deck_point
-        )
-
-        return SuccessData(
-            public=MoveToCoordinatesResult(position=DeckPoint(x=x, y=y, z=z)),
-            state_update=state_update,
-        )
+        if isinstance(result, DefinedErrorData):
+            return result
+        else:
+            return SuccessData(
+                public=MoveToCoordinatesResult(position=result.public.position),
+                state_update=result.state_update,
+            )
 
 
 class MoveToCoordinates(
-    BaseCommand[MoveToCoordinatesParams, MoveToCoordinatesResult, ErrorOccurrence]
+    BaseCommand[MoveToCoordinatesParams, MoveToCoordinatesResult, StallOrCollisionError]
 ):
     """Move to well command model."""
 
     commandType: MoveToCoordinatesCommandType = "moveToCoordinates"
     params: MoveToCoordinatesParams
-    result: Optional[MoveToCoordinatesResult]
+    result: Optional[MoveToCoordinatesResult] = None
 
     _ImplementationCls: Type[
         MoveToCoordinatesImplementation

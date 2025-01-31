@@ -1,20 +1,18 @@
 import styled from 'styled-components'
 import { Flex } from '../../primitives'
 import {
-  BORDERS,
-  COLORS,
+  ALIGN_CENTER,
   CURSOR_DEFAULT,
   CURSOR_POINTER,
+  FLEX_MAX_CONTENT,
   Icon,
-  SPACING,
-  StyledText,
   JUSTIFY_CENTER,
   JUSTIFY_START,
-  ALIGN_CENTER,
-  FLEX_MAX_CONTENT,
-} from '../..'
-import type { IconName } from '../..'
-
+  SPACING,
+  StyledText,
+} from '../../index'
+import { BORDERS, COLORS } from '../../helix-design-system'
+import type { IconName } from '../../index'
 interface EmptySelectorButtonProps {
   onClick: () => void
   text: string
@@ -29,27 +27,14 @@ export function EmptySelectorButton(
 ): JSX.Element {
   const { onClick, text, iconName, textAlignment, disabled = false } = props
 
-  const StyledButton = styled.button`
-    border: none;
-    width: ${FLEX_MAX_CONTENT};
-    height: ${FLEX_MAX_CONTENT};
-    cursor: ${disabled ? CURSOR_DEFAULT : CURSOR_POINTER};
-    &:focus-visible {
-      outline: 2px solid ${COLORS.white};
-      box-shadow: 0 0 0 4px ${COLORS.blue50};
-      border-radius: ${BORDERS.borderRadius8};
-    }
-  `
-
   return (
-    <StyledButton onClick={onClick}>
+    <StyledButton onClick={onClick} disabled={disabled}>
       <Flex
         gridGap={SPACING.spacing4}
         padding={SPACING.spacing12}
-        backgroundColor={disabled ? COLORS.grey30 : COLORS.blue30}
         color={disabled ? COLORS.grey40 : COLORS.black90}
-        borderRadius={BORDERS.borderRadius8}
         border={`2px dashed ${disabled ? COLORS.grey40 : COLORS.blue50}`}
+        borderRadius={BORDERS.borderRadius8}
         width="100%"
         height="100%"
         alignItems={ALIGN_CENTER}
@@ -70,3 +55,29 @@ export function EmptySelectorButton(
     </StyledButton>
   )
 }
+
+interface ButtonProps {
+  disabled: boolean
+}
+
+const StyledButton = styled.button<ButtonProps>`
+  border: none;
+  width: ${FLEX_MAX_CONTENT};
+  height: ${FLEX_MAX_CONTENT};
+  cursor: ${CURSOR_POINTER};
+  background-color: ${COLORS.blue30};
+  border-radius: ${BORDERS.borderRadius8};
+
+  &:focus-visible {
+    outline: 2px solid ${COLORS.white};
+    box-shadow: 0 0 0 4px ${COLORS.blue50};
+    border-radius: ${BORDERS.borderRadius8};
+  }
+  &:hover {
+    background-color: ${COLORS.blue35};
+  }
+  &:disabled {
+    background-color: ${COLORS.grey20};
+    cursor: ${CURSOR_DEFAULT};
+  }
+`

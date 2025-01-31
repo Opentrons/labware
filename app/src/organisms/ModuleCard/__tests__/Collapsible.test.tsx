@@ -1,16 +1,17 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { renderWithProviders } from '/app/__testing-utils__'
 import { Collapsible } from '../Collapsible'
 
-const render = (props: React.ComponentProps<typeof Collapsible>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof Collapsible>) => {
   return renderWithProviders(<Collapsible {...props} />)[0]
 }
 
 describe('Collapsible', () => {
-  let props: React.ComponentProps<typeof Collapsible>
+  let props: ComponentProps<typeof Collapsible>
   beforeEach(() => {
     props = {
       expanded: false,

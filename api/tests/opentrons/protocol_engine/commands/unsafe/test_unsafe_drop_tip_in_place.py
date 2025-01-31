@@ -1,6 +1,7 @@
 """Test unsafe drop tip in place commands."""
 from opentrons.protocol_engine.state.update_types import (
     PipetteTipStateUpdate,
+    PipetteUnknownFluidUpdate,
     StateUpdate,
 )
 import pytest
@@ -51,7 +52,10 @@ async def test_drop_tip_implementation(
     assert result == SuccessData(
         public=UnsafeDropTipInPlaceResult(),
         state_update=StateUpdate(
-            pipette_tip_state=PipetteTipStateUpdate(pipette_id="abc", tip_geometry=None)
+            pipette_tip_state=PipetteTipStateUpdate(
+                pipette_id="abc", tip_geometry=None
+            ),
+            pipette_aspirated_fluid=PipetteUnknownFluidUpdate(pipette_id="abc"),
         ),
     )
 

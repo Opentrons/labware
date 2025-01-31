@@ -101,7 +101,7 @@ class CalibrateModule(
 
     commandType: CalibrateModuleCommandType = "calibration/calibrateModule"
     params: CalibrateModuleParams
-    result: Optional[CalibrateModuleResult]
+    result: Optional[CalibrateModuleResult] = None
 
     _ImplementationCls: Type[
         CalibrateModuleImplementation

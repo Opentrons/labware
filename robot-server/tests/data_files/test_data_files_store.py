@@ -99,6 +99,7 @@ def _get_sample_analysis_resource(
             commands=[],
             errors=[],
             liquids=[],
+            liquidClasses=[],
         ),
     )
 

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, describe, expect, beforeEach } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 
@@ -12,9 +11,11 @@ import { mockPipetteInfo } from '/app/redux/pipettes/__fixtures__'
 import { Instructions } from '../Instructions'
 import { CheckPipettesButton } from '../CheckPipettesButton'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('../CheckPipettesButton')
 
-const render = (props: React.ComponentProps<typeof Instructions>) => {
+const render = (props: ComponentProps<typeof Instructions>) => {
   return renderWithProviders(<Instructions {...props} />, {
     i18nInstance: i18n,
   })[0]
@@ -29,7 +30,7 @@ const MOCK_ACTUAL_PIPETTE = {
 } as PipetteModelSpecs
 
 describe('Instructions', () => {
-  let props: React.ComponentProps<typeof Instructions>
+  let props: ComponentProps<typeof Instructions>
 
   beforeEach(() => {
     props = {

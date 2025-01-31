@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -59,12 +59,14 @@ import { SetupStep } from './SetupStep'
 import { SetupLiquids } from './SetupLiquids'
 import { EmptySetupStep } from './EmptySetupStep'
 import { HowLPCWorksModal } from './SetupLabwarePositionCheck/HowLPCWorksModal'
+import { useFeatureFlag } from '/app/redux/config'
 
+import type { RefObject } from 'react'
 import type { Dispatch, State } from '/app/redux/types'
 import type { StepKey } from '/app/redux/protocol-runs'
 
 interface ProtocolRunSetupProps {
-  protocolRunHeaderRef: React.RefObject<HTMLDivElement> | null
+  protocolRunHeaderRef: RefObject<HTMLDivElement> | null
   robotName: string
   runId: string
 }
@@ -84,7 +86,7 @@ export function ProtocolRunSetup({
     orderedApplicableSteps,
   } = useRequiredSetupStepsInOrder({ runId, protocolAnalysis })
   const modules = parseAllRequiredModuleModels(protocolAnalysis?.commands ?? [])
-
+  const isNewLpc = useFeatureFlag('lpcRedesign')
   const robot = useRobot(robotName)
   const calibrationStatusRobot = useRunCalibrationStatus(robotName, runId)
   const calibrationStatusModules = useModuleCalibrationStatus(robotName, runId)
@@ -92,9 +94,7 @@ export function ProtocolRunSetup({
   const isFlex = useIsFlex(robotName)
   const runHasStarted = useRunHasStarted(runId)
   const { analysisErrors } = useProtocolAnalysisErrors(runId)
-  const [expandedStepKey, setExpandedStepKey] = React.useState<StepKey | null>(
-    null
-  )
+  const [expandedStepKey, setExpandedStepKey] = useState<StepKey | null>(null)
   const robotType = isFlex ? FLEX_ROBOT_TYPE : OT2_ROBOT_TYPE
   const deckConfigCompatibility = useDeckConfigurationCompatibility(
     robotType,
@@ -225,6 +225,7 @@ export function ProtocolRunSetup({
             }
           }}
           offsetsConfirmed={!missingSteps.includes(LPC_STEP_KEY)}
+          isNewLpc={isNewLpc}
         />
       ),
       description: t('labware_position_check_step_description'),
@@ -481,14 +482,14 @@ function StepRightElement(props: StepRightElementProps): JSX.Element | null {
 
 function LearnAboutLPC(): JSX.Element {
   const { t } = useTranslation('protocol_setup')
-  const [showLPCHelpModal, setShowLPCHelpModal] = React.useState(false)
+  const [showLPCHelpModal, setShowLPCHelpModal] = useState(false)
   return (
     <>
       <Link
         css={TYPOGRAPHY.linkPSemiBold}
         marginRight={SPACING.spacing16}
         whiteSpace={NO_WRAP}
-        onClick={(e: React.MouseEvent) => {
+        onClick={(e: MouseEvent) => {
           // clicking link shouldn't toggle step expanded state
           e.preventDefault()
           e.stopPropagation()

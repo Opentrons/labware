@@ -1,4 +1,5 @@
 """Protocol engine commands sub-state."""
+
 from __future__ import annotations
 
 import enum
@@ -228,9 +229,6 @@ class CommandState:
     This value can be used to generate future hashes.
     """
 
-    failed_command_errors: List[ErrorOccurrence]
-    """List of command errors that occurred during run execution."""
-
     has_entered_error_recovery: bool
     """Whether the run has entered error recovery."""
 
@@ -269,7 +267,6 @@ class CommandStore(HasState[CommandState], HandlesActions):
             run_started_at=None,
             latest_protocol_command_hash=None,
             stopped_by_estop=False,
-            failed_command_errors=[],
             error_recovery_policy=error_recovery_policy,
             has_entered_error_recovery=False,
         )
@@ -308,7 +305,7 @@ class CommandStore(HasState[CommandState], HandlesActions):
         # TODO(mc, 2021-06-22): mypy has trouble with this automatic
         # request > command mapping, figure out how to type precisely
         # (or wait for a future mypy version that can figure it out).
-        queued_command = action.request._CommandCls.construct(
+        queued_command = action.request._CommandCls.model_construct(
             id=action.command_id,
             key=(
                 action.request.key
@@ -330,7 +327,7 @@ class CommandStore(HasState[CommandState], HandlesActions):
     def _handle_run_command_action(self, action: RunCommandAction) -> None:
         prev_entry = self._state.command_history.get(action.command_id)
 
-        running_command = prev_entry.command.copy(
+        running_command = prev_entry.command.model_copy(
             update={
                 "status": CommandStatus.RUNNING,
                 "startedAt": action.started_at,
@@ -366,7 +363,6 @@ class CommandStore(HasState[CommandState], HandlesActions):
             notes=action.notes,
         )
         self._state.failed_command = self._state.command_history.get(action.command_id)
-        self._state.failed_command_errors.append(public_error_occurrence)
 
         if (
             prev_entry.command.intent in (CommandIntent.PROTOCOL, None)
@@ -511,7 +507,10 @@ class CommandStore(HasState[CommandState], HandlesActions):
                         pass
                     case QueueStatus.RUNNING | QueueStatus.PAUSED:
                         self._state.queue_status = QueueStatus.PAUSED
-                    case QueueStatus.AWAITING_RECOVERY | QueueStatus.AWAITING_RECOVERY_PAUSED:
+                    case (
+                        QueueStatus.AWAITING_RECOVERY
+                        | QueueStatus.AWAITING_RECOVERY_PAUSED
+                    ):
                         self._state.queue_status = QueueStatus.AWAITING_RECOVERY_PAUSED
             elif action.door_state == DoorState.CLOSED:
                 self._state.is_door_blocking = False
@@ -530,7 +529,7 @@ class CommandStore(HasState[CommandState], HandlesActions):
         notes: Optional[List[CommandNote]],
     ) -> None:
         prev_entry = self._state.command_history.get(command_id)
-        failed_command = prev_entry.command.copy(
+        failed_command = prev_entry.command.model_copy(
             update={
                 "completedAt": failed_at,
                 "status": CommandStatus.FAILED,
@@ -584,7 +583,7 @@ class CommandStore(HasState[CommandState], HandlesActions):
             )
 
 
-class CommandView(HasState[CommandState]):
+class CommandView:
     """Read-only command state view."""
 
     _state: CommandState
@@ -684,7 +683,7 @@ class CommandView(HasState[CommandState]):
         finish_error = self._state.finish_error
 
         if run_error and finish_error:
-            combined_error = ErrorOccurrence.construct(
+            combined_error = ErrorOccurrence(
                 id=finish_error.id,
                 createdAt=finish_error.createdAt,
                 errorType="RunAndFinishFailed",
@@ -706,7 +705,12 @@ class CommandView(HasState[CommandState]):
 
     def get_all_errors(self) -> List[ErrorOccurrence]:
         """Get the run's full error list, if there was none, returns an empty list."""
-        return self._state.failed_command_errors
+        failed_commands = self._state.command_history.get_all_failed_commands()
+        return [
+            command_error.error
+            for command_error in failed_commands
+            if command_error.error is not None
+        ]
 
     def get_has_entered_recovery_mode(self) -> bool:
         """Get whether the run has entered recovery mode."""
@@ -916,7 +920,7 @@ class CommandView(HasState[CommandState]):
         fatal error of the overall run coming from anywhere in the Python script,
         including in between commands.
         """
-        failed_command = self.state.failed_command
+        failed_command = self._state.failed_command
         if (
             failed_command
             and failed_command.command.error
@@ -932,11 +936,15 @@ class CommandView(HasState[CommandState]):
 
         The command ID is assumed to point to a failed command.
         """
-        return self.state.command_error_recovery_types[command_id]
+        return self._state.command_error_recovery_types[command_id]
 
     def get_is_stopped(self) -> bool:
         """Get whether an engine stop has completed."""
         return self._state.run_completed_at is not None
+
+    def get_is_stopped_by_estop(self) -> bool:
+        """Return whether the engine was stopped specifically by an E-stop."""
+        return self._state.stopped_by_estop
 
     def has_been_played(self) -> bool:
         """Get whether engine has started."""

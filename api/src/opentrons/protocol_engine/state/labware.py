@@ -131,7 +131,7 @@ class LabwareStore(HasState[LabwareState], HandlesActions):
             for fixed_labware in deck_fixed_labware
         }
         labware_by_id = {
-            fixed_labware.labware_id: LoadedLabware.construct(
+            fixed_labware.labware_id: LoadedLabware.model_construct(
                 id=fixed_labware.labware_id,
                 location=fixed_labware.location,
                 loadName=fixed_labware.definition.parameters.loadName,
@@ -156,10 +156,12 @@ class LabwareStore(HasState[LabwareState], HandlesActions):
         """Modify state in reaction to an action."""
         for state_update in get_state_updates(action):
             self._add_loaded_labware(state_update)
+            self._add_loaded_lid_stack(state_update)
             self._set_labware_location(state_update)
+            self._set_labware_lid(state_update)
 
         if isinstance(action, AddLabwareOffsetAction):
-            labware_offset = LabwareOffset.construct(
+            labware_offset = LabwareOffset.model_construct(
                 id=action.labware_offset_id,
                 createdAt=action.created_at,
                 definitionUri=action.request.definitionUri,
@@ -212,7 +214,7 @@ class LabwareStore(HasState[LabwareState], HandlesActions):
 
             self._state.labware_by_id[
                 loaded_labware_update.labware_id
-            ] = LoadedLabware.construct(
+            ] = LoadedLabware.model_construct(
                 id=loaded_labware_update.labware_id,
                 location=location,
                 loadName=loaded_labware_update.definition.parameters.loadName,
@@ -220,6 +222,63 @@ class LabwareStore(HasState[LabwareState], HandlesActions):
                 offsetId=loaded_labware_update.offset_id,
                 displayName=display_name,
             )
+
+    def _add_loaded_lid_stack(self, state_update: update_types.StateUpdate) -> None:
+        loaded_lid_stack_update = state_update.loaded_lid_stack
+        if loaded_lid_stack_update != update_types.NO_CHANGE:
+            # Add the stack object
+            stack_definition_uri = uri_from_details(
+                namespace=loaded_lid_stack_update.stack_object_definition.namespace,
+                load_name=loaded_lid_stack_update.stack_object_definition.parameters.loadName,
+                version=loaded_lid_stack_update.stack_object_definition.version,
+            )
+            self.state.definitions_by_uri[
+                stack_definition_uri
+            ] = loaded_lid_stack_update.stack_object_definition
+            self._state.labware_by_id[
+                loaded_lid_stack_update.stack_id
+            ] = LoadedLabware.construct(
+                id=loaded_lid_stack_update.stack_id,
+                location=loaded_lid_stack_update.stack_location,
+                loadName=loaded_lid_stack_update.stack_object_definition.parameters.loadName,
+                definitionUri=stack_definition_uri,
+                offsetId=None,
+                displayName=None,
+            )
+
+            # Add the Lids on top of the stack object
+            for i in range(len(loaded_lid_stack_update.labware_ids)):
+                definition_uri = uri_from_details(
+                    namespace=loaded_lid_stack_update.definition.namespace,
+                    load_name=loaded_lid_stack_update.definition.parameters.loadName,
+                    version=loaded_lid_stack_update.definition.version,
+                )
+
+                self._state.definitions_by_uri[
+                    definition_uri
+                ] = loaded_lid_stack_update.definition
+
+                location = loaded_lid_stack_update.new_locations_by_id[
+                    loaded_lid_stack_update.labware_ids[i]
+                ]
+
+                self._state.labware_by_id[
+                    loaded_lid_stack_update.labware_ids[i]
+                ] = LoadedLabware.construct(
+                    id=loaded_lid_stack_update.labware_ids[i],
+                    location=location,
+                    loadName=loaded_lid_stack_update.definition.parameters.loadName,
+                    definitionUri=definition_uri,
+                    offsetId=None,
+                    displayName=None,
+                )
+
+    def _set_labware_lid(self, state_update: update_types.StateUpdate) -> None:
+        labware_lid_update = state_update.labware_lid
+        if labware_lid_update != update_types.NO_CHANGE:
+            parent_labware_id = labware_lid_update.parent_labware_id
+            lid_id = labware_lid_update.lid_id
+            self._state.labware_by_id[parent_labware_id].lid_id = lid_id
 
     def _set_labware_location(self, state_update: update_types.StateUpdate) -> None:
         labware_location_update = state_update.labware_location
@@ -244,7 +303,7 @@ class LabwareStore(HasState[LabwareState], HandlesActions):
                 self._state.labware_by_id[labware_id].location = new_location
 
 
-class LabwareView(HasState[LabwareState]):
+class LabwareView:
     """Read-only labware state view."""
 
     _state: LabwareState
@@ -268,7 +327,7 @@ class LabwareView(HasState[LabwareState]):
 
     def get_id_by_module(self, module_id: str) -> str:
         """Return the ID of the labware loaded on the given module."""
-        for labware_id, labware in self.state.labware_by_id.items():
+        for labware_id, labware in self._state.labware_by_id.items():
             if (
                 isinstance(labware.location, ModuleLocation)
                 and labware.location.moduleId == module_id
@@ -281,7 +340,7 @@ class LabwareView(HasState[LabwareState]):
 
     def get_id_by_labware(self, labware_id: str) -> str:
         """Return the ID of the labware loaded on the given labware."""
-        for labware in self.state.labware_by_id.values():
+        for labware in self._state.labware_by_id.values():
             if (
                 isinstance(labware.location, OnLabwareLocation)
                 and labware.location.labwareId == labware_id
@@ -441,21 +500,7 @@ class LabwareView(HasState[LabwareState]):
 
         If not defined within a labware, defaults to one.
         """
-        stacking_quirks = {
-            "stackingMaxFive": 5,
-            "stackingMaxFour": 4,
-            "stackingMaxThree": 3,
-            "stackingMaxTwo": 2,
-            "stackingMaxOne": 1,
-            "stackingMaxZero": 0,
-        }
-        for quirk in stacking_quirks.keys():
-            if (
-                labware.parameters.quirks is not None
-                and quirk in labware.parameters.quirks
-            ):
-                return stacking_quirks[quirk]
-        return 1
+        return labware.stackLimit if labware.stackLimit is not None else 1
 
     def get_should_center_pipette_on_target_well(self, labware_id: str) -> bool:
         """True if a pipette moving to a well of this labware should center its body on the target.
@@ -479,7 +524,6 @@ class LabwareView(HasState[LabwareState]):
         will be used.
         """
         definition = self.get_definition(labware_id)
-
         if well_name is None:
             well_name = definition.ordering[0][0]
 
@@ -815,6 +859,11 @@ class LabwareView(HasState[LabwareState]):
             return self.raise_if_labware_inaccessible_by_pipette(
                 labware_location.labwareId
             )
+        elif labware.lid_id is not None:
+            raise errors.LocationNotAccessibleByPipetteError(
+                f"Cannot move pipette to {labware.loadName} "
+                "because labware is currently covered by a lid."
+            )
         elif isinstance(labware_location, AddressableAreaLocation):
             if fixture_validation.is_staging_slot(labware_location.addressableAreaName):
                 raise errors.LocationNotAccessibleByPipetteError(
@@ -836,6 +885,19 @@ class LabwareView(HasState[LabwareState]):
                 raise errors.LocationIsOccupiedError(
                     f"Labware {labware.loadName} is already present at {location}."
                 )
+
+    def raise_if_labware_cannot_be_ondeck(
+        self,
+        location: LabwareLocation,
+        labware_definition: LabwareDefinition,
+    ) -> None:
+        """Raise an error if the labware cannot be in the specified location."""
+        if isinstance(
+            location, (DeckSlotLocation, AddressableAreaLocation)
+        ) and not labware_validation.validate_labware_can_be_ondeck(labware_definition):
+            raise errors.LabwareCannotSitOnDeckError(
+                f"{labware_definition.parameters.loadName} cannot sit in a slot by itself."
+            )
 
     def raise_if_labware_incompatible_with_plate_reader(
         self,
@@ -998,11 +1060,15 @@ class LabwareView(HasState[LabwareState]):
             return None
         else:
             return LabwareMovementOffsetData(
-                pickUpOffset=cast(
-                    LabwareOffsetVector, parsed_offsets[offset_key].pickUpOffset
+                pickUpOffset=LabwareOffsetVector.model_construct(
+                    x=parsed_offsets[offset_key].pickUpOffset.x,
+                    y=parsed_offsets[offset_key].pickUpOffset.y,
+                    z=parsed_offsets[offset_key].pickUpOffset.z,
                 ),
-                dropOffset=cast(
-                    LabwareOffsetVector, parsed_offsets[offset_key].dropOffset
+                dropOffset=LabwareOffsetVector.model_construct(
+                    x=parsed_offsets[offset_key].dropOffset.x,
+                    y=parsed_offsets[offset_key].dropOffset.y,
+                    z=parsed_offsets[offset_key].dropOffset.z,
                 ),
             )
 

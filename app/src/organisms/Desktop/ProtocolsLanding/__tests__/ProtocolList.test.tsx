@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { when } from 'vitest-when'
 import { fireEvent, screen } from '@testing-library/react'
@@ -16,13 +15,15 @@ import { useSortedProtocols } from '../hooks'
 import { EmptyStateLinks } from '../EmptyStateLinks'
 import { ProtocolCard } from '../ProtocolCard'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('../hooks')
 vi.mock('/app/redux/protocol-storage')
 vi.mock('/app/redux/config')
 vi.mock('../EmptyStateLinks')
 vi.mock('../ProtocolCard')
 
-const render = (props: React.ComponentProps<typeof ProtocolList>) => {
+const render = (props: ComponentProps<typeof ProtocolList>) => {
   return renderWithProviders(
     <BrowserRouter>
       <ProtocolList {...props} />
@@ -34,7 +35,7 @@ const render = (props: React.ComponentProps<typeof ProtocolList>) => {
 }
 
 describe('ProtocolList', () => {
-  let props: React.ComponentProps<typeof ProtocolList>
+  let props: ComponentProps<typeof ProtocolList>
 
   beforeEach(() => {
     props = {

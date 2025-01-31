@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { css } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import {
@@ -22,6 +22,7 @@ import { usePipetteNameSpecs } from '/app/local-resources/instruments'
 import { CheckPipetteButton } from './CheckPipetteButton'
 import { FLOWS } from './constants'
 
+import type { Dispatch, SetStateAction } from 'react'
 import type {
   LoadedPipette,
   MotorAxes,
@@ -34,7 +35,7 @@ interface ResultsProps extends PipetteWizardStepProps {
   currentStepIndex: number
   totalStepCount: number
   isFetching: boolean
-  setFetching: React.Dispatch<React.SetStateAction<boolean>>
+  setFetching: Dispatch<SetStateAction<boolean>>
   hasCalData: boolean
   requiredPipette?: LoadedPipette
   nextMount?: string
@@ -78,7 +79,7 @@ export const Results = (props: ResultsProps): JSX.Element => {
     usePipetteNameSpecs(requiredPipette?.pipetteName as PipetteName)
       ?.displayName ?? null
 
-  const [numberOfTryAgains, setNumberOfTryAgains] = React.useState<number>(0)
+  const [numberOfTryAgains, setNumberOfTryAgains] = useState<number>(0)
   let header: string = 'unknown results screen'
   let iconColor: string = COLORS.green50
   let isSuccess: boolean = true

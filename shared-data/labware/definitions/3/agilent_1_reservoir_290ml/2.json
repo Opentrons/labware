@@ -1,0 +1,80 @@
+{
+  "ordering": [["A1"]],
+  "brand": {
+    "brand": "Agilent",
+    "brandId": ["201252-100"],
+    "links": ["https://www.agilent.com/store/en_US/Prod-201252-100/201252-100"]
+  },
+  "metadata": {
+    "displayName": "Agilent 1 Well Reservoir 290 mL",
+    "displayCategory": "reservoir",
+    "displayVolumeUnits": "mL",
+    "tags": []
+  },
+  "dimensions": {
+    "xDimension": 127.76,
+    "yDimension": 85.57,
+    "zDimension": 44.04
+  },
+  "wells": {
+    "A1": {
+      "depth": 39.22,
+      "shape": "rectangular",
+      "xDimension": 108,
+      "yDimension": 72,
+      "totalLiquidVolume": 290000,
+      "x": 63.88,
+      "y": 42.785,
+      "z": 4.82,
+      "geometryDefinitionId": "cuboidalWell"
+    }
+  },
+  "groups": [
+    {
+      "wells": ["A1"],
+      "metadata": {
+        "wellBottomShape": "v"
+      }
+    }
+  ],
+  "parameters": {
+    "format": "trough",
+    "isTiprack": false,
+    "isMagneticModuleCompatible": false,
+    "loadName": "agilent_1_reservoir_290ml",
+    "quirks": ["centerMultichannelOnWells", "touchTipDisabled"]
+  },
+  "namespace": "opentrons",
+  "version": 2,
+  "schemaVersion": 3,
+  "cornerOffsetFromSlot": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "innerLabwareGeometry": {
+    "cuboidalWell": {
+      "sections": [
+        {
+          "shape": "cuboidal",
+          "topXDimension": 106.79,
+          "topYDimension": 8,
+          "bottomXDimension": 101.25,
+          "bottomYDimension": 1.66,
+          "topHeight": 2,
+          "bottomHeight": 0,
+          "yCount": 8
+        },
+        {
+          "shape": "cuboidal",
+          "topXDimension": 107.5,
+          "topYDimension": 71.25,
+          "bottomXDimension": 106.79,
+          "bottomYDimension": 71.0,
+          "topHeight": 39.23,
+          "bottomHeight": 2.0
+        }
+      ]
+    }
+  }
+}

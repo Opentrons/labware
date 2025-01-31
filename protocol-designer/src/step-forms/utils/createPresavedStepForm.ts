@@ -2,6 +2,7 @@ import last from 'lodash/last'
 import {
   HEATERSHAKER_MODULE_TYPE,
   MAGNETIC_MODULE_TYPE,
+  TEMPERATURE_MODULE_TYPE,
   THERMOCYCLER_MODULE_TYPE,
 } from '@opentrons/shared-data'
 import {
@@ -29,6 +30,7 @@ import type { FormData, StepType, StepIdType } from '../../form-types'
 import type { InitialDeckSetup } from '../types'
 import type { FormPatch } from '../../steplist/actions/types'
 import type { SavedStepFormState, OrderedStepIdsState } from '../reducers'
+
 export interface CreatePresavedStepFormArgs {
   stepId: StepIdType
   stepType: StepType
@@ -118,6 +120,64 @@ const _patchDefaultDropTipLocation = (args: {
   return null
 }
 
+const _patchDefaultLabwareLocations = (args: {
+  labwareEntities: LabwareEntities
+  pipetteEntities: PipetteEntities
+  stepType: StepType
+}): FormUpdater => formData => {
+  const { labwareEntities, pipetteEntities, stepType } = args
+
+  const formHasMoveLabware =
+    formData && 'labware' in formData && stepType === 'moveLabware'
+
+  const filteredLabware = Object.values(labwareEntities).filter(
+    lw =>
+      // Filter out the tiprack, adapter, and lid entities
+      !lw.def?.parameters.isTiprack &&
+      !lw.def?.allowedRoles?.includes('adapter') &&
+      !lw.def?.allowedRoles?.includes('lid')
+  )
+
+  const filteredMoveLabware = Object.values(labwareEntities).filter(
+    lw =>
+      // Filter out adapter entities
+      !lw.def?.allowedRoles?.includes('adapter')
+  )
+
+  const formHasAspirateLabware = formData && 'aspirate_labware' in formData
+  const formHasMixLabware =
+    formData && 'labware' in formData && stepType === 'mix'
+
+  if (filteredLabware.length === 1 && formHasAspirateLabware) {
+    return handleFormChange(
+      { aspirate_labware: filteredLabware[0].id ?? null },
+      formData,
+      pipetteEntities,
+      labwareEntities
+    )
+  }
+
+  if (filteredLabware.length === 1 && formHasMixLabware) {
+    return handleFormChange(
+      { labware: filteredLabware[0].id ?? null },
+      formData,
+      pipetteEntities,
+      labwareEntities
+    )
+  }
+
+  if (filteredMoveLabware.length === 1 && formHasMoveLabware) {
+    return handleFormChange(
+      { labware: filteredMoveLabware[0].id },
+      formData,
+      pipetteEntities,
+      labwareEntities
+    )
+  }
+
+  return null
+}
+
 const _patchDefaultMagnetFields = (args: {
   initialDeckSetup: InitialDeckSetup
   orderedStepIds: OrderedStepIdsState
@@ -168,13 +228,17 @@ const _patchTemperatureModuleId = (args: {
   stepType: StepType
 }): FormUpdater => () => {
   const { initialDeckSetup, orderedStepIds, savedStepForms, stepType } = args
+  const numOfModules =
+    Object.values(initialDeckSetup.modules).filter(
+      module => module.type === TEMPERATURE_MODULE_TYPE
+    )?.length ?? 1
   const hasTemperatureModuleId =
     stepType === 'pause' || stepType === 'temperature'
 
   // Auto-populate moduleId field of 'pause' and 'temperature' steps.
   //
   // Bypass dependent field changes, do not use handleFormChange
-  if (hasTemperatureModuleId) {
+  if (hasTemperatureModuleId && numOfModules === 1) {
     const moduleId = getNextDefaultTemperatureModuleId(
       savedStepForms,
       orderedStepIds,
@@ -195,6 +259,10 @@ const _patchHeaterShakerModuleId = (args: {
   stepType: StepType
 }): FormUpdater => () => {
   const { initialDeckSetup, stepType } = args
+  const numOfModules =
+    Object.values(initialDeckSetup.modules).filter(
+      module => module.type === HEATERSHAKER_MODULE_TYPE
+    )?.length ?? 1
   const hasHeaterShakerModuleId =
     stepType === 'pause' || stepType === 'heaterShaker'
 
@@ -202,7 +270,7 @@ const _patchHeaterShakerModuleId = (args: {
   // Note, if both a temperature module and a heater shaker module are present, the pause form
   // will default to use the heater shaker
   // Bypass dependent field changes, do not use handleFormChange
-  if (hasHeaterShakerModuleId) {
+  if (hasHeaterShakerModuleId && numOfModules === 1) {
     const moduleId =
       getModuleOnDeckByType(initialDeckSetup, HEATERSHAKER_MODULE_TYPE)?.id ??
       null
@@ -273,6 +341,12 @@ export const createPresavedStepForm = ({
     additionalEquipmentEntities,
   })
 
+  const updateDefaultLabwareLocations = _patchDefaultLabwareLocations({
+    labwareEntities,
+    pipetteEntities,
+    stepType,
+  })
+
   const updateDefaultPipette = _patchDefaultPipette({
     initialDeckSetup,
     labwareEntities,
@@ -317,6 +391,7 @@ export const createPresavedStepForm = ({
     updateThermocyclerFields,
     updateHeaterShakerModuleId,
     updateMagneticModuleId,
+    updateDefaultLabwareLocations,
   ].reduce<FormData>(
     (acc, updater: FormUpdater) => {
       const updates = updater(acc)

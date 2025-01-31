@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, beforeEach, afterEach } from 'vitest'
 import { screen } from '@testing-library/react'
 
@@ -11,6 +10,8 @@ import {
 import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { ModulesAndDeckMapView } from '../ModulesAndDeckMapView'
+
+import type { ComponentProps } from 'react'
 
 vi.mock('@opentrons/components/src/hardware-sim/BaseDeck')
 vi.mock('@opentrons/api-client')
@@ -99,14 +100,14 @@ vi.mock('@opentrons/components', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof ModulesAndDeckMapView>) => {
+const render = (props: ComponentProps<typeof ModulesAndDeckMapView>) => {
   return renderWithProviders(<ModulesAndDeckMapView {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('ModulesAndDeckMapView', () => {
-  let props: React.ComponentProps<typeof ModulesAndDeckMapView>
+  let props: ComponentProps<typeof ModulesAndDeckMapView>
 
   beforeEach(() => {
     props = {

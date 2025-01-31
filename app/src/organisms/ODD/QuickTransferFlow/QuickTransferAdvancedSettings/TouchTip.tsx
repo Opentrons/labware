@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { createPortal } from 'react-dom'
 
@@ -8,8 +8,8 @@ import {
   DIRECTION_COLUMN,
   Flex,
   InputField,
-  RadioButton,
   POSITION_FIXED,
+  RadioButton,
   SPACING,
 } from '@opentrons/components'
 
@@ -21,6 +21,7 @@ import { i18n } from '/app/i18n'
 import { useTrackEventWithRobotSerial } from '/app/redux-resources/analytics'
 import { NumericalKeyboard } from '/app/atoms/SoftwareKeyboard'
 
+import type { Dispatch } from 'react'
 import type {
   QuickTransferSummaryState,
   QuickTransferSummaryAction,
@@ -30,7 +31,7 @@ import type {
 interface TouchTipProps {
   onBack: () => void
   state: QuickTransferSummaryState
-  dispatch: React.Dispatch<QuickTransferSummaryAction>
+  dispatch: Dispatch<QuickTransferSummaryAction>
   kind: FlowRateKind
 }
 
@@ -38,15 +39,15 @@ export function TouchTip(props: TouchTipProps): JSX.Element {
   const { kind, onBack, state, dispatch } = props
   const { t } = useTranslation('quick_transfer')
   const { trackEventWithRobotSerial } = useTrackEventWithRobotSerial()
-  const keyboardRef = React.useRef(null)
+  const keyboardRef = useRef(null)
 
-  const [touchTipIsEnabled, setTouchTipIsEnabled] = React.useState<boolean>(
+  const [touchTipIsEnabled, setTouchTipIsEnabled] = useState<boolean>(
     kind === 'aspirate'
       ? state.touchTipAspirate != null
       : state.touchTipDispense != null
   )
-  const [currentStep, setCurrentStep] = React.useState<number>(1)
-  const [position, setPosition] = React.useState<number | null>(
+  const [currentStep, setCurrentStep] = useState<number>(1)
+  const [position, setPosition] = useState<number | null>(
     kind === 'aspirate'
       ? state.touchTipAspirate ?? null
       : state.touchTipDispense ?? null

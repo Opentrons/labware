@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { describe, it, beforeEach, expect, vi } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
@@ -20,6 +19,8 @@ import { SetupModulesList } from '../SetupModulesList'
 import { SetupModulesMap } from '../SetupModulesMap'
 import { SetupFixtureList } from '../SetupFixtureList'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/redux-resources/robots')
 vi.mock('../SetupModulesList')
 vi.mock('../SetupModulesMap')
@@ -31,14 +32,14 @@ vi.mock('/app/resources/runs')
 const MOCK_ROBOT_NAME = 'otie'
 const MOCK_RUN_ID = '1'
 
-const render = (props: React.ComponentProps<typeof SetupModuleAndDeck>) => {
+const render = (props: ComponentProps<typeof SetupModuleAndDeck>) => {
   return renderWithProviders(<SetupModuleAndDeck {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('SetupModuleAndDeck', () => {
-  let props: React.ComponentProps<typeof SetupModuleAndDeck>
+  let props: ComponentProps<typeof SetupModuleAndDeck>
   beforeEach(() => {
     props = {
       robotName: MOCK_ROBOT_NAME,

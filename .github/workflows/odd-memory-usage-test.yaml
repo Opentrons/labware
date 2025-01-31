@@ -1,0 +1,24 @@
+name: 'ODD Memory Usage Test'
+
+on:
+  schedule:
+    - cron: '30 12 * * *'
+  workflow_dispatch:
+
+jobs:
+  analyze-memory:
+    name: 'ODD Memory Usage Test'
+    runs-on: 'ubuntu-latest'
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: 'actions/checkout@v4'
+
+      - name: Run memory analysis
+        uses: ./.github/actions/odd-resource-analysis
+        with:
+          mixpanel-user: ${{ secrets.MIXPANEL_INGEST_USER }}
+          mixpanel-secret: ${{ secrets.MIXPANEL_INGEST_SECRET }}
+          mixpanel-project-id: ${{ secrets.OT_MIXPANEL_PROJECT_ID }}
+          previous-version-count: '2'

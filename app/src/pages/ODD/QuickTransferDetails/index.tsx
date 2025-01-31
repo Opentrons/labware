@@ -50,7 +50,7 @@ import {
   ANALYTICS_QUICK_TRANSFER_RUN_FROM_DETAILS,
 } from '/app/redux/analytics'
 import { useTrackEventWithRobotSerial } from '/app/redux-resources/analytics'
-import { useOffsetCandidatesForAnalysis } from '/app/organisms/ApplyHistoricOffsets/hooks/useOffsetCandidatesForAnalysis'
+import { useOffsetCandidatesForAnalysis } from '/app/organisms/LegacyApplyHistoricOffsets/hooks/useOffsetCandidatesForAnalysis'
 import { useMissingProtocolHardware } from '/app/transformations/commands'
 import { DeleteTransferConfirmationModal } from '../QuickTransferDashboard/DeleteTransferConfirmationModal'
 import { Deck } from './Deck'
@@ -180,10 +180,10 @@ const QuickTransferHeader = ({
 }
 
 const transferSectionTabOptions = [
-  'Summary',
-  'Hardware',
-  'Labware',
-  'Deck',
+  'summary',
+  'hardware',
+  'labware',
+  'deck',
 ] as const
 
 type TabOption = typeof transferSectionTabOptions[number]
@@ -197,13 +197,14 @@ const TransferSectionTabs = ({
   currentOption,
   setCurrentOption,
 }: TransferSectionTabsProps): JSX.Element => {
+  const { t, i18n } = useTranslation('protocol_details')
   const options = transferSectionTabOptions
 
   return (
     <Flex gridGap={SPACING.spacing8}>
       <Tabs
         tabs={options.map(option => ({
-          text: option,
+          text: i18n.format(t(option), 'capitalize'),
           onClick: () => {
             setCurrentOption(option)
           },
@@ -263,7 +264,7 @@ const TransferSectionContent = ({
 
   let protocolSection: JSX.Element | null = null
   switch (currentOption) {
-    case 'Summary':
+    case 'summary':
       protocolSection = (
         <Summary
           date={transferData.data.createdAt ?? null}
@@ -271,20 +272,20 @@ const TransferSectionContent = ({
         />
       )
       break
-    case 'Hardware':
+    case 'hardware':
       protocolSection = <Hardware transferId={transferId} />
       break
-    case 'Labware':
+    case 'labware':
       protocolSection = <Labware transferId={transferId} />
       break
-    case 'Deck':
+    case 'deck':
       protocolSection = <Deck transferId={transferId} />
       break
   }
   return (
     <Flex
       paddingTop={SPACING.spacing32}
-      justifyContent={currentOption === 'Deck' ? JUSTIFY_CENTER : undefined}
+      justifyContent={currentOption === 'deck' ? JUSTIFY_CENTER : undefined}
     >
       {protocolSection}
     </Flex>

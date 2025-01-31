@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, expect, beforeEach } from 'vitest'
 import { screen } from '@testing-library/react'
 import { renderWithProviders } from '/app/__testing-utils__'
@@ -7,12 +6,14 @@ import { COLORS, SPACING, TYPOGRAPHY, BORDERS } from '@opentrons/components'
 
 import { TertiaryButton } from '..'
 
-const render = (props: React.ComponentProps<typeof TertiaryButton>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof TertiaryButton>) => {
   return renderWithProviders(<TertiaryButton {...props} />)[0]
 }
 
 describe('TertiaryButton', () => {
-  let props: React.ComponentProps<typeof TertiaryButton>
+  let props: ComponentProps<typeof TertiaryButton>
 
   beforeEach(() => {
     props = {

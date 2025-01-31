@@ -474,10 +474,10 @@ describe('robot update selectors', () => {
 
     expect(result).toMatchObject({
       autoUpdateDisabledReason: expect.stringMatching(
-        /update server is not responding/
+        /update_server_unavailable/
       ),
       updateFromFileDisabledReason: expect.stringMatching(
-        /update server is not responding/
+        /update_server_unavailable/
       ),
     })
   })
@@ -495,10 +495,10 @@ describe('robot update selectors', () => {
 
     expect(result).toMatchObject({
       autoUpdateDisabledReason: expect.stringMatching(
-        /update server is not responding/
+        /update_server_unavailable/
       ),
       updateFromFileDisabledReason: expect.stringMatching(
-        /update server is not responding/
+        /update_server_unavailable/
       ),
     })
   })
@@ -526,11 +526,9 @@ describe('robot update selectors', () => {
     const result = selectors.getRobotUpdateDisplayInfo(state, robotName)
 
     expect(result).toMatchObject({
-      autoUpdateDisabledReason: expect.stringMatching(
-        /updating a different robot/
-      ),
+      autoUpdateDisabledReason: expect.stringMatching(/other_robot_updating/),
       updateFromFileDisabledReason: expect.stringMatching(
-        /updating a different robot/
+        /other_robot_updating/
       ),
     })
   })
@@ -547,9 +545,7 @@ describe('robot update selectors', () => {
 
     expect(result).toEqual({
       autoUpdateAction: expect.stringMatching(/unavailable/i),
-      autoUpdateDisabledReason: expect.stringMatching(
-        /unable to retrieve update/i
-      ),
+      autoUpdateDisabledReason: expect.stringMatching(/no_update_files/i),
       updateFromFileDisabledReason: null,
     })
   })

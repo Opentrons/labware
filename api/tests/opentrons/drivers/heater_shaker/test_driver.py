@@ -137,10 +137,14 @@ async def test_get_device_info(
     )
     response = await subject.get_device_info()
     assert response == {"serial": "TC2101010A2", "model": "A", "version": "21.2.1"}
-    expected = CommandBuilder(terminator=driver.HS_COMMAND_TERMINATOR).add_gcode(
+    device_info = CommandBuilder(terminator=driver.HS_COMMAND_TERMINATOR).add_gcode(
         gcode="M115"
     )
-    connection.send_command.assert_called_once_with(command=expected, retries=0)
+    reset_reason = CommandBuilder(terminator=driver.HS_COMMAND_TERMINATOR).add_gcode(
+        gcode="M114"
+    )
+    connection.send_command.assert_any_call(command=device_info, retries=0)
+    connection.send_command.assert_called_with(command=reset_reason, retries=0)
 
 
 async def test_enter_bootloader(

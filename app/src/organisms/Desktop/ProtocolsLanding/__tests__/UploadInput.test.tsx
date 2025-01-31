@@ -8,10 +8,16 @@ import {
   ANALYTICS_IMPORT_PROTOCOL_TO_APP,
 } from '/app/redux/analytics'
 import { ProtocolUploadInput } from '../ProtocolUploadInput'
+import { remote } from '/app/redux/shell/remote'
 
 import type { Mock } from 'vitest'
 
 vi.mock('/app/redux/analytics')
+vi.mock('/app/redux/shell/remote', () => ({
+  remote: {
+    getFilePathFrom: vi.fn(),
+  },
+}))
 
 describe('ProtocolUploadInput', () => {
   let onUpload: Mock
@@ -31,6 +37,7 @@ describe('ProtocolUploadInput', () => {
     onUpload = vi.fn()
     trackEvent = vi.fn()
     vi.mocked(useTrackEvent).mockReturnValue(trackEvent)
+    vi.mocked(remote.getFilePathFrom).mockResolvedValue('mockFileName')
   })
   afterEach(() => {
     vi.resetAllMocks()
@@ -56,16 +63,24 @@ describe('ProtocolUploadInput', () => {
     fireEvent.click(button)
     expect(input.click).toHaveBeenCalled()
   })
-  it('calls onUpload callback on choose file and trigger analytics event', () => {
+  it('calls onUpload callback on choose file and trigger analytics event', async () => {
     render()
     const input = screen.getByTestId('file_input')
-    fireEvent.change(input, {
-      target: { files: [{ path: 'dummyFile', name: 'dummyName' }] },
+
+    const mockFile = new File(['mockContent'], 'mockFileName', {
+      type: 'text/plain',
     })
-    expect(onUpload).toHaveBeenCalled()
-    expect(trackEvent).toHaveBeenCalledWith({
-      name: ANALYTICS_IMPORT_PROTOCOL_TO_APP,
-      properties: { protocolFileName: 'dummyName' },
+
+    fireEvent.change(input, {
+      target: { files: [mockFile] },
+    })
+
+    await vi.waitFor(() => {
+      expect(onUpload).toHaveBeenCalled()
+      expect(trackEvent).toHaveBeenCalledWith({
+        name: ANALYTICS_IMPORT_PROTOCOL_TO_APP,
+        properties: { protocolFileName: 'mockFileName' },
+      })
     })
   })
 })

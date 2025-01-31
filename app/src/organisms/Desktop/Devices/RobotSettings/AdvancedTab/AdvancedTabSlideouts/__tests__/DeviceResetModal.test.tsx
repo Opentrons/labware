@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, vi, expect, beforeEach } from 'vitest'
@@ -9,6 +8,7 @@ import { resetConfig } from '/app/redux/robot-admin'
 import { useDispatchApiRequest } from '/app/redux/robot-api'
 import { DeviceResetModal } from '../DeviceResetModal'
 
+import type { ComponentProps } from 'react'
 import type { DispatchApiRequestType } from '/app/redux/robot-api'
 
 vi.mock('/app/redux-resources/robots')
@@ -18,7 +18,7 @@ vi.mock('/app/redux/robot-api')
 const mockResetOptions = {}
 const mockCloseModal = vi.fn()
 const ROBOT_NAME = 'otie'
-const render = (props: React.ComponentProps<typeof DeviceResetModal>) => {
+const render = (props: ComponentProps<typeof DeviceResetModal>) => {
   return renderWithProviders(
     <MemoryRouter>
       <DeviceResetModal {...props} />

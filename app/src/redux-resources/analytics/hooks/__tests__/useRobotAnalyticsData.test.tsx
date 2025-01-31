@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, expect, describe, beforeEach, afterEach } from 'vitest'
 import { when } from 'vitest-when'
 import { renderHook } from '@testing-library/react'
@@ -18,6 +17,7 @@ import {
   getRobotSerialNumber,
 } from '/app/redux/discovery'
 
+import type { FunctionComponent, ReactNode } from 'react'
 import type { Store } from 'redux'
 import type { DiscoveredRobot } from '/app/redux/discovery/types'
 import type { AttachedPipettesByMount } from '/app/redux/pipettes/types'
@@ -41,7 +41,7 @@ const ATTACHED_PIPETTES = {
 }
 const ROBOT_SERIAL_NUMBER = 'OT123'
 
-let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+let wrapper: FunctionComponent<{ children: ReactNode }>
 let store: Store<any> = createStore(vi.fn(), {})
 
 describe('useRobotAnalyticsData hook', () => {

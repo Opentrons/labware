@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest'
 import { when } from 'vitest-when'
@@ -18,6 +17,8 @@ import {
 } from '/app/App/portal'
 import * as Fixtures from '../__fixtures__'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('../hooks')
 vi.mock('../IncompatibleModuleODDModalBody')
 vi.mock('../IncompatibleModuleDesktopModalBody')
@@ -32,7 +33,7 @@ const getRenderer = (incompatibleModules: AttachedModule[]) => {
   vi.mocked(IncompatibleModuleDesktopModalBody).mockReturnValue(
     <div>TEST ELEMENT DESKTOP</div>
   )
-  return (props: React.ComponentProps<typeof IncompatibleModuleTakeover>) => {
+  return (props: ComponentProps<typeof IncompatibleModuleTakeover>) => {
     const [rendered] = renderWithProviders(
       <>
         <PortalRoot />
@@ -55,7 +56,7 @@ const getRenderer = (incompatibleModules: AttachedModule[]) => {
 }
 
 describe('IncompatibleModuleTakeover', () => {
-  let props: React.ComponentProps<typeof IncompatibleModuleTakeover>
+  let props: ComponentProps<typeof IncompatibleModuleTakeover>
   beforeEach(() => {
     props = { isOnDevice: true }
   })

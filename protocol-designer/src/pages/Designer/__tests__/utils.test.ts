@@ -117,6 +117,7 @@ describe('getSlotInformation', () => {
     expect(
       getSlotInformation({ deckSetup: mockOt2DeckSetup, slot: '1' })
     ).toEqual({
+      matchingLabwareFor4thColumn: null,
       createdModuleForSlot: mockHS,
       createdLabwareForSlot: mockLabOnDeck1,
       createdNestedLabwareForSlot: mockLabOnDeck2,
@@ -128,6 +129,7 @@ describe('getSlotInformation', () => {
     expect(
       getSlotInformation({ deckSetup: mockOt2DeckSetup, slot: '2' })
     ).toEqual({
+      matchingLabwareFor4thColumn: null,
       createdLabwareForSlot: mockLabOnDeck3,
       createFixtureForSlots: [],
       slotPosition: null,
@@ -142,12 +144,17 @@ describe('getSlotInformation', () => {
     }
     expect(
       getSlotInformation({ deckSetup: mockDeckSetup, slot: 'A1' })
-    ).toEqual({ slotPosition: null, createFixtureForSlots: [] })
+    ).toEqual({
+      matchingLabwareFor4thColumn: null,
+      slotPosition: null,
+      createFixtureForSlots: [],
+    })
   })
   it('renders a trashbin for a Flex on slot A3', () => {
     expect(
       getSlotInformation({ deckSetup: mockFlex2DeckSetup, slot: 'A3' })
     ).toEqual({
+      matchingLabwareFor4thColumn: null,
       slotPosition: null,
       createFixtureForSlots: [mockTrash],
       preSelectedFixture: 'trashBin',
@@ -157,6 +164,7 @@ describe('getSlotInformation', () => {
     expect(
       getSlotInformation({ deckSetup: mockFlex2DeckSetup, slot: 'D1' })
     ).toEqual({
+      matchingLabwareFor4thColumn: null,
       slotPosition: null,
       createdModuleForSlot: mockHSFlex,
       createdLabwareForSlot: mockLabOnDeck1,
@@ -168,6 +176,7 @@ describe('getSlotInformation', () => {
     expect(
       getSlotInformation({ deckSetup: mockFlex2DeckSetup, slot: 'D3' })
     ).toEqual({
+      matchingLabwareFor4thColumn: mockLabOnStagingArea,
       slotPosition: null,
       createFixtureForSlots: [mockWasteChute, mockStagingArea],
       preSelectedFixture: 'wasteChuteAndStagingArea',
@@ -177,6 +186,7 @@ describe('getSlotInformation', () => {
     expect(
       getSlotInformation({ deckSetup: mockFlex2DeckSetup, slot: 'D4' })
     ).toEqual({
+      matchingLabwareFor4thColumn: null,
       slotPosition: null,
       createdLabwareForSlot: mockLabOnStagingArea,
       createFixtureForSlots: [mockWasteChute, mockStagingArea],

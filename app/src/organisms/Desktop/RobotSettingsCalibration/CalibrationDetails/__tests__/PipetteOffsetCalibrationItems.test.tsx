@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { screen } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -19,11 +18,12 @@ import { PipetteOffsetCalibrationItems } from '../PipetteOffsetCalibrationItems'
 import { OverflowMenu } from '../OverflowMenu'
 import { formatLastCalibrated } from '../utils'
 
+import type { ComponentProps } from 'react'
 import type { Mount } from '@opentrons/components'
 import type { AttachedPipettesByMount } from '/app/redux/pipettes/types'
 
 const render = (
-  props: React.ComponentProps<typeof PipetteOffsetCalibrationItems>
+  props: ComponentProps<typeof PipetteOffsetCalibrationItems>
 ): ReturnType<typeof renderWithProviders> => {
   return renderWithProviders(<PipetteOffsetCalibrationItems {...props} />, {
     i18nInstance: i18n,
@@ -73,7 +73,7 @@ const mockAttachedPipettes: AttachedPipettesByMount = {
 const mockUpdateRobotStatus = vi.fn()
 
 describe('PipetteOffsetCalibrationItems', () => {
-  let props: React.ComponentProps<typeof PipetteOffsetCalibrationItems>
+  let props: ComponentProps<typeof PipetteOffsetCalibrationItems>
 
   beforeEach(() => {
     vi.mocked(useAttachedPipettesFromInstrumentsQuery).mockReturnValue({

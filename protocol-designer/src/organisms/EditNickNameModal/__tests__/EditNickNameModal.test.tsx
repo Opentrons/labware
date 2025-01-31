@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 import { i18n } from '../../../assets/localization'
@@ -7,17 +6,19 @@ import { EditNickNameModal } from '..'
 import { getLabwareNicknamesById } from '../../../ui/labware/selectors'
 import { renameLabware } from '../../../labware-ingred/actions'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('../../../ui/labware/selectors')
 vi.mock('../../../labware-ingred/actions')
 
-const render = (props: React.ComponentProps<typeof EditNickNameModal>) => {
+const render = (props: ComponentProps<typeof EditNickNameModal>) => {
   return renderWithProviders(<EditNickNameModal {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('EditNickNameModal', () => {
-  let props: React.ComponentProps<typeof EditNickNameModal>
+  let props: ComponentProps<typeof EditNickNameModal>
 
   beforeEach(() => {
     props = {

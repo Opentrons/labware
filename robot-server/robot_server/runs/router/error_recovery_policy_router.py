@@ -4,7 +4,8 @@
 from textwrap import dedent
 from typing import Annotated
 
-from fastapi import status, APIRouter, Depends
+from fastapi import status, Depends
+from server_utils.fastapi_utils.light_router import LightRouter
 
 from robot_server.errors.error_responses import ErrorBody
 from robot_server.service.json_api.request import RequestModel
@@ -20,7 +21,7 @@ from ..run_data_manager import RunDataManager, RunNotCurrentError
 from ..error_recovery_models import ErrorRecoveryPolicy
 
 
-error_recovery_policy_router = APIRouter()
+error_recovery_policy_router = LightRouter()
 
 
 @PydanticResponse.wrap_route(
@@ -59,7 +60,7 @@ async def put_error_recovery_policy(
         raise RunStopped(detail=str(e)).as_error(status.HTTP_409_CONFLICT) from e
 
     return await PydanticResponse.create(
-        content=SimpleEmptyBody.construct(),
+        content=SimpleEmptyBody.model_construct(),
         status_code=status.HTTP_200_OK,
     )
 
@@ -90,8 +91,8 @@ async def get_error_recovery_policy(
         raise RunStopped(detail=str(e)).as_error(status.HTTP_409_CONFLICT) from e
 
     return await PydanticResponse.create(
-        content=SimpleBody.construct(
-            data=ErrorRecoveryPolicy.construct(policyRules=rules)
+        content=SimpleBody.model_construct(
+            data=ErrorRecoveryPolicy.model_construct(policyRules=rules)
         ),
         status_code=status.HTTP_200_OK,
     )

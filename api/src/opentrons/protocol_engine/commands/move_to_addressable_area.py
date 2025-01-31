@@ -7,20 +7,29 @@ from typing_extensions import Literal
 from opentrons_shared_data.pipette.types import PipetteNameType
 
 from ..errors import LocationNotAccessibleByPipetteError
-from ..state import update_types
-from ..types import DeckPoint, AddressableOffsetVector
+from ..types import AddressableOffsetVector
 from ..resources import fixture_validation
 from .pipetting_common import (
     PipetteIdMixin,
+)
+from .movement_common import (
     MovementMixin,
     DestinationPositionResult,
+    move_to_addressable_area,
+    StallOrCollisionError,
 )
-from .command import AbstractCommandImpl, BaseCommand, BaseCommandCreate, SuccessData
-from ..errors.error_occurrence import ErrorOccurrence
+from .command import (
+    AbstractCommandImpl,
+    BaseCommand,
+    BaseCommandCreate,
+    SuccessData,
+    DefinedErrorData,
+)
 
 if TYPE_CHECKING:
     from ..execution import MovementHandler
     from ..state.state import StateView
+    from ..resources.model_utils import ModelUtils
 
 MoveToAddressableAreaCommandType = Literal["moveToAddressableArea"]
 
@@ -74,25 +83,29 @@ class MoveToAddressableAreaResult(DestinationPositionResult):
     pass
 
 
+_ExecuteReturn = (
+    SuccessData[MoveToAddressableAreaResult] | DefinedErrorData[StallOrCollisionError]
+)
+
+
 class MoveToAddressableAreaImplementation(
-    AbstractCommandImpl[
-        MoveToAddressableAreaParams, SuccessData[MoveToAddressableAreaResult]
-    ]
+    AbstractCommandImpl[MoveToAddressableAreaParams, _ExecuteReturn]
 ):
     """Move to addressable area command implementation."""
 
     def __init__(
-        self, movement: MovementHandler, state_view: StateView, **kwargs: object
+        self,
+        movement: MovementHandler,
+        state_view: StateView,
+        model_utils: ModelUtils,
+        **kwargs: object,
     ) -> None:
         self._movement = movement
         self._state_view = state_view
+        self._model_utils = model_utils
 
-    async def execute(
-        self, params: MoveToAddressableAreaParams
-    ) -> SuccessData[MoveToAddressableAreaResult]:
+    async def execute(self, params: MoveToAddressableAreaParams) -> _ExecuteReturn:
         """Move the requested pipette to the requested addressable area."""
-        state_update = update_types.StateUpdate()
-
         self._state_view.addressable_areas.raise_if_area_not_in_deck_configuration(
             params.addressableAreaName
         )
@@ -115,7 +128,9 @@ class MoveToAddressableAreaImplementation(
                 f"Cannot move pipette to staging slot {params.addressableAreaName}"
             )
 
-        x, y, z = await self._movement.move_to_addressable_area(
+        result = await move_to_addressable_area(
+            movement=self._movement,
+            model_utils=self._model_utils,
             pipette_id=params.pipetteId,
             addressable_area_name=params.addressableAreaName,
             offset=params.offset,
@@ -125,29 +140,27 @@ class MoveToAddressableAreaImplementation(
             stay_at_highest_possible_z=params.stayAtHighestPossibleZ,
             highest_possible_z_extra_offset=extra_z_offset,
         )
-        deck_point = DeckPoint.construct(x=x, y=y, z=z)
-        state_update.set_pipette_location(
-            pipette_id=params.pipetteId,
-            new_addressable_area_name=params.addressableAreaName,
-            new_deck_point=deck_point,
-        )
-
-        return SuccessData(
-            public=MoveToAddressableAreaResult(position=DeckPoint(x=x, y=y, z=z)),
-            state_update=state_update,
-        )
+        if isinstance(result, DefinedErrorData):
+            return result
+        else:
+            return SuccessData(
+                public=MoveToAddressableAreaResult(position=result.public.position),
+                state_update=result.state_update,
+            )
 
 
 class MoveToAddressableArea(
     BaseCommand[
-        MoveToAddressableAreaParams, MoveToAddressableAreaResult, ErrorOccurrence
+        MoveToAddressableAreaParams,
+        MoveToAddressableAreaResult,
+        StallOrCollisionError,
     ]
 ):
     """Move to addressable area command model."""
 
     commandType: MoveToAddressableAreaCommandType = "moveToAddressableArea"
     params: MoveToAddressableAreaParams
-    result: Optional[MoveToAddressableAreaResult]
+    result: Optional[MoveToAddressableAreaResult] = None
 
     _ImplementationCls: Type[
         MoveToAddressableAreaImplementation

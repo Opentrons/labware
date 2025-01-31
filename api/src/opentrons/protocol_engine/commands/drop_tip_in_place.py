@@ -1,7 +1,10 @@
 """Drop tip in place command request, result, and implementation models."""
 from __future__ import annotations
+
+from typing import TYPE_CHECKING, Optional, Type, Any
+
 from pydantic import Field, BaseModel
-from typing import TYPE_CHECKING, Optional, Type
+from pydantic.json_schema import SkipJsonSchema
 from typing_extensions import Literal
 
 from .command import (
@@ -24,16 +27,21 @@ if TYPE_CHECKING:
 DropTipInPlaceCommandType = Literal["dropTipInPlace"]
 
 
+def _remove_default(s: dict[str, Any]) -> None:
+    s.pop("default", None)
+
+
 class DropTipInPlaceParams(PipetteIdMixin):
     """Payload required to drop a tip in place."""
 
-    homeAfter: Optional[bool] = Field(
+    homeAfter: bool | SkipJsonSchema[None] = Field(
         None,
         description=(
             "Whether to home this pipette's plunger after dropping the tip."
             " You should normally leave this unspecified to let the robot choose"
             " a safe default depending on its hardware."
         ),
+        json_schema_extra=_remove_default,
     )
 
 
@@ -79,6 +87,7 @@ class DropTipInPlaceImplementation(
             state_update_if_false_positive.update_pipette_tip_state(
                 pipette_id=params.pipetteId, tip_geometry=None
             )
+            state_update.set_fluid_unknown(pipette_id=params.pipetteId)
             error = TipPhysicallyAttachedError(
                 id=self._model_utils.generate_id(),
                 createdAt=self._model_utils.get_timestamp(),
@@ -97,6 +106,7 @@ class DropTipInPlaceImplementation(
                 state_update_if_false_positive=state_update_if_false_positive,
             )
         else:
+            state_update.set_fluid_unknown(pipette_id=params.pipetteId)
             state_update.update_pipette_tip_state(
                 pipette_id=params.pipetteId, tip_geometry=None
             )
@@ -110,7 +120,7 @@ class DropTipInPlace(
 
     commandType: DropTipInPlaceCommandType = "dropTipInPlace"
     params: DropTipInPlaceParams
-    result: Optional[DropTipInPlaceResult]
+    result: Optional[DropTipInPlaceResult] = None
 
     _ImplementationCls: Type[
         DropTipInPlaceImplementation

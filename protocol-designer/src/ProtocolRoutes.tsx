@@ -1,18 +1,20 @@
 import { Route, Navigate, Routes, useNavigate } from 'react-router-dom'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Box } from '@opentrons/components'
-import { Landing } from './pages/Landing'
-import { ProtocolOverview } from './pages/ProtocolOverview'
-import { Liquids } from './pages/Liquids'
-import { Designer } from './pages/Designer'
-import { CreateNewProtocolWizard } from './pages/CreateNewProtocolWizard'
-import { NavigationBar } from './NavigationBar'
-import { Settings } from './pages/Settings'
 import {
-  Kitchen,
+  CreateNewProtocolWizard,
+  Designer,
+  Landing,
+  Liquids,
+  ProtocolOverview,
+  Settings,
+} from './pages'
+import {
   FileUploadMessagesModal,
-  LabwareUploadModal,
   GateModal,
+  Kitchen,
+  LabwareUploadModal,
+  Navigation,
 } from './organisms'
 import { ProtocolDesignerAppFallback } from './resources/ProtocolDesignerAppFallback'
 
@@ -59,9 +61,6 @@ export function ProtocolRoutes(): JSX.Element {
     path: '/',
   }
   const allRoutes: RouteProps[] = [...pdRoutes, landingPage]
-  const showGateModal =
-    process.env.NODE_ENV === 'production' || process.env.OT_PD_SHOW_GATE
-
   const navigate = useNavigate()
   const handleReset = (): void => {
     navigate('/', { replace: true })
@@ -72,11 +71,10 @@ export function ProtocolRoutes(): JSX.Element {
       FallbackComponent={ProtocolDesignerAppFallback}
       onReset={handleReset}
     >
-      <NavigationBar />
-
+      <Navigation />
       <Kitchen>
         <Box width="100%">
-          {showGateModal ? <GateModal /> : null}
+          <GateModal />
           <LabwareUploadModal />
           <FileUploadMessagesModal />
           <Routes>

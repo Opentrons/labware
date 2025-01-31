@@ -18,7 +18,9 @@ export function RetrySameTips(props: RecoveryContentProps): JSX.Element {
       case RETRY_SAME_TIPS.STEPS.RETRY:
         return <RetrySameTipsInfo {...props} />
       default:
-        console.warn(`${step} in ${route} not explicitly handled. Rerouting.`)
+        console.warn(
+          `RetrySameTips: ${step} in ${route} not explicitly handled. Rerouting.`
+        )
         return <SelectRecoveryOption {...props} />
     }
   }

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { renderHook } from '@testing-library/react'
 import { createStore } from 'redux'
 import { I18nextProvider } from 'react-i18next'
@@ -9,6 +8,7 @@ import { i18n } from '/app/i18n'
 import { useRobotUpdateInfo } from '../useRobotUpdateInfo'
 import { getRobotUpdateDownloadProgress } from '/app/redux/robot-update'
 
+import type { FunctionComponent, ReactNode } from 'react'
 import type { Store } from 'redux'
 import type { State } from '/app/redux/types'
 import type {
@@ -21,7 +21,7 @@ vi.mock('/app/redux/robot-update')
 
 describe('useRobotUpdateInfo', () => {
   let store: Store<State>
-  let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+  let wrapper: FunctionComponent<{ children: ReactNode }>
 
   const MOCK_ROBOT_NAME = 'testRobot'
   const mockRobotUpdateSession: RobotUpdateSession | null = {

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, expect, describe, beforeEach, afterEach } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 
@@ -9,6 +8,8 @@ import { i18n } from '/app/i18n'
 import { Introduction } from '../'
 import { ChooseTipRack } from '../../ChooseTipRack'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('../../ChooseTipRack')
 
 const mockCalInvalidationHandler = vi.fn()
@@ -17,9 +18,7 @@ describe('Introduction', () => {
   const mockSendCommands = vi.fn()
   const mockCleanUpAndExit = vi.fn()
 
-  const render = (
-    props: Partial<React.ComponentProps<typeof Introduction>> = {}
-  ) => {
+  const render = (props: Partial<ComponentProps<typeof Introduction>> = {}) => {
     return renderWithProviders(
       <Introduction
         sendCommands={mockSendCommands}

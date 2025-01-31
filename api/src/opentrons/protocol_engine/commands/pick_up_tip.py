@@ -1,4 +1,5 @@
 """Pick up tip command request, result, and implementation models."""
+
 from __future__ import annotations
 from opentrons_shared_data.errors import ErrorCodes
 from pydantic import Field
@@ -9,10 +10,14 @@ from typing_extensions import Literal
 from ..errors import ErrorOccurrence, PickUpTipTipNotAttachedError
 from ..resources import ModelUtils
 from ..state import update_types
-from ..types import PickUpTipWellLocation, DeckPoint
+from ..types import PickUpTipWellLocation
 from .pipetting_common import (
     PipetteIdMixin,
+)
+from .movement_common import (
     DestinationPositionResult,
+    StallOrCollisionError,
+    move_to_well,
 )
 from .command import (
     AbstractCommandImpl,
@@ -87,7 +92,8 @@ class TipPhysicallyMissingError(ErrorOccurrence):
 
 _ExecuteReturn = Union[
     SuccessData[PickUpTipResult],
-    DefinedErrorData[TipPhysicallyMissingError],
+    DefinedErrorData[TipPhysicallyMissingError]
+    | DefinedErrorData[StallOrCollisionError],
 ]
 
 
@@ -115,24 +121,19 @@ class PickUpTipImplementation(AbstractCommandImpl[PickUpTipParams, _ExecuteRetur
         labware_id = params.labwareId
         well_name = params.wellName
 
-        state_update = update_types.StateUpdate()
-
         well_location = self._state_view.geometry.convert_pick_up_tip_well_location(
             well_location=params.wellLocation
         )
-        position = await self._movement.move_to_well(
+        move_result = await move_to_well(
+            movement=self._movement,
+            model_utils=self._model_utils,
             pipette_id=pipette_id,
             labware_id=labware_id,
             well_name=well_name,
             well_location=well_location,
         )
-        deck_point = DeckPoint.construct(x=position.x, y=position.y, z=position.z)
-        state_update.set_pipette_location(
-            pipette_id=pipette_id,
-            new_labware_id=labware_id,
-            new_well_name=well_name,
-            new_deck_point=deck_point,
-        )
+        if isinstance(move_result, DefinedErrorData):
+            return move_result
 
         try:
             tip_geometry = await self._tip_handler.pick_up_tip(
@@ -141,13 +142,27 @@ class PickUpTipImplementation(AbstractCommandImpl[PickUpTipParams, _ExecuteRetur
                 well_name=well_name,
             )
         except PickUpTipTipNotAttachedError as e:
-            state_update_if_false_positive = update_types.StateUpdate()
-            state_update_if_false_positive.update_pipette_tip_state(
-                pipette_id=pipette_id,
-                tip_geometry=e.tip_geometry,
+            state_update_if_false_positive = (
+                update_types.StateUpdate.reduce(
+                    update_types.StateUpdate(), move_result.state_update
+                )
+                .update_pipette_tip_state(
+                    pipette_id=pipette_id,
+                    tip_geometry=e.tip_geometry,
+                )
+                .set_fluid_empty(pipette_id=pipette_id)
+                .mark_tips_as_used(
+                    pipette_id=pipette_id, labware_id=labware_id, well_name=well_name
+                )
             )
-            state_update.mark_tips_as_used(
-                pipette_id=pipette_id, labware_id=labware_id, well_name=well_name
+            state_update = (
+                update_types.StateUpdate.reduce(
+                    update_types.StateUpdate(), move_result.state_update
+                )
+                .mark_tips_as_used(
+                    pipette_id=pipette_id, labware_id=labware_id, well_name=well_name
+                )
+                .set_fluid_unknown(pipette_id=pipette_id)
             )
             return DefinedErrorData(
                 public=TipPhysicallyMissingError(
@@ -165,32 +180,39 @@ class PickUpTipImplementation(AbstractCommandImpl[PickUpTipParams, _ExecuteRetur
                 state_update_if_false_positive=state_update_if_false_positive,
             )
         else:
-            state_update.update_pipette_tip_state(
-                pipette_id=pipette_id,
-                tip_geometry=tip_geometry,
-            )
-            state_update.mark_tips_as_used(
-                pipette_id=pipette_id, labware_id=labware_id, well_name=well_name
+            state_update = (
+                move_result.state_update.update_pipette_tip_state(
+                    pipette_id=pipette_id,
+                    tip_geometry=tip_geometry,
+                )
+                .mark_tips_as_used(
+                    pipette_id=pipette_id, labware_id=labware_id, well_name=well_name
+                )
+                .set_fluid_empty(pipette_id=pipette_id)
             )
             return SuccessData(
                 public=PickUpTipResult(
                     tipVolume=tip_geometry.volume,
                     tipLength=tip_geometry.length,
                     tipDiameter=tip_geometry.diameter,
-                    position=deck_point,
+                    position=move_result.public.position,
                 ),
                 state_update=state_update,
             )
 
 
 class PickUpTip(
-    BaseCommand[PickUpTipParams, PickUpTipResult, TipPhysicallyMissingError]
+    BaseCommand[
+        PickUpTipParams,
+        PickUpTipResult,
+        TipPhysicallyMissingError | StallOrCollisionError,
+    ]
 ):
     """Pick up tip command model."""
 
     commandType: PickUpTipCommandType = "pickUpTip"
     params: PickUpTipParams
-    result: Optional[PickUpTipResult]
+    result: Optional[PickUpTipResult] = None
 
     _ImplementationCls: Type[PickUpTipImplementation] = PickUpTipImplementation
 

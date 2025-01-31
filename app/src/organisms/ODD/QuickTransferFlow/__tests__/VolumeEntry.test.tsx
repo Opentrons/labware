@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, afterEach, vi, beforeEach } from 'vitest'
 
@@ -9,6 +8,8 @@ import { i18n } from '/app/i18n'
 import { NumericalKeyboard } from '/app/atoms/SoftwareKeyboard'
 import { getVolumeRange } from '../utils'
 import { VolumeEntry } from '../VolumeEntry'
+
+import type { ComponentProps } from 'react'
 
 vi.mock('/app/atoms/SoftwareKeyboard')
 vi.mock('../utils')
@@ -21,14 +22,14 @@ vi.mock('@opentrons/components', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof VolumeEntry>) => {
+const render = (props: ComponentProps<typeof VolumeEntry>) => {
   return renderWithProviders(<VolumeEntry {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('VolumeEntry', () => {
-  let props: React.ComponentProps<typeof VolumeEntry>
+  let props: ComponentProps<typeof VolumeEntry>
 
   beforeEach(() => {
     props = {

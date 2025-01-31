@@ -1,13 +1,14 @@
-import type * as React from 'react'
 import { WellLabels, StaticLabware } from './labwareInternals'
 import { LabwareAdapter, labwareAdapterLoadNames } from './LabwareAdapter'
 import { COLORS } from '../../helix-design-system'
 import { Svg } from '../..'
 
+import type { RefObject } from 'react'
 import type { LabwareDefinition2 } from '@opentrons/shared-data'
 import type { HighlightedWellLabels } from './labwareInternals/types'
 import type { LabwareAdapterLoadName } from './LabwareAdapter'
 import type { WellLabelOption } from '../..'
+
 const HIGHLIGHT_COLOR = COLORS.blue30
 const STROKE_WIDTH = 1
 const SKEW_ANGLE_DEGREES = 30
@@ -26,7 +27,7 @@ export interface LabwareStackRenderProps {
   highlightTop: boolean
   /** highlight bottom labware if it exists */
   highlightBottom: boolean
-  gRef?: React.RefObject<SVGGElement>
+  gRef?: RefObject<SVGGElement>
   definitionBottom?: LabwareDefinition2 | null
   shouldRotateAdapterOrientation?: boolean
   /** option to show well labels inside or outside of labware outline */

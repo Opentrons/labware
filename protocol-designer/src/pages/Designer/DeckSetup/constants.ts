@@ -13,6 +13,7 @@ import {
   HEATERSHAKER_MODULE_TYPE,
   MAGNETIC_BLOCK_TYPE,
   ABSORBANCE_READER_TYPE,
+  ABSORBANCE_READER_V1,
 } from '@opentrons/shared-data'
 
 import type { ModuleModel, ModuleType } from '@opentrons/shared-data'
@@ -56,6 +57,8 @@ export const ORDERED_CATEGORIES: string[] = [
   'aluminumBlock',
   'adapter',
 ]
+export const CUSTOM_CATEGORY = 'custom'
+export const ALL_ORDERED_CATEGORIES = [CUSTOM_CATEGORY, ...ORDERED_CATEGORIES]
 
 export const RECOMMENDED_LABWARE_BY_MODULE: { [K in ModuleType]: string[] } = {
   [TEMPERATURE_MODULE_TYPE]: [
@@ -90,9 +93,7 @@ export const RECOMMENDED_LABWARE_BY_MODULE: { [K in ModuleType]: string[] } = {
     'nest_96_wellplate_2ml_deep',
     'opentrons_96_wellplate_200ul_pcr_full_skirt',
   ],
-  [ABSORBANCE_READER_TYPE]: [
-    'opentrons_flex_lid_absorbance_plate_reader_module',
-  ],
+  [ABSORBANCE_READER_TYPE]: ['nest_96_wellplate_200ul_flat'],
 }
 
 export const MOAM_MODELS_WITH_FF: ModuleModel[] = [TEMPERATURE_MODULE_V2]
@@ -100,6 +101,7 @@ export const MOAM_MODELS: ModuleModel[] = [
   TEMPERATURE_MODULE_V2,
   HEATERSHAKER_MODULE_V1,
   MAGNETIC_BLOCK_V1,
+  ABSORBANCE_READER_V1,
 ]
 
 export const MAX_MOAM_MODULES = 7

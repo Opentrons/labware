@@ -1,10 +1,11 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, beforeEach, vi, expect } from 'vitest'
 
 import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { DeckConfigurationDiscardChangesModal } from '../DeckConfigurationDiscardChangesModal'
+
+import type { ComponentProps } from 'react'
 import type { NavigateFunction } from 'react-router-dom'
 
 const mockFunc = vi.fn()
@@ -19,7 +20,7 @@ vi.mock('react-router-dom', async importOriginal => {
 })
 
 const render = (
-  props: React.ComponentProps<typeof DeckConfigurationDiscardChangesModal>
+  props: ComponentProps<typeof DeckConfigurationDiscardChangesModal>
 ) => {
   return renderWithProviders(
     <DeckConfigurationDiscardChangesModal {...props} />,
@@ -30,7 +31,7 @@ const render = (
 }
 
 describe('DeckConfigurationDiscardChangesModal', () => {
-  let props: React.ComponentProps<typeof DeckConfigurationDiscardChangesModal>
+  let props: ComponentProps<typeof DeckConfigurationDiscardChangesModal>
 
   beforeEach(() => {
     props = {

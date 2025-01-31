@@ -65,7 +65,7 @@ class HardwareStopper:
             axes=[MotorAxis.X, MotorAxis.Y, MotorAxis.LEFT_Z, MotorAxis.RIGHT_Z]
         )
 
-    async def _drop_tip(self) -> None:
+    async def _try_to_drop_tips(self) -> None:
         """Drop currently attached tip, if any, into trash after a run cancel."""
         attached_tips = self._state_store.pipettes.get_all_attached_tips()
 
@@ -134,9 +134,9 @@ class HardwareStopper:
             PostRunHardwareState.HOME_THEN_DISENGAGE,
         )
         if drop_tips_after_run:
-            await self._drop_tip()
-            await self._hardware_api.stop(home_after=home_after_stop)
-        else:
-            await self._hardware_api.stop(home_after=False)
-            if home_after_stop:
-                await self._home_everything_except_plungers()
+            await self._try_to_drop_tips()
+
+        await self._hardware_api.stop(home_after=False)
+
+        if home_after_stop:
+            await self._home_everything_except_plungers()

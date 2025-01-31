@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { screen, fireEvent } from '@testing-library/react'
 import { COLORS, SIZE_2 } from '@opentrons/components'
@@ -6,14 +5,16 @@ import { renderWithProviders } from '/app/__testing-utils__'
 
 import { ToggleButton } from '..'
 
+import type { ComponentProps } from 'react'
+
 const mockOnClick = vi.fn()
 
-const render = (props: React.ComponentProps<typeof ToggleButton>) => {
+const render = (props: ComponentProps<typeof ToggleButton>) => {
   return renderWithProviders(<ToggleButton {...props} />)[0]
 }
 
 describe('ToggleButton', () => {
-  let props: React.ComponentProps<typeof ToggleButton>
+  let props: ComponentProps<typeof ToggleButton>
 
   beforeEach(() => {
     props = {

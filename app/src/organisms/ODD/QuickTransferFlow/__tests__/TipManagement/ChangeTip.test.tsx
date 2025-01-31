@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, afterEach, vi, beforeEach } from 'vitest'
 
@@ -8,9 +7,11 @@ import { ANALYTICS_QUICK_TRANSFER_SETTING_SAVED } from '/app/redux/analytics'
 import { useTrackEventWithRobotSerial } from '/app/redux-resources/analytics'
 import { ChangeTip } from '../../TipManagement/ChangeTip'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/redux-resources/analytics')
 
-const render = (props: React.ComponentProps<typeof ChangeTip>): any => {
+const render = (props: ComponentProps<typeof ChangeTip>): any => {
   return renderWithProviders(<ChangeTip {...props} />, {
     i18nInstance: i18n,
   })
@@ -19,7 +20,7 @@ const render = (props: React.ComponentProps<typeof ChangeTip>): any => {
 let mockTrackEventWithRobotSerial: any
 
 describe('ChangeTip', () => {
-  let props: React.ComponentProps<typeof ChangeTip>
+  let props: ComponentProps<typeof ChangeTip>
 
   beforeEach(() => {
     props = {

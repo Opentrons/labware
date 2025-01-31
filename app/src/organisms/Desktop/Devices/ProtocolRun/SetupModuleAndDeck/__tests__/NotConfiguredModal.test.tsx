@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, beforeEach, vi, expect } from 'vitest'
 import { renderWithProviders } from '/app/__testing-utils__'
@@ -9,20 +8,21 @@ import { i18n } from '/app/i18n'
 import { NotConfiguredModal } from '../NotConfiguredModal'
 import { useNotifyDeckConfigurationQuery } from '/app/resources/deck_configuration'
 
+import type { ComponentProps } from 'react'
 import type { UseQueryResult } from 'react-query'
 import type { DeckConfiguration } from '@opentrons/shared-data'
 
 vi.mock('@opentrons/react-api-client')
 vi.mock('/app/resources/deck_configuration')
 
-const render = (props: React.ComponentProps<typeof NotConfiguredModal>) => {
+const render = (props: ComponentProps<typeof NotConfiguredModal>) => {
   return renderWithProviders(<NotConfiguredModal {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('NotConfiguredModal', () => {
-  let props: React.ComponentProps<typeof NotConfiguredModal>
+  let props: ComponentProps<typeof NotConfiguredModal>
   const mockUpdate = vi.fn()
   beforeEach(() => {
     props = {

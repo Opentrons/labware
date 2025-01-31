@@ -24,7 +24,7 @@ CONTAINER_RESULTS: str = "/var/lib/ot/analysis_results"
 HOST_RESULTS: Path = Path(Path(__file__).parent.parent, "analysis_results")
 ANALYSIS_SUFFIX: str = "analysis.json"
 ANALYSIS_TIMEOUT_SECONDS: int = 30
-ANALYSIS_CONTAINER_INSTANCES: int = 5
+MAX_ANALYSIS_CONTAINER_INSTANCES: int = 5
 
 console = Console()
 
@@ -241,6 +241,12 @@ def analyze_against_image(tag: str, protocols: List[TargetProtocol], num_contain
     return protocols
 
 
+def get_container_instances(protocol_len: int) -> int:
+    # Scaling linearly with the number of protocols
+    instances = max(1, min(MAX_ANALYSIS_CONTAINER_INSTANCES, protocol_len // 10))
+    return instances
+
+
 def generate_analyses_from_test(tag: str, protocols: List[Protocol]) -> None:
     """Generate analyses from the tests."""
     start_time = time.time()
@@ -260,6 +266,7 @@ def generate_analyses_from_test(tag: str, protocols: List[Protocol]) -> None:
                 protocol_custom_labware_paths_in_container(test_protocol),
             )
         )
-    analyze_against_image(tag, protocols_to_process, ANALYSIS_CONTAINER_INSTANCES)
+    instance_count = get_container_instances(len(protocols_to_process))
+    analyze_against_image(tag, protocols_to_process, instance_count)
     end_time = time.time()
     console.print(f"Clock time to generate analyses: {end_time - start_time:.2f} seconds.")

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { css } from 'styled-components'
 import { Trans, useTranslation } from 'react-i18next'
@@ -24,6 +24,7 @@ import OT2_PNG from '/app/assets/images/OT2-R_HERO.png'
 import FLEX_PNG from '/app/assets/images/FLEX.png'
 import { useCurrentRunId, useNotifyRunQuery } from '/app/resources/runs'
 
+import type { Dispatch as ReactDispatch } from 'react'
 import type { IconName } from '@opentrons/components'
 import type { Runs } from '@opentrons/api-client'
 import type { Robot } from '/app/redux/discovery/types'
@@ -35,7 +36,7 @@ interface AvailableRobotOptionProps {
   onClick: () => void
   isSelected: boolean
   isSelectedRobotOnDifferentSoftwareVersion: boolean
-  registerRobotBusyStatus: React.Dispatch<RobotBusyStatusAction>
+  registerRobotBusyStatus: ReactDispatch<RobotBusyStatusAction>
   isError?: boolean
   showIdleOnly?: boolean
 }
@@ -59,7 +60,7 @@ export function AvailableRobotOption(
     getRobotModelByName(state, robotName)
   )
 
-  const [isBusy, setIsBusy] = React.useState(true)
+  const [isBusy, setIsBusy] = useState(true)
 
   const currentRunId = useCurrentRunId(
     {
@@ -112,7 +113,7 @@ export function AvailableRobotOption(
     iconName = 'usb'
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(fetchStatus(robotName))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

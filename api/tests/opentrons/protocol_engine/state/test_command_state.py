@@ -30,6 +30,7 @@ from opentrons.protocol_engine.notes.notes import CommandNote
 from opentrons.protocol_engine.state.commands import (
     CommandStore,
     CommandView,
+    CommandErrorSlice,
 )
 from opentrons.protocol_engine.state.config import Config
 from opentrons.protocol_engine.state.update_types import StateUpdate
@@ -193,7 +194,7 @@ def test_command_failure(error_recovery_type: ErrorRecoveryType) -> None:
     )
 
     assert subject_view.get("command-id") == expected_failed_command
-    assert subject.state.failed_command_errors == [expected_error_occurrence]
+    assert subject_view.get_all_errors() == [expected_error_occurrence]
 
 
 def test_command_failure_clears_queues() -> None:
@@ -255,7 +256,7 @@ def test_command_failure_clears_queues() -> None:
     assert subject_view.get_running_command_id() is None
     assert subject_view.get_queue_ids() == OrderedSet()
     assert subject_view.get_next_to_execute() is None
-    assert subject.state.failed_command_errors == [expected_error_occurance]
+    assert subject_view.get_all_errors() == [expected_error_occurance]
 
 
 def test_setup_command_failure_only_clears_setup_command_queue() -> None:
@@ -555,7 +556,7 @@ def test_door_during_error_recovery() -> None:
     subject.handle_action(play)
     assert subject_view.get_status() == EngineStatus.AWAITING_RECOVERY
     assert subject_view.get_next_to_execute() == "command-id-2"
-    assert subject.state.failed_command_errors == [expected_error_occurance]
+    assert subject_view.get_all_errors() == [expected_error_occurance]
 
 
 @pytest.mark.parametrize("close_door_before_queueing", [False, True])
@@ -732,7 +733,7 @@ def test_error_recovery_type_tracking() -> None:
         id="c2-error", createdAt=datetime(year=2023, month=3, day=3), error=exception
     )
 
-    assert subject.state.failed_command_errors == [
+    assert view.get_all_errors() == [
         error_occurrence_1,
         error_occurrence_2,
     ]
@@ -1100,3 +1101,94 @@ def test_get_state_update_for_false_positive() -> None:
     subject.handle_action(resume_from_recovery)
 
     assert subject_view.get_state_update_for_false_positive() == empty_state_update
+
+
+def test_get_errors_slice_empty() -> None:
+    """It should return an empty error list."""
+    subject = CommandStore(
+        config=_make_config(),
+        error_recovery_policy=_placeholder_error_recovery_policy,
+        is_door_open=False,
+    )
+    subject_view = CommandView(subject.state)
+    result = subject_view.get_errors_slice(cursor=0, length=2)
+
+    assert result == CommandErrorSlice(commands_errors=[], cursor=0, total_length=0)
+
+
+def test_get_errors_slice() -> None:
+    """It should return a slice of all command errors."""
+    subject = CommandStore(
+        config=_make_config(),
+        error_recovery_policy=_placeholder_error_recovery_policy,
+        is_door_open=False,
+    )
+
+    subject_view = CommandView(subject.state)
+
+    queue_1 = actions.QueueCommandAction(
+        request=commands.WaitForResumeCreate(
+            params=commands.WaitForResumeParams(), key="command-key-1"
+        ),
+        request_hash=None,
+        created_at=datetime(year=2021, month=1, day=1),
+        command_id="command-id-1",
+    )
+    subject.handle_action(queue_1)
+    queue_2_setup = actions.QueueCommandAction(
+        request=commands.WaitForResumeCreate(
+            params=commands.WaitForResumeParams(),
+            intent=commands.CommandIntent.SETUP,
+            key="command-key-2",
+        ),
+        request_hash=None,
+        created_at=datetime(year=2021, month=1, day=1),
+        command_id="command-id-2",
+    )
+    subject.handle_action(queue_2_setup)
+    queue_3_setup = actions.QueueCommandAction(
+        request=commands.WaitForResumeCreate(
+            params=commands.WaitForResumeParams(),
+            intent=commands.CommandIntent.SETUP,
+            key="command-key-3",
+        ),
+        request_hash=None,
+        created_at=datetime(year=2021, month=1, day=1),
+        command_id="command-id-3",
+    )
+    subject.handle_action(queue_3_setup)
+
+    run_2_setup = actions.RunCommandAction(
+        command_id="command-id-2",
+        started_at=datetime(year=2022, month=2, day=2),
+    )
+    subject.handle_action(run_2_setup)
+    fail_2_setup = actions.FailCommandAction(
+        command_id="command-id-2",
+        running_command=subject_view.get("command-id-2"),
+        error_id="error-id",
+        failed_at=datetime(year=2023, month=3, day=3),
+        error=errors.ProtocolEngineError(message="oh no"),
+        notes=[],
+        type=ErrorRecoveryType.CONTINUE_WITH_ERROR,
+    )
+    subject.handle_action(fail_2_setup)
+
+    result = subject_view.get_errors_slice(cursor=1, length=3)
+
+    assert result == CommandErrorSlice(
+        [
+            ErrorOccurrence(
+                id="error-id",
+                createdAt=datetime(2023, 3, 3, 0, 0),
+                isDefined=False,
+                errorType="ProtocolEngineError",
+                errorCode="4000",
+                detail="oh no",
+                errorInfo={},
+                wrappedErrors=[],
+            )
+        ],
+        cursor=0,
+        total_length=1,
+    )

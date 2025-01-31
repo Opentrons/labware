@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { Fragment } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -31,6 +31,7 @@ import { Divider } from '/app/atoms/structure'
 import { getRobotTypeDisplayName } from '../ProtocolsLanding/utils'
 import { getSlotsForThermocycler } from './utils'
 
+import type { ReactNode } from 'react'
 import type {
   CutoutConfigProtocolSpec,
   LoadModuleRunTimeCommand,
@@ -153,7 +154,7 @@ export const RobotConfigurationDetails = (
       ) : null}
       {requiredModuleDetails.map((module, index) => {
         return (
-          <React.Fragment key={`module_${index}`}>
+          <Fragment key={`module_${index}`}>
             <Divider marginY={SPACING.spacing12} width="100%" />
             <RobotConfigurationDetailsItem
               label={`${t('slot')} ${
@@ -179,12 +180,12 @@ export const RobotConfigurationDetails = (
                 </>
               }
             />
-          </React.Fragment>
+          </Fragment>
         )
       })}
       {nonStandardRequiredFixtureDetails.map((fixture, index) => {
         return (
-          <React.Fragment key={`fixture_${index}`}>
+          <Fragment key={`fixture_${index}`}>
             <Divider marginY={SPACING.spacing12} width="100%" />
             <RobotConfigurationDetailsItem
               label={`${t('slot')} ${getCutoutDisplayName(fixture.cutoutId)}`}
@@ -208,7 +209,7 @@ export const RobotConfigurationDetails = (
                 </>
               }
             />
-          </React.Fragment>
+          </Fragment>
         )
       })}
     </Flex>
@@ -217,7 +218,7 @@ export const RobotConfigurationDetails = (
 
 interface RobotConfigurationDetailsItemProps {
   label: string
-  item: React.ReactNode
+  item: ReactNode
 }
 
 export const RobotConfigurationDetailsItem = (

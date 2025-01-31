@@ -20,7 +20,7 @@ import {
   TYPOGRAPHY,
 } from '@opentrons/components'
 
-import { LANGUAGES } from '/app/i18n'
+import { LANGUAGES, US_ENGLISH_DISPLAY_NAME } from '/app/i18n'
 import { getLocalRobot, getRobotApiVersion } from '/app/redux/discovery'
 import { getRobotUpdateAvailable } from '/app/redux/robot-update'
 import { useErrorRecoverySettingsToggle } from '/app/resources/errorRecovery'
@@ -61,6 +61,7 @@ export function RobotSettingsList(props: RobotSettingsListProps): JSX.Element {
     'app_settings',
     'branded',
   ])
+  const isNewLpc = useFeatureFlag('lpcRedesign')
   const dispatch = useDispatch<Dispatch>()
   const localRobot = useSelector(getLocalRobot)
   const robotName = localRobot?.name != null ? localRobot.name : 'no name'
@@ -90,7 +91,6 @@ export function RobotSettingsList(props: RobotSettingsListProps): JSX.Element {
 
   const appLanguage = useSelector(getAppLanguage)
   const currentLanguageOption = LANGUAGES.find(lng => lng.value === appLanguage)
-  const enableLocalization = useFeatureFlag('enableLocalization')
 
   return (
     <Flex flexDirection={DIRECTION_COLUMN}>
@@ -143,18 +143,18 @@ export function RobotSettingsList(props: RobotSettingsListProps): JSX.Element {
             </Flex>
           }
         />
-        {enableLocalization ? (
-          <RobotSettingButton
-            settingName={t('app_settings:language')}
-            settingInfo={
-              currentLanguageOption != null ? currentLanguageOption.name : ''
-            }
-            onClick={() => {
-              setCurrentOption('LanguageSetting')
-            }}
-            iconName="language"
-          />
-        ) : null}
+        <RobotSettingButton
+          settingName={t('app_settings:language')}
+          settingInfo={
+            currentLanguageOption != null
+              ? currentLanguageOption.name
+              : US_ENGLISH_DISPLAY_NAME
+          }
+          onClick={() => {
+            setCurrentOption('LanguageSetting')
+          }}
+          iconName="language"
+        />
         <RobotSettingButton
           settingName={t('display_led_lights')}
           dataTestId="RobotSettingButton_display_led_lights"
@@ -188,14 +188,16 @@ export function RobotSettingsList(props: RobotSettingsListProps): JSX.Element {
           }}
           iconName="privacy"
         />
-        <RobotSettingButton
-          settingName={t('apply_historic_offsets')}
-          dataTestId="RobotSettingButton_apply_historic_offsets"
-          settingInfo={t('historic_offsets_description')}
-          iconName="reticle"
-          rightElement={<OnOffToggle isOn={historicOffsetsOn} />}
-          onClick={() => dispatch(toggleHistoricOffsets())}
-        />
+        {!isNewLpc && (
+          <RobotSettingButton
+            settingName={t('apply_historic_offsets')}
+            dataTestId="RobotSettingButton_apply_historic_offsets"
+            settingInfo={t('historic_offsets_description')}
+            iconName="reticle"
+            rightElement={<OnOffToggle isOn={historicOffsetsOn} />}
+            onClick={() => dispatch(toggleHistoricOffsets())}
+          />
+        )}
         <RobotSettingButton
           settingName={t('app_settings:error_recovery_mode')}
           dataTestId="RobotSettingButton_error_recovery_mode"

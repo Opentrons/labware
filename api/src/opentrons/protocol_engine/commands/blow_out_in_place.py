@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 from typing import TYPE_CHECKING, Optional, Type, Union
-from opentrons_shared_data.errors.exceptions import PipetteOverpressureError
 from typing_extensions import Literal
 from pydantic import BaseModel
 
@@ -10,6 +9,7 @@ from .pipetting_common import (
     OverpressureError,
     PipetteIdMixin,
     FlowRateMixin,
+    blow_out_in_place,
 )
 from .command import (
     AbstractCommandImpl,
@@ -72,36 +72,25 @@ class BlowOutInPlaceImplementation(
 
     async def execute(self, params: BlowOutInPlaceParams) -> _ExecuteReturn:
         """Blow-out without moving the pipette."""
-        try:
-            current_position = await self._gantry_mover.get_position(params.pipetteId)
-            await self._pipetting.blow_out_in_place(
-                pipette_id=params.pipetteId, flow_rate=params.flowRate
-            )
-        except PipetteOverpressureError as e:
-            return DefinedErrorData(
-                public=OverpressureError(
-                    id=self._model_utils.generate_id(),
-                    createdAt=self._model_utils.get_timestamp(),
-                    wrappedErrors=[
-                        ErrorOccurrence.from_failed(
-                            id=self._model_utils.generate_id(),
-                            createdAt=self._model_utils.get_timestamp(),
-                            error=e,
-                        )
-                    ],
-                    errorInfo={
-                        "retryLocation": (
-                            current_position.x,
-                            current_position.y,
-                            current_position.z,
-                        )
-                    },
-                ),
-            )
-        else:
-            return SuccessData(
-                public=BlowOutInPlaceResult(),
-            )
+        current_position = await self._gantry_mover.get_position(params.pipetteId)
+        result = await blow_out_in_place(
+            pipette_id=params.pipetteId,
+            flow_rate=params.flowRate,
+            location_if_error={
+                "retryLocation": (
+                    current_position.x,
+                    current_position.y,
+                    current_position.z,
+                )
+            },
+            pipetting=self._pipetting,
+            model_utils=self._model_utils,
+        )
+        if isinstance(result, DefinedErrorData):
+            return result
+        return SuccessData(
+            public=BlowOutInPlaceResult(), state_update=result.state_update
+        )
 
 
 class BlowOutInPlace(
@@ -111,7 +100,7 @@ class BlowOutInPlace(
 
     commandType: BlowOutInPlaceCommandType = "blowOutInPlace"
     params: BlowOutInPlaceParams
-    result: Optional[BlowOutInPlaceResult]
+    result: Optional[BlowOutInPlaceResult] = None
 
     _ImplementationCls: Type[
         BlowOutInPlaceImplementation

@@ -35,6 +35,7 @@ from opentrons.protocol_engine.state.module_substates.absorbance_reader_substate
     AbsorbanceReaderMeasureMode,
 )
 from opentrons.types import DeckSlotName, MountType, StagingSlotName
+from .update_types import AbsorbanceReaderStateUpdate
 from ..errors import ModuleNotConnectedError
 
 from ..types import (
@@ -63,7 +64,6 @@ from ..commands import (
     heater_shaker,
     temperature_module,
     thermocycler,
-    absorbance_reader,
 )
 from ..actions import (
     Action,
@@ -296,40 +296,10 @@ class ModuleStore(HasState[ModuleState], HandlesActions):
         ):
             self._handle_thermocycler_module_commands(command)
 
-        if isinstance(
-            command.result,
-            (
-                absorbance_reader.InitializeResult,
-                absorbance_reader.ReadAbsorbanceResult,
-            ),
-        ):
-            self._handle_absorbance_reader_commands(command)
-
     def _handle_state_update(self, state_update: update_types.StateUpdate) -> None:
-        if state_update.absorbance_reader_lid != update_types.NO_CHANGE:
-            module_id = state_update.absorbance_reader_lid.module_id
-            is_lid_on = state_update.absorbance_reader_lid.is_lid_on
-
-            # Get current values:
-            absorbance_reader_substate = self._state.substate_by_module_id[module_id]
-            assert isinstance(
-                absorbance_reader_substate, AbsorbanceReaderSubState
-            ), f"{module_id} is not an absorbance plate reader."
-            configured = absorbance_reader_substate.configured
-            measure_mode = absorbance_reader_substate.measure_mode
-            configured_wavelengths = absorbance_reader_substate.configured_wavelengths
-            reference_wavelength = absorbance_reader_substate.reference_wavelength
-            data = absorbance_reader_substate.data
-
-            self._state.substate_by_module_id[module_id] = AbsorbanceReaderSubState(
-                module_id=AbsorbanceReaderId(module_id),
-                configured=configured,
-                measured=True,
-                is_lid_on=is_lid_on,
-                measure_mode=measure_mode,
-                configured_wavelengths=configured_wavelengths,
-                reference_wavelength=reference_wavelength,
-                data=data,
+        if state_update.absorbance_reader_state_update != update_types.NO_CHANGE:
+            self._handle_absorbance_reader_commands(
+                state_update.absorbance_reader_state_update
             )
 
     def _add_module_substate(
@@ -589,50 +559,61 @@ class ModuleStore(HasState[ModuleState], HandlesActions):
             )
 
     def _handle_absorbance_reader_commands(
-        self,
-        command: Union[
-            absorbance_reader.Initialize,
-            absorbance_reader.ReadAbsorbance,
-        ],
+        self, absorbance_reader_state_update: AbsorbanceReaderStateUpdate
     ) -> None:
-        module_id = command.params.moduleId
+        # Get current values:
+        module_id = absorbance_reader_state_update.module_id
         absorbance_reader_substate = self._state.substate_by_module_id[module_id]
         assert isinstance(
             absorbance_reader_substate, AbsorbanceReaderSubState
         ), f"{module_id} is not an absorbance plate reader."
-
-        # Get current values
+        is_lid_on = absorbance_reader_substate.is_lid_on
+        measured = True
         configured = absorbance_reader_substate.configured
         measure_mode = absorbance_reader_substate.measure_mode
         configured_wavelengths = absorbance_reader_substate.configured_wavelengths
         reference_wavelength = absorbance_reader_substate.reference_wavelength
-        is_lid_on = absorbance_reader_substate.is_lid_on
-
-        if isinstance(command.result, absorbance_reader.InitializeResult):
-            self._state.substate_by_module_id[module_id] = AbsorbanceReaderSubState(
-                module_id=AbsorbanceReaderId(module_id),
-                configured=True,
-                measured=False,
-                is_lid_on=is_lid_on,
-                measure_mode=AbsorbanceReaderMeasureMode(command.params.measureMode),
-                configured_wavelengths=command.params.sampleWavelengths,
-                reference_wavelength=command.params.referenceWavelength,
-                data=None,
+        data = absorbance_reader_substate.data
+        if (
+            absorbance_reader_state_update.absorbance_reader_lid
+            != update_types.NO_CHANGE
+        ):
+            is_lid_on = absorbance_reader_state_update.absorbance_reader_lid.is_lid_on
+        elif (
+            absorbance_reader_state_update.initialize_absorbance_reader_update
+            != update_types.NO_CHANGE
+        ):
+            configured = True
+            measured = False
+            is_lid_on = is_lid_on
+            measure_mode = AbsorbanceReaderMeasureMode(
+                absorbance_reader_state_update.initialize_absorbance_reader_update.measure_mode
             )
-        elif isinstance(command.result, absorbance_reader.ReadAbsorbanceResult):
-            self._state.substate_by_module_id[module_id] = AbsorbanceReaderSubState(
-                module_id=AbsorbanceReaderId(module_id),
-                configured=configured,
-                measured=True,
-                is_lid_on=is_lid_on,
-                measure_mode=measure_mode,
-                configured_wavelengths=configured_wavelengths,
-                reference_wavelength=reference_wavelength,
-                data=command.result.data,
+            configured_wavelengths = (
+                absorbance_reader_state_update.initialize_absorbance_reader_update.sample_wave_lengths
             )
+            reference_wavelength = (
+                absorbance_reader_state_update.initialize_absorbance_reader_update.reference_wave_length
+            )
+            data = None
+        elif (
+            absorbance_reader_state_update.absorbance_reader_data
+            != update_types.NO_CHANGE
+        ):
+            data = absorbance_reader_state_update.absorbance_reader_data.read_result
+        self._state.substate_by_module_id[module_id] = AbsorbanceReaderSubState(
+            module_id=AbsorbanceReaderId(module_id),
+            configured=configured,
+            measured=measured,
+            is_lid_on=is_lid_on,
+            measure_mode=measure_mode,
+            configured_wavelengths=configured_wavelengths,
+            reference_wavelength=reference_wavelength,
+            data=data,
+        )
 
 
-class ModuleView(HasState[ModuleState]):
+class ModuleView:
     """Read-only view of computed module state."""
 
     _state: ModuleState
@@ -654,7 +635,7 @@ class ModuleView(HasState[ModuleState]):
             DeckSlotLocation(slotName=slot_name) if slot_name is not None else None
         )
 
-        return LoadedModule.construct(
+        return LoadedModule.model_construct(
             id=module_id,
             location=location,
             model=attached_module.definition.model,
@@ -860,8 +841,8 @@ class ModuleView(HasState[ModuleState]):
         Labware Position Check offset.
         """
         if (
-            self.state.deck_type == DeckType.OT2_STANDARD
-            or self.state.deck_type == DeckType.OT2_SHORT_TRASH
+            self._state.deck_type == DeckType.OT2_STANDARD
+            or self._state.deck_type == DeckType.OT2_SHORT_TRASH
         ):
             definition = self.get_definition(module_id)
             slot = self.get_location(module_id).slotName.id
@@ -908,7 +889,7 @@ class ModuleView(HasState[ModuleState]):
                     "Module location invalid for nominal module offset calculation."
                 )
             module_addressable_area = self.ensure_and_convert_module_fixture_location(
-                location, self.state.deck_type, module.model
+                location, module.model
             )
             module_addressable_area_position = (
                 addressable_areas.get_addressable_area_offsets_from_cutout(
@@ -1281,13 +1262,14 @@ class ModuleView(HasState[ModuleState]):
     def ensure_and_convert_module_fixture_location(
         self,
         deck_slot: DeckSlotName,
-        deck_type: DeckType,
         model: ModuleModel,
     ) -> str:
         """Ensure module fixture load location is valid.
 
         Also, convert the deck slot to a valid module fixture addressable area.
         """
+        deck_type = self._state.deck_type
+
         if deck_type == DeckType.OT2_STANDARD or deck_type == DeckType.OT2_SHORT_TRASH:
             raise ValueError(
                 f"Invalid Deck Type: {deck_type.name} - Does not support modules as fixtures."

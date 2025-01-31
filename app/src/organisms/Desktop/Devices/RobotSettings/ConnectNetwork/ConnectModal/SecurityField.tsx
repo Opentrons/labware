@@ -1,7 +1,7 @@
+import { useTranslation } from 'react-i18next'
 import { SelectField } from '@opentrons/components'
 
 import { SECURITY_NONE, SECURITY_WPA_PSK } from '../constants'
-import { LABEL_SECURITY_NONE, LABEL_SECURITY_PSK } from '../i18n'
 import { useConnectFormField } from './form-state'
 import { FormRow } from './FormRow'
 
@@ -25,8 +25,8 @@ export interface SecurityFieldProps {
 }
 
 const ALL_SECURITY_OPTIONS = [
-  { options: [{ value: SECURITY_NONE, label: LABEL_SECURITY_NONE }] },
-  { options: [{ value: SECURITY_WPA_PSK, label: LABEL_SECURITY_PSK }] },
+  { options: [{ value: SECURITY_NONE, label: 'shared:none' }] },
+  { options: [{ value: SECURITY_WPA_PSK, label: 'wpa2_personal' }] },
 ]
 
 const makeEapOptionsGroup = (
@@ -39,6 +39,7 @@ const makeEapOptionsGroup = (
 })
 
 export const SecurityField = (props: SecurityFieldProps): JSX.Element => {
+  const { t } = useTranslation(['device_settings', 'shared'])
   const {
     id,
     name,
@@ -62,7 +63,7 @@ export const SecurityField = (props: SecurityFieldProps): JSX.Element => {
   ]
 
   return (
-    <FormRow label={label} labelFor={id}>
+    <FormRow label={t(label)} labelFor={id}>
       <SelectField
         {...{
           id,

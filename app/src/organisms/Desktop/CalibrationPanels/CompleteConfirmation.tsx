@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   ALIGN_CENTER,
@@ -16,11 +15,13 @@ import {
   TYPOGRAPHY,
 } from '@opentrons/components'
 
+import type { MouseEventHandler, ReactNode } from 'react'
+
 interface CompleteConfirmationProps {
-  proceed: React.MouseEventHandler
+  proceed: MouseEventHandler
   flowName?: string
   body?: string
-  visualAid?: React.ReactNode
+  visualAid?: ReactNode
 }
 
 export function CompleteConfirmation(

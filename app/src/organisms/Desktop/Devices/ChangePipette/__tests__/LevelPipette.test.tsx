@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, describe, expect, beforeEach } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 
@@ -6,9 +5,11 @@ import { LEFT } from '@opentrons/shared-data'
 import { nestedTextMatcher, renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { LevelPipette } from '../LevelPipette'
+
+import type { ComponentProps } from 'react'
 import type { PipetteNameSpecs } from '@opentrons/shared-data'
 
-const render = (props: React.ComponentProps<typeof LevelPipette>) => {
+const render = (props: ComponentProps<typeof LevelPipette>) => {
   return renderWithProviders(<LevelPipette {...props} />, {
     i18nInstance: i18n,
   })[0]
@@ -57,7 +58,7 @@ const MOCK_WANTED_PIPETTE = {
 } as PipetteNameSpecs
 
 describe('LevelPipette', () => {
-  let props: React.ComponentProps<typeof LevelPipette>
+  let props: ComponentProps<typeof LevelPipette>
 
   beforeEach(() => {
     props = {

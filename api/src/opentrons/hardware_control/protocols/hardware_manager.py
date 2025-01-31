@@ -1,7 +1,7 @@
 from typing import Dict, Optional
 from typing_extensions import Protocol
 
-from ..types import SubSystem, SubSystemState
+from ..types import SubSystem, SubSystemState, Axis
 
 
 class HardwareManager(Protocol):
@@ -44,4 +44,8 @@ class HardwareManager(Protocol):
 
     async def get_serial_number(self) -> Optional[str]:
         """Get the robot serial number, if provisioned. If not provisioned, will be None."""
+        ...
+
+    def axis_is_present(self, axis: Axis) -> bool:
+        """Get whether a motor axis is present on the machine."""
         ...

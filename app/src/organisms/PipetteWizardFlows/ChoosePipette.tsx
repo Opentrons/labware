@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useSelector } from 'react-redux'
 import { css } from 'styled-components'
@@ -46,6 +46,7 @@ import { ExitModal } from './ExitModal'
 import { FLOWS } from './constants'
 import { getIsGantryEmpty } from './utils'
 
+import type { Dispatch, SetStateAction, ReactNode } from 'react'
 import type { StyleProps } from '@opentrons/components'
 import type { PipetteMount } from '@opentrons/shared-data'
 import type { SelectablePipettes } from './types'
@@ -108,7 +109,7 @@ const SELECTED_OPTIONS_STYLE = css`
 interface ChoosePipetteProps {
   proceed: () => void
   selectedPipette: SelectablePipettes
-  setSelectedPipette: React.Dispatch<React.SetStateAction<SelectablePipettes>>
+  setSelectedPipette: Dispatch<SetStateAction<SelectablePipettes>>
   exit: () => void
   mount: PipetteMount
 }
@@ -117,10 +118,9 @@ export const ChoosePipette = (props: ChoosePipetteProps): JSX.Element => {
   const isOnDevice = useSelector(getIsOnDevice)
   const { t } = useTranslation(['pipette_wizard_flows', 'shared'])
   const attachedPipettesByMount = useAttachedPipettesFromInstrumentsQuery()
-  const [
-    showExitConfirmation,
-    setShowExitConfirmation,
-  ] = React.useState<boolean>(false)
+  const [showExitConfirmation, setShowExitConfirmation] = useState<boolean>(
+    false
+  )
 
   const bothMounts = getIsGantryEmpty(attachedPipettesByMount)
     ? t('ninety_six_channel', {
@@ -281,7 +281,7 @@ export const ChoosePipette = (props: ChoosePipetteProps): JSX.Element => {
 interface PipetteMountOptionProps extends StyleProps {
   isSelected: boolean
   onClick: () => void
-  children: React.ReactNode
+  children: ReactNode
 }
 function PipetteMountOption(props: PipetteMountOptionProps): JSX.Element {
   const { isSelected, onClick, children, ...styleProps } = props

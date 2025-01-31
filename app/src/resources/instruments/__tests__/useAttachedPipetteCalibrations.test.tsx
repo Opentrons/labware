@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { vi, it, expect, describe, beforeEach } from 'vitest'
 import { Provider } from 'react-redux'
@@ -21,6 +20,8 @@ import {
 } from '/app/redux/calibration/tip-length/__fixtures__'
 
 import { useAttachedPipetteCalibrations } from '..'
+
+import type { FunctionComponent, ReactNode } from 'react'
 import type { Store } from 'redux'
 import type { State } from '/app/redux/types'
 
@@ -43,7 +44,7 @@ const PIPETTE_CALIBRATIONS = {
 }
 
 describe('useAttachedPipetteCalibrations hook', () => {
-  let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+  let wrapper: FunctionComponent<{ children: ReactNode }>
   beforeEach(() => {
     const queryClient = new QueryClient()
     wrapper = ({ children }) => (

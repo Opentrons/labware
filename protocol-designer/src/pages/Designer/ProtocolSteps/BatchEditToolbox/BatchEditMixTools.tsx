@@ -22,6 +22,7 @@ import {
   getBlowoutLocationOptionsForForm,
   getLabwareFieldForPositioningField,
 } from '../StepForm/utils'
+
 import type { WellOrderOption } from '../../../../form-types'
 import type { FieldPropsByName } from '../StepForm/types'
 
@@ -59,24 +60,18 @@ export function BatchEditMixTools(props: BatchEditMixToolsProps): JSX.Element {
     return pipetteId ? String(pipetteId) : null
   }
 
-  const getWellOrderFieldValue = (
-    name: string
-  ): WellOrderOption | null | undefined => {
-    const val = propsForFields[name]?.value
-    if (val === 'l2r' || val === 'r2l' || val === 't2b' || val === 'b2t') {
-      return val
-    } else {
-      return null
-    }
-  }
-
   return (
-    <Flex flexDirection={DIRECTION_COLUMN} width="100%">
-      <Flex padding={SPACING.spacing16}>
+    <Flex
+      flexDirection={DIRECTION_COLUMN}
+      width="100%"
+      spacing={SPACING.spacing12}
+      gridGap={SPACING.spacing16}
+    >
+      <Flex padding={`${SPACING.spacing16} ${SPACING.spacing16} 0`}>
         <Tabs tabs={[aspirateTab, dispenseTab]} />
       </Flex>
       <Divider marginY="0" />
-      <Flex padding={SPACING.spacing16} width="100%">
+      <Flex width="100%">
         <FlowRateField
           {...propsForFields[`${tab}_flowRate`]}
           pipetteId={getPipetteIdForForm()}
@@ -96,8 +91,14 @@ export function BatchEditMixTools(props: BatchEditMixToolsProps): JSX.Element {
             updateSecondWellOrder={
               propsForFields.mix_wellOrder_second.updateValue
             }
-            firstValue={getWellOrderFieldValue('mix_wellOrder_first')}
-            secondValue={getWellOrderFieldValue('mix_wellOrder_second')}
+            firstValue={
+              (propsForFields.mix_wellOrder_first?.value ??
+                't2b') as WellOrderOption
+            }
+            secondValue={
+              (propsForFields.mix_wellOrder_second?.value ??
+                'l2r') as WellOrderOption
+            }
             firstName="mix_wellOrder_first"
             secondName="mix_wellOrder_second"
           />
@@ -115,7 +116,7 @@ export function BatchEditMixTools(props: BatchEditMixToolsProps): JSX.Element {
       ) : null}
       <Flex
         flexDirection={DIRECTION_COLUMN}
-        padding={SPACING.spacing12}
+        padding={`0 ${SPACING.spacing16}`}
         gridGap={SPACING.spacing8}
       >
         <StyledText desktopStyle="bodyDefaultSemiBold">
@@ -159,6 +160,7 @@ export function BatchEditMixTools(props: BatchEditMixToolsProps): JSX.Element {
                   options={getBlowoutLocationOptionsForForm({
                     stepType: 'mix',
                   })}
+                  padding="0"
                 />
               ) : null}
             </CheckboxExpandStepFormField>

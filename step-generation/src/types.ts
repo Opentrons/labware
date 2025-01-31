@@ -77,6 +77,7 @@ export interface MagneticBlockState {
 
 export interface AbsorbanceReaderState {
   type: typeof ABSORBANCE_READER_TYPE
+  lidOpen: boolean | null
 }
 
 export type ModuleState =

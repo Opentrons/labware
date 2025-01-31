@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import '@testing-library/jest-dom/vitest'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { screen } from '@testing-library/react'
@@ -7,6 +6,8 @@ import { renderWithProviders } from '/app/__testing-utils__'
 
 import { QuaternaryButton } from '..'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('styled-components', async () => {
   const actual = await vi.importActual(
     'styled-components/dist/styled-components.browser.esm.js'
@@ -14,12 +15,12 @@ vi.mock('styled-components', async () => {
   return actual
 })
 
-const render = (props: React.ComponentProps<typeof QuaternaryButton>) => {
+const render = (props: ComponentProps<typeof QuaternaryButton>) => {
   return renderWithProviders(<QuaternaryButton {...props} />)[0]
 }
 
 describe('QuaternaryButton', () => {
-  let props: React.ComponentProps<typeof QuaternaryButton>
+  let props: ComponentProps<typeof QuaternaryButton>
 
   beforeEach(() => {
     props = {

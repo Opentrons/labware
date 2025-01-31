@@ -15,7 +15,7 @@ from robot_server.service.session.models import command, command_definitions
 )
 def test_empty(command_def: command_definitions.CommandDefinition):
     """Test creation of empty command request and response."""
-    request = command.CommandRequest.parse_obj(
+    request = command.CommandRequest.model_validate(
         {"data": {"command": command_def.value, "data": {}}}
     )
     assert request.data.command == command_def
@@ -57,6 +57,6 @@ def test_empty(command_def: command_definitions.CommandDefinition):
 def test_requires_data(command_def: command_definitions.CommandDefinition):
     """Test creation of command requiring data will fail with empty body."""
     with pytest.raises(ValidationError):
-        command.CommandRequest.parse_obj(
+        command.CommandRequest.model_validate(
             {"data": {"command": command_def.value, "data": {}}}
         )

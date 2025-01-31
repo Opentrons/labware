@@ -1,16 +1,18 @@
-import * as React from 'react'
 import { createPortal } from 'react-dom'
+import { useEffect, useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   ALIGN_CENTER,
   BORDERS,
   Box,
-  Btn,
   COLORS,
   CURSOR_DEFAULT,
   CURSOR_POINTER,
+  DIRECTION_COLUMN,
+  Divider,
   Flex,
   Icon,
+  JUSTIFY_CENTER,
   JUSTIFY_SPACE_BETWEEN,
   JUSTIFY_START,
   OverflowBtn,
@@ -22,8 +24,8 @@ import {
   ConfirmDeleteModal,
   DELETE_MULTIPLE_STEP_FORMS,
   DELETE_STEP_FORM,
-} from '../../../../components/modals/ConfirmDeleteModal'
-import { getTopPortalEl } from '../../../../components/portals/TopPortal'
+  getMainPagePortalEl,
+} from '../../../../organisms'
 import { actions as steplistActions } from '../../../../steplist'
 import {
   deselectAllSteps,
@@ -34,27 +36,38 @@ import { LINE_CLAMP_TEXT_STYLE } from '../../../../atoms'
 import { StepOverflowMenu } from './StepOverflowMenu'
 import { capitalizeFirstLetterAfterNumber } from './utils'
 
+import type {
+  SetStateAction,
+  Dispatch,
+  MouseEvent as ReactMouseEvent,
+} from 'react'
 import type { ThunkDispatch } from 'redux-thunk'
 import type { IconName } from '@opentrons/components'
 import type { StepIdType } from '../../../../form-types'
 import type { BaseState } from '../../../../types'
 
-const STARTING_DECK_STATE = 'Starting deck state'
-const FINAL_DECK_STATE = 'Final deck state'
+const STARTING_DECK_STATE = 'Starting deck'
+const FINAL_DECK_STATE = 'Ending deck'
+const PX_HEIGHT_TO_TOP_OF_CONTAINER = 32
+const PX_SIDEBAR_MIN_WIDTH_FOR_ICON = 179
 
 export interface StepContainerProps {
   title: string
   iconName: IconName
+  sidebarWidth: number
+  openedOverflowMenuId?: string | null
+  setOpenedOverflowMenuId?: Dispatch<SetStateAction<string | null>>
   stepId?: string
   iconColor?: string
-  onClick?: (event: React.MouseEvent) => void
-  onDoubleClick?: (event: React.MouseEvent) => void
-  onMouseEnter?: (event: React.MouseEvent) => void
-  onMouseLeave?: (event: React.MouseEvent) => void
+  onClick?: (event: ReactMouseEvent) => void
+  onDoubleClick?: (event: ReactMouseEvent) => void
+  onMouseEnter?: (event: ReactMouseEvent) => void
+  onMouseLeave?: (event: ReactMouseEvent) => void
   selected?: boolean
   hovered?: boolean
   hasError?: boolean
   isStepAfterError?: boolean
+  dragHovered?: boolean
 }
 
 export function StepContainer(props: StepContainerProps): JSX.Element {
@@ -71,15 +84,19 @@ export function StepContainer(props: StepContainerProps): JSX.Element {
     title,
     hasError = false,
     isStepAfterError = false,
+    dragHovered = false,
+    setOpenedOverflowMenuId,
+    openedOverflowMenuId,
+    sidebarWidth,
   } = props
-  const [top, setTop] = React.useState<number>(0)
-  const menuRootRef = React.useRef<HTMLDivElement | null>(null)
-  const [stepOverflowMenu, setStepOverflowMenu] = React.useState<boolean>(false)
+  const [top, setTop] = useState<number>(0)
+  const menuRootRef = useRef<HTMLDivElement | null>(null)
   const isStartingOrEndingState =
     title === STARTING_DECK_STATE || title === FINAL_DECK_STATE
   const dispatch = useDispatch<ThunkDispatch<BaseState, any, any>>()
   const multiSelectItemIds = useSelector(getMultiSelectItemIds)
 
+  const hasText = sidebarWidth > PX_SIDEBAR_MIN_WIDTH_FOR_ICON
   let backgroundColor = isStartingOrEndingState ? COLORS.blue20 : COLORS.grey20
   let color = COLORS.black90
   if (selected) {
@@ -87,7 +104,7 @@ export function StepContainer(props: StepContainerProps): JSX.Element {
     color = COLORS.white
   }
   if (hovered && !selected) {
-    backgroundColor = COLORS.blue30
+    backgroundColor = isStartingOrEndingState ? COLORS.blue30 : COLORS.grey30
     color = COLORS.black90
   }
   if (hasError) {
@@ -101,27 +118,26 @@ export function StepContainer(props: StepContainerProps): JSX.Element {
       menuRootRef.current?.contains(event.target)
     )
 
-    if (wasOutside && stepOverflowMenu) {
-      setStepOverflowMenu(false)
+    if (wasOutside) {
+      setOpenedOverflowMenuId?.(null)
     }
   }
 
-  const handleOverflowClick = (event: React.MouseEvent): void => {
-    const { clientY } = event
-
+  const handleOverflowClick = (event: ReactMouseEvent): void => {
+    const buttonRect = event.currentTarget.getBoundingClientRect()
     const screenHeight = window.innerHeight
-    const rootHeight = menuRootRef.current
-      ? menuRootRef.current.offsetHeight
-      : 0
+    const rootHeight = menuRootRef.current?.offsetHeight || 0
+
+    const spaceBelow = screenHeight - buttonRect.bottom
     const top =
-      screenHeight - clientY > rootHeight
-        ? clientY + 5
-        : clientY - rootHeight - 5
+      spaceBelow > rootHeight
+        ? buttonRect.bottom - PX_HEIGHT_TO_TOP_OF_CONTAINER
+        : buttonRect.top - rootHeight + PX_HEIGHT_TO_TOP_OF_CONTAINER
 
     setTop(top)
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     global.addEventListener('click', handleClick)
     return () => {
       global.removeEventListener('click', handleClick)
@@ -132,7 +148,7 @@ export function StepContainer(props: StepContainerProps): JSX.Element {
     if (stepId != null) {
       dispatch(populateForm(stepId))
     }
-    setStepOverflowMenu(false)
+    setOpenedOverflowMenuId?.(null)
   }
 
   const onDeleteClickAction = (): void => {
@@ -165,7 +181,6 @@ export function StepContainer(props: StepContainerProps): JSX.Element {
       )
     }
   }
-
   const {
     confirm: confirmDelete,
     showConfirmation: showDeleteConfirmation,
@@ -174,31 +189,34 @@ export function StepContainer(props: StepContainerProps): JSX.Element {
 
   return (
     <>
-      {showDeleteConfirmation && (
+      {showDeleteConfirmation === true && (
         <ConfirmDeleteModal
           modalType={DELETE_STEP_FORM}
           onCancelClick={cancelDelete}
           onContinueClick={confirmDelete}
         />
       )}
-      {showMultiDeleteConfirmation && (
+      {showMultiDeleteConfirmation === true && (
         <ConfirmDeleteModal
           modalType={DELETE_MULTIPLE_STEP_FORMS}
           onContinueClick={confirmMultiDelete}
           onCancelClick={cancelMultiDelete}
         />
       )}
-      <Box
+      <Flex
         id={stepId}
         {...{
           onMouseEnter: isStepAfterError ? undefined : onMouseEnter,
           onMouseLeave: isStepAfterError ? undefined : onMouseLeave,
         }}
+        gridGap={SPACING.spacing4}
+        flexDirection={DIRECTION_COLUMN}
       >
-        <Btn
+        <Box
+          role="button"
           onDoubleClick={onDoubleClick}
           onClick={onClick}
-          padding={SPACING.spacing12}
+          padding={`${SPACING.spacing4} ${SPACING.spacing12}`}
           borderRadius={BORDERS.borderRadius8}
           width="100%"
           backgroundColor={backgroundColor}
@@ -209,51 +227,66 @@ export function StepContainer(props: StepContainerProps): JSX.Element {
           <Flex
             justifyContent={JUSTIFY_SPACE_BETWEEN}
             alignItems={ALIGN_CENTER}
-            height="1.75rem"
+            height="1.9375rem"
           >
             <Flex
               alignItems={ALIGN_CENTER}
               gridGap={SPACING.spacing8}
-              justifyContent={JUSTIFY_START}
+              justifyContent={hasText ? JUSTIFY_START : JUSTIFY_CENTER}
               width="100%"
             >
-              {iconName && (
+              {iconName != null && (
                 <Icon
-                  size="1rem"
+                  size="1.25rem"
                   name={iconName}
                   color={iconColor ?? color}
-                  minWidth="1rem"
+                  minWidth="1.25rem"
                 />
               )}
-              <StyledText
-                desktopStyle="bodyDefaultRegular"
-                css={`
-                  ${LINE_CLAMP_TEXT_STYLE(1)}
-                  word-break: break-all
-                `}
-              >
-                {capitalizeFirstLetterAfterNumber(title)}
-              </StyledText>
+              {hasText ? (
+                <StyledText
+                  desktopStyle="bodyDefaultRegular"
+                  css={LINE_CLAMP_TEXT_STYLE(1)}
+                >
+                  {capitalizeFirstLetterAfterNumber(title)}
+                </StyledText>
+              ) : null}
             </Flex>
             {selected && !isStartingOrEndingState ? (
               <OverflowBtn
                 data-testid={`StepContainer_${stepId}`}
                 fillColor={COLORS.white}
-                onClick={(e: React.MouseEvent) => {
+                onClick={(e: ReactMouseEvent) => {
                   e.preventDefault()
                   e.stopPropagation()
-                  setStepOverflowMenu(prev => !prev)
+                  if (openedOverflowMenuId === stepId) {
+                    setOpenedOverflowMenuId?.(null)
+                  } else {
+                    setOpenedOverflowMenuId?.(stepId ?? null)
+                  }
+
                   handleOverflowClick(e)
                 }}
               />
             ) : null}
           </Flex>
-        </Btn>
-      </Box>
-      {stepOverflowMenu && stepId != null
+        </Box>
+        {dragHovered ? (
+          <Divider
+            marginY="0"
+            height="0.25rem"
+            width="100%"
+            backgroundColor={COLORS.blue50}
+            borderRadius={BORDERS.borderRadius2}
+          />
+        ) : null}
+      </Flex>
+      {stepId != null &&
+      openedOverflowMenuId === stepId &&
+      setOpenedOverflowMenuId != null
         ? createPortal(
             <StepOverflowMenu
-              setStepOverflowMenu={setStepOverflowMenu}
+              setOpenedOverflowMenuId={setOpenedOverflowMenuId}
               stepId={stepId}
               menuRootRef={menuRootRef}
               top={top}
@@ -262,7 +295,7 @@ export function StepContainer(props: StepContainerProps): JSX.Element {
               confirmMultiDelete={confirmMultiDelete}
               multiSelectItemIds={multiSelectItemIds}
             />,
-            getTopPortalEl()
+            getMainPagePortalEl()
           )
         : null}
     </>

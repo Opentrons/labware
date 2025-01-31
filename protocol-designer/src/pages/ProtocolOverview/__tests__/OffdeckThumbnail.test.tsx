@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { FLEX_ROBOT_TYPE, fixture12Trough } from '@opentrons/shared-data'
@@ -11,6 +10,7 @@ import { getInitialDeckSetup } from '../../../step-forms/selectors'
 import { getAllWellContentsForActiveItem } from '../../../top-selectors/well-contents'
 import { OffDeckThumbnail } from '../OffdeckThumbnail'
 
+import type { ComponentProps } from 'react'
 import type { LabwareDefinition2 } from '@opentrons/shared-data'
 import type * as Components from '@opentrons/components'
 
@@ -26,14 +26,14 @@ vi.mock('@opentrons/components', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof OffDeckThumbnail>) => {
+const render = (props: ComponentProps<typeof OffDeckThumbnail>) => {
   return renderWithProviders(<OffDeckThumbnail {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('OffDeckThumbnail', () => {
-  let props: React.ComponentProps<typeof OffDeckThumbnail>
+  let props: ComponentProps<typeof OffDeckThumbnail>
 
   beforeEach(() => {
     props = {

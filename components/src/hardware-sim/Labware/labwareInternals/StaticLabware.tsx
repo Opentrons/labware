@@ -1,5 +1,5 @@
 // Render labware definition to SVG. XY is in robot coordinates.
-import * as React from 'react'
+import { memo, Fragment } from 'react'
 import styled from 'styled-components'
 import flatMap from 'lodash/flatMap'
 
@@ -8,6 +8,7 @@ import { Well } from './Well'
 import { STYLE_BY_WELL_CONTENTS } from './StyledWells'
 import { COLORS } from '../../../helix-design-system'
 
+import type { MemoExoticComponent } from 'react'
 import type { LabwareDefinition2, LabwareWell } from '@opentrons/shared-data'
 import type { WellMouseEvent, WellStroke } from './types'
 import type { CSSProperties } from 'styled-components'
@@ -32,7 +33,7 @@ export interface StaticLabwareProps {
   showBorder?: boolean
 }
 
-const TipDecoration = React.memo(function TipDecoration(props: {
+const TipDecoration = memo(function TipDecoration(props: {
   well: LabwareWell
 }) {
   const { well } = props
@@ -90,7 +91,7 @@ export function StaticLabwareComponent(props: StaticLabwareProps): JSX.Element {
           (row: string[], i: number, c: string[][]) => {
             return row.map(wellName => {
               return (
-                <React.Fragment key={wellName}>
+                <Fragment key={wellName}>
                   <Well
                     wellName={wellName}
                     well={definition.wells[wellName]}
@@ -106,7 +107,7 @@ export function StaticLabwareComponent(props: StaticLabwareProps): JSX.Element {
                   {isTiprack ? (
                     <TipDecoration well={definition.wells[wellName]} />
                   ) : null}
-                </React.Fragment>
+                </Fragment>
               )
             })
           }
@@ -116,6 +117,6 @@ export function StaticLabwareComponent(props: StaticLabwareProps): JSX.Element {
   )
 }
 
-export const StaticLabware: React.MemoExoticComponent<
+export const StaticLabware: MemoExoticComponent<
   typeof StaticLabwareComponent
-> = React.memo(StaticLabwareComponent)
+> = memo(StaticLabwareComponent)

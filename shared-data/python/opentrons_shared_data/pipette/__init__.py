@@ -4,7 +4,7 @@ from __future__ import annotations
 opentrons_shared_data.pipette: functions and types for pipette config
 """
 import copy
-from typing import TYPE_CHECKING, Dict
+from typing import TYPE_CHECKING, Dict, Optional
 import json
 from functools import lru_cache
 
@@ -63,7 +63,7 @@ def name_for_model(pipette_model: PipetteModel) -> PipetteName:
 
 
 def fuse_specs(
-    pipette_model: PipetteModel, pipette_name: PipetteName = None
+    pipette_model: PipetteModel, pipette_name: Optional[PipetteName] = None
 ) -> PipetteFusedSpec:
     """Combine the model and name spec for a given model.
 
@@ -75,7 +75,7 @@ def fuse_specs(
 
 @lru_cache(maxsize=None)
 def _fuse_specs_cached(
-    pipette_model: PipetteModel, pipette_name: PipetteName = None
+    pipette_model: PipetteModel, pipette_name: Optional[PipetteName] = None
 ) -> PipetteFusedSpec:
     """
     Do the work of fusing the specs inside an lru cache. This can't be the

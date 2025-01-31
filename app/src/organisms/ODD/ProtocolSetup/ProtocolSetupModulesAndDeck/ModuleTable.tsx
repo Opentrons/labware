@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 
@@ -39,6 +39,7 @@ import {
 } from '/app/resources/runs'
 import { useNotifyDeckConfigurationQuery } from '/app/resources/deck_configuration'
 
+import type { Dispatch, SetStateAction } from 'react'
 import type { CommandData } from '@opentrons/api-client'
 import type { CutoutConfig, DeckDefinition } from '@opentrons/shared-data'
 import type { ModulePrepCommandsType } from '/app/local-resources/modules'
@@ -59,7 +60,7 @@ export function ModuleTable(props: ModuleTableProps): JSX.Element {
   const [
     prepCommandErrorMessage,
     setPrepCommandErrorMessage,
-  ] = React.useState<string>('')
+  ] = useState<string>('')
 
   const { data: deckConfig } = useNotifyDeckConfigurationQuery({
     refetchInterval: DECK_CONFIG_REFETCH_INTERVAL,
@@ -119,7 +120,7 @@ interface ModuleTableItemProps {
   isLoading: boolean
   module: AttachedProtocolModuleMatch
   prepCommandErrorMessage: string
-  setPrepCommandErrorMessage: React.Dispatch<React.SetStateAction<string>>
+  setPrepCommandErrorMessage: Dispatch<SetStateAction<string>>
   deckDef: DeckDefinition
   robotName: string
 }
@@ -162,11 +163,11 @@ function ModuleTableItem({
   )
   const isModuleReady = module.attachedModuleMatch != null
 
-  const [showModuleWizard, setShowModuleWizard] = React.useState<boolean>(false)
+  const [showModuleWizard, setShowModuleWizard] = useState<boolean>(false)
   const [
     showLocationConflictModal,
     setShowLocationConflictModal,
-  ] = React.useState<boolean>(false)
+  ] = useState<boolean>(false)
 
   let moduleStatus: JSX.Element = (
     <>

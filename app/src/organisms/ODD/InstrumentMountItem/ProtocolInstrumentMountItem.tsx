@@ -1,17 +1,17 @@
-import * as React from 'react'
+import { useState, useMemo } from 'react'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import {
   ALIGN_CENTER,
-  Flex,
-  COLORS,
-  SPACING,
-  TYPOGRAPHY,
-  Icon,
-  DIRECTION_COLUMN,
   ALIGN_FLEX_START,
   BORDERS,
+  COLORS,
+  DIRECTION_COLUMN,
+  Flex,
+  Icon,
   JUSTIFY_FLEX_START,
+  SPACING,
+  TYPOGRAPHY,
 } from '@opentrons/components'
 import {
   NINETY_SIX_CHANNEL,
@@ -27,6 +27,7 @@ import { FLOWS } from '/app/organisms/PipetteWizardFlows/constants'
 import { PipetteWizardFlows } from '/app/organisms/PipetteWizardFlows'
 import { GripperWizardFlows } from '/app/organisms/GripperWizardFlows'
 
+import type { MouseEventHandler } from 'react'
 import type { InstrumentData } from '@opentrons/api-client'
 import type {
   GripperModel,
@@ -61,26 +62,24 @@ export function ProtocolInstrumentMountItem(
 ): JSX.Element {
   const { i18n, t } = useTranslation('protocol_setup')
   const { mount, attachedInstrument, speccedName } = props
-  const [
-    showPipetteWizardFlow,
-    setShowPipetteWizardFlow,
-  ] = React.useState<boolean>(false)
-  const [
-    showGripperWizardFlow,
-    setShowGripperWizardFlow,
-  ] = React.useState<boolean>(false)
-  const memoizedAttachedGripper = React.useMemo(
+  const [showPipetteWizardFlow, setShowPipetteWizardFlow] = useState<boolean>(
+    false
+  )
+  const [showGripperWizardFlow, setShowGripperWizardFlow] = useState<boolean>(
+    false
+  )
+  const memoizedAttachedGripper = useMemo(
     () =>
       attachedInstrument?.instrumentType === 'gripper' && attachedInstrument.ok
         ? attachedInstrument
         : null,
     []
   )
-  const [flowType, setFlowType] = React.useState<string>(FLOWS.ATTACH)
+  const [flowType, setFlowType] = useState<string>(FLOWS.ATTACH)
   const selectedPipette =
     speccedName === 'p1000_96' ? NINETY_SIX_CHANNEL : SINGLE_MOUNT_PIPETTES
 
-  const handleCalibrate: React.MouseEventHandler = () => {
+  const handleCalibrate: MouseEventHandler = () => {
     setFlowType(FLOWS.CALIBRATE)
     if (mount === 'extension') {
       setShowGripperWizardFlow(true)
@@ -88,7 +87,7 @@ export function ProtocolInstrumentMountItem(
       setShowPipetteWizardFlow(true)
     }
   }
-  const handleAttach: React.MouseEventHandler = () => {
+  const handleAttach: MouseEventHandler = () => {
     setFlowType(FLOWS.ATTACH)
     if (mount === 'extension') {
       setShowGripperWizardFlow(true)

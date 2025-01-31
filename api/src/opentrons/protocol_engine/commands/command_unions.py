@@ -3,7 +3,7 @@
 from collections.abc import Collection
 from typing import Annotated, Type, Union, get_type_hints
 
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from opentrons.util.get_union_elements import get_union_elements
 
@@ -13,6 +13,7 @@ from .pipetting_common import (
     LiquidNotFoundError,
     TipPhysicallyAttachedError,
 )
+from .movement_common import StallOrCollisionError
 
 from . import absorbance_reader
 from . import heater_shaker
@@ -22,6 +23,7 @@ from . import thermocycler
 
 from . import calibration
 from . import unsafe
+from . import robot
 
 from .set_rail_lights import (
     SetRailLights,
@@ -29,6 +31,14 @@ from .set_rail_lights import (
     SetRailLightsCreate,
     SetRailLightsParams,
     SetRailLightsResult,
+)
+
+from .air_gap_in_place import (
+    AirGapInPlace,
+    AirGapInPlaceParams,
+    AirGapInPlaceCreate,
+    AirGapInPlaceResult,
+    AirGapInPlaceCommandType,
 )
 
 from .aspirate import (
@@ -127,6 +137,14 @@ from .load_liquid import (
     LoadLiquidCommandType,
 )
 
+from .load_liquid_class import (
+    LoadLiquidClass,
+    LoadLiquidClassParams,
+    LoadLiquidClassCreate,
+    LoadLiquidClassResult,
+    LoadLiquidClassCommandType,
+)
+
 from .load_module import (
     LoadModule,
     LoadModuleParams,
@@ -141,6 +159,22 @@ from .load_pipette import (
     LoadPipetteCreate,
     LoadPipetteResult,
     LoadPipetteCommandType,
+)
+
+from .load_lid_stack import (
+    LoadLidStack,
+    LoadLidStackParams,
+    LoadLidStackCreate,
+    LoadLidStackResult,
+    LoadLidStackCommandType,
+)
+
+from .load_lid import (
+    LoadLid,
+    LoadLidParams,
+    LoadLidCreate,
+    LoadLidResult,
+    LoadLidCommandType,
 )
 
 from .move_labware import (
@@ -305,6 +339,14 @@ from .get_tip_presence import (
     GetTipPresenceCommandType,
 )
 
+from .get_next_tip import (
+    GetNextTip,
+    GetNextTipCreate,
+    GetNextTipParams,
+    GetNextTipResult,
+    GetNextTipCommandType,
+)
+
 from .liquid_probe import (
     LiquidProbe,
     LiquidProbeParams,
@@ -318,8 +360,33 @@ from .liquid_probe import (
     TryLiquidProbeCommandType,
 )
 
+from .evotip_seal_pipette import (
+    EvotipSealPipette,
+    EvotipSealPipetteParams,
+    EvotipSealPipetteCreate,
+    EvotipSealPipetteResult,
+    EvotipSealPipetteCommandType,
+)
+
+from .evotip_dispense import (
+    EvotipDispense,
+    EvotipDispenseParams,
+    EvotipDispenseCreate,
+    EvotipDispenseResult,
+    EvotipDispenseCommandType,
+)
+
+from .evotip_unseal_pipette import (
+    EvotipUnsealPipette,
+    EvotipUnsealPipetteParams,
+    EvotipUnsealPipetteCreate,
+    EvotipUnsealPipetteResult,
+    EvotipUnsealPipetteCommandType,
+)
+
 Command = Annotated[
     Union[
+        AirGapInPlace,
         Aspirate,
         AspirateInPlace,
         Comment,
@@ -337,8 +404,11 @@ Command = Annotated[
         LoadLabware,
         ReloadLabware,
         LoadLiquid,
+        LoadLiquidClass,
         LoadModule,
         LoadPipette,
+        LoadLidStack,
+        LoadLid,
         MoveLabware,
         MoveRelative,
         MoveToCoordinates,
@@ -355,8 +425,12 @@ Command = Annotated[
         SetStatusBar,
         VerifyTipPresence,
         GetTipPresence,
+        GetNextTip,
         LiquidProbe,
         TryLiquidProbe,
+        EvotipSealPipette,
+        EvotipDispense,
+        EvotipUnsealPipette,
         heater_shaker.WaitForTemperature,
         heater_shaker.SetTargetTemperature,
         heater_shaker.DeactivateHeater,
@@ -393,11 +467,17 @@ Command = Annotated[
         unsafe.UnsafeEngageAxes,
         unsafe.UnsafeUngripLabware,
         unsafe.UnsafePlaceLabware,
+        robot.MoveTo,
+        robot.MoveAxesRelative,
+        robot.MoveAxesTo,
+        robot.openGripperJaw,
+        robot.closeGripperJaw,
     ],
     Field(discriminator="commandType"),
 ]
 
 CommandParams = Union[
+    AirGapInPlaceParams,
     AspirateParams,
     AspirateInPlaceParams,
     CommentParams,
@@ -413,8 +493,11 @@ CommandParams = Union[
     HomeParams,
     RetractAxisParams,
     LoadLabwareParams,
+    LoadLidStackParams,
+    LoadLidParams,
     ReloadLabwareParams,
     LoadLiquidParams,
+    LoadLiquidClassParams,
     LoadModuleParams,
     LoadPipetteParams,
     MoveLabwareParams,
@@ -433,8 +516,12 @@ CommandParams = Union[
     SetStatusBarParams,
     VerifyTipPresenceParams,
     GetTipPresenceParams,
+    GetNextTipParams,
     LiquidProbeParams,
     TryLiquidProbeParams,
+    EvotipSealPipetteParams,
+    EvotipDispenseParams,
+    EvotipUnsealPipetteParams,
     heater_shaker.WaitForTemperatureParams,
     heater_shaker.SetTargetTemperatureParams,
     heater_shaker.DeactivateHeaterParams,
@@ -471,9 +558,15 @@ CommandParams = Union[
     unsafe.UnsafeEngageAxesParams,
     unsafe.UnsafeUngripLabwareParams,
     unsafe.UnsafePlaceLabwareParams,
+    robot.MoveAxesRelativeParams,
+    robot.MoveAxesToParams,
+    robot.MoveToParams,
+    robot.openGripperJawParams,
+    robot.closeGripperJawParams,
 ]
 
 CommandType = Union[
+    AirGapInPlaceCommandType,
     AspirateCommandType,
     AspirateInPlaceCommandType,
     CommentCommandType,
@@ -491,8 +584,11 @@ CommandType = Union[
     LoadLabwareCommandType,
     ReloadLabwareCommandType,
     LoadLiquidCommandType,
+    LoadLiquidClassCommandType,
     LoadModuleCommandType,
     LoadPipetteCommandType,
+    LoadLidStackCommandType,
+    LoadLidCommandType,
     MoveLabwareCommandType,
     MoveRelativeCommandType,
     MoveToCoordinatesCommandType,
@@ -509,8 +605,12 @@ CommandType = Union[
     SetStatusBarCommandType,
     VerifyTipPresenceCommandType,
     GetTipPresenceCommandType,
+    GetNextTipCommandType,
     LiquidProbeCommandType,
     TryLiquidProbeCommandType,
+    EvotipSealPipetteCommandType,
+    EvotipDispenseCommandType,
+    EvotipUnsealPipetteCommandType,
     heater_shaker.WaitForTemperatureCommandType,
     heater_shaker.SetTargetTemperatureCommandType,
     heater_shaker.DeactivateHeaterCommandType,
@@ -547,10 +647,16 @@ CommandType = Union[
     unsafe.UnsafeEngageAxesCommandType,
     unsafe.UnsafeUngripLabwareCommandType,
     unsafe.UnsafePlaceLabwareCommandType,
+    robot.MoveAxesRelativeCommandType,
+    robot.MoveAxesToCommandType,
+    robot.MoveToCommandType,
+    robot.openGripperJawCommandType,
+    robot.closeGripperJawCommandType,
 ]
 
 CommandCreate = Annotated[
     Union[
+        AirGapInPlaceCreate,
         AspirateCreate,
         AspirateInPlaceCreate,
         CommentCreate,
@@ -568,8 +674,11 @@ CommandCreate = Annotated[
         LoadLabwareCreate,
         ReloadLabwareCreate,
         LoadLiquidCreate,
+        LoadLiquidClassCreate,
         LoadModuleCreate,
         LoadPipetteCreate,
+        LoadLidStackCreate,
+        LoadLidCreate,
         MoveLabwareCreate,
         MoveRelativeCreate,
         MoveToCoordinatesCreate,
@@ -586,8 +695,12 @@ CommandCreate = Annotated[
         SetStatusBarCreate,
         VerifyTipPresenceCreate,
         GetTipPresenceCreate,
+        GetNextTipCreate,
         LiquidProbeCreate,
         TryLiquidProbeCreate,
+        EvotipSealPipetteCreate,
+        EvotipDispenseCreate,
+        EvotipUnsealPipetteCreate,
         heater_shaker.WaitForTemperatureCreate,
         heater_shaker.SetTargetTemperatureCreate,
         heater_shaker.DeactivateHeaterCreate,
@@ -624,11 +737,24 @@ CommandCreate = Annotated[
         unsafe.UnsafeEngageAxesCreate,
         unsafe.UnsafeUngripLabwareCreate,
         unsafe.UnsafePlaceLabwareCreate,
+        robot.MoveAxesRelativeCreate,
+        robot.MoveAxesToCreate,
+        robot.MoveToCreate,
+        robot.openGripperJawCreate,
+        robot.closeGripperJawCreate,
     ],
     Field(discriminator="commandType"),
 ]
 
+# Each time a TypeAdapter is instantiated, it will construct a new validator and
+# serializer. To improve performance, TypeAdapters are instantiated once.
+# See https://docs.pydantic.dev/latest/concepts/performance/#typeadapter-instantiated-once
+CommandCreateAdapter: TypeAdapter[CommandCreate] = TypeAdapter(CommandCreate)
+
+CommandAdapter: TypeAdapter[Command] = TypeAdapter(Command)
+
 CommandResult = Union[
+    AirGapInPlaceResult,
     AspirateResult,
     AspirateInPlaceResult,
     CommentResult,
@@ -646,8 +772,11 @@ CommandResult = Union[
     LoadLabwareResult,
     ReloadLabwareResult,
     LoadLiquidResult,
+    LoadLiquidClassResult,
     LoadModuleResult,
     LoadPipetteResult,
+    LoadLidStackResult,
+    LoadLidResult,
     MoveLabwareResult,
     MoveRelativeResult,
     MoveToCoordinatesResult,
@@ -664,8 +793,12 @@ CommandResult = Union[
     SetStatusBarResult,
     VerifyTipPresenceResult,
     GetTipPresenceResult,
+    GetNextTipResult,
     LiquidProbeResult,
     TryLiquidProbeResult,
+    EvotipSealPipetteResult,
+    EvotipDispenseResult,
+    EvotipUnsealPipetteResult,
     heater_shaker.WaitForTemperatureResult,
     heater_shaker.SetTargetTemperatureResult,
     heater_shaker.DeactivateHeaterResult,
@@ -702,6 +835,11 @@ CommandResult = Union[
     unsafe.UnsafeEngageAxesResult,
     unsafe.UnsafeUngripLabwareResult,
     unsafe.UnsafePlaceLabwareResult,
+    robot.MoveAxesRelativeResult,
+    robot.MoveAxesToResult,
+    robot.MoveToResult,
+    robot.openGripperJawResult,
+    robot.closeGripperJawResult,
 ]
 
 
@@ -712,6 +850,7 @@ CommandDefinedErrorData = Union[
     DefinedErrorData[OverpressureError],
     DefinedErrorData[LiquidNotFoundError],
     DefinedErrorData[GripperMovementError],
+    DefinedErrorData[StallOrCollisionError],
 ]
 
 

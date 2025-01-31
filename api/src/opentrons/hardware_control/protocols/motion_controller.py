@@ -9,6 +9,12 @@ from .types import MountArgType
 class MotionController(Protocol[MountArgType]):
     """Protocol specifying fundamental motion controls."""
 
+    def get_deck_from_machine(
+        self, machine_pos: Dict[Axis, float]
+    ) -> Dict[Axis, float]:
+        """Convert machine coordinates to deck coordinates."""
+        ...
+
     async def halt(self, disengage_before_stopping: bool = False) -> None:
         """Immediately stop motion.
 
@@ -165,6 +171,7 @@ class MotionController(Protocol[MountArgType]):
         position: Mapping[Axis, float],
         speed: Optional[float] = None,
         max_speeds: Optional[Dict[Axis, float]] = None,
+        expect_stalls: bool = False,
     ) -> None:
         """Moves the effectors of the specified axis to the specified position.
         The effector of the x,y axis is the center of the carriage.

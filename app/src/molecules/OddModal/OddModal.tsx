@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import {
   ALIGN_CENTER,
   BORDERS,
@@ -11,14 +10,15 @@ import {
 import { BackgroundOverlay } from '../BackgroundOverlay'
 import { OddModalHeader } from './OddModalHeader'
 
+import type { MouseEvent, MouseEventHandler, ReactNode } from 'react'
 import type { StyleProps } from '@opentrons/components'
 import type { OddModalHeaderBaseProps, ModalSize } from './types'
 
 interface OddModalProps extends StyleProps {
   /** clicking anywhere outside of the modal closes it  */
-  onOutsideClick?: React.MouseEventHandler
+  onOutsideClick?: MouseEventHandler
   /** modal content */
-  children: React.ReactNode
+  children: ReactNode
   /** for small, medium, or large modal sizes, medium by default */
   modalSize?: ModalSize
   /** see OddModalHeader component for more details */
@@ -66,7 +66,7 @@ export function OddModal(props: OddModalProps): JSX.Element {
         margin={SPACING.spacing32}
         flexDirection={DIRECTION_COLUMN}
         aria-label={`modal_${modalSize}`}
-        onClick={(e: React.MouseEvent) => {
+        onClick={(e: MouseEvent) => {
           e.stopPropagation()
         }}
       >

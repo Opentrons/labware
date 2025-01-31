@@ -13,7 +13,7 @@ from opentrons.protocol_engine import (
 from opentrons.protocol_engine.errors import CommandDoesNotExistError
 
 from robot_server.errors.error_responses import ApiError
-from robot_server.service.json_api import MultiBodyMeta
+from robot_server.service.json_api import MultiBodyMeta, RequestModel
 
 from robot_server.maintenance_runs.maintenance_run_orchestrator_store import (
     MaintenanceRunOrchestratorStore,
@@ -31,7 +31,6 @@ from robot_server.maintenance_runs.router.commands_router import (
     get_current_run_from_url,
 )
 from robot_server.runs.command_models import (
-    RequestModelWithCommandCreate,
     CommandCollectionLinks,
     CommandLink,
     CommandLinkMeta,
@@ -109,7 +108,7 @@ async def test_create_run_command(
 
     result = await create_run_command(
         run_id="run-id",
-        request_body=RequestModelWithCommandCreate(data=command_request),
+        request_body=RequestModel(data=command_request),
         waitUntilComplete=False,
         run_orchestrator_store=mock_maintenance_run_orchestrator_store,
         timeout=None,
@@ -151,7 +150,7 @@ async def test_create_run_command_blocking_completion(
 
     result = await create_run_command(
         run_id="run-id",
-        request_body=RequestModelWithCommandCreate(data=command_request),
+        request_body=RequestModel(data=command_request),
         waitUntilComplete=True,
         timeout=999,
         run_orchestrator_store=mock_maintenance_run_orchestrator_store,

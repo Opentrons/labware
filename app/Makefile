@@ -47,7 +47,7 @@ clean:
 dist: export NODE_ENV := production
 dist:
 	echo "Building app JS bundle (browser layer)"
-	vite build
+	NODE_OPTIONS="--max-old-space-size=8192" vite build
 
 # development
 #####################################################################

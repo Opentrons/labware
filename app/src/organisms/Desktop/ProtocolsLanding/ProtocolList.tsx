@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { css } from 'styled-components'
@@ -35,6 +35,7 @@ import { ProtocolUploadInput } from './ProtocolUploadInput'
 import { ProtocolCard } from './ProtocolCard'
 import { EmptyStateLinks } from './EmptyStateLinks'
 
+import type { MouseEventHandler } from 'react'
 import type {
   StoredProtocolData,
   ProtocolSort,
@@ -61,17 +62,17 @@ export function ProtocolList(props: ProtocolListProps): JSX.Element | null {
   const [
     showImportProtocolSlideout,
     setShowImportProtocolSlideout,
-  ] = React.useState<boolean>(false)
+  ] = useState<boolean>(false)
   const [
     showChooseRobotToRunProtocolSlideout,
     setShowChooseRobotToRunProtocolSlideout,
-  ] = React.useState<boolean>(false)
+  ] = useState<boolean>(false)
   const [
     showSendProtocolToFlexSlideout,
     setShowSendProtocolToFlexSlideout,
-  ] = React.useState<boolean>(false)
+  ] = useState<boolean>(false)
   const sortBy = useSelector(getProtocolsDesktopSortKey) ?? 'alphabetical'
-  const [showSortByMenu, setShowSortByMenu] = React.useState<boolean>(false)
+  const [showSortByMenu, setShowSortByMenu] = useState<boolean>(false)
   const toggleSetShowSortByMenu = (): void => {
     setShowSortByMenu(!showSortByMenu)
   }
@@ -80,13 +81,13 @@ export function ProtocolList(props: ProtocolListProps): JSX.Element | null {
   const [
     selectedProtocol,
     setSelectedProtocol,
-  ] = React.useState<StoredProtocolData | null>(null)
+  ] = useState<StoredProtocolData | null>(null)
 
   const sortedStoredProtocols = useSortedProtocols(sortBy, storedProtocols)
 
   const dispatch = useDispatch<Dispatch>()
 
-  const handleClickOutside: React.MouseEventHandler<HTMLDivElement> = e => {
+  const handleClickOutside: MouseEventHandler<HTMLDivElement> = e => {
     e.preventDefault()
     setShowSortByMenu(false)
   }

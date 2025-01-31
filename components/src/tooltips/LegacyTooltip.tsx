@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { forwardRef } from 'react'
 import { css } from 'styled-components'
 
 import { BORDERS, COLORS } from '../helix-design-system'
@@ -8,7 +8,7 @@ import { ARROW_SIZE_PX } from './styles'
 import { Box } from '../primitives'
 import { CURSOR_POINTER } from '../styles'
 
-import type { CSSProperties } from 'react'
+import type { CSSProperties, ForwardedRef, ReactNode, RefCallback } from 'react'
 import type { FlattenSimpleInterpolation } from 'styled-components'
 import type { Placement } from './types'
 import type { StyleProps } from '../primitives'
@@ -17,7 +17,7 @@ export interface LegacyTooltipProps extends StyleProps {
   /** Whether or not the tooltip should be rendered */
   visible: boolean
   /** Contents of the tooltip */
-  children?: React.ReactNode
+  children?: ReactNode
   /**
    * Tooltip element ID (provided by useTooltip). Will match
    * targetProps.aria-describedby
@@ -28,7 +28,7 @@ export interface LegacyTooltipProps extends StyleProps {
   /** Inline styles to apply to the tooltip element (provided by useTooltip) */
   style: CSSProperties
   /** React function ref for tooltip's arrow element (provided by useTooltip) */
-  arrowRef: React.RefCallback<HTMLElement | null>
+  arrowRef: RefCallback<HTMLElement | null>
   /** Inline styles to apply to arrow element (provided by useTooltip) */
   arrowStyle: CSSProperties
 }
@@ -37,9 +37,9 @@ export interface LegacyTooltipProps extends StyleProps {
  * Tooltip component that renders based on its `visible` prop. For use with the
  * `useTooltip` and `useHoverTooltip` hooks. See examples in `Tooltip.md`.
  */
-export const LegacyTooltip = React.forwardRef(function TooltipComponent(
+export const LegacyTooltip = forwardRef(function TooltipComponent(
   props: LegacyTooltipProps,
-  ref: React.ForwardedRef<HTMLDivElement>
+  ref: ForwardedRef<HTMLDivElement>
 ) {
   const {
     visible,
@@ -85,7 +85,7 @@ export const LegacyTooltip = React.forwardRef(function TooltipComponent(
 
 export interface ArrowProps {
   placement: Placement | null
-  arrowRef: React.RefCallback<HTMLElement>
+  arrowRef: RefCallback<HTMLElement>
   arrowStyle: CSSProperties
   backgroundColor: string
 }

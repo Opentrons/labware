@@ -14,7 +14,7 @@ const EULA_URL = 'https://opentrons.com/eula'
 export function EndUserAgreementFooter(): JSX.Element {
   return (
     <Flex
-      backgroundColor={COLORS.grey20}
+      backgroundColor={COLORS.grey10}
       padding={SPACING.spacing24}
       width="100%"
       alignItems={ALIGN_CENTER}

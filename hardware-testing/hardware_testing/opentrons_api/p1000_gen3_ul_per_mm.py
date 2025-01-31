@@ -287,4 +287,4 @@ def overwrite_attached_pipette_ul_per_mm(
     pipette: Optional[Pipette] = api._pipette_handler._attached_instruments[mount]
     if pipette is None:
         raise RuntimeError(f"No pipette is attached to mount: {mount}")
-    pipette._config = replace(pipette._config, ul_per_mm=ul_per_mm)
+    pipette._config = replace(pipette._config, ul_per_mm=ul_per_mm)  # type: ignore[type-var]

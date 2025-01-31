@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { fireEvent, screen } from '@testing-library/react'
@@ -8,17 +7,19 @@ import { StepMeter } from '/app/atoms/StepMeter'
 import { WizardHeader } from '..'
 import { renderWithProviders } from '/app/__testing-utils__'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/atoms/StepMeter')
 vi.mock('/app/redux/config')
 
-const render = (props: React.ComponentProps<typeof WizardHeader>) => {
+const render = (props: ComponentProps<typeof WizardHeader>) => {
   return renderWithProviders(<WizardHeader {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('WizardHeader', () => {
-  let props: React.ComponentProps<typeof WizardHeader>
+  let props: ComponentProps<typeof WizardHeader>
 
   beforeEach(() => {
     props = {

@@ -15,7 +15,7 @@ import {
   StyledText,
 } from '@opentrons/components'
 import { selectors as uiLabwareSelectors } from '../../ui/labware'
-import { getTopPortalEl } from '../../components/portals/TopPortal'
+import { getMainPagePortalEl } from '../Portal'
 import { renameLabware } from '../../labware-ingred/actions'
 import { HandleEnter } from '../../atoms/HandleEnter'
 import type { ThunkDispatch } from '../../types'
@@ -40,6 +40,7 @@ export function EditNickNameModal(props: EditNickNameModalProps): JSX.Element {
   return createPortal(
     <HandleEnter onEnter={saveNickname}>
       <Modal
+        marginLeft="0"
         title={t('rename_labware')}
         type="info"
         onClose={onClose}
@@ -91,6 +92,6 @@ export function EditNickNameModal(props: EditNickNameModalProps): JSX.Element {
         </Flex>
       </Modal>
     </HandleEnter>,
-    getTopPortalEl()
+    getMainPagePortalEl()
   )
 }

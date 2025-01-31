@@ -1,0 +1,174 @@
+{
+  "$otSharedSchema": "#/pipette/schemas/2/pipetteLiquidPropertiesSchema.json",
+  "supportedTips": {
+    "t20": {
+      "uiMaxFlowRate": 189.1,
+      "defaultAspirateFlowRate": {
+        "default": 6,
+        "valuesByApiLevel": { "2.14": 6 }
+      },
+      "defaultDispenseFlowRate": {
+        "default": 6,
+        "valuesByApiLevel": { "2.14": 6 }
+      },
+      "defaultBlowOutFlowRate": {
+        "default": 80,
+        "valuesByApiLevel": { "2.14": 80 }
+      },
+      "defaultFlowAcceleration": 16000.0,
+      "defaultTipLength": 52.0,
+      "defaultReturnTipHeight": 0.6,
+      "aspirate": {
+        "default": {
+          "1": [
+            [1.933333, 2.844459, 4.750159],
+            [2.833333, 1.12901, 8.066694],
+            [3.603333, 0.254744, 10.543779],
+            [4.836667, 1.101839, 7.491414],
+            [5.755, 0.277649, 11.47775],
+            [6.643333, 0.14813, 12.223126],
+            [7.548333, 0.145635, 12.239705],
+            [8.475, 0.15097, 12.199433],
+            [13.02, 0.071736, 12.870946],
+            [22.318333, 0.042305, 13.254131]
+          ]
+        }
+      },
+      "dispense": {
+        "default": {
+          "1": [
+            [1.933333, 2.844459, 4.750159],
+            [2.833333, 1.12901, 8.066694],
+            [3.603333, 0.254744, 10.543779],
+            [4.836667, 1.101839, 7.491414],
+            [5.755, 0.277649, 11.47775],
+            [6.643333, 0.14813, 12.223126],
+            [7.548333, 0.145635, 12.239705],
+            [8.475, 0.15097, 12.199433],
+            [13.02, 0.071736, 12.870946],
+            [22.318333, 0.042305, 13.254131]
+          ]
+        }
+      },
+      "defaultPushOutVolume": 2
+    },
+    "t50": {
+      "uiMaxFlowRate": 194,
+      "defaultAspirateFlowRate": {
+        "default": 6,
+        "valuesByApiLevel": { "2.14": 6 }
+      },
+      "defaultDispenseFlowRate": {
+        "default": 6,
+        "valuesByApiLevel": { "2.14": 6 }
+      },
+      "defaultBlowOutFlowRate": {
+        "default": 80,
+        "valuesByApiLevel": { "2.14": 80 }
+      },
+      "defaultFlowAcceleration": 16000.0,
+      "defaultTipLength": 57.9,
+      "defaultReturnTipHeight": 0.2,
+      "aspirate": {
+        "default": {
+          "1": [
+            [1.9733, 2.7039, 5.1258],
+            [2.88, 1.0915, 8.3077],
+            [3.7642, 0.5906, 9.7502],
+            [4.9783, 1.0072, 8.1822],
+            [5.9342, 0.2998, 11.7038],
+            [6.8708, 0.1887, 12.3626],
+            [7.8092, 0.1497, 12.631],
+            [8.7525, 0.1275, 12.804],
+            [13.4575, 0.0741, 13.2718],
+            [22.8675, 0.0296, 13.87],
+            [37.0442, 0.0128, 14.2551],
+            [55.4792, -0.0013, 14.7754]
+          ]
+        }
+      },
+      "dispense": {
+        "default": {
+          "1": [
+            [1.9733, 2.7039, 5.1258],
+            [2.88, 1.0915, 8.3077],
+            [3.7642, 0.5906, 9.7502],
+            [4.9783, 1.0072, 8.1822],
+            [5.9342, 0.2998, 11.7038],
+            [6.8708, 0.1887, 12.3626],
+            [7.8092, 0.1497, 12.631],
+            [8.7525, 0.1275, 12.804],
+            [13.4575, 0.0741, 13.2718],
+            [22.8675, 0.0296, 13.87],
+            [37.0442, 0.0128, 14.2551],
+            [55.4792, -0.0013, 14.7754]
+          ]
+        }
+      },
+      "defaultPushOutVolume": 7
+    },
+    "t200": {
+      "uiMaxFlowRate": 194,
+      "defaultAspirateFlowRate": {
+        "default": 80,
+        "valuesByApiLevel": { "2.14": 80 }
+      },
+      "defaultDispenseFlowRate": {
+        "default": 80,
+        "valuesByApiLevel": { "2.14": 80 }
+      },
+      "defaultBlowOutFlowRate": {
+        "default": 80,
+        "valuesByApiLevel": { "2.14": 80 }
+      },
+      "defaultFlowAcceleration": 16000.0,
+      "defaultTipLength": 58.35,
+      "defaultReturnTipHeight": 0.2,
+      "aspirate": {
+        "default": {
+          "1": [
+            [1.9331, 3.4604, 3.5588],
+            [2.9808, 1.5307, 7.2892],
+            [3.9869, 0.825, 9.3926],
+            [4.9762, 0.5141, 10.6323],
+            [5.9431, 0.3232, 11.5819],
+            [6.9223, 0.2644, 11.9317],
+            [7.8877, 0.1832, 12.4935],
+            [8.8562, 0.1512, 12.7463],
+            [47.7169, 0.0281, 13.836],
+            [95.63, 0.0007, 15.147],
+            [211.1169, 0.0005, 15.1655]
+          ]
+        }
+      },
+      "dispense": {
+        "default": {
+          "1": [
+            [1.9331, 3.4604, 3.5588],
+            [2.9808, 1.5307, 7.2892],
+            [3.9869, 0.825, 9.3926],
+            [4.9762, 0.5141, 10.6323],
+            [5.9431, 0.3232, 11.5819],
+            [6.9223, 0.2644, 11.9317],
+            [7.8877, 0.1832, 12.4935],
+            [8.8562, 0.1512, 12.7463],
+            [47.7169, 0.0281, 13.836],
+            [95.63, 0.0007, 15.147],
+            [211.1169, 0.0005, 15.1655]
+          ]
+        }
+      },
+      "defaultPushOutVolume": 5
+    }
+  },
+  "maxVolume": 200,
+  "minVolume": 1,
+  "defaultTipracks": [
+    "opentrons/opentrons_flex_96_tiprack_200ul/1",
+    "opentrons/opentrons_flex_96_tiprack_50ul/1",
+    "opentrons/opentrons_flex_96_tiprack_20ul/1",
+    "opentrons/opentrons_flex_96_filtertiprack_200ul/1",
+    "opentrons/opentrons_flex_96_filtertiprack_50ul/1",
+    "opentrons/opentrons_flex_96_filtertiprack_20ul/1"
+  ]
+}

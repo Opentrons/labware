@@ -34,7 +34,9 @@ export function FillWellAndSkip(props: RecoveryContentProps): JSX.Element {
       case CANCEL_RUN.STEPS.CONFIRM_CANCEL:
         return <CancelRun {...props} />
       default:
-        console.warn(`${step} in ${route} not explicitly handled. Rerouting.`)
+        console.warn(
+          `FillWellAndSkip: ${step} in ${route} not explicitly handled. Rerouting.`
+        )
         return <SelectRecoveryOption {...props} />
     }
   }

@@ -1,5 +1,3 @@
-import type * as React from 'react'
-
 import { LEFT, RIGHT } from '@opentrons/shared-data'
 import { Flex } from '../primitives'
 import { SPACING, TYPOGRAPHY } from '../ui-style-constants'
@@ -7,6 +5,7 @@ import { LegacyStyledText } from '../atoms'
 import { DIRECTION_COLUMN, JUSTIFY_CENTER } from '../styles'
 import { InstrumentDiagram } from './InstrumentDiagram'
 
+import type { ReactNode } from 'react'
 import type { Mount } from '../robot-types'
 import type { InstrumentDiagramProps } from './InstrumentDiagram'
 
@@ -22,7 +21,7 @@ export interface InstrumentInfoProps {
   /** paired tiprack models */
   tiprackModels?: string[]
   /** children to display under the info */
-  children?: React.ReactNode
+  children?: ReactNode
   /** if true, show labels 'LEFT PIPETTE' / 'RIGHT PIPETTE' */
   showMountLabel?: boolean | null
 }

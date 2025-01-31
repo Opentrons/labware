@@ -13,7 +13,7 @@ import {
 import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { useHardwareStatusText } from '/app/organisms/ODD/RobotDashboard/hooks'
-import { useOffsetCandidatesForAnalysis } from '/app/organisms/ApplyHistoricOffsets/hooks/useOffsetCandidatesForAnalysis'
+import { useOffsetCandidatesForAnalysis } from '/app/organisms/LegacyApplyHistoricOffsets/hooks/useOffsetCandidatesForAnalysis'
 import { useMissingProtocolHardware } from '/app/transformations/commands'
 import { formatTimeWithUtcLabel } from '/app/resources/runs'
 import {
@@ -36,7 +36,7 @@ vi.mock('@opentrons/react-api-client')
 vi.mock('/app/organisms/ODD/RobotDashboard/hooks')
 vi.mock('/app/redux-resources/analytics')
 vi.mock(
-  '/app/organisms/ApplyHistoricOffsets/hooks/useOffsetCandidatesForAnalysis'
+  '/app/organisms/LegacyApplyHistoricOffsets/hooks/useOffsetCandidatesForAnalysis'
 )
 vi.mock('../../QuickTransferDashboard/DeleteTransferConfirmationModal')
 vi.mock('/app/transformations/commands')

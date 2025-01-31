@@ -7,10 +7,10 @@ import { i18n, i18nCb, i18nConfig } from '/app/i18n'
 import { getAppLanguage } from '/app/redux/config'
 import { useIsOEMMode } from '/app/resources/robot-settings/hooks'
 
-import type * as React from 'react'
+import type { ReactNode } from 'react'
 
 export interface LocalizationProviderProps {
-  children?: React.ReactNode
+  children?: ReactNode
 }
 
 export const BRANDED_RESOURCE = 'branded'

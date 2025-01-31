@@ -15,9 +15,9 @@ export function ChatFooter(): JSX.Element {
 
   return (
     <Flex
+      paddingTop={SPACING.spacing24}
       gridGap={SPACING.spacing24}
       flexDirection={DIRECTION_COLUMN}
-      paddingBottom={SPACING.spacing24}
     >
       <InputPrompt />
       <LegacyStyledText css={DISCLAIMER_TEXT_STYLE}>
@@ -29,8 +29,7 @@ export function ChatFooter(): JSX.Element {
 
 const DISCLAIMER_TEXT_STYLE = css`
   color: ${COLORS.grey55};
-  font-size: ${TYPOGRAPHY.fontSize20};
+  font-size: ${TYPOGRAPHY.fontSizeH3};
   line-height: ${TYPOGRAPHY.lineHeight24};
   text-align: ${TYPOGRAPHY.textAlignCenter};
-  padding-bottom: ${SPACING.spacing24};
 `

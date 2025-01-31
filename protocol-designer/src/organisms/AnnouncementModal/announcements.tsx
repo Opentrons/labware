@@ -1,11 +1,12 @@
-import type * as React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { css } from 'styled-components'
 import {
+  COLORS,
   DIRECTION_COLUMN,
   Flex,
   JUSTIFY_CENTER,
   JUSTIFY_SPACE_AROUND,
+  Link as LinkComponent,
   SPACING,
   StyledText,
 } from '@opentrons/components'
@@ -19,16 +20,27 @@ import thermocyclerGen2 from '../../assets/images/modules/thermocycler_gen2.png'
 import liquidEnhancements from '../../assets/images/announcements/liquid-enhancements.gif'
 import opentronsFlex from '../../assets/images/OpentronsFlex.png'
 import deckConfigutation from '../../assets/images/deck_configuration.png'
-
-import styles from './AnnouncementModal.module.css'
+import { DOC_URL } from '../KnowledgeLink'
+import type { ReactNode } from 'react'
 
 export interface Announcement {
   announcementKey: string
-  image: React.ReactNode | null
+  image: ReactNode | null
   heading: string
-  message: React.ReactNode
+  message: ReactNode
 }
 
+const modulesDiagramsRow = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 19.294%;
+  padding-right: 19.294%;
+`
+const modulesDiagram = css`
+  width: 100%;
+  height: 100%;
+`
 const batchEditStyles = css`
   justify-content: ${JUSTIFY_SPACE_AROUND};
   padding: ${SPACING.spacing16};
@@ -44,13 +56,14 @@ const OPENTRONS_PD = 'Opentrons Protocol Designer'
 
 export const useAnnouncements = (): Announcement[] => {
   const { t } = useTranslation('modal')
+  const pdVersion = process.env.OT_PD_VERSION
 
   return [
     {
       announcementKey: 'modulesRequireRunAppUpdate',
       image: (
-        <div className={styles.modules_diagrams_row}>
-          <img className={styles.modules_diagram} src={magTempCombined} />
+        <div css={modulesDiagramsRow}>
+          <img css={modulesDiagram} src={magTempCombined} />
         </div>
       ),
       heading: t('announcements.header', { pd: PD }),
@@ -73,8 +86,16 @@ export const useAnnouncements = (): Announcement[] => {
     {
       announcementKey: 'thermocyclerSupport',
       image: (
-        <div className={styles.thermocycler_diagram_row}>
-          <img className={styles.modules_diagram} src={thermocycler} />
+        <div
+          css={css`
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 2rem;
+            padding: 0 25%;
+          `}
+        >
+          <img css={modulesDiagram} src={thermocycler} />
         </div>
       ),
       heading: t('announcements.header', { pd: PD }),
@@ -143,8 +164,8 @@ export const useAnnouncements = (): Announcement[] => {
     {
       announcementKey: 'heaterShakerSupport',
       image: (
-        <div className={styles.modules_diagrams_row}>
-          <img className={styles.modules_diagram} src={heaterShaker} />
+        <div css={modulesDiagramsRow}>
+          <img css={modulesDiagram} src={heaterShaker} />
         </div>
       ),
       heading: t('announcements.header', { pd: PD }),
@@ -169,8 +190,8 @@ export const useAnnouncements = (): Announcement[] => {
     {
       announcementKey: 'thermocyclerGen2Support',
       image: (
-        <div className={styles.modules_diagrams_row}>
-          <img className={styles.modules_diagram} src={thermocyclerGen2} />
+        <div css={modulesDiagramsRow}>
+          <img css={modulesDiagram} src={thermocyclerGen2} />
         </div>
       ),
       heading: t('announcements.header', { pd: PD }),
@@ -195,8 +216,15 @@ export const useAnnouncements = (): Announcement[] => {
     {
       announcementKey: 'liquidColorEnhancements',
       image: (
-        <div className={styles.modules_diagrams_color_enhancements}>
-          <img className={styles.modules_diagram} src={liquidEnhancements} />
+        <div
+          css={css`
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 6%;
+          `}
+        >
+          <img css={modulesDiagram} src={liquidEnhancements} />
         </div>
       ),
       heading: t('announcements.header', { pd: PD }),
@@ -304,7 +332,7 @@ export const useAnnouncements = (): Announcement[] => {
     {
       announcementKey: 'redesign8.2',
       image: <Flex />,
-      heading: t('announcements.redesign.body1'),
+      heading: t('announcements.redesign.body1', { version: pdVersion }),
       message: (
         <Flex gridGap={SPACING.spacing8} flexDirection={DIRECTION_COLUMN}>
           <StyledText desktopStyle="bodyDefaultRegular">
@@ -323,7 +351,22 @@ export const useAnnouncements = (): Announcement[] => {
             <Trans
               t={t}
               components={{ strong: <strong /> }}
-              i18nKey={'announcements.redesign.body4'}
+              i18nKey="announcements.redesign.body4"
+            />
+          </StyledText>
+          <StyledText desktopStyle="bodyDefaultRegular">
+            <Trans
+              t={t}
+              components={{
+                link1: (
+                  <LinkComponent
+                    external
+                    href={DOC_URL}
+                    color={COLORS.blue50}
+                  />
+                ),
+              }}
+              i18nKey="announcements.redesign.body5"
             />
           </StyledText>
         </Flex>

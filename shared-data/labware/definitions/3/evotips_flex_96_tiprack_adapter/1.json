@@ -1,0 +1,41 @@
+{
+  "ordering": [],
+  "brand": {
+    "brand": "Opentrons",
+    "brandId": []
+  },
+  "metadata": {
+    "displayName": "Evotips adapter",
+    "displayCategory": "adapter",
+    "displayVolumeUnits": "\u00b5L",
+    "tags": []
+  },
+  "dimensions": {
+    "xDimension": 156.5,
+    "yDimension": 105,
+    "zDimension": 132
+  },
+  "wells": {},
+  "groups": [
+    {
+      "metadata": {},
+      "wells": []
+    }
+  ],
+  "parameters": {
+    "format": "96Standard",
+    "quirks": ["tiprackAdapterFor96Channel", "stackingMaxFive"],
+    "isTiprack": false,
+    "isMagneticModuleCompatible": false,
+    "loadName": "evotips_flex_96_tiprack_adapter"
+  },
+  "namespace": "opentrons",
+  "version": 1,
+  "schemaVersion": 3,
+  "allowedRoles": ["adapter"],
+  "cornerOffsetFromSlot": {
+    "x": -14.25,
+    "y": -3.5,
+    "z": 0
+  }
+}

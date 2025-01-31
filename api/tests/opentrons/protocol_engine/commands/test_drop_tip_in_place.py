@@ -19,6 +19,7 @@ from opentrons.protocol_engine.resources.model_utils import ModelUtils
 from opentrons.protocol_engine.state.update_types import (
     PipetteTipStateUpdate,
     StateUpdate,
+    PipetteUnknownFluidUpdate,
 )
 from opentrons.types import Point
 
@@ -60,7 +61,10 @@ async def test_success(
     assert result == SuccessData(
         public=DropTipInPlaceResult(),
         state_update=StateUpdate(
-            pipette_tip_state=PipetteTipStateUpdate(pipette_id="abc", tip_geometry=None)
+            pipette_tip_state=PipetteTipStateUpdate(
+                pipette_id="abc", tip_geometry=None
+            ),
+            pipette_aspirated_fluid=PipetteUnknownFluidUpdate(pipette_id="abc"),
         ),
     )
 
@@ -100,14 +104,18 @@ async def test_tip_attached_error(
     result = await subject.execute(params)
 
     assert result == DefinedErrorData(
-        public=TipPhysicallyAttachedError.construct(
+        public=TipPhysicallyAttachedError.model_construct(
             id="error-id",
             createdAt=datetime(year=1, month=2, day=3),
             wrappedErrors=[matchers.Anything()],
             errorInfo={"retryLocation": (9, 8, 7)},
         ),
-        state_update=StateUpdate(),
+        state_update=StateUpdate(
+            pipette_aspirated_fluid=PipetteUnknownFluidUpdate(pipette_id="abc")
+        ),
         state_update_if_false_positive=StateUpdate(
-            pipette_tip_state=PipetteTipStateUpdate(pipette_id="abc", tip_geometry=None)
+            pipette_tip_state=PipetteTipStateUpdate(
+                pipette_id="abc", tip_geometry=None
+            ),
         ),
     )

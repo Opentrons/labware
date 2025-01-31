@@ -160,7 +160,7 @@ describe('getUnsavedFormIsPristineSetTempForm', () => {
     // @ts-expect-error(jr, 4/8/22): missing module id
     const formData: FormData = {
       stepType: 'temperature',
-      setTemperature: 'true',
+      targetTemperature: 33,
     }
     const expected = true
     // @ts-expect-error(jr, 4/8/22): resultFunc (from reselect) is not part of their Selector interface

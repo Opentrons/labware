@@ -4,6 +4,7 @@ import {
   opentrons1Trash3200MlFixedV1 as trashLabwareDef,
 } from '@opentrons/shared-data'
 import { Icon } from '../../icons'
+import { DeckLabelSet } from '../../organisms'
 import { Flex, Text } from '../../primitives'
 import { ALIGN_CENTER, JUSTIFY_CENTER } from '../../styles'
 import { SPACING, TYPOGRAPHY } from '../../ui-style-constants'
@@ -11,6 +12,7 @@ import { COLORS, BORDERS } from '../../helix-design-system'
 import { RobotCoordsForeignObject } from './RobotCoordsForeignObject'
 
 import type { RobotType } from '@opentrons/shared-data'
+import type { DeckLabelProps } from '../../molecules'
 
 // only allow edge cutout locations (columns 1 and 3)
 export type TrashCutoutId =
@@ -23,11 +25,16 @@ export type TrashCutoutId =
   | 'cutoutC3'
   | 'cutoutD3'
 
+const HEIGHT_OF_TAG = 28
 interface FlexTrashProps {
   robotType: RobotType
   trashIconColor: string
   backgroundColor: string
   trashCutoutId?: TrashCutoutId
+  /** optional prop to highlight the border of the trashBin */
+  showHighlight?: boolean
+  /** optional tag info to display a tag below the trash */
+  tagInfo?: DeckLabelProps[]
 }
 
 /**
@@ -40,6 +47,8 @@ export const FlexTrash = ({
   trashIconColor,
   backgroundColor,
   trashCutoutId,
+  showHighlight,
+  tagInfo,
 }: FlexTrashProps): JSX.Element | null => {
   // be sure we don't try to render for an OT-2
   if (robotType !== FLEX_ROBOT_TYPE) return null
@@ -96,6 +105,7 @@ export const FlexTrash = ({
           justifyContent={JUSTIFY_CENTER}
           gridGap={SPACING.spacing8}
           width="100%"
+          border={showHighlight ? `3px solid ${COLORS.blue50}` : 'none'}
         >
           {rotateDegrees === '180' ? (
             <Text
@@ -123,6 +133,15 @@ export const FlexTrash = ({
           ) : null}
         </Flex>
       </RobotCoordsForeignObject>
+      {tagInfo != null && tagInfo.length > 0 ? (
+        <DeckLabelSet
+          width={xDimension}
+          height={yDimension}
+          x={x + xAdjustment}
+          y={y + yAdjustment - HEIGHT_OF_TAG}
+          deckLabels={tagInfo}
+        />
+      ) : null}
     </g>
   ) : null
 }

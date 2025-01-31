@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
@@ -6,6 +5,8 @@ import '@testing-library/jest-dom/vitest'
 import { i18n } from '/app/i18n'
 import { renderWithProviders } from '/app/__testing-utils__'
 import { RobotSystemVersionModal } from '../RobotSystemVersionModal'
+
+import type { ComponentProps } from 'react'
 import type * as Dom from 'react-router-dom'
 
 const mockFn = vi.fn()
@@ -19,16 +20,14 @@ vi.mock('react-router-dom', async importOriginal => {
   }
 })
 
-const render = (
-  props: React.ComponentProps<typeof RobotSystemVersionModal>
-) => {
+const render = (props: ComponentProps<typeof RobotSystemVersionModal>) => {
   return renderWithProviders(<RobotSystemVersionModal {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('RobotSystemVersionModal', () => {
-  let props: React.ComponentProps<typeof RobotSystemVersionModal>
+  let props: ComponentProps<typeof RobotSystemVersionModal>
 
   beforeEach(() => {
     props = {

@@ -1,9 +1,11 @@
 """Router for /runs actions endpoints."""
 import logging
 
-from fastapi import APIRouter, Depends, status
 from datetime import datetime
 from typing import Annotated, Literal, Union
+
+from fastapi import Depends, status
+from server_utils.fastapi_utils.light_router import LightRouter
 
 from robot_server.errors.error_responses import ErrorDetails, ErrorBody
 from robot_server.service.dependencies import get_current_time, get_unique_id
@@ -37,7 +39,7 @@ from robot_server.service.notifications import (
 )
 
 log = logging.getLogger(__name__)
-actions_router = APIRouter()
+actions_router = LightRouter()
 
 
 class RunActionNotAllowed(ErrorDetails):
@@ -155,6 +157,6 @@ async def create_run_action(
         raise RunNotFound.from_exc(e).as_error(status.HTTP_404_NOT_FOUND) from e
 
     return await PydanticResponse.create(
-        content=SimpleBody.construct(data=action),
+        content=SimpleBody.model_construct(data=action),
         status_code=status.HTTP_201_CREATED,
     )

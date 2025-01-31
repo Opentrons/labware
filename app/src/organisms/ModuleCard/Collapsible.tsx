@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { css } from 'styled-components'
 import {
   ALIGN_CENTER,
@@ -13,13 +12,15 @@ import {
 } from '@opentrons/components'
 import type { IconName } from '@opentrons/components'
 
+import type { ReactNode } from 'react'
+
 interface CollapsibleProps {
   expanded: boolean
-  title: React.ReactNode
+  title: ReactNode
   expandedIcon?: IconName
   collapsedIcon?: IconName
   toggleExpanded: () => void
-  children: React.ReactNode
+  children: ReactNode
 }
 
 const EXPANDED_STYLE = css`

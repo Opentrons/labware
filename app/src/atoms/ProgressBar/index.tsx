@@ -1,7 +1,7 @@
-import type * as React from 'react'
 import { css } from 'styled-components'
 import { COLORS, Box } from '@opentrons/components'
 
+import type { ReactNode } from 'react'
 import type { FlattenSimpleInterpolation } from 'styled-components'
 
 interface ProgressBarProps {
@@ -12,7 +12,7 @@ interface ProgressBarProps {
   /** extra styles to be filled progress element */
   innerStyles?: FlattenSimpleInterpolation
   /** extra elements to be rendered within container */
-  children?: React.ReactNode
+  children?: ReactNode
 }
 
 export function ProgressBar({

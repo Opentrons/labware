@@ -1,0 +1,131 @@
+test_name: Test /labwareOffsets CRUD operations.
+
+marks:
+  - usefixtures:
+      - ot3_server_base_url
+
+stages:
+  - name: Add a labware offset and check the response
+    request:
+      url: '{ot3_server_base_url}/labwareOffsets'
+      method: POST
+      json:
+        data:
+          definitionUri: definitionUri1
+          location:
+            slotName: A1
+            definitionUri: testNamespace/testLoadName/123
+            moduleModel: thermocyclerModuleV2
+          vector: { x: 1, y: 1, z: 1 }
+    response:
+      status_code: 201
+      json:
+        data:
+          id: !anystr
+          createdAt: !anystr
+          definitionUri: definitionUri1
+          location:
+            slotName: A1
+            definitionUri: testNamespace/testLoadName/123
+            moduleModel: thermocyclerModuleV2
+          vector: { x: 1, y: 1, z: 1 }
+      save:
+        json:
+          offset_1_data: data
+          offset_1_id: data.id
+
+  - name: Add another labware offset to add more testing data
+    request:
+      url: '{ot3_server_base_url}/labwareOffsets'
+      method: POST
+      json:
+        data:
+          definitionUri: definitionUri2
+          location:
+            slotName: A2
+          vector: { x: 2, y: 2, z: 2 }
+    response:
+      status_code: 201
+      save:
+        json:
+          offset_2_data: data
+
+  - name: Add another labware offset to add more testing data
+    request:
+      url: '{ot3_server_base_url}/labwareOffsets'
+      method: POST
+      json:
+        data:
+          definitionUri: definitionUri3
+          location:
+            slotName: A3
+          vector: { x: 3, y: 3, z: 3 }
+    response:
+      status_code: 201
+      save:
+        json:
+          offset_3_data: data
+
+  - name: Test getting all labware offsets
+    request:
+      url: '{ot3_server_base_url}/labwareOffsets'
+      method: GET
+    response:
+      json:
+        data:
+          - !force_format_include '{offset_1_data}'
+          - !force_format_include '{offset_2_data}'
+          - !force_format_include '{offset_3_data}'
+        meta:
+          cursor: 0
+          totalLength: 3
+
+  # Just a basic test here. More complicated tests for the filters belong in the unit tests.
+  - name: Test getting labware offsets with a filter
+    request:
+      url: '{ot3_server_base_url}/labwareOffsets?locationSlotName=A2'
+      method: GET
+    response:
+      json:
+        data:
+          - !force_format_include '{offset_2_data}'
+        meta:
+          cursor: 0
+          totalLength: 1
+
+  - name: Delete a labware offset
+    request:
+      url: '{ot3_server_base_url}/labwareOffsets/{offset_1_id}'
+      method: DELETE
+    response:
+      json:
+        data: !force_format_include '{offset_1_data}'
+
+  - name: Make sure it got deleted
+    request:
+      url: '{ot3_server_base_url}/labwareOffsets'
+    response:
+      json:
+        data:
+          - !force_format_include '{offset_2_data}'
+          - !force_format_include '{offset_3_data}'
+        meta:
+          cursor: 0
+          totalLength: 2
+
+  - name: Delete all labware offsets
+    request:
+      url: '{ot3_server_base_url}/labwareOffsets'
+      method: DELETE
+    response:
+      json: {}
+
+  - name: Make sure they all got deleted
+    request:
+      url: '{ot3_server_base_url}/labwareOffsets'
+    response:
+      json:
+        data: []
+        meta:
+          cursor: 0
+          totalLength: 0

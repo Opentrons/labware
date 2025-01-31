@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { css } from 'styled-components'
 import {
   SPACING,
@@ -8,10 +7,12 @@ import {
   styleProps,
 } from '@opentrons/components'
 
+import type { MouseEvent } from 'react'
+
 interface SubmitPrimaryButtonProps {
   form: string
   value: string
-  onClick?: (event: React.MouseEvent<HTMLInputElement>) => unknown
+  onClick?: (event: MouseEvent<HTMLInputElement>) => unknown
   disabled?: boolean
 }
 export const SubmitPrimaryButton = (

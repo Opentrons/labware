@@ -1,9 +1,11 @@
+import type { ReactNode } from 'react'
+
 export type AlertLevel = 'timeline' | 'form'
 type AlertType = 'error' | 'warning'
 
 interface AlertData {
   title: string
-  description: React.ReactNode
+  description: ReactNode
   dismissId?: string
 }
 

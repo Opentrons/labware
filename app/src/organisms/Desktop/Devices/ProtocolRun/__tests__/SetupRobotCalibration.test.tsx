@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, beforeEach, vi, afterEach, expect } from 'vitest'
@@ -18,6 +17,8 @@ import { SetupDeckCalibration } from '../SetupDeckCalibration'
 import { SetupInstrumentCalibration } from '../SetupInstrumentCalibration'
 import { SetupTipLengthCalibration } from '../SetupTipLengthCalibration'
 import { SetupRobotCalibration } from '../SetupRobotCalibration'
+
+import type { ComponentProps } from 'react'
 
 vi.mock('/app/redux/analytics')
 vi.mock('../../hooks')
@@ -40,7 +41,7 @@ describe('SetupRobotCalibration', () => {
     nextStep = 'module_setup_step',
     calibrationStatus = { complete: true },
     expandStep = mockExpandStep,
-  }: Partial<React.ComponentProps<typeof SetupRobotCalibration>> = {}) => {
+  }: Partial<ComponentProps<typeof SetupRobotCalibration>> = {}) => {
     return renderWithProviders(
       <SetupRobotCalibration
         {...{

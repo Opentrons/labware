@@ -163,3 +163,5 @@ opentrons-robot-app.tar.gz
 mock_dir
 .npm-cache/
 .eslintcache
+
+package-testing/results

@@ -161,6 +161,7 @@ const getHighestVersion = (
   path: string,
   pipetteModel: string,
   channels: Channels | null,
+  oemString: string,
   majorVersion: number,
   highestVersion: string
 ): string => {
@@ -174,10 +175,10 @@ const getHighestVersion = (
     //  and make sure the given model, channels, and major/minor versions
     //  are found in the path
     if (
-      minorPathVersion > minorHighestVersion &&
+      minorPathVersion >= minorHighestVersion &&
       path.includes(`${majorPathVersion}_${minorPathVersion}`) &&
       path.includes(pipetteModel) &&
-      path.includes(channels ?? '')
+      path.includes(channels != null ? `${channels}${oemString}` : '')
     ) {
       highestVersion = `${majorPathVersion}_${minorPathVersion}`
     }
@@ -186,9 +187,9 @@ const getHighestVersion = (
 }
 const V2_DEFINITION_TYPES = ['general', 'geometry']
 
-/* takes in pipetteName such as 'p300_single' or 'p300_single_gen1' 
+/* takes in pipetteName such as 'p300_single' or 'p300_single_gen1'
 or PipetteModel such as 'p300_single_v1.3' and converts it to channels,
-model, and version in order to return the correct pipette schema v2 json files. 
+model, and version in order to return the correct pipette schema v2 json files.
 **/
 export const getPipetteSpecsV2 = (
   name?: PipetteName | PipetteModel
@@ -200,7 +201,15 @@ export const getPipetteSpecsV2 = (
   const nameSplit = name.split('_')
   const pipetteModel = nameSplit[0] // ex: p300
   const channels = getChannelsFromString(nameSplit[1] as PipChannelString) //  ex: single -> single_channel
-  const pipetteGen = getVersionFromGen(nameSplit[2] as Gen)
+  let version_index: number
+  let oemString: string = ''
+  if (nameSplit.length === 4) {
+    version_index = 3
+    oemString = `_${nameSplit[2]}`
+  } else {
+    version_index = 2
+  }
+  const pipetteGen = getVersionFromGen(nameSplit[version_index] as Gen)
   let version: string = ''
   let majorVersion: number
   //  the first 2 conditions are to accommodate version from the pipetteName
@@ -215,7 +224,7 @@ export const getPipetteSpecsV2 = (
     majorVersion = pipetteGen //  ex: gen1 -> 1
     //  the 'else' is to accommodate the exact version if PipetteModel was added
   } else {
-    const versionNumber = nameSplit[2].split('v')[1]
+    const versionNumber = nameSplit[version_index].split('v')[1]
     if (versionNumber.includes('.')) {
       version = versionNumber.replace('.', '_') // ex: 1.0 -> 1_0
     } else {
@@ -231,12 +240,13 @@ export const getPipetteSpecsV2 = (
         path,
         pipetteModel,
         channels,
+        oemString,
         majorVersion,
         highestVersion
       )
       V2_DEFINITION_TYPES.forEach(type => {
         if (
-          `../pipette/definitions/2/${type}/${channels}/${pipetteModel}/${
+          `../pipette/definitions/2/${type}/${channels}${oemString}/${pipetteModel}/${
             version === '' ? highestVersion : version
           }.json` === path
         ) {

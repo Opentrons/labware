@@ -21,7 +21,6 @@
   "dependencies": {
     "@fontsource/public-sans": "5.0.3",
     "@hot-loader/react-dom": "17.0.1",
-    "@vitejs/plugin-react": "^4.2.1",
     "@vituum/vite-plugin-postcss": "1.1.0",
     "@hookform/resolvers": "3.1.1",
     "@opentrons/components": "link:../components",
@@ -34,7 +33,6 @@
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@typescript-eslint/parser": "^6.10.0",
     "ajv": "6.12.3",
-    "classnames": "2.2.5",
     "cookie": "0.3.1",
     "core-js": "3.2.1",
     "date-fns": "2.10.0",
@@ -62,7 +60,6 @@
     "styled-components": "5.3.6",
     "ua-parser-js": "^0.7.23",
     "uuid": "3.3.2",
-    "vite": "5.0.5",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.4",
     "postcss-apply": "0.12.0",

@@ -8,8 +8,10 @@ from pathlib import Path
 from textwrap import dedent
 from typing import Annotated, Callable, Final, Literal, Optional, Union
 
-from fastapi import APIRouter, Depends, status, Query
+from fastapi import Depends, status, Query
 from pydantic import BaseModel, Field
+from server_utils.fastapi_utils.light_router import LightRouter
+
 
 from opentrons_shared_data.errors import ErrorCodes
 from opentrons_shared_data.robot.types import RobotTypeEnum
@@ -87,7 +89,7 @@ from opentrons.protocol_engine.resources.file_provider import FileProvider
 from robot_server.service.notifications import get_pe_notify_publishers
 
 log = logging.getLogger(__name__)
-base_router = APIRouter()
+base_router = LightRouter()
 
 _DEFAULT_COMMAND_ERROR_LIST_LENGTH: Final = 20
 
@@ -288,7 +290,7 @@ async def create_run(  # noqa: C901
     log.info(f'Created protocol run "{run_id}" from protocol "{protocol_id}".')
 
     return await PydanticResponse.create(
-        content=SimpleBody.construct(data=run_data),
+        content=SimpleBody.model_construct(data=run_data),
         status_code=status.HTTP_201_CREATED,
     )
 
@@ -328,13 +330,13 @@ async def get_runs(
     current_run_id = run_data_manager.current_run_id
     meta = MultiBodyMeta(cursor=0, totalLength=len(data))
     links = AllRunsLinks(
-        current=ResourceLink.construct(href=f"/runs/{current_run_id}")
+        current=ResourceLink.model_construct(href=f"/runs/{current_run_id}")
         if current_run_id is not None
         else None
     )
 
     return await PydanticResponse.create(
-        content=MultiBody.construct(data=data, links=links, meta=meta),
+        content=MultiBody.model_construct(data=data, links=links, meta=meta),
         status_code=status.HTTP_200_OK,
     )
 
@@ -358,7 +360,7 @@ async def get_run(
         run_data: Data of the run specified in the runId url parameter.
     """
     return await PydanticResponse.create(
-        content=SimpleBody.construct(data=run_data),
+        content=SimpleBody.model_construct(data=run_data),
         status_code=status.HTTP_200_OK,
     )
 
@@ -393,7 +395,7 @@ async def remove_run(
         raise RunNotFound(detail=str(e)).as_error(status.HTTP_404_NOT_FOUND) from e
 
     return await PydanticResponse.create(
-        content=SimpleEmptyBody.construct(),
+        content=SimpleEmptyBody.model_construct(),
         status_code=status.HTTP_200_OK,
     )
 
@@ -433,7 +435,7 @@ async def update_run(
         raise RunNotFound(detail=str(e)).as_error(status.HTTP_404_NOT_FOUND) from e
 
     return await PydanticResponse.create(
-        content=SimpleBody.construct(data=run_data),
+        content=SimpleBody.model_construct(data=run_data),
         status_code=status.HTTP_200_OK,
     )
 
@@ -485,14 +487,13 @@ async def get_run_commands_error(
         run_data_manager: Run data retrieval interface.
     """
     try:
-        all_errors = run_data_manager.get_command_errors(run_id=runId)
-        total_length = len(all_errors)
+        all_errors_count = run_data_manager.get_command_errors_count(run_id=runId)
 
         if cursor is None:
-            if len(all_errors) > 0:
+            if all_errors_count > 0:
                 # Get the most recent error,
                 # which we can find just at the end of the list.
-                cursor = total_length - 1
+                cursor = all_errors_count - 1
             else:
                 cursor = 0
 
@@ -510,7 +511,7 @@ async def get_run_commands_error(
     )
 
     return await PydanticResponse.create(
-        content=SimpleMultiBody.construct(
+        content=SimpleMultiBody.model_construct(
             data=command_error_slice.commands_errors,
             meta=meta,
         ),
@@ -555,16 +556,16 @@ async def get_current_state(  # noqa: C901
 
     active_nozzle_maps = run_data_manager.get_nozzle_maps(run_id=runId)
     nozzle_layouts = {
-        pipetteId: ActiveNozzleLayout.construct(
+        pipetteId: ActiveNozzleLayout.model_construct(
             startingNozzle=nozzle_map.starting_nozzle,
-            activeNozzles=list(nozzle_map.map_store.keys()),
+            activeNozzles=nozzle_map.active_nozzles,
             config=NozzleLayoutConfig(nozzle_map.configuration.value.lower()),
         )
         for pipetteId, nozzle_map in active_nozzle_maps.items()
     }
 
     tip_states = {
-        pipette_id: TipState.construct(hasTip=has_tip)
+        pipette_id: TipState.model_construct(hasTip=has_tip)
         for pipette_id, has_tip in run_data_manager.get_tip_attached(
             run_id=runId
         ).items()
@@ -626,8 +627,8 @@ async def get_current_state(  # noqa: C901
                     break
 
     last_completed_command = run_data_manager.get_last_completed_command(run_id=runId)
-    links = CurrentStateLinks.construct(
-        lastCompleted=CommandLinkNoMeta.construct(
+    links = CurrentStateLinks.model_construct(
+        lastCompleted=CommandLinkNoMeta.model_construct(
             id=last_completed_command.command_id,
             href=f"/runs/{runId}/commands/{last_completed_command.command_id}",
         )
@@ -636,8 +637,8 @@ async def get_current_state(  # noqa: C901
     )
 
     return await PydanticResponse.create(
-        content=Body.construct(
-            data=RunCurrentState.construct(
+        content=Body.model_construct(
+            data=RunCurrentState.model_construct(
                 estopEngaged=estop_engaged,
                 activeNozzleLayouts=nozzle_layouts,
                 tipStates=tip_states,

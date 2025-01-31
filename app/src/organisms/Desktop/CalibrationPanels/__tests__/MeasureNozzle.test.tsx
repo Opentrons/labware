@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { vi, it, describe, expect } from 'vitest'
 
@@ -11,11 +10,13 @@ import {
 import * as Sessions from '/app/redux/sessions'
 import { MeasureNozzle } from '../MeasureNozzle'
 
+import type { ComponentProps } from 'react'
+
 describe('MeasureNozzle', () => {
   const mockSendCommands = vi.fn()
   const mockDeleteSession = vi.fn()
   const render = (
-    props: Partial<React.ComponentProps<typeof MeasureNozzle>> = {}
+    props: Partial<ComponentProps<typeof MeasureNozzle>> = {}
   ) => {
     const {
       mount = 'left',

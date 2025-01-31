@@ -35,7 +35,9 @@ export function CancelRun(props: RecoveryContentProps): JSX.Element {
       case CANCEL_RUN.STEPS.CONFIRM_CANCEL:
         return <CancelRunConfirmation {...props} />
       default:
-        console.warn(`${step} in ${route} not explicitly handled. Rerouting.`)
+        console.warn(
+          `CancelRun: ${step} in ${route} not explicitly handled. Rerouting.`
+        )
         return <SelectRecoveryOption {...props} />
     }
   }

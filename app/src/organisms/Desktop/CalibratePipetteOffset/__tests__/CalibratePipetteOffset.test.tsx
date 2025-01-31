@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, describe, expect, beforeEach } from 'vitest'
 import { when } from 'vitest-when'
 import { fireEvent, screen } from '@testing-library/react'
@@ -7,13 +6,15 @@ import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import * as Sessions from '/app/redux/sessions'
 import { mockPipetteOffsetCalibrationSessionAttributes } from '/app/redux/sessions/__fixtures__'
-import { CalibratePipetteOffset } from '../index'
-import type { PipetteOffsetCalibrationStep } from '/app/redux/sessions/types'
-import type { DispatchRequestsType } from '/app/redux/robot-api'
 import {
   useCalibrationError,
   CalibrationError,
 } from '/app/organisms/Desktop/CalibrationError'
+import { CalibratePipetteOffset } from '../index'
+
+import type { ComponentProps, ComponentType } from 'react'
+import type { PipetteOffsetCalibrationStep } from '/app/redux/sessions/types'
+import type { DispatchRequestsType } from '/app/redux/robot-api'
 
 vi.mock('@opentrons/shared-data', async importOriginal => {
   const actual = await importOriginal<typeof getDeckDefinitions>()
@@ -35,16 +36,14 @@ interface CalibratePipetteOffsetSpec {
 describe('CalibratePipetteOffset', () => {
   let dispatchRequests: DispatchRequestsType
   const render = (
-    props: Partial<React.ComponentProps<typeof CalibratePipetteOffset>> = {}
+    props: Partial<ComponentProps<typeof CalibratePipetteOffset>> = {}
   ) => {
     const {
       showSpinner = false,
       isJogging = false,
       session = mockPipOffsetCalSession,
     } = props
-    return renderWithProviders<
-      React.ComponentType<typeof CalibratePipetteOffset>
-    >(
+    return renderWithProviders<ComponentType<typeof CalibratePipetteOffset>>(
       <CalibratePipetteOffset
         robotName="robot-name"
         session={session}

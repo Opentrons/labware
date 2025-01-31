@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import userEvent from '@testing-library/user-event'
 import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -20,14 +19,13 @@ import {
 } from '/app/redux/calibration/tip-length/__fixtures__'
 import { mockAttachedPipette } from '/app/redux/pipettes/__fixtures__'
 import { useRunStatuses } from '/app/resources/runs'
-
 import {
   useAttachedPipettes,
   useAttachedPipetteCalibrations,
 } from '/app/resources/instruments'
-
 import { CalibrationHealthCheck } from '../CalibrationHealthCheck'
 
+import type { ComponentProps } from 'react'
 import type {
   AttachedPipettesByMount,
   PipetteCalibrationsByMount,
@@ -66,7 +64,7 @@ let mockTrackEvent: any
 const mockDispatchRequests = vi.fn()
 
 const render = (
-  props?: Partial<React.ComponentProps<typeof CalibrationHealthCheck>>
+  props?: Partial<ComponentProps<typeof CalibrationHealthCheck>>
 ) => {
   return renderWithProviders(
     <CalibrationHealthCheck

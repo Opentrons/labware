@@ -91,7 +91,11 @@ class HardwarePipettingHandler(PipettingHandler):
         )
 
     async def prepare_for_aspirate(self, pipette_id: str) -> None:
-        """Prepare for pipette aspiration."""
+        """Prepare for pipette aspiration.
+
+        Raises:
+            PipetteOverpressureError, propagated as-is from the hardware controller.
+        """
         hw_mount = self._state_view.pipettes.get_mount(pipette_id).to_hw_mount()
         await self._hardware_api.prepare_for_aspirate(mount=hw_mount)
 

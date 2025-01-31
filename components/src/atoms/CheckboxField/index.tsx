@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { css } from 'styled-components'
 import { SPACING, TYPOGRAPHY } from '../../ui-style-constants'
 import { COLORS, BORDERS } from '../../helix-design-system'
@@ -11,21 +10,23 @@ import {
   JUSTIFY_CENTER,
 } from '../../styles'
 
+import type { ChangeEventHandler, ComponentProps, ReactNode } from 'react'
+
 export interface CheckboxFieldProps {
   /** change handler */
-  onChange: React.ChangeEventHandler
+  onChange: ChangeEventHandler
   /** checkbox is checked if value is true */
   value?: boolean
   /** name of field in form */
   name?: string
   /** label text for checkbox */
-  label?: React.ReactNode
+  label?: ReactNode
   /** checkbox is disabled if value is true */
   disabled?: boolean
   /** html tabindex property */
   tabIndex?: number
   /** props passed into label div. TODO IMMEDIATELY what is the Flow type? */
-  labelProps?: React.ComponentProps<'div'>
+  labelProps?: ComponentProps<'div'>
   /** if true, render indeterminate icon */
   isIndeterminate?: boolean
 }

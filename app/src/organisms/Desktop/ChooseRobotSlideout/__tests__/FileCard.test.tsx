@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, describe, expect } from 'vitest'
 import { MemoryRouter } from 'react-router-dom'
 import { fireEvent, screen } from '@testing-library/react'
@@ -7,6 +6,7 @@ import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { FileCard } from '../FileCard'
 
+import type { ComponentProps } from 'react'
 import type { CsvFileParameter } from '@opentrons/shared-data'
 
 vi.mock('/app/redux/discovery')
@@ -15,7 +15,7 @@ vi.mock('/app/redux/networking')
 vi.mock('/app/resources/useNotifyDataReady')
 vi.mock('/app/redux/config')
 
-const render = (props: React.ComponentProps<typeof FileCard>) => {
+const render = (props: ComponentProps<typeof FileCard>) => {
   return renderWithProviders(
     <MemoryRouter>
       <FileCard {...props} />

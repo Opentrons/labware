@@ -2,7 +2,7 @@ import abc
 import asyncio
 import logging
 import re
-from typing import ClassVar, Mapping, Optional, TypeVar, cast
+from typing import ClassVar, Mapping, Optional, TypeVar
 from packaging.version import InvalidVersion, parse, Version
 from opentrons.config import IS_ROBOT, ROBOT_FIRMWARE_DIR
 from opentrons.drivers.rpi_drivers.types import USBPort
@@ -31,7 +31,7 @@ def parse_fw_version(version: str) -> Version:
             raise InvalidVersion()
     except InvalidVersion:
         device_version = parse("v0.0.0")
-    return cast(Version, device_version)
+    return device_version
 
 
 class AbstractModule(abc.ABC):

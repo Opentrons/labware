@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { css } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 
@@ -22,17 +22,19 @@ import {
 
 import { Divider } from '../structure'
 
+import type { ReactElement, ReactNode } from 'react'
+
 export interface MultiSlideoutSpecs {
   currentStep: number
   maxSteps: number
 }
 export interface SlideoutProps {
-  title: string | React.ReactElement
-  children: React.ReactNode
+  title: string | ReactElement
+  children: ReactNode
   onCloseClick: () => void
   //  isExpanded is for collapse and expand animation
   isExpanded?: boolean
-  footer?: React.ReactNode
+  footer?: ReactNode
   multiSlideoutSpecs?: MultiSlideoutSpecs
 }
 
@@ -124,9 +126,9 @@ export const Slideout = (props: SlideoutProps): JSX.Element => {
     multiSlideoutSpecs,
   } = props
   const { t } = useTranslation('shared')
-  const slideOutRef = React.useRef<HTMLDivElement>(null)
-  const [isReachedBottom, setIsReachedBottom] = React.useState<boolean>(false)
-  const hasBeenExpanded = React.useRef<boolean>(isExpanded ?? false)
+  const slideOutRef = useRef<HTMLDivElement>(null)
+  const [isReachedBottom, setIsReachedBottom] = useState<boolean>(false)
+  const hasBeenExpanded = useRef<boolean>(isExpanded ?? false)
   const handleScroll = (): void => {
     if (slideOutRef.current == null) return
     const { scrollTop, scrollHeight, clientHeight } = slideOutRef.current
@@ -137,7 +139,7 @@ export const Slideout = (props: SlideoutProps): JSX.Element => {
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     handleScroll()
   }, [slideOutRef])
 

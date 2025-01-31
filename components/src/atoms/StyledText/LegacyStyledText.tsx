@@ -2,11 +2,11 @@ import styled, { css } from 'styled-components'
 import { Text } from '../../primitives'
 import { TYPOGRAPHY, RESPONSIVENESS } from '../../ui-style-constants'
 
-import type * as React from 'react'
+import type { ComponentProps, ReactNode } from 'react'
 import type { FlattenSimpleInterpolation } from 'styled-components'
 
-export interface LegacyProps extends React.ComponentProps<typeof Text> {
-  children?: React.ReactNode
+export interface LegacyProps extends ComponentProps<typeof Text> {
+  children?: ReactNode
 }
 
 const styleMap: { [tag: string]: FlattenSimpleInterpolation } = {

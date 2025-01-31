@@ -118,6 +118,7 @@ stages:
                 name: sample_plates.csv
           outputFileIds: []
           liquids: []
+          liquidClasses: []
           protocolId: '{protocol_id}'
 
   - name: Play the run

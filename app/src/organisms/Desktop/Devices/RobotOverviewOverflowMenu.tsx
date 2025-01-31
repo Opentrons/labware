@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { css } from 'styled-components'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
@@ -35,6 +35,8 @@ import { useIsRobotBusy } from '/app/redux-resources/robots'
 import { useCanDisconnect } from '/app/resources/networking/hooks'
 import { useIsEstopNotDisengaged } from '/app/resources/devices/hooks/useIsEstopNotDisengaged'
 import { useCurrentRunId } from '/app/resources/runs'
+
+import type { MouseEventHandler, MouseEvent } from 'react'
 import type { DiscoveredRobot } from '/app/redux/discovery/types'
 import type { Dispatch } from '/app/redux/types'
 
@@ -61,25 +63,23 @@ export const RobotOverviewOverflowMenu = (
 
   const dispatch = useDispatch<Dispatch>()
 
-  const handleClickRestart: React.MouseEventHandler<HTMLButtonElement> = () => {
+  const handleClickRestart: MouseEventHandler<HTMLButtonElement> = () => {
     dispatch(restartRobot(robot.name))
   }
 
-  const handleClickHomeGantry: React.MouseEventHandler<HTMLButtonElement> = () => {
+  const handleClickHomeGantry: MouseEventHandler<HTMLButtonElement> = () => {
     dispatch(home(robot.name, ROBOT))
   }
 
   const [
     showChooseProtocolSlideout,
     setShowChooseProtocolSlideout,
-  ] = React.useState<boolean>(false)
-  const [showDisconnectModal, setShowDisconnectModal] = React.useState<boolean>(
-    false
-  )
+  ] = useState<boolean>(false)
+  const [showDisconnectModal, setShowDisconnectModal] = useState<boolean>(false)
 
   const canDisconnect = useCanDisconnect(robot.name)
 
-  const handleClickDisconnect: React.MouseEventHandler<HTMLButtonElement> = () => {
+  const handleClickDisconnect: MouseEventHandler<HTMLButtonElement> = () => {
     setShowDisconnectModal(true)
   }
 
@@ -87,7 +87,7 @@ export const RobotOverviewOverflowMenu = (
     dispatch(checkShellUpdate())
   })
 
-  const handleClickRun: React.MouseEventHandler<HTMLButtonElement> = () => {
+  const handleClickRun: MouseEventHandler<HTMLButtonElement> = () => {
     setShowChooseProtocolSlideout(true)
   }
 
@@ -125,7 +125,7 @@ export const RobotOverviewOverflowMenu = (
           top="2.25rem"
           right={0}
           flexDirection={DIRECTION_COLUMN}
-          onClick={(e: React.MouseEvent) => {
+          onClick={(e: MouseEvent) => {
             e.preventDefault()
             e.stopPropagation()
             setShowOverflowMenu(false)

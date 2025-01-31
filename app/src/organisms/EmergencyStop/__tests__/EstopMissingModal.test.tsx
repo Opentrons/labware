@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
 import { describe, it, vi, beforeEach, expect } from 'vitest'
@@ -8,16 +7,18 @@ import { i18n } from '/app/i18n'
 import { getIsOnDevice } from '/app/redux/config'
 import { EstopMissingModal } from '../EstopMissingModal'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/redux/config')
 
-const render = (props: React.ComponentProps<typeof EstopMissingModal>) => {
+const render = (props: ComponentProps<typeof EstopMissingModal>) => {
   return renderWithProviders(<EstopMissingModal {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('EstopMissingModal - Touchscreen', () => {
-  let props: React.ComponentProps<typeof EstopMissingModal>
+  let props: ComponentProps<typeof EstopMissingModal>
 
   beforeEach(() => {
     props = {
@@ -40,7 +41,7 @@ describe('EstopMissingModal - Touchscreen', () => {
 })
 
 describe('EstopMissingModal - Desktop', () => {
-  let props: React.ComponentProps<typeof EstopMissingModal>
+  let props: ComponentProps<typeof EstopMissingModal>
 
   beforeEach(() => {
     props = {

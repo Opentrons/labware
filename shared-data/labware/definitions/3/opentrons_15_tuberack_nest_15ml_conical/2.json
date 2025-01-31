@@ -1,0 +1,251 @@
+{
+  "ordering": [
+    ["A1", "B1", "C1"],
+    ["A2", "B2", "C2"],
+    ["A3", "B3", "C3"],
+    ["A4", "B4", "C4"],
+    ["A5", "B5", "C5"]
+  ],
+  "brand": {
+    "brand": "Opentrons",
+    "brandId": [],
+    "links": [
+      "https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1"
+    ]
+  },
+  "metadata": {
+    "displayName": "Opentrons 15 Tube Rack with NEST 15 mL Conical",
+    "displayCategory": "tubeRack",
+    "displayVolumeUnits": "mL",
+    "tags": []
+  },
+  "dimensions": {
+    "xDimension": 127.76,
+    "yDimension": 85.48,
+    "zDimension": 124.65
+  },
+  "wells": {
+    "A1": {
+      "depth": 117.8,
+      "shape": "circular",
+      "diameter": 15.5,
+      "totalLiquidVolume": 15000,
+      "x": 13.88,
+      "y": 67.74,
+      "z": 6.85,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B1": {
+      "depth": 117.8,
+      "shape": "circular",
+      "diameter": 15.5,
+      "totalLiquidVolume": 15000,
+      "x": 13.88,
+      "y": 42.74,
+      "z": 6.85,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "C1": {
+      "depth": 117.8,
+      "shape": "circular",
+      "diameter": 15.5,
+      "totalLiquidVolume": 15000,
+      "x": 13.88,
+      "y": 17.74,
+      "z": 6.85,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A2": {
+      "depth": 117.8,
+      "shape": "circular",
+      "diameter": 15.5,
+      "totalLiquidVolume": 15000,
+      "x": 38.88,
+      "y": 67.74,
+      "z": 6.85,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B2": {
+      "depth": 117.8,
+      "shape": "circular",
+      "diameter": 15.5,
+      "totalLiquidVolume": 15000,
+      "x": 38.88,
+      "y": 42.74,
+      "z": 6.85,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "C2": {
+      "depth": 117.8,
+      "shape": "circular",
+      "diameter": 15.5,
+      "totalLiquidVolume": 15000,
+      "x": 38.88,
+      "y": 17.74,
+      "z": 6.85,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A3": {
+      "depth": 117.8,
+      "shape": "circular",
+      "diameter": 15.5,
+      "totalLiquidVolume": 15000,
+      "x": 63.88,
+      "y": 67.74,
+      "z": 6.85,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B3": {
+      "depth": 117.8,
+      "shape": "circular",
+      "diameter": 15.5,
+      "totalLiquidVolume": 15000,
+      "x": 63.88,
+      "y": 42.74,
+      "z": 6.85,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "C3": {
+      "depth": 117.8,
+      "shape": "circular",
+      "diameter": 15.5,
+      "totalLiquidVolume": 15000,
+      "x": 63.88,
+      "y": 17.74,
+      "z": 6.85,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A4": {
+      "depth": 117.8,
+      "shape": "circular",
+      "diameter": 15.5,
+      "totalLiquidVolume": 15000,
+      "x": 88.88,
+      "y": 67.74,
+      "z": 6.85,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B4": {
+      "depth": 117.8,
+      "shape": "circular",
+      "diameter": 15.5,
+      "totalLiquidVolume": 15000,
+      "x": 88.88,
+      "y": 42.74,
+      "z": 6.85,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "C4": {
+      "depth": 117.8,
+      "shape": "circular",
+      "diameter": 15.5,
+      "totalLiquidVolume": 15000,
+      "x": 88.88,
+      "y": 17.74,
+      "z": 6.85,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A5": {
+      "depth": 117.8,
+      "shape": "circular",
+      "diameter": 15.5,
+      "totalLiquidVolume": 15000,
+      "x": 113.88,
+      "y": 67.74,
+      "z": 6.85,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B5": {
+      "depth": 117.8,
+      "shape": "circular",
+      "diameter": 15.5,
+      "totalLiquidVolume": 15000,
+      "x": 113.88,
+      "y": 42.74,
+      "z": 6.85,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "C5": {
+      "depth": 117.8,
+      "shape": "circular",
+      "diameter": 15.5,
+      "totalLiquidVolume": 15000,
+      "x": 113.88,
+      "y": 17.74,
+      "z": 6.85,
+      "geometryDefinitionId": "conicalWell"
+    }
+  },
+  "groups": [
+    {
+      "metadata": {
+        "displayName": "NEST 15x15 mL Conical",
+        "displayCategory": "tubeRack",
+        "wellBottomShape": "v"
+      },
+      "brand": {
+        "brand": "NEST",
+        "brandId": ["601052"],
+        "links": ["https://www.nest-biotech.com/centrifuge-tube/59282849.html"]
+      },
+      "wells": [
+        "A1",
+        "B1",
+        "C1",
+        "A2",
+        "B2",
+        "C2",
+        "A3",
+        "B3",
+        "C3",
+        "A4",
+        "B4",
+        "C4",
+        "A5",
+        "B5",
+        "C5"
+      ]
+    }
+  ],
+  "parameters": {
+    "format": "irregular",
+    "isTiprack": false,
+    "isMagneticModuleCompatible": false,
+    "loadName": "opentrons_15_tuberack_nest_15ml_conical"
+  },
+  "namespace": "opentrons",
+  "version": 2,
+  "schemaVersion": 3,
+  "cornerOffsetFromSlot": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "innerLabwareGeometry": {
+    "conicalWell": {
+      "sections": [
+        {
+          "shape": "conical",
+          "topDiameter": 13.8,
+          "bottomDiameter": 2.5,
+          "topHeight": 22.55,
+          "bottomHeight": 0.0
+        },
+        {
+          "shape": "conical",
+          "topDiameter": 14.78,
+          "bottomDiameter": 13.8,
+          "topHeight": 109.03,
+          "bottomHeight": 22.55
+        },
+        {
+          "shape": "conical",
+          "topDiameter": 15.5,
+          "bottomDiameter": 14.78,
+          "topHeight": 117.8,
+          "bottomHeight": 109.03
+        }
+      ]
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -34,13 +34,14 @@ import { TouchTip } from './TouchTip'
 import { AirGap } from './AirGap'
 import { BlowOut } from './BlowOut'
 
+import type { Dispatch } from 'react'
 import type {
   QuickTransferSummaryAction,
   QuickTransferSummaryState,
 } from '../types'
 interface QuickTransferAdvancedSettingsProps {
   state: QuickTransferSummaryState
-  dispatch: React.Dispatch<QuickTransferSummaryAction>
+  dispatch: Dispatch<QuickTransferSummaryAction>
 }
 
 export function QuickTransferAdvancedSettings(
@@ -48,13 +49,11 @@ export function QuickTransferAdvancedSettings(
 ): JSX.Element | null {
   const { state, dispatch } = props
   const { t, i18n } = useTranslation(['quick_transfer', 'shared'])
-  const [selectedSetting, setSelectedSetting] = React.useState<string | null>(
-    null
-  )
+  const [selectedSetting, setSelectedSetting] = useState<string | null>(null)
   const { trackEventWithRobotSerial } = useTrackEventWithRobotSerial()
   const { makeSnackbar } = useToaster()
 
-  React.useEffect(() => {
+  useEffect(() => {
     trackEventWithRobotSerial({
       name: ANALYTICS_QUICK_TRANSFER_ADVANCED_SETTINGS_TAB,
       properties: {},

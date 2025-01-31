@@ -8,7 +8,7 @@
   "types": "lib/main.d.ts",
   "scripts": {
     "start": "make dev",
-    "rebuild": "electron-rebuild"
+    "rebuild": "electron-rebuild --force-abi=3.71.0"
   },
   "repository": {
     "type": "git",
@@ -50,7 +50,7 @@
     "electron-localshortcut": "3.2.1",
     "electron-devtools-installer": "3.2.0",
     "electron-store": "5.1.1",
-    "electron-updater": "4.1.2",
+    "electron-updater": "6.3.9",
     "execa": "4.0.0",
     "form-data": "2.5.0",
     "fs-extra": "10.0.0",

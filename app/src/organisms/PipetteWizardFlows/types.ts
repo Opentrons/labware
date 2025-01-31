@@ -1,6 +1,7 @@
-import type { SECTIONS, FLOWS } from './constants'
+import type { Dispatch, SetStateAction } from 'react'
 import type { useCreateCommandMutation } from '@opentrons/react-api-client'
 import type { PipetteMount, CreateCommand } from '@opentrons/shared-data'
+import type { SECTIONS, FLOWS } from './constants'
 import type { AttachedPipettesFromInstrumentsQuery } from '/app/resources/instruments'
 
 export type PipetteWizardStep =
@@ -78,7 +79,7 @@ export interface PipetteWizardStepProps {
   isRobotMoving: boolean
   maintenanceRunId?: string
   attachedPipettes: AttachedPipettesFromInstrumentsQuery
-  setShowErrorMessage: React.Dispatch<React.SetStateAction<string | null>>
+  setShowErrorMessage: Dispatch<SetStateAction<string | null>>
   errorMessage: string | null
   selectedPipette: SelectablePipettes
   isOnDevice: boolean | null

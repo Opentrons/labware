@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   AlertPrimaryButton,
@@ -14,9 +13,11 @@ import {
   TYPOGRAPHY,
 } from '@opentrons/components'
 
+import type { MouseEventHandler } from 'react'
+
 interface ConfirmDeleteProtocolModalProps {
-  cancelDeleteProtocol: React.MouseEventHandler<HTMLAnchorElement> | undefined
-  handleClickDelete: React.MouseEventHandler<HTMLButtonElement>
+  cancelDeleteProtocol: MouseEventHandler<HTMLAnchorElement> | undefined
+  handleClickDelete: MouseEventHandler<HTMLButtonElement>
 }
 
 export function ConfirmDeleteProtocolModal(

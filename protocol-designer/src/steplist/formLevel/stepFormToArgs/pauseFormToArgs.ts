@@ -13,13 +13,7 @@ import type {
 export const pauseFormToArgs = (
   formData: FormData
 ): PauseArgs | WaitForTemperatureArgs | null => {
-  const { hours, minutes, seconds } = getTimeFromForm(
-    formData,
-    'pauseTime',
-    'pauseSecond',
-    'pauseMinute',
-    'pauseHour'
-  )
+  const { hours, minutes, seconds } = getTimeFromForm(formData, 'pauseTime')
   const totalSeconds = (hours ?? 0) * 3600 + minutes * 60 + seconds
   const temperature = parseFloat(formData.pauseTemperature as string)
   const message = formData.pauseMessage ?? ''

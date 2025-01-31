@@ -89,6 +89,7 @@ stages:
             result: ok
             robotType: OT-2 Standard
             runTimeParameters: []
+            commandAnnotations: []
             pipettes:
               - id: pipetteId
                 pipetteName: p10_single
@@ -590,6 +591,7 @@ stages:
                 displayName: Water
                 description: Liquid H2O
                 displayColor: '#7332a8'
+            liquidClasses: []
 
 ---
 test_name: Upload and analyze a JSONv6 protocol, with liquids

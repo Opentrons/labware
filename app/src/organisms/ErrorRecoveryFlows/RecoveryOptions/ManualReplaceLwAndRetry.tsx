@@ -30,7 +30,9 @@ export function ManualReplaceLwAndRetry(
       case MANUAL_REPLACE_AND_RETRY.STEPS.RETRY:
         return <RetryStepInfo {...props} />
       default:
-        console.warn(`${step} in ${route} not explicitly handled. Rerouting.`)
+        console.warn(
+          `ManualReplaceLwAndRetry: ${step} in ${route} not explicitly handled. Rerouting.`
+        )
         return <SelectRecoveryOption {...props} />
     }
   }

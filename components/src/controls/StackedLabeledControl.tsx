@@ -1,12 +1,12 @@
-import type * as React from 'react'
-
 import { ControlInfo } from './ControlInfo'
 import styles from './styles.module.css'
 
+import type { ReactNode } from 'react'
+
 export interface StackedLabeledControlProps {
   label: string
-  control: React.ReactNode
-  children?: React.ReactNode
+  control: ReactNode
+  children?: ReactNode
 }
 
 export function StackedLabeledControl(

@@ -1,0 +1,129 @@
+{
+  "ordering": [
+    ["A1", "B1"],
+    ["A2", "B2"],
+    ["A3", "B3"]
+  ],
+  "metadata": {
+    "displayName": "Corning 6 Well Plate 16.8 mL Flat",
+    "displayVolumeUnits": "mL",
+    "displayCategory": "wellPlate",
+    "tags": []
+  },
+  "schemaVersion": 3,
+  "version": 3,
+  "namespace": "opentrons",
+  "dimensions": {
+    "xDimension": 127.76,
+    "yDimension": 85.47,
+    "zDimension": 20.27
+  },
+  "parameters": {
+    "format": "irregular",
+    "isTiprack": false,
+    "isMagneticModuleCompatible": false,
+    "loadName": "corning_6_wellplate_16.8ml_flat"
+  },
+  "wells": {
+    "B1": {
+      "shape": "circular",
+      "depth": 17.4,
+      "diameter": 35.43,
+      "totalLiquidVolume": 16800,
+      "x": 24.76,
+      "y": 23.16,
+      "z": 2.87,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A1": {
+      "shape": "circular",
+      "depth": 17.4,
+      "diameter": 35.43,
+      "totalLiquidVolume": 16800,
+      "x": 24.76,
+      "y": 62.28,
+      "z": 2.87,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B2": {
+      "shape": "circular",
+      "depth": 17.4,
+      "diameter": 35.43,
+      "totalLiquidVolume": 16800,
+      "x": 63.88,
+      "y": 23.16,
+      "z": 2.87,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A2": {
+      "shape": "circular",
+      "depth": 17.4,
+      "diameter": 35.43,
+      "totalLiquidVolume": 16800,
+      "x": 63.88,
+      "y": 62.28,
+      "z": 2.87,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "B3": {
+      "shape": "circular",
+      "depth": 17.4,
+      "diameter": 35.43,
+      "totalLiquidVolume": 16800,
+      "x": 103,
+      "y": 23.16,
+      "z": 2.87,
+      "geometryDefinitionId": "conicalWell"
+    },
+    "A3": {
+      "shape": "circular",
+      "depth": 17.4,
+      "diameter": 35.43,
+      "totalLiquidVolume": 16800,
+      "x": 103,
+      "y": 62.28,
+      "z": 2.87,
+      "geometryDefinitionId": "conicalWell"
+    }
+  },
+  "brand": {
+    "brand": "Corning",
+    "brandId": ["3335", "3506", "3516", "3471"],
+    "links": [
+      "https://ecatalog.corning.com/life-sciences/b2c/US/en/Microplates/Assay-Microplates/96-Well-Microplates/Costar%C2%AE-Multiple-Well-Cell-Culture-Plates/p/3335"
+    ]
+  },
+  "groups": [
+    {
+      "wells": ["A1", "B1", "A2", "B2", "A3", "B3"],
+      "metadata": {
+        "wellBottomShape": "flat"
+      }
+    }
+  ],
+  "cornerOffsetFromSlot": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "stackingOffsetWithLabware": {
+    "opentrons_aluminum_flat_bottom_plate": {
+      "x": 0,
+      "y": 0,
+      "z": 4.5
+    }
+  },
+  "innerLabwareGeometry": {
+    "conicalWell": {
+      "sections": [
+        {
+          "shape": "conical",
+          "bottomDiameter": 34.798,
+          "topDiameter": 35.433,
+          "topHeight": 17.399,
+          "bottomHeight": 0.0
+        }
+      ]
+    }
+  }
+}

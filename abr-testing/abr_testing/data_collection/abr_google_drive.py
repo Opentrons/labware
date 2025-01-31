@@ -34,8 +34,6 @@ def create_data_dictionary(
     runs_to_save: Union[Set[str], str],
     storage_directory: str,
     issue_url: str,
-    plate: str,
-    accuracy: Any,
     hellma_plate_standards: List[Dict[str, Any]],
 ) -> Tuple[List[List[Any]], List[str], List[List[Any]], List[str]]:
     """Pull data from run files and format into a dictionary."""
@@ -43,11 +41,16 @@ def create_data_dictionary(
     runs_and_lpc: List[Dict[str, Any]] = []
     headers: List[str] = []
     headers_lpc: List[str] = []
+    hellma_plate_orientation = False  # default hellma plate is not rotated.
     for filename in os.listdir(storage_directory):
         file_path = os.path.join(storage_directory, filename)
         if file_path.endswith(".json"):
             with open(file_path) as file:
-                file_results = json.load(file)
+                try:
+                    file_results = json.load(file)
+                except json.decoder.JSONDecodeError:
+                    print(f"Skipped file {file_path} bc no data.")
+                    continue
         else:
             continue
         if not isinstance(file_results, dict):
@@ -62,6 +65,10 @@ def create_data_dictionary(
         if run_id in runs_to_save:
             print(f"started reading run {run_id}.")
             robot = file_results.get("robot_name")
+            parameters = file_results.get("runTimeParameters", "")
+            for parameter in parameters:
+                if parameter["displayName"] == "Hellma Plate Orientation":
+                    hellma_plate_orientation = bool(parameter["value"])
             protocol_name = file_results["protocol"]["metadata"].get("protocolName", "")
             software_version = file_results.get("API_Version", "")
             left_pipette = file_results.get("left", "")
@@ -93,12 +100,15 @@ def create_data_dictionary(
                 run_time_min = run_time.total_seconds() / 60
             except ValueError:
                 pass  # Handle datetime parsing errors if necessary
+            # Get protocol version #
+            version_number = read_robot_logs.get_protocol_version_number(file_results)
 
             if run_time_min > 0:
                 run_row = {
                     "Robot": robot,
                     "Run_ID": run_id,
                     "Protocol_Name": protocol_name,
+                    "Protocol Version": version_number,
                     "Software Version": software_version,
                     "Date": start_date,
                     "Start_Time": start_time_str,
@@ -118,12 +128,12 @@ def create_data_dictionary(
                     file_results, labware_name="opentrons_tough_pcr_auto_sealing_lid"
                 )
                 plate_reader_dict = read_robot_logs.plate_reader_commands(
-                    file_results, hellma_plate_standards
+                    file_results, hellma_plate_standards, hellma_plate_orientation
                 )
                 notes = {"Note1": "", "Jira Link": issue_url}
+                liquid_height = read_robot_logs.get_liquid_waste_height(file_results)
                 plate_measure = {
-                    "Plate Measured": plate,
-                    "End Volume Accuracy (%)": accuracy,
+                    "Liquid Waste Height (mm)": liquid_height,
                     "Average Temp (oC)": "",
                     "Average RH(%)": "",
                 }
@@ -155,7 +165,12 @@ def create_data_dictionary(
     print(f"Number of runs read: {num_of_runs_read}")
     transposed_runs_and_robots = list(map(list, zip(*runs_and_robots)))
     transposed_runs_and_lpc = list(map(list, zip(*runs_and_lpc)))
-    return transposed_runs_and_robots, headers, transposed_runs_and_lpc, headers_lpc
+    return (
+        transposed_runs_and_robots,
+        headers,
+        transposed_runs_and_lpc,
+        headers_lpc,
+    )
 
 
 def run(
@@ -173,7 +188,8 @@ def run(
         credentials_path, google_sheet_name, 0
     )
     # Get run ids on google sheet
-    run_ids_on_gs = set(google_sheet.get_column(2))
+    run_ids_on_gs: Set[str] = set(google_sheet.get_column(2))
+
     # Get robots on google sheet
     # Uploads files that are not in google drive directory
     google_drive.upload_missing_files(storage_directory)
@@ -195,9 +211,7 @@ def run(
         missing_runs_from_gs,
         storage_directory,
         "",
-        "",
-        "",
-        hellma_plate_standards=file_values,
+        file_values,
     )
     start_row = google_sheet.get_index_row() + 1
     google_sheet.batch_update_cells(transposed_runs_and_robots, "A", start_row, "0")

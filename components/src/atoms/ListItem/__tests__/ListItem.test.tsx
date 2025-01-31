@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { fireEvent, screen } from '@testing-library/react'
@@ -7,11 +6,13 @@ import { BORDERS, COLORS } from '../../../helix-design-system'
 
 import { ListItem } from '..'
 
-const render = (props: React.ComponentProps<typeof ListItem>) =>
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof ListItem>) =>
   renderWithProviders(<ListItem {...props} />)
 
 describe('ListItem', () => {
-  let props: React.ComponentProps<typeof ListItem>
+  let props: ComponentProps<typeof ListItem>
 
   beforeEach(() => {
     props = {
@@ -33,7 +34,7 @@ describe('ListItem', () => {
     render(props)
     screen.getByText('mock listitem content')
     const listItem = screen.getByTestId('ListItem_noActive')
-    expect(listItem).toHaveStyle(`backgroundColor: ${COLORS.grey30}`)
+    expect(listItem).toHaveStyle(`backgroundColor: ${COLORS.grey20}`)
     expect(listItem).toHaveStyle(`borderRadius: ${BORDERS.borderRadius4}`)
   })
   it('should render correct style - success', () => {

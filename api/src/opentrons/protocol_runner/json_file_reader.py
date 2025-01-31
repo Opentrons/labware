@@ -30,11 +30,17 @@ class JsonFileReader:
                 },
             )
         if protocol_source.config.schema_version == 6:
-            return ProtocolSchemaV6.parse_file(protocol_source.main_file)
+            return ProtocolSchemaV6.model_validate_json(
+                protocol_source.main_file.read_bytes()
+            )
         elif protocol_source.config.schema_version == 7:
-            return ProtocolSchemaV7.parse_file(protocol_source.main_file)
+            return ProtocolSchemaV7.model_validate_json(
+                protocol_source.main_file.read_bytes()
+            )
         elif protocol_source.config.schema_version == 8:
-            return ProtocolSchemaV8.parse_file(protocol_source.main_file)
+            return ProtocolSchemaV8.model_validate_json(
+                protocol_source.main_file.read_bytes()
+            )
         else:
             raise ProtocolFilesInvalidError(
                 message=f"{name} is a JSON protocol v{protocol_source.config.schema_version} which this robot cannot execute",

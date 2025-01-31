@@ -1,5 +1,6 @@
 import { Link as InternalLink } from 'react-router-dom'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 
 import {
   AlertModal,
@@ -12,19 +13,8 @@ import {
   ANALYTICS_U2E_DRIVE_ALERT_DISMISSED,
   ANALYTICS_U2E_DRIVE_LINK_CLICKED,
 } from '/app/redux/analytics'
-import {
-  U2E_DRIVER_UPDATE_URL,
-  U2E_DRIVER_OUTDATED_MESSAGE,
-  U2E_DRIVER_DESCRIPTION,
-  U2E_DRIVER_OUTDATED_CTA,
-} from '/app/redux/system-info'
+import { U2E_DRIVER_UPDATE_URL } from '/app/redux/system-info'
 import type { AlertProps } from './types'
-
-// TODO(mc, 2020-05-07): i18n
-const DRIVER_OUT_OF_DATE = 'Realtek USB-to-Ethernet Driver Update Available'
-const VIEW_ADAPTER_INFO = 'view adapter info'
-const GET_UPDATE = 'get update'
-const DONT_REMIND_ME_AGAIN = "Don't remind me again"
 
 const ADAPTER_INFO_URL = '/more/network-and-system'
 
@@ -42,19 +32,20 @@ const IgnoreCheckbox = styled(DeprecatedCheckboxField)`
 
 export function U2EDriverOutdatedAlert(props: AlertProps): JSX.Element {
   const trackEvent = useTrackEvent()
+  const { t } = useTranslation(['app_settings', 'branded'])
   const [rememberDismiss, toggleRememberDismiss] = useToggle()
   const { dismissAlert } = props
 
   return (
     <AlertModal
       alertOverlay
-      heading={DRIVER_OUT_OF_DATE}
+      heading={t('driver_out_of_date')}
       buttons={[
         {
           Component: LinkButton,
           as: InternalLink,
           to: ADAPTER_INFO_URL,
-          children: VIEW_ADAPTER_INFO,
+          children: t('view_adapter_info'),
           onClick: () => {
             dismissAlert(rememberDismiss)
             trackEvent({
@@ -67,7 +58,7 @@ export function U2EDriverOutdatedAlert(props: AlertProps): JSX.Element {
           Component: LinkButton,
           href: U2E_DRIVER_UPDATE_URL,
           external: true,
-          children: GET_UPDATE,
+          children: t('get_update'),
           onClick: () => {
             dismissAlert(rememberDismiss)
             trackEvent({
@@ -79,11 +70,11 @@ export function U2EDriverOutdatedAlert(props: AlertProps): JSX.Element {
       ]}
     >
       <p>
-        {U2E_DRIVER_OUTDATED_MESSAGE} {U2E_DRIVER_DESCRIPTION}
+        {t('u2e_driver_outdated_message')} {t('branded:u2e_driver_description')}
       </p>
-      <p>{U2E_DRIVER_OUTDATED_CTA}</p>
+      <p>{t('please_update_driver')}</p>
       <IgnoreCheckbox
-        label={DONT_REMIND_ME_AGAIN}
+        label={t('dont_remind_me')}
         value={rememberDismiss}
         onChange={toggleRememberDismiss}
       />

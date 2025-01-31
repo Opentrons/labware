@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, beforeEach, afterEach, vi, expect } from 'vitest'
 
@@ -18,6 +17,8 @@ import { FixtureTable } from '../FixtureTable'
 import { getLocalRobot } from '/app/redux/discovery'
 import { mockConnectedRobot } from '/app/redux/discovery/__fixtures__'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/redux/discovery')
 vi.mock('/app/resources/deck_configuration/hooks')
 vi.mock('/app/organisms/LocationConflictModal')
@@ -26,14 +27,14 @@ const mockSetSetupScreen = vi.fn()
 const mockSetCutoutId = vi.fn()
 const mockSetProvidedFixtureOptions = vi.fn()
 
-const render = (props: React.ComponentProps<typeof FixtureTable>) => {
+const render = (props: ComponentProps<typeof FixtureTable>) => {
   return renderWithProviders(<FixtureTable {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('FixtureTable', () => {
-  let props: React.ComponentProps<typeof FixtureTable>
+  let props: ComponentProps<typeof FixtureTable>
   beforeEach(() => {
     props = {
       mostRecentAnalysis: { commands: [], labware: [] } as any,

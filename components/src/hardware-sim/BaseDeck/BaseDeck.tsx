@@ -1,5 +1,4 @@
-import * as React from 'react'
-
+import { Fragment } from 'react'
 import {
   getDeckDefFromRobotType,
   getModuleDef2,
@@ -34,6 +33,7 @@ import { StagingAreaFixture } from './StagingAreaFixture'
 import { WasteChuteFixture } from './WasteChuteFixture'
 import { WasteChuteStagingAreaFixture } from './WasteChuteStagingAreaFixture'
 
+import type { ComponentProps, ReactNode } from 'react'
 import type { Svg } from '../../primitives'
 import type {
   CutoutFixtureId,
@@ -54,7 +54,7 @@ export interface LabwareOnDeck {
   wellFill?: WellFill
   missingTips?: WellGroup
   /** generic prop to render self-positioned children for each labware */
-  labwareChildren?: React.ReactNode
+  labwareChildren?: ReactNode
   onLabwareClick?: () => void
   highlight?: boolean
   highlightShadow?: boolean
@@ -66,9 +66,9 @@ export interface ModuleOnDeck {
   moduleLocation: ModuleLocation
   nestedLabwareDef?: LabwareDefinition2 | null
   nestedLabwareWellFill?: WellFill
-  innerProps?: React.ComponentProps<typeof Module>['innerProps']
+  innerProps?: ComponentProps<typeof Module>['innerProps']
   /** generic prop to render self-positioned children for each module */
-  moduleChildren?: React.ReactNode
+  moduleChildren?: ReactNode
   onLabwareClick?: () => void
   highlightLabware?: boolean
   highlightShadowLabware?: boolean
@@ -84,12 +84,12 @@ interface BaseDeckProps {
   lightFill?: string
   mediumFill?: string
   darkFill?: string
-  children?: React.ReactNode
+  children?: ReactNode
   showSlotLabels?: boolean
   /** whether to make wrapping svg tag animatable via @react-spring/web, defaults to false */
   animatedSVG?: boolean
   /** extra props to pass to svg tag */
-  svgProps?: React.ComponentProps<typeof Svg>
+  svgProps?: ComponentProps<typeof Svg>
 }
 
 const LABWARE_OFFSET_DISPLAY_THRESHOLD = 2
@@ -195,7 +195,7 @@ export function BaseDeck(props: BaseDeckProps): JSX.Element {
             />
           ))}
           {trashBinFixtures.map(fixture => (
-            <React.Fragment key={fixture.cutoutId}>
+            <Fragment key={fixture.cutoutId}>
               <SingleSlotFixture
                 cutoutId={fixture.cutoutId}
                 deckDefinition={deckDef}
@@ -208,7 +208,7 @@ export function BaseDeck(props: BaseDeckProps): JSX.Element {
                 trashCutoutId={fixture.cutoutId as TrashCutoutId}
                 backgroundColor={mediumFill}
               />
-            </React.Fragment>
+            </Fragment>
           ))}
           {wasteChuteOnlyFixtures.map(fixture => {
             if (fixture.cutoutId === WASTE_CHUTE_CUTOUT) {

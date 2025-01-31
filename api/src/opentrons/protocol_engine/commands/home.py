@@ -1,7 +1,10 @@
 """Home command payload, result, and implementation models."""
 from __future__ import annotations
+from typing import TYPE_CHECKING, Optional, List, Type, Any
+
 from pydantic import BaseModel, Field
-from typing import TYPE_CHECKING, Optional, List, Type
+from pydantic.json_schema import SkipJsonSchema
+
 from typing_extensions import Literal
 
 from opentrons.types import MountType
@@ -17,24 +20,30 @@ if TYPE_CHECKING:
 HomeCommandType = Literal["home"]
 
 
+def _remove_default(s: dict[str, Any]) -> None:
+    s.pop("default", None)
+
+
 class HomeParams(BaseModel):
     """Payload required for a Home command."""
 
-    axes: Optional[List[MotorAxis]] = Field(
+    axes: List[MotorAxis] | SkipJsonSchema[None] = Field(
         None,
         description=(
             "Axes to return to their home positions. If omitted,"
             " will home all motors. Extra axes may be implicitly homed"
             " to ensure accurate homing of the explicitly specified axes."
         ),
+        json_schema_extra=_remove_default,
     )
-    skipIfMountPositionOk: Optional[MountType] = Field(
+    skipIfMountPositionOk: MountType | SkipJsonSchema[None] = Field(
         None,
         description=(
             "If this parameter is provided, the gantry will only be homed if the"
             " specified mount has an invalid position. If omitted, the homing action"
             " will be executed unconditionally."
         ),
+        json_schema_extra=_remove_default,
     )
 
 
@@ -77,7 +86,7 @@ class Home(BaseCommand[HomeParams, HomeResult, ErrorOccurrence]):
 
     commandType: HomeCommandType = "home"
     params: HomeParams
-    result: Optional[HomeResult]
+    result: Optional[HomeResult] = None
 
     _ImplementationCls: Type[HomeImplementation] = HomeImplementation
 

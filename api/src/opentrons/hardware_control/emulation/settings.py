@@ -1,7 +1,8 @@
 from typing import List
 from opentrons.hardware_control.emulation.types import ModuleType
 from opentrons.hardware_control.emulation.util import TEMPERATURE_ROOM
-from pydantic import BaseSettings, BaseModel
+from pydantic import BaseModel
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class PipetteSettings(BaseModel):
@@ -113,8 +114,6 @@ class Settings(BaseSettings):
         emulator_port=9003, driver_port=9998
     )
     magdeck_proxy: ProxySettings = ProxySettings(emulator_port=9004, driver_port=9999)
-
-    class Config:
-        env_prefix = "OT_EMULATOR_"
+    model_config = SettingsConfigDict(env_prefix="OT_EMULATOR_")
 
     module_server: ModuleServerSettings = ModuleServerSettings()

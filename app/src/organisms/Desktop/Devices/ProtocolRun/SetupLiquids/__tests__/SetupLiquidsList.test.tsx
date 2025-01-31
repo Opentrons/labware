@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { when } from 'vitest-when'
 import { describe, it, beforeEach, vi, expect } from 'vitest'
@@ -25,6 +24,7 @@ import {
 import { LiquidsLabwareDetailsModal } from '/app/organisms/LiquidsLabwareDetailsModal'
 import { useNotifyRunQuery } from '/app/resources/runs'
 
+import type { ComponentProps } from 'react'
 import type { Mock } from 'vitest'
 import type * as SharedData from '@opentrons/shared-data'
 
@@ -70,7 +70,7 @@ vi.mock('@opentrons/shared-data', async importOriginal => {
 vi.mock('/app/redux/analytics')
 vi.mock('/app/resources/runs')
 
-const render = (props: React.ComponentProps<typeof SetupLiquidsList>) => {
+const render = (props: ComponentProps<typeof SetupLiquidsList>) => {
   return renderWithProviders(<SetupLiquidsList {...props} />, {
     i18nInstance: i18n,
   })
@@ -78,7 +78,7 @@ const render = (props: React.ComponentProps<typeof SetupLiquidsList>) => {
 let mockTrackEvent: Mock
 
 describe('SetupLiquidsList', () => {
-  let props: React.ComponentProps<typeof SetupLiquidsList>
+  let props: ComponentProps<typeof SetupLiquidsList>
   beforeEach(() => {
     props = { runId: '123', robotName: 'test_flex' }
     vi.mocked(getTotalVolumePerLiquidId).mockReturnValue(400)

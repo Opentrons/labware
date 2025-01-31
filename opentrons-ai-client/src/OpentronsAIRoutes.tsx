@@ -1,10 +1,18 @@
 import { Route, Navigate, Routes } from 'react-router-dom'
 import { Landing } from './pages/Landing'
+import { UpdateProtocol } from './pages/UpdateProtocol'
 
 import type { RouteProps } from './resources/types'
+import { Chat } from './pages/Chat'
 import { CreateProtocol } from './pages/CreateProtocol'
 
 const opentronsAIRoutes: RouteProps[] = [
+  {
+    Component: Chat,
+    name: 'Chat',
+    navLinkTo: '/chat',
+    path: '/chat',
+  },
   {
     Component: CreateProtocol,
     name: 'Create A New Protocol',
@@ -12,7 +20,7 @@ const opentronsAIRoutes: RouteProps[] = [
     path: '/new-protocol',
   },
   {
-    Component: Landing,
+    Component: UpdateProtocol,
     name: 'Update An Existing Protocol',
     navLinkTo: '/update-protocol',
     path: '/update-protocol',

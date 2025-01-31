@@ -1,35 +1,41 @@
 import { useRef, useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { DeckLabelSet } from '@opentrons/components'
+import { getDesignerTab } from '../../file-data/selectors'
 import type { DeckLabelProps } from '@opentrons/components'
 import type {
   CoordinateTuple,
   LabwareDefinition2,
 } from '@opentrons/shared-data'
 
-interface ModuleLabelProps {
+interface LabwareLabelProps {
   position: CoordinateTuple
   labwareDef: LabwareDefinition2
   isSelected: boolean
   isLast: boolean
   nestedLabwareInfo?: DeckLabelProps[]
+  labelText?: string
 }
-export const LabwareLabel = (props: ModuleLabelProps): JSX.Element => {
+export const LabwareLabel = (props: LabwareLabelProps): JSX.Element => {
   const {
     labwareDef,
     position,
     isSelected,
     isLast,
     nestedLabwareInfo = [],
+    labelText = labwareDef.metadata.displayName,
   } = props
   const labelContainerRef = useRef<HTMLDivElement>(null)
+  const designerTab = useSelector(getDesignerTab)
   const [labelContainerHeight, setLabelContainerHeight] = useState(0)
 
   const deckLabels = [
     ...nestedLabwareInfo,
     {
-      text: labwareDef.metadata.displayName,
+      text: labelText,
       isSelected: isSelected,
       isLast: isLast,
+      isZoomed: designerTab === 'startingDeck',
     },
   ]
 

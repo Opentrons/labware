@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, afterEach, vi, beforeEach } from 'vitest'
 
@@ -16,6 +15,8 @@ import { useTrackEventWithRobotSerial } from '/app/redux-resources/analytics'
 import { SummaryAndSettings } from '../SummaryAndSettings'
 import { NameQuickTransfer } from '../NameQuickTransfer'
 import { Overview } from '../Overview'
+
+import type { ComponentProps } from 'react'
 import type { NavigateFunction } from 'react-router-dom'
 
 const mockNavigate = vi.fn()
@@ -41,7 +42,7 @@ vi.mock('../utils/createQuickTransferFile')
 vi.mock('@opentrons/react-api-client')
 vi.mock('/app/resources/deck_configuration')
 
-const render = (props: React.ComponentProps<typeof SummaryAndSettings>) => {
+const render = (props: ComponentProps<typeof SummaryAndSettings>) => {
   return renderWithProviders(<SummaryAndSettings {...props} />, {
     i18nInstance: i18n,
   })
@@ -49,7 +50,7 @@ const render = (props: React.ComponentProps<typeof SummaryAndSettings>) => {
 let mockTrackEventWithRobotSerial: any
 
 describe('SummaryAndSettings', () => {
-  let props: React.ComponentProps<typeof SummaryAndSettings>
+  let props: ComponentProps<typeof SummaryAndSettings>
   const createProtocol = vi.fn()
   const createRun = vi.fn()
 

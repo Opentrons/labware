@@ -1,9 +1,10 @@
 """Shared helpers for migrations."""
 
-import sqlalchemy
-
 import shutil
+import typing
 from pathlib import Path
+
+import sqlalchemy
 
 from ..database import sqlite_rowid
 
@@ -54,3 +55,43 @@ def copytree_if_exists(src: Path, dst: Path) -> None:
         shutil.copytree(src=src, dst=dst)
     except FileNotFoundError:
         pass
+
+
+def add_column(
+    engine: sqlalchemy.engine.Engine,
+    table_name: str,
+    column: typing.Any,
+) -> None:
+    """Add a column to an existing SQL table, with an `ALTER TABLE` statement.
+
+    Params:
+        engine: A SQLAlchemy engine to connect to the database.
+        table_name: The SQL name of the parent table.
+        column: The SQLAlchemy column object.
+
+    Known limitations:
+
+    - This does not currently support indexes.
+    - This does not currently support constraints.
+    - The column will always be added as nullable. Adding non-nullable columns in
+      SQLite requires an elaborate and sensitive dance that we do not wish to attempt.
+      https://www.sqlite.org/lang_altertable.html#making_other_kinds_of_table_schema_changes
+
+    To avoid those limitations, instead of this function, consider this:
+
+    1. Start with an empty database, or drop or rename the current table.
+    2. Use SQLAlchemy's `metadata.create_all()` to create an empty table with the new
+       schema, including the new column.
+    3. Copy rows from the old table to the new one, populating the new column
+       however you please.
+    """
+    column_type = column.type.compile(engine.dialect)
+    with engine.begin() as transaction:
+        # todo(mm, 2024-11-25): This text seems like something that SQLAlchemy could generate for us
+        # (maybe: https://docs.sqlalchemy.org/en/20/core/metadata.html#sqlalchemy.schema.Column.compile),
+        # and that might help us account for indexes and constraints.
+        transaction.execute(
+            sqlalchemy.text(
+                f"ALTER TABLE {table_name} ADD COLUMN {column.key} {column_type}"
+            )
+        )

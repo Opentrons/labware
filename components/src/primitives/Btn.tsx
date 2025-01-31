@@ -4,6 +4,8 @@ import * as Styles from '../styles'
 import { styleProps, isntStyleProp } from './style-props'
 
 import { RESPONSIVENESS } from '../ui-style-constants'
+
+import type { HTMLProps } from 'react'
 import type { StyledComponent } from 'styled-components'
 import type { StyleProps } from './types'
 
@@ -58,7 +60,7 @@ export const Btn: StyledComponent<
   .withConfig({
     shouldForwardProp: isntStyleProp,
   })
-  .attrs((props: React.HTMLProps<HTMLButtonElement>) => ({
+  .attrs((props: HTMLProps<HTMLButtonElement>) => ({
     type: props.type ?? BUTTON_TYPE_BUTTON,
   }))`
   ${BUTTON_BASE_STYLE}

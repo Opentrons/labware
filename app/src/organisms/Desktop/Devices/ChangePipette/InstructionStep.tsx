@@ -1,14 +1,15 @@
-import type * as React from 'react'
 import { Box, Flex, JUSTIFY_SPACE_EVENLY, SPACING } from '@opentrons/components'
 import type {
   PipetteChannels,
   PipetteDisplayCategory,
 } from '@opentrons/shared-data'
+
+import type { ReactNode } from 'react'
 import type { Mount } from '@opentrons/components'
 import type { Diagram, Direction } from './types'
 
 interface Props {
-  children: React.ReactNode
+  children: ReactNode
   direction: Direction
   mount: Mount
   channels: PipetteChannels

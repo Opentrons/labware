@@ -63,7 +63,7 @@ function Image({ imageUrl }: ImageProps): JSX.Element | null {
   const hasComponent =
     imageUrl != null && imageUrl.length > 0 && imageUrl[0].length > 0
   return hasComponent ? (
-    <img src={new URL(imageUrl[0], import.meta.url).href} width={'100%'} />
+    <img src={new URL(imageUrl[0], import.meta.url).href} width="100%" />
   ) : null
 }
 

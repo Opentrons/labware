@@ -1,4 +1,5 @@
 """Tests for the ProtocolEngine class."""
+
 import inspect
 from datetime import datetime
 from typing import Any
@@ -32,7 +33,6 @@ from opentrons.protocol_engine.types import (
     ModuleModel,
     Liquid,
     PostRunHardwareState,
-    AddressableAreaLocation,
 )
 from opentrons.protocol_engine.execution import (
     QueueWorker,
@@ -684,7 +684,7 @@ async def test_finish(
     """It should be able to gracefully tell the engine it's done."""
     completed_at = datetime(2021, 1, 1, 0, 0)
 
-    decoy.when(state_store.commands.state.stopped_by_estop).then_return(False)
+    decoy.when(state_store.commands.get_is_stopped_by_estop()).then_return(False)
     decoy.when(model_utils.get_timestamp()).then_return(completed_at)
 
     await subject.finish(
@@ -719,7 +719,7 @@ async def test_finish_with_defaults(
     state_store: StateStore,
 ) -> None:
     """It should be able to gracefully tell the engine it's done."""
-    decoy.when(state_store.commands.state.stopped_by_estop).then_return(False)
+    decoy.when(state_store.commands.get_is_stopped_by_estop()).then_return(False)
     await subject.finish()
 
     decoy.verify(
@@ -761,7 +761,7 @@ async def test_finish_with_error(
         error=error,
     )
 
-    decoy.when(state_store.commands.state.stopped_by_estop).then_return(
+    decoy.when(state_store.commands.get_is_stopped_by_estop()).then_return(
         stopped_by_estop
     )
     decoy.when(model_utils.generate_id()).then_return("error-id")
@@ -804,9 +804,9 @@ async def test_finish_with_estop_error_will_not_drop_tip_and_home(
 ) -> None:
     """It should be able to tell the engine it's finished because of an error and will not drop tip and home."""
     error = ProtocolCommandFailedError(
-        original_error=ErrorOccurrence.construct(  # type: ignore[call-arg]
+        original_error=ErrorOccurrence.model_construct(  # type: ignore[call-arg]
             wrappedErrors=[
-                ErrorOccurrence.construct(errorCode="3008")  # type: ignore[call-arg]
+                ErrorOccurrence.model_construct(errorCode="3008")  # type: ignore[call-arg]
             ]
         )
     )
@@ -861,7 +861,7 @@ async def test_finish_stops_hardware_if_queue_worker_join_fails(
         await queue_worker.join(),
     ).then_raise(exception)
 
-    decoy.when(state_store.commands.state.stopped_by_estop).then_return(False)
+    decoy.when(state_store.commands.get_is_stopped_by_estop()).then_return(False)
 
     error_id = "error-id"
     completed_at = datetime(2021, 1, 1, 0, 0)
@@ -997,8 +997,7 @@ async def test_estop_noops_if_invalid(
     subject.estop()  # Should not raise.
 
     decoy.verify(
-        action_dispatcher.dispatch(),  # type: ignore
-        ignore_extra_args=True,
+        action_dispatcher.dispatch(expected_action),
         times=0,
     )
     decoy.verify(
@@ -1120,11 +1119,7 @@ def test_add_addressable_area(
 
     decoy.verify(
         action_dispatcher.dispatch(
-            AddAddressableAreaAction(
-                addressable_area=AddressableAreaLocation(
-                    addressableAreaName="my_funky_area"
-                )
-            )
+            AddAddressableAreaAction(addressable_area_name="my_funky_area")
         )
     )
 
@@ -1133,21 +1128,18 @@ def test_add_liquid(
     decoy: Decoy,
     action_dispatcher: ActionDispatcher,
     subject: ProtocolEngine,
+    state_store: StateStore,
 ) -> None:
     """It should dispatch an AddLiquidAction action."""
+    liquid_obj = Liquid(id="water-id", displayName="water", description="water desc")
+    decoy.when(
+        state_store.liquid.validate_liquid_allowed(liquid=liquid_obj)
+    ).then_return(liquid_obj)
     subject.add_liquid(
         id="water-id", name="water", description="water desc", color=None
     )
 
-    decoy.verify(
-        action_dispatcher.dispatch(
-            AddLiquidAction(
-                liquid=Liquid(
-                    id="water-id", displayName="water", description="water desc"
-                )
-            )
-        )
-    )
+    decoy.verify(action_dispatcher.dispatch(AddLiquidAction(liquid=liquid_obj)))
 
 
 async def test_use_attached_temp_and_mag_modules(

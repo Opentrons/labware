@@ -112,7 +112,7 @@ import opentronsFlex96Tiprack50UlV1Uncasted from '../labware/definitions/2/opent
 import opentronsFlex96TiprackAdapterV1Uncasted from '../labware/definitions/2/opentrons_flex_96_tiprack_adapter/1.json'
 import opentronsFlexDeckRiserV1Uncasted from '../labware/definitions/2/opentrons_flex_deck_riser/1.json'
 import opentronsFlexLidAbsorbancePlateReaderModuleV1Uncasted from '../labware/definitions/2/opentrons_flex_lid_absorbance_plate_reader_module/1.json'
-import opentronsToughPcrAutoSealingLidV1Uncasted from '../labware/definitions/2/opentrons_tough_pcr_auto_sealing_lid/1.json'
+import opentronsToughPcrAutoSealingLidV1Uncasted from '../labware/definitions/3/opentrons_tough_pcr_auto_sealing_lid/1.json'
 import opentronsUniversalFlatAdapterV1Uncasted from '../labware/definitions/2/opentrons_universal_flat_adapter/1.json'
 import opentronsUniversalFlatAdapterCorning384Wellplate112UlFlatV1Uncasted from '../labware/definitions/2/opentrons_universal_flat_adapter_corning_384_wellplate_112ul_flat/1.json'
 import opentrons96DeepWellTempModAdapterV1Uncasted from '../labware/definitions/2/opentrons_96_deep_well_temp_mod_adapter/1.json'
@@ -121,6 +121,8 @@ import thermoscientificnunc96Wellplate2000UlV1Uncasted from '../labware/definiti
 import tipone96Tiprack200UlV1Uncasted from '../labware/definitions/2/tipone_96_tiprack_200ul/1.json'
 import usascientific12Reservoir22MlV1Uncasted from '../labware/definitions/2/usascientific_12_reservoir_22ml/1.json'
 import usascientific96Wellplate24MlDeepV1Uncasted from '../labware/definitions/2/usascientific_96_wellplate_2.4ml_deep/1.json'
+import evotipsFlex96TiprackAdapterV1Uncasted from '../labware/definitions/3/evotips_flex_96_tiprack_adapter/1.json'
+import evotipsOpentrons96LabwareV1Uncasted from '../labware/definitions/3/evotips_opentrons_96_labware/1.json'
 
 // v1 legacy labware definitions
 
@@ -297,6 +299,8 @@ const thermoscientificnunc96Wellplate2000UlV1 = thermoscientificnunc96Wellplate2
 const tipone96Tiprack200UlV1 = tipone96Tiprack200UlV1Uncasted as LabwareDefinition2
 const usascientific12Reservoir22MlV1 = usascientific12Reservoir22MlV1Uncasted as LabwareDefinition2
 const usascientific96Wellplate24MlDeepV1 = usascientific96Wellplate24MlDeepV1Uncasted as LabwareDefinition2
+const evotipsFlex96TiprackAdapterV1 = evotipsFlex96TiprackAdapterV1Uncasted as LabwareDefinition2
+const evotipsOpentrons96LabwareV1 = evotipsOpentrons96LabwareV1Uncasted as LabwareDefinition2
 
 // cast v1 defs
 
@@ -466,6 +470,8 @@ const latestDefs = {
   tipone96Tiprack200UlV1,
   usascientific12Reservoir22MlV1,
   usascientific96Wellplate24MlDeepV1,
+  evotipsFlex96TiprackAdapterV1,
+  evotipsOpentrons96LabwareV1,
 }
 // labware definitions
 const getAllLabwareDefs = (): Record<

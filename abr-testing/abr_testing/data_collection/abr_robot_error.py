@@ -11,9 +11,33 @@ from datetime import datetime, timedelta
 import sys
 import json
 import re
+from pathlib import Path
 import pandas as pd
 from statistics import mean, StatisticsError
 from abr_testing.tools import plate_reader
+
+
+def retrieve_protocol_file(
+    protocol_id: str,
+    robot_ip: str,
+    storage: str,
+) -> Path | str:
+    """Find and copy protocol file on robot with error."""
+    protocol_dir = f"/var/lib/opentrons-robot-server/7.1/protocols/{protocol_id}"
+
+    print(f"FILE TO FIND: {protocol_dir}/{protocol_id}")
+    # Copy protocol file found in robot oto host computer
+    save_dir = Path(f"{storage}/protocol_errors")
+    command = ["scp", "-r", f"root@{robot_ip}:{protocol_dir}", save_dir]
+    try:
+        # If file found and copied return path to file
+        subprocess.run(command, check=True)  # type: ignore
+        print("File transfer successful!")
+        return save_dir
+    except subprocess.CalledProcessError as e:
+        print(f"Error during file transfer: {e}")
+        # Return empty string if file can't be copied
+    return ""
 
 
 def compare_current_trh_to_average(
@@ -38,9 +62,13 @@ def compare_current_trh_to_average(
     # Find average conditions of errored time period
     df_all_trh = pd.DataFrame(all_trh_data)
     # Convert timestamps to datetime objects
-    df_all_trh["Timestamp"] = pd.to_datetime(
-        df_all_trh["Timestamp"], format="mixed", utc=True
-    ).dt.tz_localize(None)
+    print(f'TIMESTAMP: {df_all_trh["Timestamp"]}')
+    try:
+        df_all_trh["Timestamp"] = pd.to_datetime(
+            df_all_trh["Timestamp"], format="mixed", utc=True
+        ).dt.tz_localize(None)
+    except Exception:
+        print(f'The following timestamp is invalid: {df_all_trh["Timestamp"]}')
     # Ensure start_time is timezone-naive
     start_time = start_time.replace(tzinfo=None)
     relevant_temp_rhs = df_all_trh[
@@ -125,15 +153,20 @@ def compare_lpc_to_historical_data(
         & (df_lpc_data["Robot"] == robot)
         & (df_lpc_data["Module"] == labware_dict["Module"])
         & (df_lpc_data["Adapter"] == labware_dict["Adapter"])
-        & (df_lpc_data["Run Ending Error"] < 1)
+        & (df_lpc_data["Run Ending Error"])
+        < 1
     ]
     # Converts coordinates to floats and finds averages.
-    x_float = [float(value) for value in relevant_lpc["X"]]
-    y_float = [float(value) for value in relevant_lpc["Y"]]
-    z_float = [float(value) for value in relevant_lpc["Z"]]
-    current_x = round(labware_dict["X"], 2)
-    current_y = round(labware_dict["Y"], 2)
-    current_z = round(labware_dict["Z"], 2)
+    try:
+        x_float = [float(value) for value in relevant_lpc["X"]]
+        y_float = [float(value) for value in relevant_lpc["Y"]]
+        z_float = [float(value) for value in relevant_lpc["Z"]]
+        current_x = round(labware_dict["X"], 2)
+        current_y = round(labware_dict["Y"], 2)
+        current_z = round(labware_dict["Z"], 2)
+    except (ValueError):
+        x_float, y_float, z_float = [0.0], [0.0], [0.0]
+        current_x, current_y, current_z = 0.0, 0.0, 0.0
     try:
         avg_x = round(mean(x_float), 2)
         avg_y = round(mean(y_float), 2)
@@ -240,25 +273,29 @@ def get_user_id(user_file_path: str, assignee_name: str) -> str:
     return assignee_id
 
 
-def get_error_runs_from_robot(ip: str) -> List[str]:
+def get_error_runs_from_robot(ip: str) -> Tuple[List[str], List[str]]:
     """Get runs that have errors from robot."""
     error_run_ids = []
+    protocol_ids = []
     response = requests.get(
         f"http://{ip}:31950/runs", headers={"opentrons-version": "3"}
     )
     run_data = response.json()
-    run_list = run_data["data"]
+    run_list = run_data.get("data", [])
     for run in run_list:
         run_id = run["id"]
+        protocol_id = run["protocolId"]
         num_of_errors = len(run["errors"])
         if not run["current"] and num_of_errors > 0:
             error_run_ids.append(run_id)
-    return error_run_ids
+            # Protocol ID will identify the correct folder on the robot of the protocol file
+            protocol_ids.append(protocol_id)
+    return (error_run_ids, protocol_ids)
 
 
 def get_robot_state(
     ip: str, reported_string: str
-) -> Tuple[Any, Any, Any, List[str], str]:
+) -> Tuple[Any, Any, Any, List[str], List[str], str]:
     """Get robot status in case of non run error."""
     description = dict()
     # Get instruments attached to robot
@@ -274,10 +311,11 @@ def get_robot_state(
         f"http://{ip}:31950/health", headers={"opentrons-version": "3"}
     )
     health_data = response.json()
-    parent = health_data.get("name", "")
+    print(f"health data {health_data}")
+    robot = health_data.get("name", "")
     # Create summary name
-    description["robot_name"] = parent
-    summary = parent + "_" + reported_string
+    description["robot_name"] = robot
+    summary = robot + "_" + reported_string
     affects_version = health_data.get("api_version", "")
     description["affects_version"] = affects_version
     # Instruments Attached
@@ -297,6 +335,12 @@ def get_robot_state(
         description[module["moduleType"]] = module
     components = ["Flex-RABR"]
     components = match_error_to_component("RABR", reported_string, components)
+    if "alpha" in affects_version:
+        components.append("flex internal releases")
+    labels = [robot]
+    if "8.2" in affects_version:
+        labels.append("8_2_0")
+    parent = affects_version + " Bugs"
     print(components)
     end_time = datetime.now()
     print(end_time)
@@ -317,13 +361,14 @@ def get_robot_state(
         parent,
         affects_version,
         components,
+        labels,
         whole_description_str,
     )
 
 
 def get_run_error_info_from_robot(
-    ip: str, one_run: str, storage_directory: str
-) -> Tuple[str, str, str, List[str], str, str]:
+    ip: str, one_run: str, storage_directory: str, protocol_found: bool
+) -> Tuple[str, str, str, List[str], List[str], str, str]:
     """Get error information from robot to fill out ticket."""
     description = dict()
     # get run information
@@ -339,20 +384,26 @@ def get_run_error_info_from_robot(
     error_code = error_dict["Error_Code"]
     error_instrument = error_dict["Error_Instrument"]
     # JIRA Ticket Fields
-
+    robot = results.get("robot_name", "")
     failure_level = "Level " + str(error_level) + " Failure"
 
     components = [failure_level, "Flex-RABR"]
     components = match_error_to_component("RABR", str(error_type), components)
-    print(components)
     affects_version = results["API_Version"]
-    parent = results.get("robot_name", "")
-    print(parent)
-    summary = parent + "_" + str(one_run) + "_" + str(error_code) + "_" + error_type
+    if "alpha" in affects_version:
+        components.append("flex internal releases")
+    labels = [robot]
+    if "8.2" in affects_version:
+        labels.append("8_2_0")
+    parent = affects_version + " Bugs"
+    summary = robot + "_" + str(one_run) + "_" + str(error_code) + "_" + error_type
     # Description of error
     description["protocol_name"] = results["protocol"]["metadata"].get(
         "protocolName", ""
     )
+
+    # If Protocol was successfully retrieved from the robot
+    description["protocol_found_on_robot"] = protocol_found
     # Get start and end time of run
     start_time = datetime.strptime(
         results.get("startedAt", ""), "%Y-%m-%dT%H:%M:%S.%f%z"
@@ -430,6 +481,7 @@ Please confirm with the ABR-LPC sheet and re-LPC."
         parent,
         affects_version,
         components,
+        labels,
         whole_description_str,
         saved_file_path,
     )
@@ -494,27 +546,40 @@ if __name__ == "__main__":
     users_file_path = ticket.get_jira_users(storage_directory)
     assignee_id = get_user_id(users_file_path, assignee)
     run_log_file_path = ""
+    protocol_found = False
     try:
-        error_runs = get_error_runs_from_robot(ip)
+        error_runs, protocol_ids = get_error_runs_from_robot(ip)
     except requests.exceptions.InvalidURL:
         print("Invalid IP address.")
         sys.exit()
     if len(run_or_other) < 1:
+        # Retrieve the most recently run protocol file
+        protocol_files_path = retrieve_protocol_file(
+            protocol_ids[-1], ip, storage_directory
+        )
+        # Set protocol_found to true if python protocol was successfully copied over
+        if protocol_files_path:
+            protocol_found = True
+
         one_run = error_runs[-1]  # Most recent run with error.
         (
             summary,
-            robot,
+            parent,
             affects_version,
             components,
+            labels,
             whole_description_str,
             run_log_file_path,
-        ) = get_run_error_info_from_robot(ip, one_run, storage_directory)
+        ) = get_run_error_info_from_robot(
+            ip, one_run, storage_directory, protocol_found
+        )
     else:
         (
             summary,
-            robot,
+            parent,
             affects_version,
             components,
+            labels,
             whole_description_str,
         ) = get_robot_state(ip, run_or_other)
     # Get Calibration Data
@@ -525,16 +590,8 @@ if __name__ == "__main__":
     print(f"Making ticket for {summary}.")
     # TODO: make argument or see if I can get rid of with using board_id.
     project_key = "RABR"
-    print(robot)
-    try:
-        parent_key = project_key + "-" + robot.split("ABR")[1]
-    except IndexError:
-        parent_key = ""
-
-    # Grab all previous issues
-    all_issues = ticket.issues_on_board(project_key)
-
     # TODO: read board to see if ticket for run id already exists.
+    all_issues = ticket.issues_on_board(project_key)
     # CREATE TICKET
     issue_key, raw_issue_url = ticket.create_ticket(
         summary,
@@ -546,7 +603,8 @@ if __name__ == "__main__":
         "Medium",
         components,
         affects_version,
-        parent_key,
+        labels,
+        parent,
     )
     # Link Tickets
     to_link = ticket.match_issues(all_issues, summary)
@@ -554,8 +612,15 @@ if __name__ == "__main__":
     # OPEN TICKET
     issue_url = ticket.open_issue(issue_key)
     # MOVE FILES TO ERROR FOLDER.
+    print(protocol_files_path)
     error_files = [saved_file_path_calibration, run_log_file_path] + file_paths
-    error_folder_path = os.path.join(storage_directory, issue_key)
+
+    # Move protocol file(s) to error folder
+    if protocol_files_path:
+        for file in os.listdir(protocol_files_path):
+            error_files.append(os.path.join(protocol_files_path, file))
+
+    error_folder_path = os.path.join(storage_directory, "issue_key")
     os.makedirs(error_folder_path, exist_ok=True)
     for source_file in error_files:
         try:
@@ -565,7 +630,7 @@ if __name__ == "__main__":
             shutil.move(source_file, destination_file)
         except shutil.Error:
             continue
-    # POST FILES TO TICKET
+    # POST ALL FILES TO TICKET
     list_of_files = os.listdir(error_folder_path)
     for file in list_of_files:
         file_to_attach = os.path.join(error_folder_path, file)
@@ -606,9 +671,7 @@ if __name__ == "__main__":
             run_id,
             error_folder_path,
             issue_url,
-            "",
-            "",
-            hellma_plate_standards=file_values,
+            file_values,
         )
 
         start_row = google_sheet.get_index_row() + 1

@@ -1,20 +1,19 @@
-import type * as React from 'react'
-
 import { SlotBase } from './SlotBase'
 import { SlotClip } from './SlotClip'
 
+import type { SVGProps } from 'react'
 import type {
   CutoutId,
   DeckDefinition,
   ModuleType,
 } from '@opentrons/shared-data'
 
-interface SingleSlotFixtureProps extends React.SVGProps<SVGGElement> {
+interface SingleSlotFixtureProps extends SVGProps<SVGGElement> {
   cutoutId: CutoutId
   deckDefinition: DeckDefinition
   moduleType?: ModuleType
-  fixtureBaseColor?: React.SVGProps<SVGPathElement>['fill']
-  slotClipColor?: React.SVGProps<SVGPathElement>['stroke']
+  fixtureBaseColor?: SVGProps<SVGPathElement>['fill']
+  slotClipColor?: SVGProps<SVGPathElement>['stroke']
   showExpansion?: boolean
 }
 

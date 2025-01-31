@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 
@@ -26,6 +26,7 @@ import { useMostRecentCompletedAnalysis } from '/app/resources/runs'
 import { getTopPortalEl } from '/app/App/portal'
 import { useNotifyDeckConfigurationQuery } from '/app/resources/deck_configuration'
 
+import type { Dispatch, SetStateAction } from 'react'
 import type {
   CutoutFixtureId,
   CutoutId,
@@ -37,7 +38,7 @@ import type { SetupScreens } from '../types'
 interface ProtocolSetupDeckConfigurationProps {
   cutoutId: CutoutId | null
   runId: string
-  setSetupScreen: React.Dispatch<React.SetStateAction<SetupScreens>>
+  setSetupScreen: Dispatch<SetStateAction<SetupScreens>>
   providedFixtureOptions: CutoutFixtureId[]
 }
 
@@ -53,14 +54,12 @@ export function ProtocolSetupDeckConfiguration({
     'shared',
   ])
 
-  const [
-    showConfigurationModal,
-    setShowConfigurationModal,
-  ] = React.useState<boolean>(true)
-  const [
-    showDiscardChangeModal,
-    setShowDiscardChangeModal,
-  ] = React.useState<boolean>(false)
+  const [showConfigurationModal, setShowConfigurationModal] = useState<boolean>(
+    true
+  )
+  const [showDiscardChangeModal, setShowDiscardChangeModal] = useState<boolean>(
+    false
+  )
 
   const mostRecentAnalysis = useMostRecentCompletedAnalysis(runId)
   const deckConfig = useNotifyDeckConfigurationQuery()?.data ?? []

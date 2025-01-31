@@ -1,36 +1,5 @@
-import {
-  getPipetteSpecsV2,
-  getTiprackVolume,
-  getLabwareDefURI,
-} from '@opentrons/shared-data'
-import type { PipetteName } from '@opentrons/shared-data'
-import type { Options, LegacyDropdownOption } from '@opentrons/components'
+import { getTiprackVolume, getLabwareDefURI } from '@opentrons/shared-data'
 import type { PipetteEntity } from '@opentrons/step-generation'
-const supportedPipetteNames: PipetteName[] = [
-  'p10_single',
-  'p10_multi',
-  'p50_single',
-  'p50_multi',
-  'p300_single',
-  'p300_multi',
-  'p1000_single',
-]
-// TODO: should a version of pipetteOptions be moved to shared-data,
-// and used for both PD and Run App?
-export const pipetteOptions: Options = supportedPipetteNames
-  .map(name => {
-    const pipette = getPipetteSpecsV2(name)
-    return pipette
-      ? {
-          name: pipette.displayName,
-          value: name as string,
-        }
-      : null
-  })
-  .filter<LegacyDropdownOption>(
-    (option: LegacyDropdownOption | null): option is LegacyDropdownOption =>
-      Boolean(option)
-  )
 
 // NOTE: this is similar to getPipetteWithTipMaxVol, the fns
 export const getPipetteCapacity = (

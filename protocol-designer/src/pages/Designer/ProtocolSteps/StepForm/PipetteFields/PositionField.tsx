@@ -2,9 +2,11 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import {
+  ALIGN_CENTER,
   COLORS,
   DIRECTION_COLUMN,
   Flex,
+  Icon,
   InputField,
   ListButton,
   SPACING,
@@ -13,18 +15,17 @@ import {
   useHoverTooltip,
 } from '@opentrons/components'
 import { getWellsDepth, getWellDimension } from '@opentrons/shared-data'
+import { TipPositionModal, ZTipPositionModal } from '../../../../../organisms'
 import { getIsDelayPositionField } from '../../../../../form-types'
+import { getDefaultMmFromBottom } from '../../../../../organisms/TipPositionModal/utils'
 import { selectors as stepFormSelectors } from '../../../../../step-forms'
-import { TipPositionModal } from '../../../../../components/StepEditForm/fields/TipPositionField/TipPositionModal'
-import { getDefaultMmFromBottom } from '../../../../../components/StepEditForm/fields/TipPositionField/utils'
-import { ZTipPositionModal } from '../../../../../components/StepEditForm/fields/TipPositionField/ZTipPositionModal'
 import type {
   TipXOffsetFields,
   TipYOffsetFields,
   TipZOffsetFields,
 } from '../../../../../form-types'
+import type { PositionSpecs } from '../../../../../organisms'
 import type { FieldPropsByName } from '../types'
-import type { PositionSpecs } from '../../../../../components/StepEditForm/fields/TipPositionField/TipPositionModal'
 interface PositionFieldProps {
   prefix: 'aspirate' | 'dispense' | 'mix'
   propsForFields: FieldPropsByName
@@ -32,10 +33,19 @@ interface PositionFieldProps {
   xField?: TipXOffsetFields
   yField?: TipYOffsetFields
   labwareId?: string | null
+  padding?: string
 }
 
 export function PositionField(props: PositionFieldProps): JSX.Element {
-  const { labwareId, propsForFields, zField, xField, yField, prefix } = props
+  const {
+    labwareId,
+    propsForFields,
+    zField,
+    xField,
+    yField,
+    prefix,
+    padding = `0 ${SPACING.spacing16}`,
+  } = props
   const {
     name: zName,
     value: rawZValue,
@@ -91,18 +101,20 @@ export function PositionField(props: PositionFieldProps): JSX.Element {
   }
   const isDelayPositionField = getIsDelayPositionField(zName)
   let zValue: string | number = '0'
+
   const mmFromBottom = typeof rawZValue === 'number' ? rawZValue : null
   if (wellDepthMm !== null) {
     // show default value for field in parens if no mmFromBottom value is selected
     zValue =
       mmFromBottom ?? getDefaultMmFromBottom({ name: zName, wellDepthMm })
   }
+
   let modal = (
     <ZTipPositionModal
       name={zName}
       closeModal={handleClose}
       wellDepthMm={wellDepthMm}
-      zValue={mmFromBottom}
+      zValue={zValue as number}
       updateValue={zUpdateValue}
       isIndeterminate={isIndeterminate}
     />
@@ -122,7 +134,7 @@ export function PositionField(props: PositionFieldProps): JSX.Element {
     const specs: PositionSpecs = {
       z: {
         name: zName,
-        value: mmFromBottom,
+        value: zValue as number,
         updateValue: zUpdateValue,
       },
       x: {
@@ -145,6 +157,7 @@ export function PositionField(props: PositionFieldProps): JSX.Element {
         wellYWidthMm={wellYWidthMm}
         isIndeterminate={isIndeterminate}
         specs={specs}
+        prefix={prefix}
       />
     )
   }
@@ -156,7 +169,7 @@ export function PositionField(props: PositionFieldProps): JSX.Element {
       {yField != null && xField != null ? (
         <Flex
           {...targetProps}
-          padding={SPACING.spacing16}
+          padding={padding}
           gridGap={SPACING.spacing8}
           flexDirection={DIRECTION_COLUMN}
         >
@@ -172,20 +185,22 @@ export function PositionField(props: PositionFieldProps): JSX.Element {
             onClick={() => {
               handleOpen(true)
             }}
+            gridGap={SPACING.spacing8}
+            alignItems={ALIGN_CENTER}
           >
+            <Icon name="tip-position" size="1.25rem" />
             <StyledText desktopStyle="bodyDefaultRegular">
-              {t('protocol_steps:well_position')}
-              {`${
-                propsForFields[xField].value != null
-                  ? Number(propsForFields[xField].value)
-                  : 0
-              }${t('units.millimeter')}, 
-                  ${
-                    propsForFields[yField].value != null
-                      ? Number(propsForFields[yField].value)
-                      : 0
-                  }${t('units.millimeter')},
-                  ${mmFromBottom ?? 0}${t('units.millimeter')}`}
+              {t('protocol_steps:well_position', {
+                x:
+                  propsForFields[xField].value != null
+                    ? Number(propsForFields[xField].value)
+                    : 0,
+                y:
+                  propsForFields[yField].value != null
+                    ? Number(propsForFields[yField].value)
+                    : 0,
+                z: zValue,
+              })}
             </StyledText>
           </ListButton>
         </Flex>
@@ -205,6 +220,7 @@ export function PositionField(props: PositionFieldProps): JSX.Element {
           isIndeterminate={isIndeterminate}
           units={t('units.millimeter')}
           id={`TipPositionField_${zName}`}
+          padding={padding}
         />
       )}
     </>

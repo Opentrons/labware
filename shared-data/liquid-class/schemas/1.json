@@ -90,59 +90,70 @@
       "additionalProperties": false
     },
     "airGapByVolume": {
-      "type": "object",
+      "type": "array",
       "description": "Settings for air gap keyed by target aspiration volume.",
-      "properties": {
-        "default": { "$ref": "#/definitions/positiveNumber" }
+      "items": {
+        "type": "array",
+        "items": { "$ref": "#/definitions/positiveNumber" },
+        "minItems": 2,
+        "maxItems": 2
       },
-      "patternProperties": {
-        "d+": { "$ref": "#/definitions/positiveNumber" }
-      },
-      "required": ["default"]
+      "minItems": 1
     },
     "flowRateByVolume": {
-      "type": "object",
+      "type": "array",
       "description": "Settings for flow rate keyed by target aspiration/dispense volume.",
-      "properties": {
-        "default": { "$ref": "#/definitions/positiveNumber" }
+      "items": {
+        "type": "array",
+        "items": { "$ref": "#/definitions/positiveNumber" },
+        "minItems": 2,
+        "maxItems": 2
       },
-      "patternProperties": {
-        "d+": { "$ref": "#/definitions/positiveNumber" }
-      },
-      "required": ["default"]
+      "minItems": 1
     },
     "pushOutByVolume": {
-      "type": "object",
+      "type": "array",
       "description": "Settings for pushout keyed by target aspiration volume.",
-      "properties": {
-        "default": { "$ref": "#/definitions/positiveNumber" }
+      "items": {
+        "type": "array",
+        "items": { "$ref": "#/definitions/positiveNumber" },
+        "minItems": 2,
+        "maxItems": 2
       },
-      "patternProperties": {
-        "d+": { "$ref": "#/definitions/positiveNumber" }
-      },
-      "required": ["default"]
+      "minItems": 1
     },
     "disposalByVolume": {
-      "type": "object",
-      "description": "Settings for disposal volume keyed by target dispense volume.",
-      "properties": {
-        "default": { "$ref": "#/definitions/positiveNumber" }
+      "type": "array",
+      "description": "An array of two tuples containing positive numbers.",
+      "items": {
+        "type": "array",
+        "items": { "$ref": "#/definitions/positiveNumber" },
+        "minItems": 2,
+        "maxItems": 2
       },
-      "patternProperties": {
-        "d+": { "$ref": "#/definitions/positiveNumber" }
-      },
-      "required": ["default"]
+      "minItems": 1
     },
     "conditioningByVolume": {
-      "type": "object",
+      "type": "array",
       "description": "Settings for conditioning volume keyed by target dispense volume.",
-      "properties": {
-        "default": { "$ref": "#/definitions/positiveNumber" }
+      "items": {
+        "type": "array",
+        "items": { "$ref": "#/definitions/positiveNumber" },
+        "minItems": 2,
+        "maxItems": 2
       },
-      "patternProperties": {
-        "d+": { "$ref": "#/definitions/positiveNumber" }
+      "minItems": 1
+    },
+    "correctionByVolume": {
+      "type": "array",
+      "description": "Settings for volume correction keyed by target aspiration/dispense volume, representing additional volume the plunger should move to accurately hit target volume.",
+      "items": {
+        "type": "array",
+        "items": { "type": "number" },
+        "minItems": 2,
+        "maxItems": 2
       },
-      "required": ["default"]
+      "minItems": 1
     },
     "mix": {
       "type": "object",
@@ -310,6 +321,9 @@
         "flowRateByVolume": {
           "$ref": "#/definitions/flowRateByVolume"
         },
+        "correctionByVolume": {
+          "$ref": "#/definitions/correctionByVolume"
+        },
         "preWet": {
           "type": "boolean",
           "description": "Whether to perform a pre-wet action."
@@ -327,6 +341,7 @@
         "positionReference",
         "offset",
         "flowRateByVolume",
+        "correctionByVolume",
         "preWet",
         "mix",
         "delay"
@@ -352,6 +367,9 @@
         "flowRateByVolume": {
           "$ref": "#/definitions/flowRateByVolume"
         },
+        "correctionByVolume": {
+          "$ref": "#/definitions/correctionByVolume"
+        },
         "mix": {
           "$ref": "#/definitions/mix"
         },
@@ -368,6 +386,7 @@
         "positionReference",
         "offset",
         "flowRateByVolume",
+        "correctionByVolume",
         "mix",
         "pushOutByVolume",
         "delay"
@@ -393,6 +412,9 @@
         "flowRateByVolume": {
           "$ref": "#/definitions/flowRateByVolume"
         },
+        "correctionByVolume": {
+          "$ref": "#/definitions/correctionByVolume"
+        },
         "conditioningByVolume": {
           "$ref": "#/definitions/conditioningByVolume"
         },
@@ -409,7 +431,7 @@
         "positionReference",
         "offset",
         "flowRateByVolume",
-        "mix",
+        "correctionByVolume",
         "conditioningByVolume",
         "disposalByVolume",
         "delay"

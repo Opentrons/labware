@@ -1,9 +1,15 @@
 import values from 'lodash/values'
 import {
-  MAGNETIC_MODULE_V1,
+  ABSORBANCE_READER_TYPE,
   getLabwareDefaultEngageHeight,
+  HEATERSHAKER_MODULE_TYPE,
+  MAGNETIC_BLOCK_TYPE,
+  MAGNETIC_MODULE_TYPE,
+  MAGNETIC_MODULE_V1,
+  TEMPERATURE_MODULE_TYPE,
+  THERMOCYCLER_MODULE_TYPE,
 } from '@opentrons/shared-data'
-import type { Options } from '@opentrons/components'
+import type { DropdownOption } from '@opentrons/components'
 import type { ModuleType } from '@opentrons/shared-data'
 import type {
   ModuleOnDeck,
@@ -76,17 +82,17 @@ export function getModuleUnderLabware(
 
 export const getModuleShortNames = (type: ModuleType): string => {
   switch (type) {
-    case 'heaterShakerModuleType':
-      return 'Heater-Shaker'
-    case 'magneticBlockType':
+    case HEATERSHAKER_MODULE_TYPE:
+      return 'Heater-Shaker Module'
+    case MAGNETIC_BLOCK_TYPE:
       return 'Magnetic Block'
-    case 'magneticModuleType':
+    case MAGNETIC_MODULE_TYPE:
       return 'Magnetic Module'
-    case 'temperatureModuleType':
+    case TEMPERATURE_MODULE_TYPE:
       return 'Temperature Module'
-    case 'thermocyclerModuleType':
+    case THERMOCYCLER_MODULE_TYPE:
       return 'Thermocycler'
-    case 'absorbanceReaderType':
+    case ABSORBANCE_READER_TYPE:
       return 'Absorbance Reader'
   }
 }
@@ -95,11 +101,11 @@ export function getModuleLabwareOptions(
   initialDeckSetup: InitialDeckSetup,
   nicknamesById: Record<string, string>,
   type: ModuleType
-): Options {
+): DropdownOption[] {
   const labwares = initialDeckSetup.labware
   const modulesOnDeck = getModulesOnDeckByType(initialDeckSetup, type)
   const module = getModuleShortNames(type)
-  let options: Options = []
+  let options: DropdownOption[] = []
 
   if (modulesOnDeck != null) {
     options = modulesOnDeck.map(moduleOnDeck => {
@@ -110,22 +116,25 @@ export function getModuleLabwareOptions(
         )?.id
         if (labwareOnAdapterId != null) {
           return {
-            name: `${nicknamesById[labwareOnAdapterId]} in ${
-              nicknamesById[labware.id]
-            } in ${module} in slot ${moduleOnDeck.slot}`,
+            name: `${nicknamesById[labware.id]} with ${
+              nicknamesById[labwareOnAdapterId]
+            }`,
+            deckLabel: moduleOnDeck.slot,
+            subtext: module,
             value: moduleOnDeck.id,
           }
         } else {
           return {
-            name: `${nicknamesById[labware.id]} in ${module} in slot ${
-              moduleOnDeck.slot
-            }`,
+            name: nicknamesById[labware.id],
+            deckLabel: moduleOnDeck.slot,
+            subtext: module,
             value: moduleOnDeck.id,
           }
         }
       } else {
         return {
-          name: `No labware in ${module} in slot ${moduleOnDeck.slot}`,
+          name: module,
+          deckLabel: moduleOnDeck.slot,
           value: moduleOnDeck.id,
         }
       }

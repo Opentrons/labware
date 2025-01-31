@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { screen } from '@testing-library/react'
 import { describe, it, beforeEach, vi, afterEach, expect } from 'vitest'
@@ -35,6 +34,7 @@ import { mockFetchModulesSuccessActionPayloadModules } from '/app/redux/modules/
 
 import { SetupLiquidsMap } from '../SetupLiquidsMap'
 
+import type { ComponentProps } from 'react'
 import type {
   ModuleModel,
   ModuleType,
@@ -102,7 +102,7 @@ const mockMagneticModule = {
   quirks: [],
 }
 
-const render = (props: React.ComponentProps<typeof SetupLiquidsMap>) => {
+const render = (props: ComponentProps<typeof SetupLiquidsMap>) => {
   return renderWithProviders(<SetupLiquidsMap {...props} />, {
     i18nInstance: i18n,
   })
@@ -113,7 +113,7 @@ const mockProtocolAnalysis = {
 } as any
 
 describe('SetupLiquidsMap', () => {
-  let props: React.ComponentProps<typeof SetupLiquidsMap>
+  let props: ComponentProps<typeof SetupLiquidsMap>
   beforeEach(() => {
     props = {
       runId: RUN_ID,

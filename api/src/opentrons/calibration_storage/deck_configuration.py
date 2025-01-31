@@ -10,7 +10,7 @@ from . import file_operators as io
 class _CutoutFixturePlacementModel(pydantic.BaseModel):
     cutoutId: str
     cutoutFixtureId: str
-    opentronsModuleSerialNumber: Optional[str]
+    opentronsModuleSerialNumber: Optional[str] = None
 
 
 class _DeckConfigurationModel(pydantic.BaseModel):
@@ -24,9 +24,9 @@ def serialize_deck_configuration(
     cutout_fixture_placements: List[CutoutFixturePlacement], last_modified: datetime
 ) -> bytes:
     """Serialize a deck configuration for storing on the filesystem."""
-    data = _DeckConfigurationModel.construct(
+    data = _DeckConfigurationModel.model_construct(
         cutoutFixtures=[
-            _CutoutFixturePlacementModel.construct(
+            _CutoutFixturePlacementModel.model_construct(
                 cutoutId=e.cutout_id,
                 cutoutFixtureId=e.cutout_fixture_id,
                 opentronsModuleSerialNumber=e.opentrons_module_serial_number,

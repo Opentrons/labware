@@ -424,7 +424,7 @@ def _pipette_settings_from_mutable_configs(
 
     # TODO(mc, 2020-09-17): s/fields/setting_fields (?)
     # need model and name?
-    return PipetteSettings(  # type: ignore[call-arg]
+    return PipetteSettings(
         info=PipetteSettingsInfo(
             name=cast(str, mutable_configs.get("name", "")),
             model=cast(str, mutable_configs.get("model", "")),

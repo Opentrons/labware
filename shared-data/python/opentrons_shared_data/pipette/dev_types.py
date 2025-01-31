@@ -31,7 +31,9 @@ PipetteName = Literal[
     "p1000_single_gen2",
     "p1000_single_flex",
     "p1000_multi_flex",
+    "p1000_multi_em",
     "p1000_96",
+    "p200_96",
 ]
 
 
@@ -56,7 +58,9 @@ class PipetteNameType(str, Enum):
     P1000_SINGLE_GEN2 = "p1000_single_gen2"
     P1000_SINGLE_FLEX = "p1000_single_flex"
     P1000_MULTI_FLEX = "p1000_multi_flex"
+    P1000_MULTI_EM = "p1000_multi_em"
     P1000_96 = "p1000_96"
+    P200_96 = "p200_96"
 
 
 # Generic NewType for models because we get new ones frequently and theres

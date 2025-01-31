@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { fireEvent, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -7,11 +6,13 @@ import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { SetWifiCred } from '../SetWifiCred'
 
+import type { ComponentProps } from 'react'
+
 const mockSetPassword = vi.fn()
 vi.mock('/app/redux/discovery')
 vi.mock('/app/redux/robot-api')
 
-const render = (props: React.ComponentProps<typeof SetWifiCred>) => {
+const render = (props: ComponentProps<typeof SetWifiCred>) => {
   return renderWithProviders(
     <MemoryRouter>
       <SetWifiCred {...props} />
@@ -23,7 +24,7 @@ const render = (props: React.ComponentProps<typeof SetWifiCred>) => {
 }
 
 describe('SetWifiCred', () => {
-  let props: React.ComponentProps<typeof SetWifiCred>
+  let props: ComponentProps<typeof SetWifiCred>
   beforeEach(() => {
     props = {
       password: 'mock-password',

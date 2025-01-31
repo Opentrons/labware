@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState, useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useQueryClient } from 'react-query'
@@ -33,11 +33,12 @@ import { SaveOrRunModal } from './SaveOrRunModal'
 import { getInitialSummaryState, createQuickTransferFile } from './utils'
 import { quickTransferSummaryReducer } from './reducers'
 
+import type { ComponentProps } from 'react'
 import type { SmallButton } from '/app/atoms/buttons'
 import type { QuickTransferWizardState } from './types'
 
 interface SummaryAndSettingsProps {
-  exitButtonProps: React.ComponentProps<typeof SmallButton>
+  exitButtonProps: ComponentProps<typeof SmallButton>
   state: QuickTransferWizardState
   analyticsStartTime: Date
 }
@@ -51,18 +52,14 @@ export function SummaryAndSettings(
   const queryClient = useQueryClient()
   const host = useHost()
   const { t } = useTranslation(['quick_transfer', 'shared'])
-  const [showSaveOrRunModal, setShowSaveOrRunModal] = React.useState<boolean>(
-    false
-  )
+  const [showSaveOrRunModal, setShowSaveOrRunModal] = useState<boolean>(false)
 
   const displayCategory: string[] = [
     'overview',
     'advanced_settings',
     'tip_management',
   ]
-  const [selectedCategory, setSelectedCategory] = React.useState<string>(
-    'overview'
-  )
+  const [selectedCategory, setSelectedCategory] = useState<string>('overview')
   const deckConfig = useNotifyDeckConfigurationQuery().data ?? []
 
   const initialSummaryState = getInitialSummaryState({
@@ -71,7 +68,7 @@ export function SummaryAndSettings(
     state: wizardFlowState,
     deckConfig,
   })
-  const [state, dispatch] = React.useReducer(
+  const [state, dispatch] = useReducer(
     quickTransferSummaryReducer,
     initialSummaryState
   )

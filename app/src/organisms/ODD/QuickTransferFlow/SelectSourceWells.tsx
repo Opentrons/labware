@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import without from 'lodash/without'
 import {
@@ -14,6 +14,7 @@ import { WellSelection } from '/app/organisms/WellSelection'
 import { ANALYTICS_QUICK_TRANSFER_WELL_SELECTION_DURATION } from '/app/redux/analytics'
 import { useTrackEventWithRobotSerial } from '/app/redux-resources/analytics'
 
+import type { ComponentProps, Dispatch, MouseEvent } from 'react'
 import type { SmallButton } from '/app/atoms/buttons'
 import type {
   QuickTransferWizardState,
@@ -24,7 +25,7 @@ interface SelectSourceWellsProps {
   onNext: () => void
   onBack: () => void
   state: QuickTransferWizardState
-  dispatch: React.Dispatch<QuickTransferWizardAction>
+  dispatch: Dispatch<QuickTransferWizardAction>
 }
 
 export const CIRCULAR_WELL_96_PLATE_DEFINITION_URI =
@@ -42,8 +43,8 @@ export function SelectSourceWells(props: SelectSourceWellsProps): JSX.Element {
     return { ...acc, [well]: null }
   }, {})
 
-  const [selectedWells, setSelectedWells] = React.useState(sourceWellGroup)
-  const [startingTimeStamp] = React.useState<Date>(new Date())
+  const [selectedWells, setSelectedWells] = useState(sourceWellGroup)
+  const [startingTimeStamp] = useState<Date>(new Date())
   const is384WellPlate = state.source?.parameters.format === '384Standard'
 
   const handleClickNext = (): void => {
@@ -62,10 +63,10 @@ export function SelectSourceWells(props: SelectSourceWellsProps): JSX.Element {
     onNext()
   }
 
-  const resetButtonProps: React.ComponentProps<typeof SmallButton> = {
+  const resetButtonProps: ComponentProps<typeof SmallButton> = {
     buttonType: 'tertiaryLowLight',
     buttonText: t('shared:reset'),
-    onClick: (e: React.MouseEvent<HTMLButtonElement>) => {
+    onClick: (e: MouseEvent<HTMLButtonElement>) => {
       setSelectedWells({})
       e.currentTarget.blur?.()
     },

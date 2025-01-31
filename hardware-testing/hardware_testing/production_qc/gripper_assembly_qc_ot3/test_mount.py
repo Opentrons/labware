@@ -120,7 +120,7 @@ async def run(api: OT3API, report: CSVReport, section: str) -> None:
                 mount,
                 Point(z=-Z_AXIS_TRAVEL_DISTANCE),
                 speed=speed,
-                _expect_stalls=True,
+                expect_stalls=True,
             )
             down_end_passed = await _save_result(
                 _get_test_tag(current, speed, "down", "end"),
@@ -139,7 +139,7 @@ async def run(api: OT3API, report: CSVReport, section: str) -> None:
                     mount,
                     Point(z=Z_AXIS_TRAVEL_DISTANCE),
                     speed=speed,
-                    _expect_stalls=True,
+                    expect_stalls=True,
                 )
                 up_end_passed = await _save_result(
                     _get_test_tag(current, speed, "up", "end"),

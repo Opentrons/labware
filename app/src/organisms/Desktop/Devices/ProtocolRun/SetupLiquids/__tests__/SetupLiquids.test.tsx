@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, beforeEach, vi, expect } from 'vitest'
 import { screen, fireEvent } from '@testing-library/react'
 
@@ -10,6 +9,8 @@ import { SetupLiquids } from '../index'
 import { SetupLiquidsList } from '../SetupLiquidsList'
 import { SetupLiquidsMap } from '../SetupLiquidsMap'
 import { useRunHasStarted } from '/app/resources/runs'
+
+import type { ComponentProps } from 'react'
 
 vi.mock('@opentrons/components', async () => {
   const actual = await vi.importActual('@opentrons/components')
@@ -24,7 +25,7 @@ vi.mock('/app/resources/runs')
 
 describe('SetupLiquids', () => {
   const render = (
-    props: React.ComponentProps<typeof SetupLiquids> & {
+    props: ComponentProps<typeof SetupLiquids> & {
       startConfirmed?: boolean
     }
   ) => {
@@ -47,7 +48,7 @@ describe('SetupLiquids', () => {
     )
   }
 
-  let props: React.ComponentProps<typeof SetupLiquids>
+  let props: ComponentProps<typeof SetupLiquids>
   beforeEach(() => {
     vi.mocked(SetupLiquidsList).mockReturnValue(
       <div>Mock setup liquids list</div>

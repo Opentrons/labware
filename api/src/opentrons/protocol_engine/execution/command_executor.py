@@ -188,7 +188,7 @@ class CommandExecutor:
                     "completedAt": self._model_utils.get_timestamp(),
                     "notes": note_tracker.get_notes(),
                 }
-                succeeded_command = running_command.copy(update=update)
+                succeeded_command = running_command.model_copy(update=update)
                 self._action_dispatcher.dispatch(
                     SucceedCommandAction(
                         command=succeeded_command,

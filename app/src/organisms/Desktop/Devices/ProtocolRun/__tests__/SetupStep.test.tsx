@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, beforeEach, vi, afterEach, expect } from 'vitest'
 
@@ -6,6 +5,7 @@ import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { SetupStep } from '../SetupStep'
 
+import type { ComponentProps } from 'react'
 import type { Mock } from 'vitest'
 
 describe('SetupStep', () => {
@@ -16,7 +16,7 @@ describe('SetupStep', () => {
     toggleExpanded = toggleExpandedMock,
     children = <button>stub children</button>,
     rightElement = <div>right element</div>,
-  }: Partial<React.ComponentProps<typeof SetupStep>> = {}) => {
+  }: Partial<ComponentProps<typeof SetupStep>> = {}) => {
     return renderWithProviders(
       <SetupStep
         {...{

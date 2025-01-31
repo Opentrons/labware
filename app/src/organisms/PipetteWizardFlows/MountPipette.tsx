@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   SINGLE_MOUNT_PIPETTES,
@@ -17,11 +16,13 @@ import { Skeleton } from '/app/atoms/Skeleton'
 import { CheckPipetteButton } from './CheckPipetteButton'
 import { BODY_STYLE, SECTIONS } from './constants'
 import { getPipetteAnimations, getPipetteAnimations96 } from './utils'
+
+import type { Dispatch, ReactNode, SetStateAction } from 'react'
 import type { PipetteWizardStepProps } from './types'
 
 interface MountPipetteProps extends PipetteWizardStepProps {
   isFetching: boolean
-  setFetching: React.Dispatch<React.SetStateAction<boolean>>
+  setFetching: Dispatch<SetStateAction<boolean>>
 }
 const BACKGROUND_SIZE = '47rem'
 
@@ -47,7 +48,7 @@ export const MountPipette = (props: MountPipetteProps): JSX.Element => {
       backgroundSize={BACKGROUND_SIZE}
     />
   )
-  let bodyText: React.ReactNode = <div></div>
+  let bodyText: ReactNode = <div></div>
   if (isFetching) {
     bodyText = (
       <>

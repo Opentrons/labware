@@ -3,14 +3,14 @@
 from __future__ import annotations
 
 from abc import abstractmethod, ABC
-from typing import Any, Generic, Optional, TypeVar, Union
+from typing import Any, Generic, Optional, TypeVar, Union, List
 
 from opentrons import types
 from opentrons.hardware_control.dev_types import PipetteDict
 from opentrons.protocols.api_support.util import FlowRates
+from opentrons.protocols.advanced_control.transfers.common import TransferTipPolicyV2
 from opentrons.protocol_api._nozzle_layout import NozzleLayout
-from opentrons.hardware_control.nozzle_manager import NozzleMap
-
+from opentrons.protocol_api._liquid import LiquidClass
 from ..disposal_locations import TrashBin, WasteChute
 from .well import WellCoreType
 
@@ -23,6 +23,14 @@ class AbstractInstrument(ABC, Generic[WellCoreType]):
     @abstractmethod
     def set_default_speed(self, speed: float) -> None:
         ...
+
+    @abstractmethod
+    def air_gap_in_place(self, volume: float, flow_rate: float) -> None:
+        """Aspirate a given volume of air from the current location of the pipette.
+        Args:
+            volume: The volume of air to aspirate, in microliters.
+            flow_rate: The flow rate of air into the pipette, in microliters.
+        """
 
     @abstractmethod
     def aspirate(
@@ -173,6 +181,33 @@ class AbstractInstrument(ABC, Generic[WellCoreType]):
         ...
 
     @abstractmethod
+    def resin_tip_seal(
+        self,
+        location: types.Location,
+        well_core: WellCoreType,
+        in_place: Optional[bool] = False,
+    ) -> None:
+        ...
+
+    @abstractmethod
+    def resin_tip_unseal(
+        self,
+        location: types.Location,
+        well_core: WellCoreType,
+    ) -> None:
+        ...
+
+    @abstractmethod
+    def resin_tip_dispense(
+        self,
+        location: types.Location,
+        well_core: WellCoreType,
+        volume: Optional[float] = None,
+        flow_rate: Optional[float] = None,
+    ) -> None:
+        ...
+
+    @abstractmethod
     def get_mount(self) -> types.Mount:
         ...
 
@@ -222,7 +257,7 @@ class AbstractInstrument(ABC, Generic[WellCoreType]):
         ...
 
     @abstractmethod
-    def get_nozzle_map(self) -> NozzleMap:
+    def get_nozzle_map(self) -> types.NozzleMapInterface:
         ...
 
     @abstractmethod
@@ -251,6 +286,10 @@ class AbstractInstrument(ABC, Generic[WellCoreType]):
 
     @abstractmethod
     def get_liquid_presence_detection(self) -> bool:
+        ...
+
+    @abstractmethod
+    def _pressure_supported_by_pipette(self) -> bool:
         ...
 
     @abstractmethod
@@ -299,6 +338,32 @@ class AbstractInstrument(ABC, Generic[WellCoreType]):
         ...
 
     @abstractmethod
+    def load_liquid_class(
+        self,
+        liquid_class: LiquidClass,
+        pipette_load_name: str,
+        tiprack_uri: str,
+    ) -> str:
+        """Load the liquid class properties of given pipette and tiprack into the engine.
+
+        Returns: ID of the liquid class record
+        """
+        ...
+
+    @abstractmethod
+    def transfer_liquid(
+        self,
+        liquid_class_id: str,
+        volume: float,
+        source: List[WellCoreType],
+        dest: List[WellCoreType],
+        new_tip: TransferTipPolicyV2,
+        trash_location: Union[WellCoreType, types.Location, TrashBin, WasteChute],
+    ) -> None:
+        """Transfer a liquid from source to dest according to liquid class properties."""
+        ...
+
+    @abstractmethod
     def is_tip_tracking_available(self) -> bool:
         """Return whether auto tip tracking is available for the pipette's current nozzle configuration."""
 
@@ -326,6 +391,10 @@ class AbstractInstrument(ABC, Generic[WellCoreType]):
     ) -> float:
         """Do a liquid probe to find the level of the liquid in the well."""
         ...
+
+    @abstractmethod
+    def nozzle_configuration_valid_for_lld(self) -> bool:
+        """Check if the nozzle configuration currently supports LLD."""
 
 
 InstrumentCoreType = TypeVar("InstrumentCoreType", bound=AbstractInstrument[Any])

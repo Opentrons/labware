@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, expect, beforeEach } from 'vitest'
 import { screen, waitFor } from '@testing-library/react'
 
@@ -11,6 +10,7 @@ import { CancelRun } from '../CancelRun'
 import { SelectRecoveryOption } from '../SelectRecoveryOption'
 import { clickButtonLabeled } from '../../__tests__/util'
 
+import type { ComponentProps } from 'react'
 import type { Mock } from 'vitest'
 
 vi.mock('../../shared', async () => {
@@ -32,28 +32,26 @@ vi.mock('../CancelRun')
 vi.mock('../SelectRecoveryOption')
 vi.mock('/app/molecules/Command')
 
-const render = (props: React.ComponentProps<typeof FillWellAndSkip>) => {
+const render = (props: ComponentProps<typeof FillWellAndSkip>) => {
   return renderWithProviders(<FillWellAndSkip {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
-const renderFillWell = (props: React.ComponentProps<typeof FillWell>) => {
+const renderFillWell = (props: ComponentProps<typeof FillWell>) => {
   return renderWithProviders(<FillWell {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
-const renderSkipToNextStep = (
-  props: React.ComponentProps<typeof SkipToNextStep>
-) => {
+const renderSkipToNextStep = (props: ComponentProps<typeof SkipToNextStep>) => {
   return renderWithProviders(<SkipToNextStep {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('FillWellAndSkip', () => {
-  let props: React.ComponentProps<typeof FillWellAndSkip>
+  let props: ComponentProps<typeof FillWellAndSkip>
 
   beforeEach(() => {
     props = {
@@ -118,7 +116,7 @@ describe('FillWellAndSkip', () => {
 })
 
 describe('FillWell', () => {
-  let props: React.ComponentProps<typeof FillWell>
+  let props: ComponentProps<typeof FillWell>
 
   beforeEach(() => {
     props = {
@@ -136,7 +134,7 @@ describe('FillWell', () => {
 })
 
 describe('SkipToNextStep', () => {
-  let props: React.ComponentProps<typeof SkipToNextStep>
+  let props: ComponentProps<typeof SkipToNextStep>
   let mockhandleMotionRouting: Mock
   let mockGoBackPrevStep: Mock
   let mockProceedToRouteAndStep: Mock

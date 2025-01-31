@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -11,6 +10,8 @@ import { CurrentRunningProtocolCommand } from '../CurrentRunningProtocolCommand'
 import { useRunningStepCounts } from '/app/resources/protocols/hooks'
 import { useNotifyAllCommandsQuery } from '/app/resources/runs'
 import { FLEX_ROBOT_TYPE } from '@opentrons/shared-data'
+
+import type { ComponentProps } from 'react'
 
 vi.mock('/app/resources/runs')
 vi.mock('/app/resources/protocols/hooks')
@@ -28,7 +29,7 @@ const mockRunTimer = {
 }
 
 const render = (
-  props: React.ComponentProps<typeof CurrentRunningProtocolCommand>
+  props: ComponentProps<typeof CurrentRunningProtocolCommand>
 ) => {
   return renderWithProviders(<CurrentRunningProtocolCommand {...props} />, {
     i18nInstance: i18n,
@@ -36,7 +37,7 @@ const render = (
 }
 
 describe('CurrentRunningProtocolCommand', () => {
-  let props: React.ComponentProps<typeof CurrentRunningProtocolCommand>
+  let props: ComponentProps<typeof CurrentRunningProtocolCommand>
 
   beforeEach(() => {
     props = {

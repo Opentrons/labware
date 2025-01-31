@@ -105,7 +105,7 @@ class Engage(BaseCommand[EngageParams, EngageResult, ErrorOccurrence]):
 
     commandType: EngageCommandType = "magneticModule/engage"
     params: EngageParams
-    result: Optional[EngageResult]
+    result: Optional[EngageResult] = None
 
     _ImplementationCls: Type[EngageImplementation] = EngageImplementation
 

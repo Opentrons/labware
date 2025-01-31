@@ -38,8 +38,7 @@ OT3HardwareControlAPI = FlexHardwareControlInterface[
 ]
 HardwareControlAPI = Union[OT2HardwareControlAPI, OT3HardwareControlAPI]
 
-# this type ignore is because of https://github.com/python/mypy/issues/13437
-ThreadManagedHardware = ThreadManager[HardwareControlAPI]  # type: ignore[misc]
+ThreadManagedHardware = ThreadManager[HardwareControlAPI]
 SyncHardwareAPI = SynchronousAdapter[HardwareControlAPI]
 
 __all__ = [

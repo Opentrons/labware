@@ -76,7 +76,7 @@ async def _move_and_interrupt_with_signal(api: OT3API, sig_name: str) -> None:
     runner = MoveGroupRunner(move_groups=[[_move_group_nsync]])
     if api.is_simulator:
         # test that the required functionality exists
-        assert runner.run
+        assert runner.run is not None
     else:
         backend: OT3Controller = api._backend  # type: ignore[assignment]
         messenger = backend._messenger

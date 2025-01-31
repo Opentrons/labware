@@ -216,7 +216,12 @@ class MaintenanceRunOrchestratorStore:
         self._run_orchestrator = None
         self._created_at = None
 
-        return RunResult(state_summary=run_data, commands=commands, parameters=[])
+        return RunResult(
+            state_summary=run_data,
+            commands=commands,
+            parameters=[],
+            command_annotations=[],
+        )
 
     def get_command_slice(
         self,

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { createRef } from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 import { i18n } from '../../../assets/localization'
@@ -7,6 +7,7 @@ import * as labwareIngredActions from '../../../labware-ingred/actions'
 import { renderWithProviders } from '../../../__testing-utils__'
 import { LiquidsOverflowMenu } from '../LiquidsOverflowMenu'
 
+import type { ComponentProps } from 'react'
 import type { NavigateFunction } from 'react-router-dom'
 
 const mockLocation = vi.fn()
@@ -21,26 +22,27 @@ vi.mock('react-router-dom', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof LiquidsOverflowMenu>) => {
+const render = (props: ComponentProps<typeof LiquidsOverflowMenu>) => {
   return renderWithProviders(<LiquidsOverflowMenu {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('SlotOverflowMenu', () => {
-  let props: React.ComponentProps<typeof LiquidsOverflowMenu>
+  let props: ComponentProps<typeof LiquidsOverflowMenu>
 
   beforeEach(() => {
     props = {
       onClose: vi.fn(),
       showLiquidsModal: vi.fn(),
-      overflowWrapperRef: React.createRef(),
+      overflowWrapperRef: createRef(),
     }
     vi.mocked(labwareIngredSelectors.allIngredientNamesIds).mockReturnValue([
       {
         displayColor: 'mockColor',
         name: 'mockname',
         ingredientId: '0',
+        liquidClass: null,
       },
     ])
   })

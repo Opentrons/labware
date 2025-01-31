@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, beforeEach } from 'vitest'
 import { renderWithProviders } from '/app/__testing-utils__'
 import { LEFT } from '@opentrons/shared-data'
@@ -7,6 +6,8 @@ import { i18n } from '/app/i18n'
 import { PipetteWizardFlows } from '/app/organisms/PipetteWizardFlows'
 import { GripperWizardFlows } from '/app/organisms/GripperWizardFlows'
 import { ProtocolInstrumentMountItem } from '..'
+
+import type { ComponentProps } from 'react'
 
 vi.mock('/app/organisms/PipetteWizardFlows')
 vi.mock('/app/organisms/GripperWizardFlows')
@@ -51,16 +52,14 @@ const mockLeftPipetteData = {
   ok: true,
 }
 
-const render = (
-  props: React.ComponentProps<typeof ProtocolInstrumentMountItem>
-) => {
+const render = (props: ComponentProps<typeof ProtocolInstrumentMountItem>) => {
   return renderWithProviders(<ProtocolInstrumentMountItem {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('ProtocolInstrumentMountItem', () => {
-  let props: React.ComponentProps<typeof ProtocolInstrumentMountItem>
+  let props: ComponentProps<typeof ProtocolInstrumentMountItem>
   beforeEach(() => {
     props = {
       mount: LEFT,

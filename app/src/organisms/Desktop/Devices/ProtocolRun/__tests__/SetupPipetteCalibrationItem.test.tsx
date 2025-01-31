@@ -1,7 +1,7 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { describe, it, beforeEach, vi, afterEach, expect } from 'vitest'
 import { screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 
 import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
@@ -9,7 +9,8 @@ import { mockDeckCalData } from '/app/redux/calibration/__fixtures__'
 import { mockPipetteInfo } from '/app/redux/pipettes/__fixtures__'
 import { useDeckCalibrationData } from '../../hooks'
 import { SetupPipetteCalibrationItem } from '../SetupPipetteCalibrationItem'
-import { MemoryRouter } from 'react-router-dom'
+
+import type { ComponentProps } from 'react'
 
 vi.mock('../../hooks')
 vi.mock('/app/redux-resources/robots')
@@ -23,9 +24,7 @@ describe('SetupPipetteCalibrationItem', () => {
     mount = 'left',
     robotName = ROBOT_NAME,
     runId = RUN_ID,
-  }: Partial<
-    React.ComponentProps<typeof SetupPipetteCalibrationItem>
-  > = {}) => {
+  }: Partial<ComponentProps<typeof SetupPipetteCalibrationItem>> = {}) => {
     return renderWithProviders(
       <MemoryRouter>
         <SetupPipetteCalibrationItem

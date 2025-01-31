@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { Fragment } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
@@ -22,6 +22,7 @@ import {
   updateConfigValue,
 } from '/app/redux/config'
 
+import type { ChangeEvent } from 'react'
 import type { Dispatch } from '/app/redux/types'
 
 interface LabelProps {
@@ -59,7 +60,7 @@ export function UpdateChannel({
     ? channelOptions.filter(option => option.value !== 'alpha')
     : channelOptions
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     dispatch(updateConfigValue('update.channel', event.target.value))
   }
 
@@ -87,7 +88,7 @@ export function UpdateChannel({
           marginTop={SPACING.spacing24}
         >
           {modifiedChannelOptions.map(radio => (
-            <React.Fragment key={`channel_setting_${radio.label}`}>
+            <Fragment key={`channel_setting_${radio.label}`}>
               <SettingButton
                 id={radio.label}
                 type="radio"
@@ -120,7 +121,7 @@ export function UpdateChannel({
                   </LegacyStyledText>
                 ) : null}
               </SettingButtonLabel>
-            </React.Fragment>
+            </Fragment>
           ))}
         </Flex>
       </Flex>

@@ -22,6 +22,9 @@ from opentrons.protocol_engine.resources.pipette_data_provider import (
 )
 from opentrons.types import DeckSlotName, Point
 from opentrons_shared_data.pipette.types import PipetteNameType
+from opentrons_shared_data.pipette.pipette_definition import (
+    AvailableSensorDefinition,
+)
 from ..pipette_fixtures import (
     NINETY_SIX_MAP,
     NINETY_SIX_COLS,
@@ -29,7 +32,13 @@ from ..pipette_fixtures import (
     get_default_nozzle_map,
 )
 
-_tip_rack_parameters = LabwareParameters.construct(isTiprack=True)  # type: ignore[call-arg]
+_tip_rack_parameters = LabwareParameters.model_construct(isTiprack=True)  # type: ignore[call-arg]
+
+
+@pytest.fixture
+def available_sensors() -> AvailableSensorDefinition:
+    """Provide a list of sensors."""
+    return AvailableSensorDefinition(sensors=["pressure", "capacitive", "environment"])
 
 
 @pytest.fixture
@@ -41,7 +50,7 @@ def subject() -> TipStore:
 @pytest.fixture
 def labware_definition() -> LabwareDefinition:
     """Get a labware definition value object."""
-    return LabwareDefinition.construct(  # type: ignore[call-arg]
+    return LabwareDefinition.model_construct(  # type: ignore[call-arg]
         ordering=[
             ["A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1"],
             ["A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2"],
@@ -81,19 +90,18 @@ def load_labware_action(
 
 def _dummy_command() -> commands.Command:
     """Return a placeholder command."""
-    return commands.Comment.construct()  # type: ignore[call-arg]
+    return commands.Comment.model_construct()  # type: ignore[call-arg]
 
 
 @pytest.mark.parametrize(
     "labware_definition",
-    [
-        LabwareDefinition.construct(ordering=[], parameters=_tip_rack_parameters)  # type: ignore[call-arg]
-    ],
+    [LabwareDefinition.model_construct(ordering=[], parameters=_tip_rack_parameters)],  # type: ignore[call-arg]
 )
 def test_get_next_tip_returns_none(
     load_labware_action: actions.SucceedCommandAction,
     subject: TipStore,
     supported_tip_fixture: pipette_definition.SupportedTipsDefinition,
+    available_sensors: AvailableSensorDefinition,
 ) -> None:
     """It should start at the first tip in the labware."""
     subject.handle_action(load_labware_action)
@@ -119,6 +127,14 @@ def test_get_next_tip_returns_none(
             back_left_corner_offset=Point(0, 0, 0),
             front_right_corner_offset=Point(0, 0, 0),
             pipette_lld_settings={},
+            plunger_positions={
+                "top": 0.0,
+                "bottom": 5.0,
+                "blow_out": 19.0,
+                "drop_tip": 20.0,
+            },
+            shaft_ul_per_mm=5.0,
+            available_sensors=available_sensors,
         ),
     )
     subject.handle_action(
@@ -144,6 +160,7 @@ def test_get_next_tip_returns_first_tip(
     subject: TipStore,
     input_tip_amount: int,
     supported_tip_fixture: pipette_definition.SupportedTipsDefinition,
+    available_sensors: AvailableSensorDefinition,
 ) -> None:
     """It should start at the first tip in the labware."""
     subject.handle_action(load_labware_action)
@@ -177,6 +194,14 @@ def test_get_next_tip_returns_first_tip(
             back_left_corner_offset=Point(0, 0, 0),
             front_right_corner_offset=Point(0, 0, 0),
             pipette_lld_settings={},
+            plunger_positions={
+                "top": 0.0,
+                "bottom": 5.0,
+                "blow_out": 19.0,
+                "drop_tip": 20.0,
+            },
+            shaft_ul_per_mm=5.0,
+            available_sensors=available_sensors,
         ),
     )
     subject.handle_action(
@@ -203,6 +228,7 @@ def test_get_next_tip_used_starting_tip(
     input_tip_amount: int,
     result_well_name: str,
     supported_tip_fixture: pipette_definition.SupportedTipsDefinition,
+    available_sensors: AvailableSensorDefinition,
 ) -> None:
     """It should start searching at the given starting tip."""
     subject.handle_action(load_labware_action)
@@ -229,6 +255,14 @@ def test_get_next_tip_used_starting_tip(
             back_left_corner_offset=Point(0, 0, 0),
             front_right_corner_offset=Point(0, 0, 0),
             pipette_lld_settings={},
+            plunger_positions={
+                "top": 0.0,
+                "bottom": 5.0,
+                "blow_out": 19.0,
+                "drop_tip": 20.0,
+            },
+            shaft_ul_per_mm=5.0,
+            available_sensors=available_sensors,
         ),
     )
     subject.handle_action(
@@ -270,6 +304,7 @@ def test_get_next_tip_skips_picked_up_tip(
     input_starting_tip: Optional[str],
     result_well_name: Optional[str],
     supported_tip_fixture: pipette_definition.SupportedTipsDefinition,
+    available_sensors: AvailableSensorDefinition,
 ) -> None:
     """It should get the next tip in the column if one has been picked up."""
     subject.handle_action(load_labware_action)
@@ -314,6 +349,14 @@ def test_get_next_tip_skips_picked_up_tip(
             back_left_corner_offset=Point(0, 0, 0),
             front_right_corner_offset=Point(0, 0, 0),
             pipette_lld_settings={},
+            plunger_positions={
+                "top": 0.0,
+                "bottom": 5.0,
+                "blow_out": 19.0,
+                "drop_tip": 20.0,
+            },
+            shaft_ul_per_mm=5.0,
+            available_sensors=available_sensors,
         ),
     )
     subject.handle_action(
@@ -351,6 +394,7 @@ def test_get_next_tip_with_starting_tip(
     subject: TipStore,
     load_labware_action: actions.SucceedCommandAction,
     supported_tip_fixture: pipette_definition.SupportedTipsDefinition,
+    available_sensors: AvailableSensorDefinition,
 ) -> None:
     """It should return the starting tip, and then the following tip after that."""
     subject.handle_action(load_labware_action)
@@ -377,6 +421,14 @@ def test_get_next_tip_with_starting_tip(
             back_left_corner_offset=Point(x=1, y=2, z=3),
             front_right_corner_offset=Point(x=4, y=5, z=6),
             pipette_lld_settings={},
+            plunger_positions={
+                "top": 0.0,
+                "bottom": 5.0,
+                "blow_out": 19.0,
+                "drop_tip": 20.0,
+            },
+            shaft_ul_per_mm=5.0,
+            available_sensors=available_sensors,
         ),
     )
     subject.handle_action(
@@ -418,6 +470,7 @@ def test_get_next_tip_with_starting_tip_8_channel(
     subject: TipStore,
     load_labware_action: actions.SucceedCommandAction,
     supported_tip_fixture: pipette_definition.SupportedTipsDefinition,
+    available_sensors: AvailableSensorDefinition,
 ) -> None:
     """It should return the starting tip, and then the following tip after that."""
     subject.handle_action(load_labware_action)
@@ -444,6 +497,14 @@ def test_get_next_tip_with_starting_tip_8_channel(
             back_left_corner_offset=Point(0, 0, 0),
             front_right_corner_offset=Point(0, 0, 0),
             pipette_lld_settings={},
+            plunger_positions={
+                "top": 0.0,
+                "bottom": 5.0,
+                "blow_out": 19.0,
+                "drop_tip": 20.0,
+            },
+            shaft_ul_per_mm=5.0,
+            available_sensors=available_sensors,
         ),
     )
     subject.handle_action(
@@ -488,6 +549,7 @@ def test_get_next_tip_with_1_channel_followed_by_8_channel(
     subject: TipStore,
     load_labware_action: actions.SucceedCommandAction,
     supported_tip_fixture: pipette_definition.SupportedTipsDefinition,
+    available_sensors: AvailableSensorDefinition,
 ) -> None:
     """It should return the first tip of column 2 for the 8 channel after performing a single tip pickup on column 1."""
     subject.handle_action(load_labware_action)
@@ -514,6 +576,14 @@ def test_get_next_tip_with_1_channel_followed_by_8_channel(
             back_left_corner_offset=Point(0, 0, 0),
             front_right_corner_offset=Point(0, 0, 0),
             pipette_lld_settings={},
+            plunger_positions={
+                "top": 0.0,
+                "bottom": 5.0,
+                "blow_out": 19.0,
+                "drop_tip": 20.0,
+            },
+            shaft_ul_per_mm=5.0,
+            available_sensors=available_sensors,
         ),
     )
     subject.handle_action(
@@ -522,7 +592,6 @@ def test_get_next_tip_with_1_channel_followed_by_8_channel(
             command=_dummy_command(),
         )
     )
-
     config_update_2 = update_types.PipetteConfigUpdate(
         pipette_id="pipette-id2",
         serial_number="pipette-serial2",
@@ -545,6 +614,14 @@ def test_get_next_tip_with_1_channel_followed_by_8_channel(
             back_left_corner_offset=Point(0, 0, 0),
             front_right_corner_offset=Point(0, 0, 0),
             pipette_lld_settings={},
+            plunger_positions={
+                "top": 0.0,
+                "bottom": 5.0,
+                "blow_out": 19.0,
+                "drop_tip": 20.0,
+            },
+            shaft_ul_per_mm=5.0,
+            available_sensors=available_sensors,
         ),
     )
     subject.handle_action(
@@ -589,6 +666,7 @@ def test_get_next_tip_with_starting_tip_out_of_tips(
     subject: TipStore,
     load_labware_action: actions.SucceedCommandAction,
     supported_tip_fixture: pipette_definition.SupportedTipsDefinition,
+    available_sensors: AvailableSensorDefinition,
 ) -> None:
     """It should return the starting tip of H12 and then None after that."""
     subject.handle_action(load_labware_action)
@@ -615,6 +693,14 @@ def test_get_next_tip_with_starting_tip_out_of_tips(
             back_left_corner_offset=Point(0, 0, 0),
             front_right_corner_offset=Point(0, 0, 0),
             pipette_lld_settings={},
+            plunger_positions={
+                "top": 0.0,
+                "bottom": 5.0,
+                "blow_out": 19.0,
+                "drop_tip": 20.0,
+            },
+            shaft_ul_per_mm=5.0,
+            available_sensors=available_sensors,
         ),
     )
     subject.handle_action(
@@ -659,6 +745,7 @@ def test_get_next_tip_with_column_and_starting_tip(
     subject: TipStore,
     load_labware_action: actions.SucceedCommandAction,
     supported_tip_fixture: pipette_definition.SupportedTipsDefinition,
+    available_sensors: AvailableSensorDefinition,
 ) -> None:
     """It should return the first tip in a column, taking starting tip into account."""
     subject.handle_action(load_labware_action)
@@ -685,6 +772,14 @@ def test_get_next_tip_with_column_and_starting_tip(
             back_left_corner_offset=Point(0, 0, 0),
             front_right_corner_offset=Point(0, 0, 0),
             pipette_lld_settings={},
+            plunger_positions={
+                "top": 0.0,
+                "bottom": 5.0,
+                "blow_out": 19.0,
+                "drop_tip": 20.0,
+            },
+            shaft_ul_per_mm=5.0,
+            available_sensors=available_sensors,
         ),
     )
     subject.handle_action(
@@ -708,6 +803,7 @@ def test_reset_tips(
     subject: TipStore,
     load_labware_action: actions.SucceedCommandAction,
     supported_tip_fixture: pipette_definition.SupportedTipsDefinition,
+    available_sensors: AvailableSensorDefinition,
 ) -> None:
     """It should be able to reset tip tracking state."""
     subject.handle_action(load_labware_action)
@@ -734,6 +830,14 @@ def test_reset_tips(
             back_left_corner_offset=Point(x=1, y=2, z=3),
             front_right_corner_offset=Point(x=4, y=5, z=6),
             pipette_lld_settings={},
+            plunger_positions={
+                "top": 0.0,
+                "bottom": 5.0,
+                "blow_out": 19.0,
+                "drop_tip": 20.0,
+            },
+            shaft_ul_per_mm=5.0,
+            available_sensors=available_sensors,
         ),
     )
 
@@ -771,7 +875,9 @@ def test_reset_tips(
 
 
 def test_handle_pipette_config_action(
-    subject: TipStore, supported_tip_fixture: pipette_definition.SupportedTipsDefinition
+    subject: TipStore,
+    supported_tip_fixture: pipette_definition.SupportedTipsDefinition,
+    available_sensors: AvailableSensorDefinition,
 ) -> None:
     """Should add pipette channel to state."""
     config_update = update_types.PipetteConfigUpdate(
@@ -796,6 +902,14 @@ def test_handle_pipette_config_action(
             back_left_corner_offset=Point(x=1, y=2, z=3),
             front_right_corner_offset=Point(x=4, y=5, z=6),
             pipette_lld_settings={},
+            plunger_positions={
+                "top": 0.0,
+                "bottom": 5.0,
+                "blow_out": 19.0,
+                "drop_tip": 20.0,
+            },
+            shaft_ul_per_mm=5.0,
+            available_sensors=available_sensors,
         ),
     )
     subject.handle_action(
@@ -812,9 +926,9 @@ def test_handle_pipette_config_action(
 @pytest.mark.parametrize(
     "labware_definition",
     [
-        LabwareDefinition.construct(  # type: ignore[call-arg]
+        LabwareDefinition.model_construct(  # type: ignore[call-arg]
             ordering=[["A1"]],
-            parameters=LabwareParameters.construct(isTiprack=False),  # type: ignore[call-arg]
+            parameters=LabwareParameters.model_construct(isTiprack=False),  # type: ignore[call-arg]
         )
     ],
 )
@@ -904,6 +1018,7 @@ def test_active_channels(
     supported_tip_fixture: pipette_definition.SupportedTipsDefinition,
     nozzle_map: NozzleMap,
     expected_channels: int,
+    available_sensors: AvailableSensorDefinition,
 ) -> None:
     """Should update active channels after pipette configuration change."""
     # Load pipette to update state
@@ -929,6 +1044,14 @@ def test_active_channels(
             back_left_corner_offset=Point(x=1, y=2, z=3),
             front_right_corner_offset=Point(x=4, y=5, z=6),
             pipette_lld_settings={},
+            plunger_positions={
+                "top": 0.0,
+                "bottom": 5.0,
+                "blow_out": 19.0,
+                "drop_tip": 20.0,
+            },
+            shaft_ul_per_mm=5.0,
+            available_sensors=available_sensors,
         ),
     )
     subject.handle_action(
@@ -961,6 +1084,7 @@ def test_next_tip_uses_active_channels(
     subject: TipStore,
     supported_tip_fixture: pipette_definition.SupportedTipsDefinition,
     load_labware_action: actions.SucceedCommandAction,
+    available_sensors: AvailableSensorDefinition,
 ) -> None:
     """Test that tip tracking logic uses pipette's active channels."""
     # Load labware
@@ -989,6 +1113,14 @@ def test_next_tip_uses_active_channels(
             back_left_corner_offset=Point(x=1, y=2, z=3),
             front_right_corner_offset=Point(x=4, y=5, z=6),
             pipette_lld_settings={},
+            plunger_positions={
+                "top": 0.0,
+                "bottom": 5.0,
+                "blow_out": 19.0,
+                "drop_tip": 20.0,
+            },
+            shaft_ul_per_mm=5.0,
+            available_sensors=available_sensors,
         ),
     )
     subject.handle_action(
@@ -1059,6 +1191,7 @@ def test_next_tip_automatic_tip_tracking_with_partial_configurations(
     subject: TipStore,
     supported_tip_fixture: pipette_definition.SupportedTipsDefinition,
     load_labware_action: actions.SucceedCommandAction,
+    available_sensors: AvailableSensorDefinition,
 ) -> None:
     """Test tip tracking logic using multiple pipette configurations."""
     # Load labware
@@ -1087,6 +1220,14 @@ def test_next_tip_automatic_tip_tracking_with_partial_configurations(
             back_left_corner_offset=Point(x=1, y=2, z=3),
             front_right_corner_offset=Point(x=4, y=5, z=6),
             pipette_lld_settings={},
+            plunger_positions={
+                "top": 0.0,
+                "bottom": 5.0,
+                "blow_out": 19.0,
+                "drop_tip": 20.0,
+            },
+            shaft_ul_per_mm=5.0,
+            available_sensors=available_sensors,
         ),
     )
     subject.handle_action(
@@ -1211,6 +1352,7 @@ def test_next_tip_automatic_tip_tracking_tiprack_limits(
     subject: TipStore,
     supported_tip_fixture: pipette_definition.SupportedTipsDefinition,
     load_labware_action: actions.SucceedCommandAction,
+    available_sensors: AvailableSensorDefinition,
 ) -> None:
     """Test tip tracking logic to ensure once a tiprack is consumed it returns None when consuming tips using multiple pipette configurations."""
     # Load labware
@@ -1239,6 +1381,14 @@ def test_next_tip_automatic_tip_tracking_tiprack_limits(
             back_left_corner_offset=Point(x=1, y=2, z=3),
             front_right_corner_offset=Point(x=4, y=5, z=6),
             pipette_lld_settings={},
+            plunger_positions={
+                "top": 0.0,
+                "bottom": 5.0,
+                "blow_out": 19.0,
+                "drop_tip": 20.0,
+            },
+            shaft_ul_per_mm=5.0,
+            available_sensors=available_sensors,
         ),
     )
     subject.handle_action(

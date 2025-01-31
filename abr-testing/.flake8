@@ -21,4 +21,5 @@ docstring-convention = google
 
 noqa-require-code = true
 
-# per-file-ignores =
+per-file-ignores =
+    abr_testing/protocols/*: C901

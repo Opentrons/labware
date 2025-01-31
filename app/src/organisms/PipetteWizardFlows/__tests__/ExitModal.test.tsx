@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, beforeEach, vi, expect } from 'vitest'
 
@@ -7,14 +6,16 @@ import { i18n } from '/app/i18n'
 import { FLOWS } from '../constants'
 import { ExitModal } from '../ExitModal'
 
-const render = (props: React.ComponentProps<typeof ExitModal>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof ExitModal>) => {
   return renderWithProviders(<ExitModal {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('ExitModal', () => {
-  let props: React.ComponentProps<typeof ExitModal>
+  let props: ComponentProps<typeof ExitModal>
 
   beforeEach(() => {
     props = {

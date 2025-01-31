@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { Fragment, memo } from 'react'
 import styled from 'styled-components'
 import map from 'lodash/map'
 
@@ -19,6 +19,8 @@ import type {
   WellFill,
   WellStroke,
 } from './labwareInternals/types'
+
+import type { RefObject } from 'react'
 import type { LabwareAdapterLoadName } from './LabwareAdapter'
 
 export interface LabwareProps {
@@ -42,7 +44,7 @@ export interface LabwareProps {
   onMouseEnterWell?: (e: WellMouseEvent) => unknown
   /** Optional callback, called with WellMouseEvent args onMouseLeave */
   onMouseLeaveWell?: (e: WellMouseEvent) => unknown
-  gRef?: React.RefObject<SVGGElement>
+  gRef?: RefObject<SVGGElement>
   onLabwareClick?: () => void
   /** Hide labware outline */
   hideOutline?: boolean
@@ -50,7 +52,7 @@ export interface LabwareProps {
   isInteractive?: boolean
 }
 
-const TipDecoration = React.memo(function TipDecoration(props: {
+const TipDecoration = memo(function TipDecoration(props: {
   well: LabwareWell
 }) {
   const { well } = props
@@ -141,7 +143,7 @@ export const Labware = (props: LabwareProps): JSX.Element => {
         <g>
           {map(definition.wells, (well, wellName) => {
             return (
-              <React.Fragment key={wellName}>
+              <Fragment key={wellName}>
                 <Well
                   wellName={wellName}
                   well={well}
@@ -156,7 +158,7 @@ export const Labware = (props: LabwareProps): JSX.Element => {
                 />
 
                 {isTiprack ? <TipDecoration well={well} /> : null}
-              </React.Fragment>
+              </Fragment>
             )
           })}
         </g>

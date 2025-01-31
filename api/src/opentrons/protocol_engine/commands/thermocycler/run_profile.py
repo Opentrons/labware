@@ -1,9 +1,10 @@
 """Command models to execute a Thermocycler profile."""
 from __future__ import annotations
-from typing import List, Optional, TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING, Any
 from typing_extensions import Literal, Type
 
 from pydantic import BaseModel, Field
+from pydantic.json_schema import SkipJsonSchema
 
 from opentrons.hardware_control.modules.types import ThermocyclerStep
 
@@ -16,6 +17,10 @@ if TYPE_CHECKING:
 
 
 RunProfileCommandType = Literal["thermocycler/runProfile"]
+
+
+def _remove_default(s: dict[str, Any]) -> None:
+    s.pop("default", None)
 
 
 class RunProfileStepParams(BaseModel):
@@ -35,10 +40,11 @@ class RunProfileParams(BaseModel):
         ...,
         description="Array of profile steps with target temperature and temperature hold time.",
     )
-    blockMaxVolumeUl: Optional[float] = Field(
+    blockMaxVolumeUl: float | SkipJsonSchema[None] = Field(
         None,
         description="Amount of liquid in uL of the most-full well"
         " in labware loaded onto the thermocycler.",
+        json_schema_extra=_remove_default,
     )
 
 
@@ -104,7 +110,7 @@ class RunProfile(BaseCommand[RunProfileParams, RunProfileResult, ErrorOccurrence
 
     commandType: RunProfileCommandType = "thermocycler/runProfile"
     params: RunProfileParams
-    result: Optional[RunProfileResult]
+    result: Optional[RunProfileResult] = None
 
     _ImplementationCls: Type[RunProfileImpl] = RunProfileImpl
 

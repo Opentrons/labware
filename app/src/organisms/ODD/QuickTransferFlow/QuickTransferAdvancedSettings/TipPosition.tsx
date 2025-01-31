@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -19,6 +19,7 @@ import { ACTIONS } from '../constants'
 import { createPortal } from 'react-dom'
 import { useTrackEventWithRobotSerial } from '/app/redux-resources/analytics'
 
+import type { Dispatch } from 'react'
 import type {
   QuickTransferSummaryState,
   QuickTransferSummaryAction,
@@ -28,7 +29,7 @@ import type {
 interface TipPositionEntryProps {
   onBack: () => void
   state: QuickTransferSummaryState
-  dispatch: React.Dispatch<QuickTransferSummaryAction>
+  dispatch: Dispatch<QuickTransferSummaryAction>
   kind: FlowRateKind // TODO: rename flowRateKind to be generic
 }
 
@@ -36,9 +37,9 @@ export function TipPositionEntry(props: TipPositionEntryProps): JSX.Element {
   const { onBack, state, dispatch, kind } = props
   const { i18n, t } = useTranslation(['quick_transfer', 'shared'])
   const { trackEventWithRobotSerial } = useTrackEventWithRobotSerial()
-  const keyboardRef = React.useRef(null)
+  const keyboardRef = useRef(null)
 
-  const [tipPosition, setTipPosition] = React.useState<number>(
+  const [tipPosition, setTipPosition] = useState<number>(
     kind === 'aspirate' ? state.tipPositionAspirate : state.tipPositionDispense
   )
 

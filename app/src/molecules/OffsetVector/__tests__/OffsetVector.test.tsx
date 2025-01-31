@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
 import { describe, it, expect, beforeEach } from 'vitest'
@@ -7,12 +6,14 @@ import { renderWithProviders } from '/app/__testing-utils__'
 
 import { OffsetVector } from '../'
 
-const render = (props: React.ComponentProps<typeof OffsetVector>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof OffsetVector>) => {
   return renderWithProviders(<OffsetVector {...props} />)[0]
 }
 
 describe('OffsetVector', () => {
-  let props: React.ComponentProps<typeof OffsetVector>
+  let props: ComponentProps<typeof OffsetVector>
 
   beforeEach(() => {
     props = {

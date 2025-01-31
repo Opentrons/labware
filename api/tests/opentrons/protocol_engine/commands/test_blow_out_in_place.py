@@ -1,11 +1,14 @@
 """Test blow-out-in-place commands."""
 from datetime import datetime
+
+import pytest
 from decoy import Decoy, matchers
 
 from opentrons.protocol_engine.commands.pipetting_common import OverpressureError
 from opentrons.protocol_engine.execution.gantry_mover import GantryMover
 from opentrons.protocol_engine.resources.model_utils import ModelUtils
 from opentrons.protocol_engine.state.state import StateView
+from opentrons.protocol_engine.state import update_types
 from opentrons.protocol_engine.commands.blow_out_in_place import (
     BlowOutInPlaceParams,
     BlowOutInPlaceResult,
@@ -18,7 +21,6 @@ from opentrons.protocol_engine.execution import (
 from opentrons.hardware_control import HardwareControlAPI
 from opentrons.types import Point
 from opentrons_shared_data.errors.exceptions import PipetteOverpressureError
-import pytest
 
 
 @pytest.fixture
@@ -41,6 +43,7 @@ def subject(
 
 async def test_blow_out_in_place_implementation(
     decoy: Decoy,
+    gantry_mover: GantryMover,
     subject: BlowOutInPlaceImplementation,
     pipetting: PipettingHandler,
 ) -> None:
@@ -49,10 +52,19 @@ async def test_blow_out_in_place_implementation(
         pipetteId="pipette-id",
         flowRate=1.234,
     )
+    decoy.when(await gantry_mover.get_position("pipette-id")).then_return(
+        Point(1, 2, 3)
+    )
 
     result = await subject.execute(data)
-
-    assert result == SuccessData(public=BlowOutInPlaceResult())
+    assert result == SuccessData(
+        public=BlowOutInPlaceResult(),
+        state_update=update_types.StateUpdate(
+            pipette_aspirated_fluid=update_types.PipetteEmptyFluidUpdate(
+                pipette_id="pipette-id"
+            )
+        ),
+    )
 
     decoy.verify(
         await pipetting.blow_out_in_place(pipette_id="pipette-id", flow_rate=1.234)
@@ -94,10 +106,15 @@ async def test_overpressure_error(
     result = await subject.execute(data)
 
     assert result == DefinedErrorData(
-        public=OverpressureError.construct(
+        public=OverpressureError.model_construct(
             id=error_id,
             createdAt=error_timestamp,
             wrappedErrors=[matchers.Anything()],
             errorInfo={"retryLocation": (position.x, position.y, position.z)},
+        ),
+        state_update=update_types.StateUpdate(
+            pipette_aspirated_fluid=update_types.PipetteUnknownFluidUpdate(
+                pipette_id="pipette-id"
+            )
         ),
     )

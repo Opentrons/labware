@@ -1,15 +1,16 @@
-import type * as React from 'react'
 import { describe, it, beforeEach, vi, expect } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 import { renderWithProviders } from '../../../testing/utils'
 
 import { ListButtonRadioButton } from '..'
 
-const render = (props: React.ComponentProps<typeof ListButtonRadioButton>) =>
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof ListButtonRadioButton>) =>
   renderWithProviders(<ListButtonRadioButton {...props} />)
 
 describe('ListButtonRadioButton', () => {
-  let props: React.ComponentProps<typeof ListButtonRadioButton>
+  let props: ComponentProps<typeof ListButtonRadioButton>
 
   beforeEach(() => {
     props = {

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { createPortal } from 'react-dom'
 
@@ -19,6 +19,7 @@ import { ChildNavigation } from '/app/organisms/ODD/ChildNavigation'
 import { useTrackEventWithRobotSerial } from '/app/redux-resources/analytics'
 import { ACTIONS } from '../constants'
 
+import type { Dispatch } from 'react'
 import type {
   QuickTransferSummaryState,
   QuickTransferSummaryAction,
@@ -30,7 +31,7 @@ import { NumericalKeyboard } from '/app/atoms/SoftwareKeyboard'
 interface AirGapProps {
   onBack: () => void
   state: QuickTransferSummaryState
-  dispatch: React.Dispatch<QuickTransferSummaryAction>
+  dispatch: Dispatch<QuickTransferSummaryAction>
   kind: FlowRateKind
 }
 
@@ -38,15 +39,15 @@ export function AirGap(props: AirGapProps): JSX.Element {
   const { kind, onBack, state, dispatch } = props
   const { t } = useTranslation('quick_transfer')
   const { trackEventWithRobotSerial } = useTrackEventWithRobotSerial()
-  const keyboardRef = React.useRef(null)
+  const keyboardRef = useRef(null)
 
-  const [airGapEnabled, setAirGapEnabled] = React.useState<boolean>(
+  const [airGapEnabled, setAirGapEnabled] = useState<boolean>(
     kind === 'aspirate'
       ? state.airGapAspirate != null
       : state.airGapDispense != null
   )
-  const [currentStep, setCurrentStep] = React.useState<number>(1)
-  const [volume, setVolume] = React.useState<number | null>(
+  const [currentStep, setCurrentStep] = useState<number>(1)
+  const [volume, setVolume] = useState<number | null>(
     kind === 'aspirate'
       ? state.airGapAspirate ?? null
       : state.airGapDispense ?? null

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { fireEvent, screen } from '@testing-library/react'
@@ -7,12 +6,14 @@ import { COLORS, BORDERS } from '@opentrons/components'
 import { SmallButton } from '../SmallButton'
 import { renderWithProviders } from '/app/__testing-utils__'
 
-const render = (props: React.ComponentProps<typeof SmallButton>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof SmallButton>) => {
   return renderWithProviders(<SmallButton {...props} />)[0]
 }
 
 describe('SmallButton', () => {
-  let props: React.ComponentProps<typeof SmallButton>
+  let props: ComponentProps<typeof SmallButton>
 
   beforeEach(() => {
     props = {

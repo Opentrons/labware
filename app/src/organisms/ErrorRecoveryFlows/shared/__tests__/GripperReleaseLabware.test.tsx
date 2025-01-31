@@ -7,20 +7,21 @@ import { i18n } from '/app/i18n'
 import { mockRecoveryContentProps } from '/app/organisms/ErrorRecoveryFlows/__fixtures__'
 import { clickButtonLabeled } from '/app/organisms/ErrorRecoveryFlows/__tests__/util'
 
+import type { ComponentProps } from 'react'
 import type { Mock } from 'vitest'
 
 vi.mock('/app/assets/videos/error-recovery/Gripper_Release.webm', () => ({
   default: 'mocked-animation-path.webm',
 }))
 
-const render = (props: React.ComponentProps<typeof GripperReleaseLabware>) => {
+const render = (props: ComponentProps<typeof GripperReleaseLabware>) => {
   return renderWithProviders(<GripperReleaseLabware {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('GripperReleaseLabware', () => {
-  let props: React.ComponentProps<typeof GripperReleaseLabware>
+  let props: ComponentProps<typeof GripperReleaseLabware>
   let mockHandleMotionRouting: Mock
 
   beforeEach(() => {

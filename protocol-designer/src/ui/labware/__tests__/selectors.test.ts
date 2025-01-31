@@ -9,7 +9,6 @@ import {
   THERMOCYCLER_MODULE_TYPE,
   THERMOCYCLER_MODULE_V1,
 } from '@opentrons/shared-data'
-import { SPAN7_8_10_11_SLOT } from '../../../constants'
 import {
   getDisposalOptions,
   getLabwareOptions,
@@ -102,7 +101,7 @@ describe('labware selectors', () => {
       expect(
         // @ts-expect-error(sa, 2021-6-15): resultFunc
         getDisposalOptions.resultFunc(additionalEquipmentEntities)
-      ).toEqual([{ name: 'Trash Bin', value: mockTrashId }])
+      ).toEqual([{ name: 'Trash bin', value: mockTrashId }])
     })
     it('filters out additional equipment that is NOT trash when multiple trash bins present', () => {
       const mockTrashId = 'mockTrashId'
@@ -129,8 +128,8 @@ describe('labware selectors', () => {
         // @ts-expect-error(sa, 2021-6-15): resultFunc
         getDisposalOptions.resultFunc(additionalEquipmentEntities)
       ).toEqual([
-        { name: 'Trash Bin', value: mockTrashId },
-        { name: 'Trash Bin', value: mockTrashId2 },
+        { name: 'Trash bin', value: mockTrashId },
+        { name: 'Trash bin', value: mockTrashId2 },
       ])
     })
   })
@@ -142,7 +141,12 @@ describe('labware selectors', () => {
         getLabwareOptions.resultFunc(
           {},
           {},
-          { labware: {}, modules: {}, pipettes: {} },
+          {
+            labware: {},
+            modules: {},
+            pipettes: {},
+            additionalEquipmentOnDeck: {},
+          },
           {},
           {},
           {}
@@ -153,13 +157,13 @@ describe('labware selectors', () => {
     it('should return labware options when no modules are present, with no tipracks', () => {
       const labwareEntities = {
         ...tipracks,
-        ...trash,
         ...otherLabware,
       }
       const initialDeckSetup = {
         labware: labwareEntities,
         modules: {},
         pipettes: {},
+        additionalEquipmentOnDeck: {},
       }
       expect(
         // @ts-expect-error(sa, 2021-6-15): resultFunc
@@ -171,13 +175,10 @@ describe('labware selectors', () => {
           {},
           {}
         )
-      ).toEqual([
-        { name: 'Source Plate', value: 'wellPlateId' },
-        { name: 'Trash', value: mockTrash },
-      ])
+      ).toEqual([{ name: 'Source Plate', value: 'wellPlateId' }])
     })
 
-    it('should return labware options with module prefixes when a labware is on module', () => {
+    it('should return labware options with no module prefixes even when a labware is on module', () => {
       const labware = {
         wellPlateId: {
           ...otherLabware.wellPlateId,
@@ -206,6 +207,9 @@ describe('labware selectors', () => {
           ...trash,
           ...labware,
         },
+        additionalEquipmentOnDeck: {
+          trash: { id: 'trash', location: 'cutout12', name: 'trashBin' },
+        },
         modules: {
           magModuleId: {
             id: 'magModuleId',
@@ -223,7 +227,7 @@ describe('labware selectors', () => {
             id: 'thermocyclerId',
             type: THERMOCYCLER_MODULE_TYPE,
             model: THERMOCYCLER_MODULE_V1,
-            slot: SPAN7_8_10_11_SLOT,
+            slot: '8',
           },
           heaterShakerId: {
             id: 'heaterShakerId',
@@ -253,11 +257,11 @@ describe('labware selectors', () => {
           {}
         )
       ).toEqual([
-        { name: 'HS Plate in Heater-Shaker', value: 'hsPlateId' },
-        { name: 'TC Plate in Thermocycler', value: 'tcPlateId' },
-        { name: 'Temp Plate in Temperature Module', value: 'tempPlateId' },
+        { name: 'HS Plate in 6', value: 'hsPlateId' },
+        { name: 'TC Plate in A1+B1', value: 'tcPlateId' },
+        { name: 'Temp Plate in 3', value: 'tempPlateId' },
         { name: 'Trash', value: mockTrash },
-        { name: 'Well Plate in Magnetic Module', value: 'wellPlateId' },
+        { name: 'Well Plate in 1', value: 'wellPlateId' },
       ])
     })
 
@@ -272,7 +276,6 @@ describe('labware selectors', () => {
       const initialDeckSetup = {
         pipettes: {},
         labware: {
-          ...trash,
           ...labware,
         },
         modules: {
@@ -282,6 +285,9 @@ describe('labware selectors', () => {
             model: MAGNETIC_MODULE_V1,
             slot: '1',
           },
+        },
+        additionalEquipmentOnDeck: {
+          trash: { id: 'trash', name: 'trashBin', location: 'cutout12' },
         },
       }
 
@@ -312,14 +318,14 @@ describe('labware selectors', () => {
         )
       ).toEqual([
         { name: 'Trash', value: mockTrash },
-        { name: 'Well Plate in Magnetic Module', value: 'wellPlateId' },
+        { name: 'Well Plate in 1', value: 'wellPlateId' },
       ])
     })
   })
 
   describe('_sortLabwareDropdownOptions', () => {
     const trashOption = {
-      name: 'Trash Bin',
+      name: 'Trash bin',
       value: mockTrash,
     }
     const zzzPlateOption = { name: 'Zzz Plate', value: 'zzz' }

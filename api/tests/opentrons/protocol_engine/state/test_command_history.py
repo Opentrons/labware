@@ -202,13 +202,13 @@ def test_set_fixit_running_command_id(command_history: CommandHistory) -> None:
     """It should set the ID of the currently running fixit command."""
     command_entry = create_queued_command()
     command_history.append_queued_command(command_entry)
-    running_command = command_entry.copy(
+    running_command = command_entry.model_copy(
         update={
             "status": CommandStatus.RUNNING,
         }
     )
     command_history.set_command_running(running_command)
-    finished_command = command_entry.copy(
+    finished_command = command_entry.model_copy(
         update={
             "status": CommandStatus.SUCCEEDED,
         }
@@ -218,7 +218,7 @@ def test_set_fixit_running_command_id(command_history: CommandHistory) -> None:
         command_id="fixit-id", intent=CommandIntent.FIXIT
     )
     command_history.append_queued_command(fixit_command_entry)
-    fixit_running_command = fixit_command_entry.copy(
+    fixit_running_command = fixit_command_entry.model_copy(
         update={
             "status": CommandStatus.RUNNING,
         }

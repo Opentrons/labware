@@ -1,5 +1,5 @@
 // Pipette Offset Calibration Orchestration Component
-import * as React from 'react'
+import { useMemo } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
@@ -27,6 +27,7 @@ import {
   useCalibrationError,
 } from '/app/organisms/Desktop/CalibrationError'
 
+import type { ComponentType } from 'react'
 import type { Mount } from '@opentrons/components'
 import type {
   CalibrationLabware,
@@ -37,7 +38,7 @@ import type { CalibratePipetteOffsetParentProps } from './types'
 import type { CalibrationPanelProps } from '/app/organisms/Desktop/CalibrationPanels/types'
 
 const PANEL_BY_STEP: Partial<
-  Record<CalibrationSessionStep, React.ComponentType<CalibrationPanelProps>>
+  Record<CalibrationSessionStep, ComponentType<CalibrationPanelProps>>
 > = {
   [Sessions.PIP_OFFSET_STEP_SESSION_STARTED]: Introduction,
   [Sessions.PIP_OFFSET_STEP_LABWARE_LOADED]: DeckSetup,
@@ -88,7 +89,7 @@ export function CalibratePipetteOffset({
   const calBlock: CalibrationLabware | null =
     labware != null ? labware.find(l => !l.isTiprack) ?? null : null
 
-  const isMulti = React.useMemo(() => {
+  const isMulti = useMemo(() => {
     const spec =
       instrument != null ? getPipetteModelSpecs(instrument.model) : null
     return spec != null ? spec.channels > 1 : false

@@ -99,7 +99,7 @@ extensions += ['sphinx-prompt', 'sphinx_substitution_extensions']
 # use rst_prolog to hold the subsitution
 # update the apiLevel value whenever a new minor version is released
 rst_prolog = f"""
-.. |apiLevel| replace:: 2.20
+.. |apiLevel| replace:: 2.21
 .. |release| replace:: {release}
 """
 

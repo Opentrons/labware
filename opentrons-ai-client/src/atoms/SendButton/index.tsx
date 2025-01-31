@@ -7,8 +7,11 @@ import {
   COLORS,
   DISPLAY_FLEX,
   Icon,
-  JUSTIFY_CENTER,
+  JUSTIFY_SPACE_AROUND,
+  StyledText,
 } from '@opentrons/components'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface SendButtonProps {
   handleClick: () => void
@@ -21,6 +24,15 @@ export function SendButton({
   disabled = false,
   isLoading = false,
 }: SendButtonProps): JSX.Element {
+  const { t } = useTranslation('protocol_generator')
+
+  const progressTexts = [
+    t('progressInitializing'),
+    t('progressProcessing'),
+    t('progressGenerating'),
+    t('progressFinalizing'),
+  ]
+
   const playButtonStyle = css`
     -webkit-tap-highlight-color: transparent;
     &:focus {
@@ -47,20 +59,50 @@ export function SendButton({
       color: ${COLORS.grey50};
     }
   `
+
+  const [buttonText, setButtonText] = useState(progressTexts[0])
+  const [, setProgressIndex] = useState(0)
+
+  useEffect(() => {
+    if (isLoading) {
+      const interval = setInterval(() => {
+        setProgressIndex(prevIndex => {
+          let newIndex = prevIndex + 1
+          if (newIndex > progressTexts.length - 1) {
+            newIndex = progressTexts.length - 1
+          }
+          return newIndex
+        })
+      }, 10000)
+
+      return () => {
+        setProgressIndex(0)
+        setButtonText(progressTexts[0])
+        clearInterval(interval)
+      }
+    }
+  }, [isLoading])
+
   return (
     <Btn
       alignItems={ALIGN_CENTER}
       backgroundColor={disabled ? COLORS.grey35 : COLORS.blue50}
       borderRadius={BORDERS.borderRadiusFull}
       display={DISPLAY_FLEX}
-      justifyContent={JUSTIFY_CENTER}
-      width="4.25rem"
-      height="3.75rem"
+      justifyContent={JUSTIFY_SPACE_AROUND}
+      paddingX="20px"
+      width={isLoading ? 'wrap' : '4.25rem'}
+      height="4.25rem"
       disabled={disabled || isLoading}
       onClick={handleClick}
       aria-label="play"
       css={playButtonStyle}
     >
+      {isLoading ? (
+        <StyledText paddingLeft="0px" paddingRight="24px" as="i">
+          {buttonText}
+        </StyledText>
+      ) : null}
       <Icon
         color={disabled ? COLORS.grey50 : COLORS.white}
         name={isLoading ? 'ot-spinner' : 'send'}

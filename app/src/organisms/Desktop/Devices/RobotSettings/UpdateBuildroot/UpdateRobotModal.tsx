@@ -88,7 +88,7 @@ export function UpdateRobotModal({
 
   let disabledReason: string = ''
   if (updateFromFileDisabledReason)
-    disabledReason = updateFromFileDisabledReason
+    disabledReason = t(updateFromFileDisabledReason)
   else if (isRobotBusy) disabledReason = t('robot_busy_protocol')
 
   useEffect(() => {

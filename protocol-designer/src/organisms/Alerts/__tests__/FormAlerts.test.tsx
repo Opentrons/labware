@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, beforeEach, expect } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { fireEvent, screen } from '@testing-library/react'
@@ -18,25 +17,29 @@ import {
   dismissTimelineWarning,
 } from '../../../dismiss/actions'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('../../../dismiss/actions')
 vi.mock('../../../ui/steps')
 vi.mock('../../../top-selectors/timelineWarnings')
 vi.mock('../../../dismiss/selectors')
 vi.mock('../../../step-forms/selectors')
 
-const render = (props: React.ComponentProps<typeof FormAlerts>) => {
+const render = (props: ComponentProps<typeof FormAlerts>) => {
   return renderWithProviders(<FormAlerts {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('FormAlerts', () => {
-  let props: React.ComponentProps<typeof FormAlerts>
+  let props: ComponentProps<typeof FormAlerts>
 
   beforeEach(() => {
     props = {
       focusedField: null,
       dirtyFields: [],
+      showFormErrors: false,
+      page: 0,
     }
     vi.mocked(getFormLevelErrorsForUnsavedForm).mockReturnValue([])
     vi.mocked(getFormWarningsForSelectedStep).mockReturnValue([])

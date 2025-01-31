@@ -49,6 +49,7 @@ def get_all_pipette_models() -> Iterator[PipetteModel]:
         "single_channel": "single",
         "ninety_six_channel": "96",
         "eight_channel": "multi",
+        "eight_channel_em": "multi_em",
     }
     assert os.listdir(paths_to_validate), "You have a path wrong"
     for channel_dir in os.listdir(paths_to_validate):
@@ -74,6 +75,7 @@ def test_max_flow_rates_per_volume(pipette: PipetteModel, action: str) -> None:
         pipette_model_version.pipette_type,
         pipette_model_version.pipette_channels,
         pipette_model_version.pipette_version,
+        pipette_model_version.oem_type,
     )
 
     pipette_model_version_str = f"{pipette_model_version}"

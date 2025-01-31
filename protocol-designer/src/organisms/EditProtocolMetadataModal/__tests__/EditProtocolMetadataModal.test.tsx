@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { fireEvent, screen } from '@testing-library/react'
@@ -7,18 +6,18 @@ import { renderWithProviders } from '../../../__testing-utils__'
 import { EditProtocolMetadataModal } from '..'
 import { selectors as fileSelectors } from '../../../file-data'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('../../../file-data')
 
-const render = (
-  props: React.ComponentProps<typeof EditProtocolMetadataModal>
-) => {
+const render = (props: ComponentProps<typeof EditProtocolMetadataModal>) => {
   return renderWithProviders(<EditProtocolMetadataModal {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('EditProtocolMetadataModal', () => {
-  let props: React.ComponentProps<typeof EditProtocolMetadataModal>
+  let props: ComponentProps<typeof EditProtocolMetadataModal>
 
   beforeEach(() => {
     props = {

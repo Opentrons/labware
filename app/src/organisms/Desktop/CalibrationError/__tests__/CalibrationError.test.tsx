@@ -8,7 +8,7 @@ import { CalibrationError } from '..'
 import type { ComponentProps } from 'react'
 
 describe('CalibrationError', () => {
-  let props: React.ComponentProps<typeof CalibrationError>
+  let props: ComponentProps<typeof CalibrationError>
 
   beforeEach(() => {
     props = {

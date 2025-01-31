@@ -17,7 +17,7 @@ import {
   StyledText,
   TYPOGRAPHY,
 } from '@opentrons/components'
-import { BUTTON_LINK_STYLE } from '../../atoms'
+import { LINK_BUTTON_STYLE } from '../../atoms'
 import { AnnouncementModal } from '../../organisms'
 import { actions as loadFileActions } from '../../load-file'
 import { getFileMetadata } from '../../file-data/selectors'
@@ -28,6 +28,7 @@ import { useAnnouncements } from '../../organisms/AnnouncementModal/announcement
 import { getLocalStorageItem, localStorageAnnouncementKey } from '../../persist'
 import welcomeImage from '../../assets/images/welcome_page.png'
 
+import type { ChangeEvent, ComponentProps } from 'react'
 import type { ThunkDispatch } from '../../types'
 
 export function Landing(): JSX.Element {
@@ -38,7 +39,7 @@ export function Landing(): JSX.Element {
   const [showAnnouncementModal, setShowAnnouncementModal] = useState<boolean>(
     false
   )
-  const hasOptedIn = useSelector(getHasOptedIn)
+  const { hasOptedIn } = useSelector(getHasOptedIn)
   const { bakeToast, eatToast } = useKitchen()
   const announcements = useAnnouncements()
   const lastAnnouncement = announcements[announcements.length - 1]
@@ -77,9 +78,7 @@ export function Landing(): JSX.Element {
     }
   }, [metadata, navigate])
 
-  const loadFile = (
-    fileChangeEvent: React.ChangeEvent<HTMLInputElement>
-  ): void => {
+  const loadFile = (fileChangeEvent: ChangeEvent<HTMLInputElement>): void => {
     dispatch(loadFileActions.loadProtocolFile(fileChangeEvent))
   }
 
@@ -94,7 +93,8 @@ export function Landing(): JSX.Element {
         />
       ) : null}
       <Flex
-        backgroundColor={COLORS.grey20}
+        data-cy="landing-page"
+        backgroundColor={COLORS.grey10}
         flexDirection={DIRECTION_COLUMN}
         alignItems={ALIGN_CENTER}
         justifyContent={JUSTIFY_CENTER}
@@ -127,7 +127,7 @@ export function Landing(): JSX.Element {
             </StyledText>
           </Flex>
         </Flex>
-        <StyledNavLink to={'/createNew'}>
+        <StyledNavLink to="/createNew">
           <LargeButton
             onClick={() => {
               dispatch(toggleNewProtocolModal(true))
@@ -136,12 +136,12 @@ export function Landing(): JSX.Element {
           />
         </StyledNavLink>
         <StyledLabel>
-          <Flex css={BUTTON_LINK_STYLE}>
+          <Flex css={LINK_BUTTON_STYLE}>
             <StyledText desktopStyle="bodyLargeRegular">
               {t('edit_existing')}
             </StyledText>
           </Flex>
-          <input type="file" onChange={loadFile}></input>
+          <input type="file" onChange={loadFile} />
         </StyledLabel>
       </Flex>
       <EndUserAgreementFooter />
@@ -164,7 +164,7 @@ const ButtonText = styled.span`
   font-weight: ${TYPOGRAPHY.fontWeightSemiBold};
 `
 
-const StyledNavLink = styled(NavLink)<React.ComponentProps<typeof NavLink>>`
+const StyledNavLink = styled(NavLink)<ComponentProps<typeof NavLink>>`
   color: ${COLORS.white};
   text-decoration: none;
 `

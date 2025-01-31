@@ -1,0 +1,80 @@
+{
+  "ordering": [["A1"]],
+  "brand": {
+    "brand": "NEST",
+    "brandId": ["360206", "360266"],
+    "links": ["https://www.nest-biotech.com/reagent-reserviors"]
+  },
+  "metadata": {
+    "displayName": "NEST 1 Well Reservoir 290 mL",
+    "displayCategory": "reservoir",
+    "displayVolumeUnits": "mL",
+    "tags": []
+  },
+  "dimensions": {
+    "xDimension": 127.76,
+    "yDimension": 85.47,
+    "zDimension": 44.4
+  },
+  "wells": {
+    "A1": {
+      "depth": 39.55,
+      "shape": "rectangular",
+      "xDimension": 106.8,
+      "yDimension": 71.2,
+      "totalLiquidVolume": 290000,
+      "x": 63.88,
+      "y": 42.74,
+      "z": 4.85,
+      "geometryDefinitionId": "cuboidalWell"
+    }
+  },
+  "groups": [
+    {
+      "metadata": {
+        "wellBottomShape": "v"
+      },
+      "wells": ["A1"]
+    }
+  ],
+  "parameters": {
+    "format": "trough",
+    "isTiprack": false,
+    "isMagneticModuleCompatible": false,
+    "quirks": ["centerMultichannelOnWells", "touchTipDisabled"],
+    "loadName": "nest_1_reservoir_290ml"
+  },
+  "namespace": "opentrons",
+  "version": 2,
+  "schemaVersion": 3,
+  "cornerOffsetFromSlot": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "innerLabwareGeometry": {
+    "cuboidalWell": {
+      "sections": [
+        {
+          "shape": "cuboidal",
+          "topXDimension": 7.75,
+          "topYDimension": 70.75,
+          "bottomXDimension": 3.127,
+          "bottomYDimension": 66.85,
+          "topHeight": 2.0,
+          "bottomHeight": 0.0,
+          "xCount": 12
+        },
+        {
+          "shape": "cuboidal",
+          "topXDimension": 107.76,
+          "topYDimension": 71.0,
+          "bottomXDimension": 106.75,
+          "bottomYDimension": 70.75,
+          "topHeight": 39.55,
+          "bottomHeight": 2.0
+        }
+      ]
+    }
+  }
+}

@@ -2,12 +2,11 @@
 from dataclasses import dataclass
 from typing import List
 
+from opentrons.protocol_engine.actions.get_state_update import get_state_updates
+from opentrons.protocol_engine.state import update_types
+
 from ._abstract_store import HasState, HandlesActions
-from ..actions import Action, SucceedCommandAction
-from ..commands import (
-    Command,
-    absorbance_reader,
-)
+from ..actions import Action
 
 
 @dataclass
@@ -28,16 +27,15 @@ class FileStore(HasState[FileState], HandlesActions):
 
     def handle_action(self, action: Action) -> None:
         """Modify state in reaction to an action."""
-        if isinstance(action, SucceedCommandAction):
-            self._handle_command(action.command)
+        for state_update in get_state_updates(action):
+            self._handle_state_update(state_update)
 
-    def _handle_command(self, command: Command) -> None:
-        if isinstance(command.result, absorbance_reader.ReadAbsorbanceResult):
-            if command.result.fileIds is not None:
-                self._state.file_ids.extend(command.result.fileIds)
+    def _handle_state_update(self, state_update: update_types.StateUpdate) -> None:
+        if state_update.files_added != update_types.NO_CHANGE:
+            self._state.file_ids.extend(state_update.files_added.file_ids)
 
 
-class FileView(HasState[FileState]):
+class FileView:
     """Read-only engine created file state view."""
 
     _state: FileState

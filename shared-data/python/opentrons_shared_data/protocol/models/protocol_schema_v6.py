@@ -1,4 +1,9 @@
-from pydantic import BaseModel, Field, validator
+from pydantic import (
+    ConfigDict,
+    BaseModel,
+    Field,
+    model_validator,
+)
 from typing import Any, List, Optional, Dict, Union
 from typing_extensions import Literal
 from opentrons_shared_data.labware.labware_definition import LabwareDefinition
@@ -21,44 +26,44 @@ from .shared_models import (
 
 # TODO (tamar 3/15/22): split apart all the command payloads when we tackle #9583
 class Params(BaseModel):
-    slotName: Optional[str]
-    axes: Optional[List[str]]
-    pipetteId: Optional[str]
-    mount: Optional[str]
-    moduleId: Optional[str]
-    location: Optional[Union[Location, Literal["offDeck"]]]
-    labwareId: Optional[str]
-    displayName: Optional[str]
-    liquidId: Optional[str]
-    volumeByWell: Optional[Dict[str, Any]]
-    wellName: Optional[str]
-    volume: Optional[float]
-    flowRate: Optional[float]
-    wellLocation: Optional[Union[WellLocation]]
-    waitForResume: Optional[Literal[True]]
-    seconds: Optional[float]
-    minimumZHeight: Optional[float]
-    forceDirect: Optional[bool]
-    speed: Optional[float]
-    message: Optional[str]
-    coordinates: Optional[OffsetVector]
-    axis: Optional[str]
-    distance: Optional[float]
-    positionId: Optional[str]
-    temperature: Optional[float]
-    celsius: Optional[float]
-    blockMaxVolumeUl: Optional[float]
-    rpm: Optional[float]
-    height: Optional[float]
-    offset: Optional[OffsetVector]
-    profile: Optional[List[ProfileStep]]
-    radius: Optional[float]
+    slotName: Optional[str] = None
+    axes: Optional[List[str]] = None
+    pipetteId: Optional[str] = None
+    mount: Optional[str] = None
+    moduleId: Optional[str] = None
+    location: Optional[Union[Location, Literal["offDeck"]]] = None
+    labwareId: Optional[str] = None
+    displayName: Optional[str] = None
+    liquidId: Optional[str] = None
+    volumeByWell: Optional[Dict[str, Any]] = None
+    wellName: Optional[str] = None
+    volume: Optional[float] = None
+    flowRate: Optional[float] = None
+    wellLocation: Optional[Union[WellLocation]] = None
+    waitForResume: Optional[Literal[True]] = None
+    seconds: Optional[float] = None
+    minimumZHeight: Optional[float] = None
+    forceDirect: Optional[bool] = None
+    speed: Optional[float] = None
+    message: Optional[str] = None
+    coordinates: Optional[OffsetVector] = None
+    axis: Optional[str] = None
+    distance: Optional[float] = None
+    positionId: Optional[str] = None
+    temperature: Optional[float] = None
+    celsius: Optional[float] = None
+    blockMaxVolumeUl: Optional[float] = None
+    rpm: Optional[float] = None
+    height: Optional[float] = None
+    offset: Optional[OffsetVector] = None
+    profile: Optional[List[ProfileStep]] = None
+    radius: Optional[float] = None
 
 
 class Command(BaseModel):
     commandType: str
     params: Params
-    key: Optional[str]
+    key: Optional[str] = None
 
 
 class ProtocolSchemaV6(BaseModel):
@@ -73,38 +78,23 @@ class ProtocolSchemaV6(BaseModel):
     robot: Robot
     pipettes: Dict[str, Pipette]
     labware: Dict[str, Labware]
-    modules: Optional[Dict[str, Module]]
-    liquids: Optional[Dict[str, Liquid]]
+    modules: Optional[Dict[str, Module]] = None
+    liquids: Optional[Dict[str, Liquid]] = None
     labwareDefinitions: Dict[str, LabwareDefinition]
     # commands must be after pipettes, labware, etc. for its @validator to work.
     commands: List[Command]
-    commandAnnotations: Optional[List[CommandAnnotation]]
-    designerApplication: Optional[DesignerApplication]
+    commandAnnotations: Optional[List[CommandAnnotation]] = None
+    designerApplication: Optional[DesignerApplication] = None
+    model_config = ConfigDict(populate_by_name=True)
 
-    class Config:
-        # added for constructing the class with field name instead of alias
-        allow_population_by_field_name = True
+    @model_validator(mode="after")
+    def _validate_commands(self) -> "ProtocolSchemaV6":
+        pipette_ids = set(self.pipettes.keys() if self.pipettes else [])
+        labware_ids = set(self.labware.keys() if self.labware else [])
+        module_ids = set(self.modules.keys() if self.modules else [])
+        liquid_ids = set(self.liquids.keys() if self.liquids else [])
 
-    @validator("commands")
-    def _validate_commands(
-        cls,
-        value: List[Command],
-        values: Dict[str, Any],
-    ) -> List[Command]:
-        pipette_ids = set(values["pipettes"].keys()) if "pipettes" in values else set()
-        labware_ids = set(values["labware"].keys()) if "labware" in values else set()
-        module_ids = (
-            set(values["modules"].keys())
-            if "modules" in values and values["modules"]
-            else set()
-        )
-        liquid_ids = (
-            set(values["liquids"].keys())
-            if "liquids" in values and values["liquids"]
-            else set()
-        )
-
-        for index, command in enumerate(value):
+        for index, command in enumerate(self.commands):
             if (
                 command.params.pipetteId is not None
                 and command.params.pipetteId not in pipette_ids
@@ -142,4 +132,4 @@ class ProtocolSchemaV6(BaseModel):
                     f" which doesn't exist."
                 )
 
-        return value
+        return self

@@ -42,24 +42,32 @@ export function ToggleExpandStepFormField(
     toggleValue,
     caption,
     toggleElement = 'toggle',
+    name,
     ...restProps
   } = props
 
   const resetFieldValue = (): void => {
-    restProps.updateValue('null')
+    restProps.updateValue(null)
   }
 
+  //  TODO: refactor this, it is messy
   const onToggleUpdateValue = (): void => {
-    if (typeof toggleValue === 'boolean') {
+    if (toggleValue === 'engage' || toggleValue === 'disengage') {
+      const newValue = toggleValue === 'engage' ? 'disengage' : 'engage'
+      toggleUpdateValue(newValue)
+    } else if (toggleValue === 'true' || toggleValue === 'false') {
+      const newValue = toggleValue === 'true' ? 'false' : 'true'
+      toggleUpdateValue(newValue)
+      if (newValue === 'true') {
+        resetFieldValue()
+      }
+    } else if (toggleValue == null) {
+      toggleUpdateValue(name === 'targetTemperature' ? 'true' : true)
+    } else {
       toggleUpdateValue(!toggleValue)
       if (toggleValue) {
         resetFieldValue()
       }
-    } else if (toggleValue === 'engage' || toggleValue === 'disengage') {
-      const newToggleValue = toggleValue === 'engage' ? 'disengage' : 'engage'
-      toggleUpdateValue(newToggleValue)
-    } else if (toggleValue == null) {
-      toggleUpdateValue(true)
     }
   }
 
@@ -99,6 +107,7 @@ export function ToggleExpandStepFormField(
           {isSelected ? (
             <InputStepFormField
               {...restProps}
+              name={name}
               padding="0"
               showTooltip={false}
               title={fieldTitle}

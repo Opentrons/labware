@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, expect, describe, beforeEach, afterEach } from 'vitest'
 import { when } from 'vitest-when'
 import { QueryClient, QueryClientProvider } from 'react-query'
@@ -25,6 +24,7 @@ import {
 } from '../__fixtures__/storedProtocolAnalysis'
 import { useNotifyRunQuery } from '/app/resources/runs'
 
+import type { FunctionComponent, ReactNode } from 'react'
 import type { Store } from 'redux'
 import type { UseQueryResult } from 'react-query'
 import type { Protocol, Run } from '@opentrons/api-client'
@@ -63,7 +63,7 @@ const PROTOCOL_ID = 'the_protocol_id'
 const PROTOCOL_KEY = 'the_protocol_key'
 
 describe('useStoredProtocolAnalysis hook', () => {
-  let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+  let wrapper: FunctionComponent<{ children: ReactNode }>
   beforeEach(() => {
     const queryClient = new QueryClient()
     wrapper = ({ children }) => (

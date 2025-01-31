@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 
 import { vi, it, expect, describe, beforeEach } from 'vitest'
@@ -8,16 +7,17 @@ import { useIncompatibleModulesAttached } from '..'
 
 import * as Fixtures from '../__fixtures__'
 
+import type { FunctionComponent, ReactNode } from 'react'
 import type { Modules } from '@opentrons/api-client'
 import type { UseQueryResult } from 'react-query'
 vi.mock('@opentrons/react-api-client')
 
 describe('useIncompatibleModulesAttached', () => {
-  let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+  let wrapper: FunctionComponent<{ children: ReactNode }>
   beforeEach(() => {
     const queryClient = new QueryClient()
-    const clientProvider: React.FunctionComponent<{
-      children: React.ReactNode
+    const clientProvider: FunctionComponent<{
+      children: ReactNode
     }> = ({ children }) => (
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     )

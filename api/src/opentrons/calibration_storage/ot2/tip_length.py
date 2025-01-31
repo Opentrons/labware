@@ -24,13 +24,14 @@ log = logging.getLogger(__name__)
 
 
 def _convert_tip_length_model_to_dict(
-    to_dict: typing.Dict[LabwareUri, v1.TipLengthModel]
+    to_dict: typing.Dict[LabwareUri, v1.TipLengthModel],
 ) -> typing.Dict[LabwareUri, typing.Any]:
+    # TODO[pydantic]: supported in Pydantic V2
     # This is a workaround since pydantic doesn't have a nice way to
     # add encoders when converting to a dict.
     dict_of_tip_lengths = {}
     for key, item in to_dict.items():
-        dict_of_tip_lengths[key] = json.loads(item.json())
+        dict_of_tip_lengths[key] = json.loads(item.model_dump_json())
     return dict_of_tip_lengths
 
 
@@ -175,12 +176,14 @@ def delete_tip_length_calibration(
             io.save_to_file(tip_length_dir, pipette_id, dict_of_tip_lengths)
         else:
             io.delete_file(tip_length_dir / f"{pipette_id}.json")
-    elif tiprack_hash and any(tiprack_hash in v.dict() for v in tip_lengths.values()):
+    elif tiprack_hash and any(
+        tiprack_hash in v.model_dump() for v in tip_lengths.values()
+    ):
         # NOTE this is for backwards compatibilty only
         # TODO delete this check once the tip_length DELETE router
         # no longer depends on a tiprack hash
         for k, v in tip_lengths.items():
-            if tiprack_hash in v.dict():
+            if tiprack_hash in v.model_dump():
                 tip_lengths.pop(k)
         if tip_lengths:
             dict_of_tip_lengths = _convert_tip_length_model_to_dict(tip_lengths)

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, expect, describe, beforeEach, afterEach } from 'vitest'
 import { when } from 'vitest-when'
 import { Provider } from 'react-redux'
@@ -15,6 +14,7 @@ import { useDispatchApiRequest } from '/app/redux/robot-api'
 import { useRobot } from '/app/redux-resources/robots'
 import { usePipetteOffsetCalibration } from '..'
 
+import type { FunctionComponent, ReactNode } from 'react'
 import type { Store } from 'redux'
 import type { DiscoveredRobot } from '/app/redux/discovery/types'
 import type { DispatchApiRequestType } from '/app/redux/robot-api'
@@ -32,7 +32,7 @@ const MOUNT = 'left' as Mount
 
 describe('usePipetteOffsetCalibration hook', () => {
   let dispatchApiRequest: DispatchApiRequestType
-  let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+  let wrapper: FunctionComponent<{ children: ReactNode }>
   beforeEach(() => {
     dispatchApiRequest = vi.fn()
     const queryClient = new QueryClient()

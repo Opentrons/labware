@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { MemoryRouter } from 'react-router-dom'
 import { describe, it, beforeEach, vi, afterEach, expect } from 'vitest'
@@ -20,6 +19,7 @@ import {
 } from '/app/transformations/analysis'
 import { SetupLabwareMap } from '../SetupLabwareMap'
 
+import type { ComponentProps } from 'react'
 import type {
   CompletedProtocolAnalysis,
   LabwareDefinition2,
@@ -86,7 +86,7 @@ const mockTCModule = {
   type: 'thermocyclerModuleType' as ModuleType,
 }
 
-const render = (props: React.ComponentProps<typeof SetupLabwareMap>) => {
+const render = (props: ComponentProps<typeof SetupLabwareMap>) => {
   return renderWithProviders(
     <MemoryRouter>
       <SetupLabwareMap {...props} />

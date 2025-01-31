@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import {
@@ -23,6 +23,7 @@ import { Divider } from '/app/atoms/structure'
 import { getTopPortalEl } from '/app/App/portal'
 import { LabwareDetails } from '/app/organisms/Desktop/Labware/LabwareDetails'
 
+import type { MouseEventHandler } from 'react'
 import type { LoadLabwareRunTimeCommand } from '@opentrons/shared-data'
 import type { LabwareDefAndDate } from '/app/local-resources/labware'
 
@@ -164,9 +165,9 @@ export const LabwareDetailOverflowMenu = (
   const [
     showLabwareDetailSlideout,
     setShowLabwareDetailSlideout,
-  ] = React.useState<boolean>(false)
+  ] = useState<boolean>(false)
 
-  const handleClickMenuItem: React.MouseEventHandler<HTMLButtonElement> = e => {
+  const handleClickMenuItem: MouseEventHandler<HTMLButtonElement> = e => {
     e.preventDefault()
     setShowOverflowMenu(false)
     setShowLabwareDetailSlideout(true)

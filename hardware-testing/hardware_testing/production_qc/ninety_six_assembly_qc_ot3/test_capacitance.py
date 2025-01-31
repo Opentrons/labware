@@ -1,6 +1,6 @@
 """Test Capacitance."""
 from asyncio import sleep
-from typing import List, Union, Tuple, Optional, cast
+from typing import List, Union, Tuple, Optional, cast, Literal
 
 from opentrons_hardware.hardware_control.tool_sensors import capacitive_probe
 from opentrons_hardware.firmware_bindings.constants import NodeId, SensorId
@@ -104,7 +104,9 @@ def _get_hover_and_probe_pos(
     return hover_pos + probe_offset, probe_pos + probe_offset
 
 
-async def run(api: OT3API, report: CSVReport, section: str) -> None:
+async def run(
+    api: OT3API, report: CSVReport, section: str, pipette: Literal[200, 1000]
+) -> None:
     """Run."""
     z_ax = Axis.Z_L
     p_ax = Axis.P_L

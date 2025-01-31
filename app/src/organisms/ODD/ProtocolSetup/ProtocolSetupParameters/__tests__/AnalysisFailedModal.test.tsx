@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, beforeEach, expect } from 'vitest'
 import { when } from 'vitest-when'
 import { fireEvent, screen } from '@testing-library/react'
@@ -7,6 +6,8 @@ import { useDismissCurrentRunMutation } from '@opentrons/react-api-client'
 import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { AnalysisFailedModal } from '../AnalysisFailedModal'
+
+import type { ComponentProps } from 'react'
 import type { NavigateFunction } from 'react-router-dom'
 
 const PROTOCOL_ID = 'mockProtocolId'
@@ -26,14 +27,14 @@ vi.mock('react-router-dom', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof AnalysisFailedModal>) => {
+const render = (props: ComponentProps<typeof AnalysisFailedModal>) => {
   return renderWithProviders(<AnalysisFailedModal {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('AnalysisFailedModal', () => {
-  let props: React.ComponentProps<typeof AnalysisFailedModal>
+  let props: ComponentProps<typeof AnalysisFailedModal>
 
   when(vi.mocked(useDismissCurrentRunMutation))
     .calledWith()

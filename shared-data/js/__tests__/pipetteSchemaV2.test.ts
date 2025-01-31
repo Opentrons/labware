@@ -50,7 +50,7 @@ describe('test schema against all liquid specs definitions', () => {
     })
 
     it(`second parent dir matches pipette model: ${liquidPath}`, () => {
-      expect(['p10', 'p20', 'p50', 'p300', 'p1000']).toContain(
+      expect(['p10', 'p20', 'p50', 'p200', 'p300', 'p1000']).toContain(
         path.basename(path.dirname(path.dirname(liquidPath)))
       )
     })
@@ -73,7 +73,7 @@ describe('test schema against all geometry specs definitions', () => {
     })
 
     it(`parent dir matches pipette model: ${geometryPath}`, () => {
-      expect(['p10', 'p20', 'p50', 'p300', 'p1000']).toContain(
+      expect(['p10', 'p20', 'p50', 'p200', 'p300', 'p1000']).toContain(
         path.basename(path.dirname(geometryPath))
       )
     })
@@ -100,7 +100,7 @@ describe('test schema against all general specs definitions', () => {
     })
 
     it(`parent dir matches pipette model: ${generalPath}`, () => {
-      expect(['p10', 'p20', 'p50', 'p300', 'p1000']).toContain(
+      expect(['p10', 'p20', 'p50', 'p200', 'p300', 'p1000']).toContain(
         path.basename(path.dirname(generalPath))
       )
     })

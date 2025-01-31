@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { Fragment } from 'react'
 import values from 'lodash/values'
 
 import { Module } from '@opentrons/components'
@@ -11,10 +11,12 @@ import {
   isAddressableAreaStandardSlot,
   THERMOCYCLER_MODULE_TYPE,
 } from '@opentrons/shared-data'
-import { LabwareOnDeck } from '../../components/DeckSetup/LabwareOnDeck'
 import { getStagingAreaAddressableAreas } from '../../utils'
 import { getSlotIdsBlockedBySpanningForThermocycler } from '../../step-forms'
+import { LabwareOnDeck } from '../../organisms'
 import { SlotHover } from './SlotHover'
+
+import type { Dispatch, SetStateAction } from 'react'
 import type {
   CutoutId,
   DeckDefinition,
@@ -31,7 +33,7 @@ interface DeckSetupDetailsProps {
   deckDef: DeckDefinition
   stagingAreaCutoutIds: CutoutId[]
   hover: string | null
-  setHover: React.Dispatch<React.SetStateAction<string | null>>
+  setHover: Dispatch<SetStateAction<string | null>>
   robotType: RobotType
 }
 
@@ -75,7 +77,7 @@ export const DeckThumbnailDetails = (
         const moduleDef = getModuleDef2(model)
         const labwareLoadedOnModule = allLabware.find(lw => lw.slot === id)
         return (
-          <React.Fragment key={id}>
+          <Fragment key={id}>
             <Module
               key={slot}
               x={slotPosition[0]}
@@ -118,7 +120,7 @@ export const DeckThumbnailDetails = (
                 />
               ) : null}
             </Module>
-          </React.Fragment>
+          </Fragment>
         )
       })}
       {/* all labware on deck NOT those in modules */}
@@ -140,7 +142,7 @@ export const DeckThumbnailDetails = (
           return null
         }
         return (
-          <React.Fragment key={labware.id}>
+          <Fragment key={labware.id}>
             <LabwareOnDeck
               x={slotPosition[0]}
               y={slotPosition[1]}
@@ -153,7 +155,7 @@ export const DeckThumbnailDetails = (
               slotPosition={slotPosition}
               slotId={labware.slot}
             />
-          </React.Fragment>
+          </Fragment>
         )
       })}
 
@@ -190,7 +192,7 @@ export const DeckThumbnailDetails = (
             ? allModules.find(module => module.id === slotForOnTheDeck)?.slot
             : null
         return (
-          <React.Fragment key={labware.id}>
+          <Fragment key={labware.id}>
             <LabwareOnDeck
               x={slotPosition[0]}
               y={slotPosition[1]}
@@ -203,7 +205,7 @@ export const DeckThumbnailDetails = (
               slotPosition={slotPosition}
               slotId={slotOnDeck ?? ''}
             />
-          </React.Fragment>
+          </Fragment>
         )
       })}
 
@@ -223,7 +225,7 @@ export const DeckThumbnailDetails = (
         })
         .map(addressableArea => {
           return (
-            <React.Fragment key={addressableArea.id}>
+            <Fragment key={addressableArea.id}>
               <SlotHover
                 robotType={robotType}
                 hover={hover}
@@ -234,7 +236,7 @@ export const DeckThumbnailDetails = (
                 )}
                 slotId={addressableArea.id}
               />
-            </React.Fragment>
+            </Fragment>
           )
         })}
     </>

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { css } from 'styled-components'
 
 import {
@@ -12,6 +12,8 @@ import {
   LegacyStyledText,
   TYPOGRAPHY,
 } from '@opentrons/components'
+
+import type { ReactNode } from 'react'
 import type { StyleProps } from '@opentrons/components'
 
 const ACCORDION_STYLE = css`
@@ -26,7 +28,7 @@ const ACCORDION_STYLE = css`
 
 interface CollapsibleSectionProps extends StyleProps {
   title: string
-  children: React.ReactNode
+  children: ReactNode
   isExpandedInitially?: boolean
 }
 
@@ -34,7 +36,7 @@ export function CollapsibleSection(
   props: CollapsibleSectionProps
 ): JSX.Element {
   const { title, children, isExpandedInitially = true, ...styleProps } = props
-  const [isExpanded, setIsExpanded] = React.useState(isExpandedInitially)
+  const [isExpanded, setIsExpanded] = useState(isExpandedInitially)
   return (
     <Flex flexDirection={DIRECTION_COLUMN} {...styleProps}>
       <Flex

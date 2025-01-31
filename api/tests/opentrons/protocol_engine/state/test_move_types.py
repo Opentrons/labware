@@ -53,43 +53,47 @@ def test_get_move_type_to_well(
         (
             subject.EdgePathType.LEFT,
             [
-                Point(5, 20, 30),
+                Point(8, 20, 30),
                 Point(10, 20, 30),
-                Point(10, 30, 30),
-                Point(10, 10, 30),
+                Point(10, 27, 30),
+                Point(10, 13, 30),
                 Point(10, 20, 30),
             ],
         ),
         (
             subject.EdgePathType.RIGHT,
             [
-                Point(15, 20, 30),
+                Point(12, 20, 30),
                 Point(10, 20, 30),
-                Point(10, 30, 30),
-                Point(10, 10, 30),
+                Point(10, 27, 30),
+                Point(10, 13, 30),
                 Point(10, 20, 30),
             ],
         ),
         (
             subject.EdgePathType.DEFAULT,
             [
-                Point(15, 20, 30),
-                Point(5, 20, 30),
+                Point(12, 20, 30),
+                Point(8, 20, 30),
                 Point(10, 20, 30),
-                Point(10, 30, 30),
-                Point(10, 10, 30),
+                Point(10, 27, 30),
+                Point(10, 13, 30),
                 Point(10, 20, 30),
             ],
         ),
     ],
 )
-def get_edge_point_list(
+def test_get_edge_point_list(
     edge_path_type: subject.EdgePathType,
     expected_result: List[Point],
 ) -> None:
     """It should get a list of well edge points."""
     result = subject.get_edge_point_list(
-        Point(x=10, y=20, z=30), x_radius=5, y_radius=10, edge_path_type=edge_path_type
+        Point(x=10, y=20, z=30),
+        x_radius=5,
+        y_radius=10,
+        mm_from_edge=3,
+        edge_path_type=edge_path_type,
     )
 
     assert result == expected_result

@@ -1,5 +1,5 @@
 """Test Plunger."""
-from typing import List, Union, Tuple, Dict
+from typing import List, Union, Tuple, Dict, Literal
 
 from opentrons.hardware_control.ot3api import OT3API
 
@@ -53,7 +53,9 @@ async def _is_plunger_still_aligned_with_encoder(
     return p_enc, p_est, is_aligned
 
 
-async def run(api: OT3API, report: CSVReport, section: str) -> None:
+async def run(
+    api: OT3API, report: CSVReport, section: str, pipette: Literal[200, 1000]
+) -> None:
     """Run."""
     ax = Axis.P_L
     mount = OT3Mount.LEFT

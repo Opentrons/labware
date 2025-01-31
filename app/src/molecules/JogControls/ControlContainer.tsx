@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { css } from 'styled-components'
 import {
   BORDERS,
@@ -9,11 +8,13 @@ import {
   SPACING,
   LegacyStyledText,
 } from '@opentrons/components'
+
+import type { ReactNode } from 'react'
 import type { StyleProps } from '@opentrons/components'
 
 interface ControlContainerProps extends StyleProps {
   title: string
-  children: React.ReactNode
+  children: ReactNode
 }
 
 const CONTROL_CHILDREN_STYLES = css`

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, describe, expect, beforeEach, afterEach } from 'vitest'
 import { when } from 'vitest-when'
 import { act, fireEvent, screen } from '@testing-library/react'
@@ -11,6 +10,7 @@ import { i18n } from '/app/i18n'
 import { useToaster } from '/app/organisms/ToasterOven'
 import { DeleteTransferConfirmationModal } from '../DeleteTransferConfirmationModal'
 
+import type { ComponentProps } from 'react'
 import type { NavigateFunction } from 'react-router-dom'
 import type { HostConfig } from '@opentrons/api-client'
 
@@ -33,7 +33,7 @@ const mockMakeSnackbar = vi.fn()
 const MOCK_HOST_CONFIG = {} as HostConfig
 
 const render = (
-  props: React.ComponentProps<typeof DeleteTransferConfirmationModal>
+  props: ComponentProps<typeof DeleteTransferConfirmationModal>
 ) => {
   return renderWithProviders(<DeleteTransferConfirmationModal {...props} />, {
     i18nInstance: i18n,
@@ -41,7 +41,7 @@ const render = (
 }
 
 describe('DeleteTransferConfirmationModal', () => {
-  let props: React.ComponentProps<typeof DeleteTransferConfirmationModal>
+  let props: ComponentProps<typeof DeleteTransferConfirmationModal>
 
   beforeEach(() => {
     props = {

@@ -8,21 +8,6 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from opentrons.protocol_engine import commands as pe_commands
-
-from robot_server.service.json_api.request import RequestModel
-
-
-class RequestModelWithCommandCreate(RequestModel[pe_commands.CommandCreate]):
-    """Equivalent to RequestModel[CommandCreate].
-
-    This works around a Pydantic v<2 bug where RequestModel[CommandCreate]
-    doesn't parse using the CommandCreate union discriminator.
-    https://github.com/pydantic/pydantic/issues/3782
-    """
-
-    data: pe_commands.CommandCreate
-
 
 class CommandLinkMeta(BaseModel):
     """Metadata about a command resource referenced in `links`."""

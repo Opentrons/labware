@@ -1,10 +1,11 @@
-import * as React from 'react'
+import { forwardRef } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Flex } from '../../primitives'
 import {
   ALIGN_CENTER,
   DIRECTION_COLUMN,
+  DIRECTION_ROW,
   NO_WRAP,
   TEXT_ALIGN_RIGHT,
 } from '../../styles'
@@ -14,7 +15,16 @@ import { RESPONSIVENESS, SPACING, TYPOGRAPHY } from '../../ui-style-constants'
 import { Tooltip } from '../Tooltip'
 import { useHoverTooltip } from '../../tooltips'
 import { StyledText } from '../StyledText'
+
+import type {
+  ChangeEventHandler,
+  FocusEvent,
+  MouseEvent,
+  MutableRefObject,
+  ReactNode,
+} from 'react'
 import type { IconName } from '../../icons'
+
 export const INPUT_TYPE_NUMBER = 'number' as const
 export const LEGACY_INPUT_TYPE_TEXT = 'text' as const
 export const LEGACY_INPUT_TYPE_PASSWORD = 'password' as const
@@ -24,7 +34,7 @@ export interface InputFieldProps {
   /** field is disabled if value is true */
   disabled?: boolean
   /** change handler */
-  onChange?: React.ChangeEventHandler<HTMLInputElement>
+  onChange?: ChangeEventHandler<HTMLInputElement>
   /** name of field in form */
   name?: string
   /** optional ID of <input> element */
@@ -32,7 +42,7 @@ export interface InputFieldProps {
   /** placeholder text */
   placeholder?: string
   /** optional suffix component, appears to the right of input text */
-  units?: React.ReactNode
+  units?: ReactNode
   /** current value of text in box, defaults to '' */
   value?: string | number | null
   /** if included, InputField will use error style and display error instead of caption */
@@ -49,11 +59,11 @@ export interface InputFieldProps {
     | typeof LEGACY_INPUT_TYPE_PASSWORD
     | typeof INPUT_TYPE_NUMBER
   /** mouse click handler */
-  onClick?: (event: React.MouseEvent<HTMLInputElement>) => unknown
+  onClick?: (event: MouseEvent<HTMLInputElement>) => unknown
   /** focus handler */
-  onFocus?: (event: React.FocusEvent<HTMLInputElement>) => unknown
+  onFocus?: (event: FocusEvent<HTMLInputElement>) => unknown
   /** blur handler */
-  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => unknown
+  onBlur?: (event: FocusEvent<HTMLInputElement>) => unknown
   /** makes input field read-only */
   readOnly?: boolean
   /** html tabindex property */
@@ -63,8 +73,8 @@ export interface InputFieldProps {
   /** if true, clear out value and add '-' placeholder */
   isIndeterminate?: boolean
   /** if input type is number, these are the min and max values */
-  max?: number
-  min?: number
+  max?: number | string
+  min?: number | string
   /** horizontal text alignment for title, input, and (sub)captions */
   textAlign?:
     | typeof TYPOGRAPHY.textAlignLeft
@@ -72,14 +82,22 @@ export interface InputFieldProps {
   /** small or medium input field height, relevant only */
   size?: 'medium' | 'small'
   /** react useRef to control input field instead of react event */
-  ref?: React.MutableRefObject<HTMLInputElement | null>
+  ref?: MutableRefObject<HTMLInputElement | null>
+  /** optional IconName to display icon aligned to left of input field */
   leftIcon?: IconName
+  /** if true, show delete icon aligned to right of input field */
   showDeleteIcon?: boolean
+  /** callback passed to optional delete icon onClick */
   onDelete?: () => void
+  /** if true, style the background of input field to error state */
   hasBackgroundError?: boolean
+  /** optional prop to override input field border radius */
+  borderRadius?: string
+  /** optional prop to override input field padding */
+  padding?: string
 }
 
-export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
+export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
   (props, ref): JSX.Element => {
     const {
       placeholder,
@@ -90,6 +108,9 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
       tabIndex = 0,
       showDeleteIcon = false,
       hasBackgroundError = false,
+      onDelete,
+      borderRadius,
+      padding,
       ...inputProps
     } = props
     const hasError = props.error != null
@@ -111,8 +132,10 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
     const INPUT_FIELD = css`
       display: flex;
       background-color: ${hasBackgroundError ? COLORS.red30 : COLORS.white};
-      border-radius: ${BORDERS.borderRadius4};
-      padding: ${SPACING.spacing8};
+      border-radius: ${borderRadius != null
+        ? borderRadius
+        : BORDERS.borderRadius4};
+      padding: ${padding != null ? padding : SPACING.spacing8};
       border: ${hasBackgroundError
         ? 'none'
         : `1px ${BORDERS.styleSolid}
@@ -254,7 +277,11 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
       >
         <Flex flexDirection={DIRECTION_COLUMN} width="100%">
           {title != null ? (
-            <Flex gridGap={SPACING.spacing8}>
+            <Flex
+              flexDirection={DIRECTION_ROW}
+              gridGap={SPACING.spacing8}
+              alignItems={ALIGN_CENTER}
+            >
               <StyledText
                 desktopStyle="bodyDefaultRegular"
                 htmlFor={props.id}
@@ -276,7 +303,12 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
               ) : null}
             </Flex>
           ) : null}
-          <Flex width="100%" flexDirection={DIRECTION_COLUMN} css={OUTER_CSS}>
+          <Flex
+            width="100%"
+            flexDirection={DIRECTION_COLUMN}
+            css={OUTER_CSS}
+            onClick={!props.disabled ? props.onClick : null}
+          >
             <Flex
               tabIndex={tabIndex}
               css={INPUT_FIELD}
@@ -313,7 +345,7 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
               {showDeleteIcon ? (
                 <Flex
                   alignSelf={TEXT_ALIGN_RIGHT}
-                  onClick={props.onDelete}
+                  onClick={onDelete}
                   cursor="pointer"
                 >
                   <Icon name="close" size="1.75rem" />
@@ -331,7 +363,10 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
             </StyledText>
           ) : null}
           {hasError ? (
-            <StyledText desktopStyle="captionRegular" css={ERROR_TEXT_STYLE}>
+            <StyledText
+              desktopStyle="bodyDefaultRegular"
+              css={ERROR_TEXT_STYLE}
+            >
               {props.error}
             </StyledText>
           ) : null}

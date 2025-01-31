@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { when } from 'vitest-when'
 import { screen } from '@testing-library/react'
@@ -37,6 +36,7 @@ import {
   useErrorRecoveryBanner,
 } from '../ErrorRecoveryBanner'
 
+import type { ComponentProps } from 'react'
 import type { State } from '/app/redux/types'
 
 vi.mock('/app/redux/robot-update/selectors')
@@ -94,7 +94,7 @@ const MOCK_STATE: State = {
   },
 } as any
 
-const render = (props: React.ComponentProps<typeof RobotCard>) => {
+const render = (props: ComponentProps<typeof RobotCard>) => {
   return renderWithProviders(
     <MemoryRouter>
       <RobotCard {...props} />
@@ -107,7 +107,7 @@ const render = (props: React.ComponentProps<typeof RobotCard>) => {
 }
 
 describe('RobotCard', () => {
-  let props: React.ComponentProps<typeof RobotCard>
+  let props: ComponentProps<typeof RobotCard>
 
   beforeEach(() => {
     props = { robot: mockConnectableRobot }

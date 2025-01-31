@@ -1,24 +1,26 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { COLORS } from '../helix-design-system'
 import { Overlay } from '../modals'
 
+import type { Dispatch, MouseEventHandler, SetStateAction } from 'react'
+
 interface MenuHandleClickOutside {
   menuOverlay: JSX.Element
-  handleOverflowClick: React.MouseEventHandler<HTMLButtonElement>
+  handleOverflowClick: MouseEventHandler<HTMLButtonElement>
   showOverflowMenu: boolean
-  setShowOverflowMenu: React.Dispatch<React.SetStateAction<boolean>>
+  setShowOverflowMenu: Dispatch<SetStateAction<boolean>>
 }
 
 export function useMenuHandleClickOutside(): MenuHandleClickOutside {
-  const [showOverflowMenu, setShowOverflowMenu] = React.useState<boolean>(false)
+  const [showOverflowMenu, setShowOverflowMenu] = useState<boolean>(false)
 
-  const handleOverflowClick: React.MouseEventHandler<HTMLButtonElement> = e => {
+  const handleOverflowClick: MouseEventHandler<HTMLButtonElement> = e => {
     e.preventDefault()
     e.stopPropagation()
     setShowOverflowMenu(currentShowOverflowMenu => !currentShowOverflowMenu)
   }
 
-  const handleClickOutside: React.MouseEventHandler<HTMLDivElement> = e => {
+  const handleClickOutside: MouseEventHandler<HTMLDivElement> = e => {
     e.preventDefault()
     e.stopPropagation()
     setShowOverflowMenu(false)

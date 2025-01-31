@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, waitFor, screen } from '@testing-library/react'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 
@@ -10,14 +9,16 @@ import { RUN_ID_1 } from '/app/resources/runs/__fixtures__'
 import { FLOWS } from '../constants'
 import { MountingPlate } from '../MountingPlate'
 
-const render = (props: React.ComponentProps<typeof MountingPlate>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof MountingPlate>) => {
   return renderWithProviders(<MountingPlate {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('MountingPlate', () => {
-  let props: React.ComponentProps<typeof MountingPlate>
+  let props: ComponentProps<typeof MountingPlate>
   beforeEach(() => {
     props = {
       mount: LEFT,

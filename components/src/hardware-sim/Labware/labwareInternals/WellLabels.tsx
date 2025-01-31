@@ -1,8 +1,10 @@
-import * as React from 'react'
+import { memo } from 'react'
 import { C_BLACK, C_BLUE } from '../../../styles/colors'
 import { RobotCoordsText } from '../../Deck'
 import { WELL_LABEL_OPTIONS } from '../LabwareRender'
 import { COLORS } from '../../../helix-design-system'
+
+import type { MemoExoticComponent } from 'react'
 import type { LabwareDefinition2 } from '@opentrons/shared-data'
 import type { WellLabelOption } from '../LabwareRender'
 import type { HighlightedWellLabels } from './types'
@@ -73,6 +75,7 @@ const Labels = (props: {
                 ? highlightColor
                 : fillColor
             }
+            canHighlight={false}
           >
             {(props.isLetterColumn === true ? /[A-Z]+/g : /\d+/g).exec(
               wellName
@@ -115,6 +118,6 @@ export function WellLabelsComponent(props: WellLabelsProps): JSX.Element {
   )
 }
 
-export const WellLabels: React.MemoExoticComponent<
-  typeof WellLabelsComponent
-> = React.memo(WellLabelsComponent)
+export const WellLabels: MemoExoticComponent<typeof WellLabelsComponent> = memo(
+  WellLabelsComponent
+)

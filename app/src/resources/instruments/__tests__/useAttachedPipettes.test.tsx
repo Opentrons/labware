@@ -8,7 +8,8 @@ import {
   pipetteResponseFixtureLeft,
   pipetteResponseFixtureRight,
 } from '@opentrons/api-client'
-import type * as React from 'react'
+
+import type { FunctionComponent, ReactNode } from 'react'
 import type { UseQueryResult } from 'react-query'
 import type { FetchPipettesResponseBody } from '@opentrons/api-client'
 import type { PipetteModelSpecs } from '@opentrons/shared-data'
@@ -17,7 +18,7 @@ vi.mock('@opentrons/react-api-client')
 vi.mock('@opentrons/shared-data')
 
 describe('useAttachedPipettes hook', () => {
-  let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+  let wrapper: FunctionComponent<{ children: ReactNode }>
   beforeEach(() => {
     vi.mocked(getPipetteModelSpecs).mockReturnValue({
       name: 'mockName',

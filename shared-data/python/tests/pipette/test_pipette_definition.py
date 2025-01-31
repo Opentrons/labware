@@ -19,10 +19,10 @@ def get_liquid_definition_for(
     liquid_class: LiquidClasses,
 ) -> PipetteLiquidPropertiesDefinition:
     if liquid_class == LiquidClasses.lowVolumeDefault:
-        return PipetteLiquidPropertiesDefinition.parse_obj(
+        return PipetteLiquidPropertiesDefinition.model_validate(
             {
                 "supportedTips": {
-                    "t50": SupportedTipsDefinition.parse_obj(
+                    "t50": SupportedTipsDefinition.model_validate(
                         {
                             "defaultAspirateFlowRate": {
                                 "default": 5,
@@ -52,10 +52,10 @@ def get_liquid_definition_for(
             }
         )
     else:
-        return PipetteLiquidPropertiesDefinition.parse_obj(
+        return PipetteLiquidPropertiesDefinition.model_validate(
             {
                 "supportedTips": {
-                    "t50": SupportedTipsDefinition.parse_obj(
+                    "t50": SupportedTipsDefinition.model_validate(
                         {
                             "defaultAspirateFlowRate": {
                                 "default": 5,

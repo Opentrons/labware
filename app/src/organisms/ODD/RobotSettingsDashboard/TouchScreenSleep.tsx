@@ -1,12 +1,12 @@
-import * as React from 'react'
+import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 
 import {
   DIRECTION_COLUMN,
   Flex,
-  SPACING,
   RadioButton,
+  SPACING,
 } from '@opentrons/components'
 
 import { ChildNavigation } from '/app/organisms/ODD/ChildNavigation'
@@ -14,8 +14,9 @@ import {
   getOnDeviceDisplaySettings,
   updateConfigValue,
 } from '/app/redux/config'
-import { SLEEP_NEVER_MS } from '/app/local-resources/config'
+import { SLEEP_NEVER_MS } from '/app/local-resources/dom-utils'
 
+import type { ChangeEvent } from 'react'
 import type { Dispatch } from '/app/redux/types'
 import type { SetSettingOption } from './types'
 
@@ -31,7 +32,7 @@ export function TouchScreenSleep({
   const { t } = useTranslation(['device_settings'])
   const { sleepMs } = useSelector(getOnDeviceDisplaySettings) ?? SLEEP_NEVER_MS
   const dispatch = useDispatch<Dispatch>()
-  const screenRef = React.useRef<HTMLDivElement | null>(null)
+  const screenRef = useRef<HTMLDivElement | null>(null)
 
   // Note (kj:02/10/2023) value's unit is ms
   const settingsButtons = [
@@ -44,7 +45,7 @@ export function TouchScreenSleep({
     { label: t('one_hour'), value: SLEEP_TIME_MS * 60 },
   ]
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     dispatch(
       updateConfigValue(
         'onDeviceDisplaySettings.sleepMs',
@@ -53,7 +54,7 @@ export function TouchScreenSleep({
     )
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (screenRef.current != null) screenRef.current.scrollIntoView()
   }, [])
 

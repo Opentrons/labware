@@ -119,3 +119,5 @@ export type Epic = (
 ) => Observable<Action>
 
 export type Error = Partial<{ name: string; message: string }>
+
+export * from './shell/types'

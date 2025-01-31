@@ -1,6 +1,4 @@
 import { useTranslation } from 'react-i18next'
-import { START_TERMINAL_ITEM_ID } from '../../steplist'
-import { TerminalItemLink } from './TerminalItemLink'
 
 import type { AlertLevel } from './types'
 
@@ -22,7 +20,6 @@ export function WarningContents(
             {t(`timeline.warning.${warningType}.body`, {
               defaultValue: '',
             })}
-            <TerminalItemLink terminalId={START_TERMINAL_ITEM_ID} />
           </>
         )
       default:

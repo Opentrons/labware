@@ -1,14 +1,20 @@
 import round from 'lodash/round'
-import omitBy from 'lodash/omitBy'
 import uniq from 'lodash/uniq'
 import { UAParser } from 'ua-parser-js'
-import type { WellIngredientVolumeData } from '../../../../steplist'
+
+import type { MouseEvent } from 'react'
 import type { StepIdType } from '../../../../form-types'
 
 export const capitalizeFirstLetterAfterNumber = (title: string): string =>
   title.replace(
-    /(^[\d\W]*)([a-zA-Z])/,
-    (match, prefix, firstLetter) => `${prefix}${firstLetter.toUpperCase()}`
+    /(^[\d\W]*)([a-zA-Z])|(-[a-zA-Z])/g,
+    (match, prefix, firstLetter) => {
+      if (prefix) {
+        return `${prefix}${firstLetter.toUpperCase()}`
+      } else {
+        return `${match.charAt(0)}${match.charAt(1).toUpperCase()}`
+      }
+    }
   )
 
 const VOLUME_SIG_DIGITS_DEFAULT = 2
@@ -27,31 +33,6 @@ export function formatVolume(
 const PERCENTAGE_DECIMALS_ALLOWED = 1
 export const formatPercentage = (part: number, total: number): string => {
   return `${round((part / total) * 100, PERCENTAGE_DECIMALS_ALLOWED)}%`
-}
-
-export const compactPreIngreds = (
-  preIngreds: WellIngredientVolumeData
-): Partial<
-  | {
-      [ingredId: string]:
-        | {
-            volume: number
-          }
-        | undefined
-    }
-  | {
-      [well: string]:
-        | {
-            [ingredId: string]: {
-              volume: number
-            }
-          }
-        | undefined
-    }
-> => {
-  return omitBy(preIngreds, ingred => {
-    return typeof ingred?.volume === 'number' && ingred.volume <= 0
-  })
 }
 
 export const getMetaSelectedSteps = (
@@ -139,7 +120,7 @@ export const nonePressed = (keysPressed: boolean[]): boolean =>
   keysPressed.every(keyPress => keyPress === false)
 
 export const getMouseClickKeyInfo = (
-  event: React.MouseEvent
+  event: MouseEvent
 ): { isShiftKeyPressed: boolean; isMetaKeyPressed: boolean } => {
   const isMac: boolean = getUserOS() === 'Mac OS'
   const isShiftKeyPressed: boolean = event.shiftKey

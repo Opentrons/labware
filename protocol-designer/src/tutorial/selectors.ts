@@ -3,6 +3,7 @@ import {
   THERMOCYCLER_MODULE_TYPE,
   WASTE_CHUTE_CUTOUT,
 } from '@opentrons/shared-data'
+import { getHasWasteChute } from '@opentrons/step-generation'
 import { timelineFrameBeforeActiveItem } from '../top-selectors/timelineFrames'
 import {
   getUnsavedForm,
@@ -10,7 +11,6 @@ import {
   getAdditionalEquipmentEntities,
 } from '../step-forms/selectors'
 import isEmpty from 'lodash/isEmpty'
-import { getHasWasteChute } from '../components/labware'
 import type { BaseState, Selector } from '../types'
 import type { HintKey } from '.'
 

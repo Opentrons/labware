@@ -38,7 +38,7 @@ describe('update', () => {
 
     vi.mocked(ElectronUpdater.autoUpdater).emit('update-available', {
       version: '1.0.0',
-    })
+    } as any)
 
     expect(dispatch).toHaveBeenCalledWith({
       type: 'shell:CHECK_UPDATE_RESULT',
@@ -50,7 +50,7 @@ describe('update', () => {
     handleAction({ type: 'shell:CHECK_UPDATE', meta: { shell: true } })
     vi.mocked(ElectronUpdater.autoUpdater).emit('update-not-available', {
       version: '1.0.0',
-    })
+    } as any)
 
     expect(dispatch).toHaveBeenCalledWith({
       type: 'shell:CHECK_UPDATE_RESULT',
@@ -82,7 +82,7 @@ describe('update', () => {
       vi.mocked(ElectronUpdater.autoUpdater).downloadUpdate
     ).toHaveBeenCalledTimes(1)
 
-    const progress = {
+    const progress: any = {
       percent: 20,
     }
 
@@ -97,7 +97,7 @@ describe('update', () => {
 
     vi.mocked(ElectronUpdater.autoUpdater).emit('update-downloaded', {
       version: '1.0.0',
-    })
+    } as any)
 
     expect(dispatch).toHaveBeenCalledWith({
       type: 'shell:DOWNLOAD_UPDATE_RESULT',

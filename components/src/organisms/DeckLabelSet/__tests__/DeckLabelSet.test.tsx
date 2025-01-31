@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, beforeEach, expect } from 'vitest'
 import { screen } from '@testing-library/react'
 
@@ -7,6 +6,8 @@ import { BORDERS, COLORS } from '../../../helix-design-system'
 import { DeckLabel } from '../../../molecules/DeckLabel'
 import { DeckLabelSet } from '..'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('../../../molecules/DeckLabel')
 
 const mockDeckLabels = [
@@ -14,19 +15,21 @@ const mockDeckLabels = [
     text: 'Label',
     isSelected: false,
     labelBorderRadius: BORDERS.borderRadius4,
+    isZoomed: true,
   },
   {
     text: 'Label',
     isSelected: false,
     labelBorderRadius: BORDERS.borderRadius4,
+    isZoomed: true,
   },
 ]
 
-const render = (props: React.ComponentProps<typeof DeckLabelSet>) => {
+const render = (props: ComponentProps<typeof DeckLabelSet>) => {
   return renderWithProviders(<DeckLabelSet {...props} />)
 }
 describe('DeckLabelSet', () => {
-  let props: React.ComponentProps<typeof DeckLabelSet>
+  let props: ComponentProps<typeof DeckLabelSet>
 
   beforeEach(() => {
     props = {

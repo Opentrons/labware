@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
@@ -9,6 +8,7 @@ import { useDispatchApiRequest } from '/app/redux/robot-api'
 
 import { DeviceReset } from '../DeviceReset'
 
+import type { ComponentProps } from 'react'
 import type { DispatchApiRequestType } from '/app/redux/robot-api'
 
 vi.mock('/app/redux/robot-admin')
@@ -47,7 +47,7 @@ const mockResetConfigOptions = [
   },
 ]
 
-const render = (props: React.ComponentProps<typeof DeviceReset>) => {
+const render = (props: ComponentProps<typeof DeviceReset>) => {
   return renderWithProviders(
     <DeviceReset {...props} />,
 
@@ -56,7 +56,7 @@ const render = (props: React.ComponentProps<typeof DeviceReset>) => {
 }
 
 describe('DeviceReset', () => {
-  let props: React.ComponentProps<typeof DeviceReset>
+  let props: ComponentProps<typeof DeviceReset>
   let dispatchApiRequest: DispatchApiRequestType
 
   beforeEach(() => {

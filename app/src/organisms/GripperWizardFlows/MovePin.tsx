@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useTranslation, Trans } from 'react-i18next'
 import { EXTENSION } from '@opentrons/shared-data'
 import {
@@ -25,6 +24,7 @@ import movePinRearToStorage from '/app/assets/videos/gripper-wizards/PIN_FROM_RE
 import calibratingFrontJaw from '/app/assets/videos/gripper-wizards/CALIBRATING_FRONT_JAW.webm'
 import calibratingRearJaw from '/app/assets/videos/gripper-wizards/CALIBRATING_REAR_JAW.webm'
 
+import type { ReactNode } from 'react'
 import type { Coordinates } from '@opentrons/shared-data'
 import type { CreateMaintenanceCommand } from '/app/resources/runs'
 import type { GripperWizardStepProps, MovePinStep } from './types'
@@ -137,10 +137,10 @@ export const MovePin = (props: MovePinProps): JSX.Element | null => {
     [m in typeof movement]: {
       inProgressText: string
       header: string
-      body: React.ReactNode
+      body: ReactNode
       buttonText: string
-      prepImage: React.ReactNode
-      inProgressImage?: React.ReactNode
+      prepImage: ReactNode
+      inProgressImage?: ReactNode
     }
   } = {
     [MOVE_PIN_TO_FRONT_JAW]: {

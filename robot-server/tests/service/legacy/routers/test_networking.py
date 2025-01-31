@@ -5,6 +5,7 @@ from mock import patch
 
 import pytest
 from opentrons.system import nmcli, wifi
+from robot_server.service.legacy.routers.networking import _massage_nmcli_error
 from typing import Optional
 
 
@@ -369,3 +370,25 @@ def test_eap_config_options(api_client):
         assert "options" in opt
         for method_opt in opt["options"]:
             check_option(method_opt)
+
+
+@pytest.mark.parametrize(
+    "nmcli_message,result_message",
+    [
+        (
+            "Warning: password for '802-11-wireless-security.psk' not given in 'passwd-file' and nmcli cannot ask without '--ask' option. Error: Connection activation failed: Secrets were required, but not provided Hint: use 'journalctl -xe NM_CONNECTION=05d784ec-1feb4147-be22-c07d7915ef96 + NM_DEVICE=mlan0' to get more details.",
+            "Could not connect to network. Please double-check network credentials.",
+        ),
+        (
+            "Warning: asdasdasff for '802-11-afasda' not given in 'asdadsa'. Error: Connection activation failed: Secrets were required, but not provided",
+            "Warning: asdasdasff for '802-11-afasda' not given in 'asdadsa'. Error: Connection activation failed: Secrets were required, but not provided",
+        ),
+        (
+            "Error: Connection activation failed: Secrets were required, but not provided",
+            "Error: Connection activation failed: Secrets were required, but not provided",
+        ),
+    ],
+)
+def test_error_rewriting(nmcli_message: str, result_message: str) -> None:
+    """It should rewrite known nmcli failure messages."""
+    assert _massage_nmcli_error(nmcli_message) == result_message

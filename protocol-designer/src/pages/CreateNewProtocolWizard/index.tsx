@@ -1,5 +1,5 @@
-import * as React from 'react'
 import * as Yup from 'yup'
+import { useEffect, useState } from 'react'
 import reduce from 'lodash/reduce'
 import omit from 'lodash/omit'
 import uniq from 'lodash/uniq'
@@ -16,7 +16,6 @@ import {
   MAGNETIC_BLOCK_TYPE,
   MAGNETIC_MODULE_TYPE,
   OT2_ROBOT_TYPE,
-  STAGING_AREA_CUTOUTS,
   TEMPERATURE_MODULE_TYPE,
   THERMOCYCLER_MODULE_TYPE,
   WASTE_CHUTE_CUTOUT,
@@ -29,7 +28,10 @@ import * as labwareDefSelectors from '../../labware-defs/selectors'
 import * as labwareDefActions from '../../labware-defs/actions'
 import * as labwareIngredActions from '../../labware-ingred/actions'
 import { actions as steplistActions } from '../../steplist'
-import { INITIAL_DECK_SETUP_STEP_ID } from '../../constants'
+import {
+  INITIAL_DECK_SETUP_STEP_ID,
+  STAGING_AREA_CUTOUTS_ORDERED,
+} from '../../constants'
 import { actions as stepFormActions } from '../../step-forms'
 import { createModuleWithNoSlot } from '../../modules'
 import {
@@ -45,6 +47,7 @@ import { SelectFixtures } from './SelectFixtures'
 import { AddMetadata } from './AddMetadata'
 import { getTrashSlot } from './utils'
 
+import type { Dispatch, SetStateAction } from 'react'
 import type { ThunkDispatch } from 'redux-thunk'
 import type { NormalizedPipette } from '@opentrons/step-generation'
 import type { BaseState } from '../../types'
@@ -154,17 +157,16 @@ const validationSchema: any = Yup.object().shape({
 export function CreateNewProtocolWizard(): JSX.Element | null {
   const navigate = useNavigate()
   const showWizard = useSelector(getNewProtocolModal)
+  const [analyticsStartTime] = useState<Date>(new Date())
   const customLabware = useSelector(
     labwareDefSelectors.getCustomLabwareDefsByURI
   )
-  const [currentStepIndex, setCurrentStepIndex] = React.useState<number>(0)
-  const [wizardSteps, setWizardSteps] = React.useState<WizardStep[]>(
-    WIZARD_STEPS
-  )
+  const [currentStepIndex, setCurrentStepIndex] = useState<number>(0)
+  const [wizardSteps, setWizardSteps] = useState<WizardStep[]>(WIZARD_STEPS)
 
   const dispatch = useDispatch<ThunkDispatch<BaseState, any, any>>()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!showWizard) {
       navigate('/overview')
     }
@@ -284,7 +286,7 @@ export function CreateNewProtocolWizard(): JSX.Element | null {
     if (stagingAreas.length > 0) {
       stagingAreas.forEach((_, index) => {
         return dispatch(
-          createDeckFixture('stagingArea', STAGING_AREA_CUTOUTS[index])
+          createDeckFixture('stagingArea', STAGING_AREA_CUTOUTS_ORDERED[index])
         )
       })
     }
@@ -371,13 +373,14 @@ export function CreateNewProtocolWizard(): JSX.Element | null {
   }
 
   return showWizard ? (
-    <Box backgroundColor={COLORS.grey20} height="calc(100vh - 48px)">
+    <Box backgroundColor={COLORS.grey10} height="calc(100vh - 48px)">
       <CreateFileForm
         currentWizardStep={currentWizardStep}
         createProtocolFile={createProtocolFile}
         proceed={proceed}
         goBack={goBack}
         setWizardSteps={setWizardSteps}
+        analyticsStartTime={analyticsStartTime}
       />
     </Box>
   ) : null
@@ -388,7 +391,8 @@ interface CreateFileFormProps {
   createProtocolFile: (values: WizardFormState) => void
   goBack: () => void
   proceed: () => void
-  setWizardSteps: React.Dispatch<React.SetStateAction<WizardStep[]>>
+  setWizardSteps: Dispatch<SetStateAction<WizardStep[]>>
+  analyticsStartTime: Date
 }
 
 function CreateFileForm(props: CreateFileFormProps): JSX.Element {
@@ -398,6 +402,7 @@ function CreateFileForm(props: CreateFileFormProps): JSX.Element {
     proceed,
     goBack,
     setWizardSteps,
+    analyticsStartTime,
   } = props
   const { ...formProps } = useForm<WizardFormState>({
     defaultValues: initialFormState,
@@ -446,6 +451,7 @@ function CreateFileForm(props: CreateFileFormProps): JSX.Element {
                   createProtocolFile(formProps.getValues())
                 }}
                 goBack={goBack}
+                analyticsStartTime={analyticsStartTime}
               />
             )
           default:

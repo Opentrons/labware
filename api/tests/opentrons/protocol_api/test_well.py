@@ -1,4 +1,5 @@
 """Tests for the InstrumentContext public interface."""
+
 import pytest
 from decoy import Decoy
 

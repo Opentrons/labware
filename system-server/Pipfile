@@ -4,13 +4,14 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-fastapi = "==0.99.1"
+fastapi = "==0.100.0"
 uvicorn = "==0.27.0.post1"
 anyio = "==3.7.1"
 typing-extensions = ">=4.0.0,<5"
 python-dotenv = "==1.0.1"
 python-multipart = "==0.0.6"
-pydantic = "==1.10.12"
+pydantic = "==2.9.0"
+pydantic-settings = "==2.4.0"
 importlib-metadata = ">=4.13.0,<5"
 sqlalchemy = "==1.4.51"
 pyjwt = "==2.6.0"
@@ -37,7 +38,7 @@ coverage = "==7.4.0"
 atomicwrites = { version = "==1.4.0", markers="sys_platform=='win32'" }
 colorama = { version = "==0.4.4", markers="sys_platform=='win32'" }
 sqlalchemy2-stubs = "==0.0.2a21"
-mypy = "==1.8.0"
+mypy = "==1.11.0"
 black = "==22.3.0"
 decoy = "==2.1.1"
 mock = "~=5.1.0"

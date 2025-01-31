@@ -13,7 +13,7 @@ import {
 } from '@opentrons/react-api-client'
 import { i18n } from '/app/i18n'
 import { useHardwareStatusText } from '/app/organisms/ODD/RobotDashboard/hooks'
-import { useOffsetCandidatesForAnalysis } from '/app/organisms/ApplyHistoricOffsets/hooks/useOffsetCandidatesForAnalysis'
+import { useOffsetCandidatesForAnalysis } from '/app/organisms/LegacyApplyHistoricOffsets/hooks/useOffsetCandidatesForAnalysis'
 import { useRunTimeParameters } from '/app/resources/protocols'
 import { ProtocolSetupParameters } from '/app/organisms/ODD/ProtocolSetup/ProtocolSetupParameters'
 import { mockRunTimeParameterData } from '/app/organisms/ODD/ProtocolSetup/__fixtures__'
@@ -35,7 +35,7 @@ vi.mock('@opentrons/api-client')
 vi.mock('@opentrons/react-api-client')
 vi.mock('/app/organisms/ODD/RobotDashboard/hooks')
 vi.mock(
-  '/app/organisms/ApplyHistoricOffsets/hooks/useOffsetCandidatesForAnalysis'
+  '/app/organisms/LegacyApplyHistoricOffsets/hooks/useOffsetCandidatesForAnalysis'
 )
 vi.mock('/app/resources/protocols')
 vi.mock('/app/transformations/commands')

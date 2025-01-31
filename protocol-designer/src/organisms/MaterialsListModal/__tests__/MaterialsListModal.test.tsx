@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, beforeEach, vi, expect } from 'vitest'
 import { screen } from '@testing-library/react'
 
@@ -11,6 +10,7 @@ import { getRobotType } from '../../../file-data/selectors'
 import { getInitialDeckSetup } from '../../../step-forms/selectors'
 import { MaterialsListModal } from '..'
 
+import type { ComponentProps } from 'react'
 import type { InfoScreen } from '@opentrons/components'
 import type { LabwareOnDeck, ModuleOnDeck } from '../../../step-forms'
 import type { FixtureInList } from '..'
@@ -63,14 +63,14 @@ const mockLabware = [
   },
 ] as LabwareOnDeck[]
 
-const render = (props: React.ComponentProps<typeof MaterialsListModal>) => {
+const render = (props: ComponentProps<typeof MaterialsListModal>) => {
   return renderWithProviders(<MaterialsListModal {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('MaterialsListModal', () => {
-  let props: React.ComponentProps<typeof MaterialsListModal>
+  let props: ComponentProps<typeof MaterialsListModal>
 
   beforeEach(() => {
     props = {
@@ -137,7 +137,7 @@ describe('MaterialsListModal', () => {
           lidTargetTemp: null,
           lidOpen: false,
         },
-        slot: 'span7_8_10_11',
+        slot: '7',
         type: 'thermocyclerModuleType',
       },
     ] as ModuleOnDeck[]
@@ -162,6 +162,7 @@ describe('MaterialsListModal', () => {
           ingredientId: mockId,
           name: 'mockName',
           displayColor: 'mockDisplayColor',
+          liquidClass: null,
         },
       ],
     }

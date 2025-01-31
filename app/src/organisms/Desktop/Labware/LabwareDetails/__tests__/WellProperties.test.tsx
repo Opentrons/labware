@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { describe, it, expect, beforeEach } from 'vitest'
 import { renderWithProviders } from '/app/__testing-utils__'
@@ -6,14 +5,16 @@ import { i18n } from '/app/i18n'
 import { mockCircularLabwareWellGroupProperties } from '/app/redux/custom-labware/__fixtures__'
 import { WellProperties } from '../WellProperties'
 
-const render = (props: React.ComponentProps<typeof WellProperties>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof WellProperties>) => {
   return renderWithProviders(<WellProperties {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('WellProperties', () => {
-  let props: React.ComponentProps<typeof WellProperties>
+  let props: ComponentProps<typeof WellProperties>
   beforeEach(() => {
     props = {
       wellProperties: mockCircularLabwareWellGroupProperties,

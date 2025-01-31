@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useMemo } from 'react'
 import { css } from 'styled-components'
 import { Trans, useTranslation } from 'react-i18next'
 import {
@@ -29,6 +29,7 @@ import slot5LeftSingleDemoAsset from '/app/assets/videos/cal-movement/SLOT_5_LEF
 import slot5RightMultiDemoAsset from '/app/assets/videos/cal-movement/SLOT_5_RIGHT_MULTI_Z.webm'
 import slot5RightSingleDemoAsset from '/app/assets/videos/cal-movement/SLOT_5_RIGHT_SINGLE_Z.webm'
 
+import type { MouseEventHandler } from 'react'
 import type { Axis, Sign, StepSize } from '/app/molecules/JogControls/types'
 import type { CalibrationPanelProps } from './types'
 
@@ -46,7 +47,7 @@ const assetMap = {
 export function SaveZPoint(props: CalibrationPanelProps): JSX.Element {
   const { t } = useTranslation('robot_calibration')
   const { isMulti, mount, sendCommands, sessionType } = props
-  const demoAsset = React.useMemo(
+  const demoAsset = useMemo(
     () => mount && assetMap[mount][isMulti ? 'multi' : 'single'],
     [mount, isMulti]
   )
@@ -62,7 +63,7 @@ export function SaveZPoint(props: CalibrationPanelProps): JSX.Element {
 
   const isHealthCheck =
     sessionType === Sessions.SESSION_TYPE_CALIBRATION_HEALTH_CHECK
-  const proceed: React.MouseEventHandler<HTMLButtonElement> = _event => {
+  const proceed: MouseEventHandler<HTMLButtonElement> = _event => {
     isHealthCheck
       ? sendCommands(
           { command: Sessions.checkCommands.COMPARE_POINT },

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -8,6 +7,7 @@ import * as Fixtures from '/app/redux/networking/__fixtures__'
 import { DisplaySearchNetwork } from '../DisplaySearchNetwork'
 import { DisplayWifiList } from '../DisplayWifiList'
 
+import type { ComponentProps } from 'react'
 import type { NavigateFunction } from 'react-router-dom'
 
 const mockNavigate = vi.fn()
@@ -31,14 +31,14 @@ vi.mock('react-router-dom', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof DisplayWifiList>) => {
+const render = (props: ComponentProps<typeof DisplayWifiList>) => {
   return renderWithProviders(<DisplayWifiList {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('DisplayWifiList', () => {
-  let props: React.ComponentProps<typeof DisplayWifiList>
+  let props: ComponentProps<typeof DisplayWifiList>
   beforeEach(() => {
     props = {
       list: mockWifiList,

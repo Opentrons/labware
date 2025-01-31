@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, expect, describe, beforeEach, afterEach } from 'vitest'
 import { when } from 'vitest-when'
 import { renderHook } from '@testing-library/react'
@@ -11,12 +10,14 @@ import {
 } from '/app/redux/calibration/pipette-offset/__fixtures__'
 import { usePipetteOffsetCalibrations } from '..'
 
+import type { FunctionComponent, ReactNode } from 'react'
+
 vi.mock('@opentrons/react-api-client')
 
 const CALIBRATION_DATA_POLL_MS = 5000
 
 describe('usePipetteOffsetCalibrations hook', () => {
-  let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+  let wrapper: FunctionComponent<{ children: ReactNode }>
   beforeEach(() => {
     const queryClient = new QueryClient()
     wrapper = ({ children }) => (

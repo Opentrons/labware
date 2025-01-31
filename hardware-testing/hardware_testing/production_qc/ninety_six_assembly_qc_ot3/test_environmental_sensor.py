@@ -1,6 +1,6 @@
 """Test Environmental Sensor."""
 from asyncio import sleep
-from typing import List, Union
+from typing import List, Union, Literal
 
 from opentrons.hardware_control.ot3api import OT3API
 
@@ -33,7 +33,9 @@ def _remove_outliers_and_average(values: List[float]) -> float:
     return sum(no_outliers) / len(no_outliers)
 
 
-async def run(api: OT3API, report: CSVReport, section: str) -> None:
+async def run(
+    api: OT3API, report: CSVReport, section: str, pipette: Literal[200, 1000]
+) -> None:
     """Run."""
     await api.home_z(OT3Mount.LEFT)
     slot_5 = helpers_ot3.get_slot_calibration_square_position_ot3(5)

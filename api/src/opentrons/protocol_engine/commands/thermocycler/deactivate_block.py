@@ -66,7 +66,7 @@ class DeactivateBlock(
 
     commandType: DeactivateBlockCommandType = "thermocycler/deactivateBlock"
     params: DeactivateBlockParams
-    result: Optional[DeactivateBlockResult]
+    result: Optional[DeactivateBlockResult] = None
 
     _ImplementationCls: Type[DeactivateBlockImpl] = DeactivateBlockImpl
 

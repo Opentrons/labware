@@ -40,6 +40,12 @@ from opentrons_hardware.firmware_bindings.constants import PipetteName
             1,
             b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00",
         ),
+        (
+            "P1KPV30",
+            PipetteName.p1000_multi_em,
+            30,
+            b"\x00" * 16,
+        ),
     ],
 )
 def test_scan_valid_pipette_serials(

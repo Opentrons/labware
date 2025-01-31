@@ -4,14 +4,16 @@ import { i18n } from '../../../assets/localization'
 import { renderWithProviders } from '../../../__testing-utils__'
 import { WellOrderModal } from '..'
 
-const render = (props: React.ComponentProps<typeof WellOrderModal>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof WellOrderModal>) => {
   return renderWithProviders(<WellOrderModal {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('WellOrderModal', () => {
-  let props: React.ComponentProps<typeof WellOrderModal>
+  let props: ComponentProps<typeof WellOrderModal>
 
   beforeEach(() => {
     props = {

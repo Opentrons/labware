@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
@@ -6,6 +5,8 @@ import { i18n } from '/app/i18n'
 import { renderWithProviders } from '/app/__testing-utils__'
 import { TipLengthCalibrationItems } from '../TipLengthCalibrationItems'
 import { OverflowMenu } from '../OverflowMenu'
+
+import type { ComponentProps } from 'react'
 import type { Mount } from '@opentrons/components'
 
 vi.mock('/app/redux/custom-labware/selectors')
@@ -54,14 +55,14 @@ const mockTipLengthCalibrations = [
 const mockUpdateRobotStatus = vi.fn()
 
 const render = (
-  props: React.ComponentProps<typeof TipLengthCalibrationItems>
+  props: ComponentProps<typeof TipLengthCalibrationItems>
 ): ReturnType<typeof renderWithProviders> => {
   return renderWithProviders(<TipLengthCalibrationItems {...props} />, {
     i18nInstance: i18n,
   })
 }
 describe('TipLengthCalibrationItems', () => {
-  let props: React.ComponentProps<typeof TipLengthCalibrationItems>
+  let props: ComponentProps<typeof TipLengthCalibrationItems>
 
   beforeEach(() => {
     vi.mocked(OverflowMenu).mockReturnValue(<div>mock overflow menu</div>)

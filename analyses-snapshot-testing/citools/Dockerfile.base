@@ -1,0 +1,7 @@
+# Use Python 3.10 as the base image
+FROM python:3.10-slim-bullseye
+
+# Update packages and install dependencies
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y git libsystemd-dev build-essential pkg-config network-manager

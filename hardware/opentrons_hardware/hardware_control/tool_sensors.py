@@ -269,10 +269,11 @@ async def liquid_probe(
     threshold_pascals: float,
     plunger_impulse_time: float,
     num_baseline_reads: int,
+    z_offset_for_plunger_prep: float,
     sensor_id: SensorId = SensorId.S0,
     force_both_sensors: bool = False,
-    response_queue: Optional[
-        asyncio.Queue[Dict[SensorId, List[SensorDataType]]]
+    emplace_data: Optional[
+        Callable[[Dict[SensorId, List[SensorDataType]]], None]
     ] = None,
 ) -> Dict[NodeId, MotorPositionStatus]:
     """Move the mount and pipette simultaneously while reading from the pressure sensor."""
@@ -331,8 +332,9 @@ async def liquid_probe(
     )
     sensor_runner = MoveGroupRunner(move_groups=[[lower_plunger], [sensor_group]])
 
+    # Only raise the z a little so we don't do a huge slow travel
     raise_z = create_step(
-        distance={head_node: float64(max_z_distance)},
+        distance={head_node: float64(z_offset_for_plunger_prep)},
         velocity={head_node: float64(-1 * mount_speed)},
         acceleration={},
         duration=float64(max_z_distance / mount_speed),
@@ -360,12 +362,12 @@ async def liquid_probe(
         await finalize_logs(messenger, tool, listeners, pressure_sensors)
 
     # give response data to any consumer that wants it
-    if response_queue:
+    if emplace_data:
         for s_id in listeners.keys():
             data = listeners[s_id].get_data()
             if data:
                 for d in data:
-                    response_queue.put_nowait({s_id: data})
+                    emplace_data({s_id: data})
 
     return positions
 

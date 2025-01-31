@@ -1,10 +1,10 @@
-import type * as React from 'react'
 import { vi, it, describe, expect, beforeEach } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 
 import { renderWithProviders } from '/app/__testing-utils__'
 import { TitleHeader } from '../TitleHeader'
 
+import type { ComponentProps } from 'react'
 import type { NavigateFunction } from 'react-router-dom'
 
 const mockNavigate = vi.fn()
@@ -16,12 +16,12 @@ vi.mock('react-router-dom', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof TitleHeader>) => {
+const render = (props: ComponentProps<typeof TitleHeader>) => {
   return renderWithProviders(<TitleHeader {...props} />)
 }
 
 describe('TitleHeader', () => {
-  let props: React.ComponentProps<typeof TitleHeader>
+  let props: ComponentProps<typeof TitleHeader>
 
   beforeEach(() => {
     props = {

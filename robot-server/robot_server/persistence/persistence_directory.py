@@ -11,7 +11,7 @@ from typing_extensions import Final
 from anyio import Path as AsyncPath, to_thread
 
 from ._folder_migrator import MigrationOrchestrator
-from ._migrations import up_to_3, v3_to_v4, v4_to_v5, v5_to_v6, v6_to_v7
+from ._migrations import up_to_3, v3_to_v4, v4_to_v5, v5_to_v6, v6_to_v7, v7_to_v8
 from .file_and_directory_names import LATEST_VERSION_DIRECTORY
 
 _TEMP_PERSISTENCE_DIR_PREFIX: Final = "opentrons-robot-server-"
@@ -43,9 +43,13 @@ class PersistenceResetter:
         await file.write_text(encoding="utf-8", data=_RESET_MARKER_FILE_CONTENTS)
 
 
-async def prepare_active_subdirectory(prepared_root: Path) -> Path:
-    """Return the active persistence subdirectory after preparing it, if necessary."""
-    migration_orchestrator = MigrationOrchestrator(
+def make_migration_orchestrator(prepared_root: Path) -> MigrationOrchestrator:
+    """Return a `MigrationOrchestrator` configured for robot-server production use.
+
+    Production code should not use this directly.
+    This is currently exposed only for tests.
+    """
+    return MigrationOrchestrator(
         root=prepared_root,
         migrations=[
             up_to_3.MigrationUpTo3(subdirectory="3"),
@@ -55,10 +59,16 @@ async def prepare_active_subdirectory(prepared_root: Path) -> Path:
             # Subdirectory "7" was previously used on our edge branch for an in-dev
             # schema that was never released to the public. It may be present on
             # internal robots.
-            v6_to_v7.Migration6to7(subdirectory=LATEST_VERSION_DIRECTORY),
+            v6_to_v7.Migration6to7(subdirectory="7.1"),
+            v7_to_v8.Migration7to8(subdirectory=LATEST_VERSION_DIRECTORY),
         ],
         temp_file_prefix="temp-",
     )
+
+
+async def prepare_active_subdirectory(prepared_root: Path) -> Path:
+    """Return the active persistence subdirectory after preparing it, if necessary."""
+    migration_orchestrator = make_migration_orchestrator(prepared_root)
 
     await to_thread.run_sync(migration_orchestrator.clean_up_stray_temp_files)
     subdirectory = await to_thread.run_sync(migration_orchestrator.migrate_to_latest)

@@ -11,12 +11,12 @@ def test_robot_home_target():
 
 
 def test_robot_move_target_points_too_few():
-    with pytest.raises(ValueError, match="ensure this value has at least 3 items"):
+    with pytest.raises(ValueError, match="List should have at least 3 items"):
         control.RobotMoveTarget(target=control.MotionTarget.pipette, point=[1, 2])
 
 
 def test_robot_move_target_points_too_many():
-    with pytest.raises(ValueError, match="ensure this value has at most 3 items"):
+    with pytest.raises(ValueError, match="List should have at most 3 items"):
         control.RobotMoveTarget(target=control.MotionTarget.pipette, point=[1, 2, 3, 4])
 
 

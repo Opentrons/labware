@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING, Optional, Union, List
 
 from opentrons import types
 from opentrons.hardware_control import CriticalPoint
 from opentrons.hardware_control.dev_types import PipetteDict
 from opentrons.protocol_api.core.common import WellCore
+from opentrons.protocols.advanced_control.transfers.common import TransferTipPolicyV2
 from opentrons.protocols.api_support import instrument as instrument_support
 from opentrons.protocols.api_support.definitions import MAX_SUPPORTED_VERSION
 from opentrons.protocols.api_support.labware_like import LabwareLike
@@ -19,7 +20,7 @@ from opentrons.protocols.api_support.util import (
 )
 from opentrons.protocols.geometry import planning
 from opentrons.protocol_api._nozzle_layout import NozzleLayout
-from opentrons.hardware_control.nozzle_manager import NozzleMap
+from opentrons.protocol_api._liquid import LiquidClass
 
 from ...disposal_locations import TrashBin, WasteChute
 from ..instrument import AbstractInstrument
@@ -71,6 +72,9 @@ class LegacyInstrumentCore(AbstractInstrument[LegacyWellCore]):
     def set_default_speed(self, speed: float) -> None:
         """Sets the speed at which the robot's gantry moves."""
         self._default_speed = speed
+
+    def air_gap_in_place(self, volume: float, flow_rate: float) -> None:
+        assert False, "Air gap tracking only available in API version 2.22 and later"
 
     def aspirate(
         self,
@@ -304,6 +308,30 @@ class LegacyInstrumentCore(AbstractInstrument[LegacyWellCore]):
     ) -> None:
         raise APIVersionError(api_element="Dropping tips in a trash bin or waste chute")
 
+    def resin_tip_seal(
+        self,
+        location: types.Location,
+        well_core: WellCore,
+        in_place: Optional[bool] = False,
+    ) -> None:
+        raise APIVersionError(api_element="Sealing resin tips.")
+
+    def resin_tip_unseal(
+        self,
+        location: types.Location,
+        well_core: WellCore,
+    ) -> None:
+        raise APIVersionError(api_element="Unsealing resin tips.")
+
+    def resin_tip_dispense(
+        self,
+        location: types.Location,
+        well_core: WellCore,
+        volume: Optional[float] = None,
+        flow_rate: Optional[float] = None,
+    ) -> None:
+        raise APIVersionError(api_element="Dispensing liquid from resin tips.")
+
     def home(self) -> None:
         """Home the mount"""
         self._protocol_interface.get_hardware().home_z(
@@ -395,6 +423,32 @@ class LegacyInstrumentCore(AbstractInstrument[LegacyWellCore]):
             self._protocol_interface.set_last_location(
                 location=location, mount=location_cache_mount
             )
+
+    def evotip_seal(
+        self,
+        location: types.Location,
+        well_core: LegacyWellCore,
+        in_place: Optional[bool] = False,
+    ) -> None:
+        """This will never be called because it was added in API 2.22."""
+        assert False, "evotip_seal only supported in API 2.22 & later"
+
+    def evotip_unseal(
+        self, location: types.Location, well_core: WellCore, home_after: Optional[bool]
+    ) -> None:
+        """This will never be called because it was added in API 2.22."""
+        assert False, "evotip_unseal only supported in API 2.22 & later"
+
+    def evotip_dispense(
+        self,
+        location: types.Location,
+        well_core: WellCore,
+        volume: Optional[float] = None,
+        flow_rate: Optional[float] = None,
+        push_out: Optional[float] = None,
+    ) -> None:
+        """This will never be called because it was added in API 2.22."""
+        assert False, "evotip_dispense only supported in API 2.22 & later"
 
     def get_mount(self) -> types.Mount:
         """Get the mount this pipette is attached to."""
@@ -552,11 +606,34 @@ class LegacyInstrumentCore(AbstractInstrument[LegacyWellCore]):
         """This will never be called because it was added in API 2.16."""
         pass
 
+    def load_liquid_class(
+        self,
+        liquid_class: LiquidClass,
+        pipette_load_name: str,
+        tiprack_uri: str,
+    ) -> str:
+        """This will never be called because it was added in .."""
+        # TODO(spp, 2024-11-20): update the docstring and error to include API version
+        assert False, "load_liquid_class is not supported in legacy context"
+
+    def transfer_liquid(
+        self,
+        liquid_class_id: str,
+        volume: float,
+        source: List[LegacyWellCore],
+        dest: List[LegacyWellCore],
+        new_tip: TransferTipPolicyV2,
+        trash_location: Union[LegacyWellCore, types.Location, TrashBin, WasteChute],
+    ) -> None:
+        """This will never be called because it was added in .."""
+        # TODO(spp, 2024-11-20): update the docstring and error to include API version
+        assert False, "transfer_liquid is not supported in legacy context"
+
     def get_active_channels(self) -> int:
         """This will never be called because it was added in API 2.16."""
         assert False, "get_active_channels only supported in API 2.16 & later"
 
-    def get_nozzle_map(self) -> NozzleMap:
+    def get_nozzle_map(self) -> types.NozzleMapInterface:
         """This will never be called because it was added in API 2.18."""
         assert False, "get_nozzle_map only supported in API 2.18 & later"
 
@@ -583,3 +660,10 @@ class LegacyInstrumentCore(AbstractInstrument[LegacyWellCore]):
     ) -> float:
         """This will never be called because it was added in API 2.20."""
         assert False, "liquid_probe_without_recovery only supported in API 2.20 & later"
+
+    def _pressure_supported_by_pipette(self) -> bool:
+        return False
+
+    def nozzle_configuration_valid_for_lld(self) -> bool:
+        """Check if the nozzle configuration currently supports LLD."""
+        return False

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { css } from 'styled-components'
 
 import { RobotCoordsForeignDiv } from '../Deck'
@@ -13,6 +12,8 @@ import {
 import { Box, Flex, Text } from '../../primitives'
 import { TYPOGRAPHY, SPACING } from '../../ui-style-constants'
 import { COLORS } from '../../helix-design-system'
+
+import type { ReactNode } from 'react'
 import type { LabwareDefinition2 } from '@opentrons/shared-data'
 
 const labwareDisplayNameStyle = css`
@@ -26,7 +27,7 @@ const labwareDisplayNameStyle = css`
 `
 export function LabwareInfo(props: {
   def: LabwareDefinition2
-  children: React.ReactNode
+  children: ReactNode
 }): JSX.Element {
   const width = props.def.dimensions.xDimension
   const height = props.def.dimensions.yDimension

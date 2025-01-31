@@ -9,10 +9,8 @@ Summary of changes from schema 4:
 from pathlib import Path
 from contextlib import ExitStack
 import shutil
-from typing import Any
 
-import sqlalchemy
-
+from ._util import add_column
 from ..database import sql_engine_ctx
 from ..file_and_directory_names import DB_FILE
 from ..tables import schema_5
@@ -34,16 +32,6 @@ class Migration4to5(Migration):  # noqa: D101
         with ExitStack() as exit_stack:
             dest_engine = exit_stack.enter_context(sql_engine_ctx(dest_db_file))
             schema_5.metadata.create_all(dest_engine)
-
-            def add_column(
-                engine: sqlalchemy.engine.Engine,
-                table_name: str,
-                column: Any,
-            ) -> None:
-                column_type = column.type.compile(engine.dialect)
-                engine.execute(
-                    f"ALTER TABLE {table_name} ADD COLUMN {column.key} {column_type}"
-                )
 
             add_column(
                 dest_engine,

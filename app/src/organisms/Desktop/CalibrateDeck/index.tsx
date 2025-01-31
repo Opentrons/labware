@@ -1,5 +1,5 @@
 // Deck Calibration Orchestration Component
-import * as React from 'react'
+import { useMemo } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
@@ -27,6 +27,7 @@ import {
   useCalibrationError,
 } from '/app/organisms/Desktop/CalibrationError'
 
+import type { ComponentType } from 'react'
 import type { Mount } from '@opentrons/components'
 import type {
   CalibrationLabware,
@@ -37,7 +38,7 @@ import type { CalibrationPanelProps } from '/app/organisms/Desktop/CalibrationPa
 import type { CalibrateDeckParentProps } from './types'
 
 const PANEL_BY_STEP: Partial<
-  Record<CalibrationSessionStep, React.ComponentType<CalibrationPanelProps>>
+  Record<CalibrationSessionStep, ComponentType<CalibrationPanelProps>>
 > = {
   [Sessions.DECK_STEP_SESSION_STARTED]: Introduction,
   [Sessions.DECK_STEP_LABWARE_LOADED]: DeckSetup,
@@ -89,7 +90,7 @@ export function CalibrateDeck({
 
   const errorInfo = useCalibrationError(requestIds, session?.id)
 
-  const isMulti = React.useMemo(() => {
+  const isMulti = useMemo(() => {
     const spec = instrument && getPipetteModelSpecs(instrument.model)
     return spec ? spec.channels > 1 : false
   }, [instrument])

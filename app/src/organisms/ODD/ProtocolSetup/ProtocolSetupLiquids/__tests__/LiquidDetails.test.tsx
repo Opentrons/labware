@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen, fireEvent } from '@testing-library/react'
 import { describe, it, beforeEach, vi } from 'vitest'
 
@@ -13,20 +12,22 @@ import {
   MOCK_LABWARE_INFO_BY_LIQUID_ID,
   MOCK_PROTOCOL_ANALYSIS,
 } from '../fixtures'
+
+import type { ComponentProps } from 'react'
 import type { CompletedProtocolAnalysis } from '@opentrons/shared-data'
 
 vi.mock('/app/transformations/analysis')
 vi.mock('/app/transformations/commands')
 vi.mock('/app/organisms/LiquidsLabwareDetailsModal')
 
-const render = (props: React.ComponentProps<typeof LiquidDetails>) => {
+const render = (props: ComponentProps<typeof LiquidDetails>) => {
   return renderWithProviders(<LiquidDetails {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('LiquidDetails', () => {
-  let props: React.ComponentProps<typeof LiquidDetails>
+  let props: ComponentProps<typeof LiquidDetails>
   beforeEach(() => {
     props = {
       commands: (MOCK_PROTOCOL_ANALYSIS as CompletedProtocolAnalysis).commands,

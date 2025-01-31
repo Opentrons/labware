@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { css } from 'styled-components'
 import {
   ALIGN_CENTER,
@@ -13,9 +12,11 @@ import {
   TYPOGRAPHY,
 } from '@opentrons/components'
 
+import type { ReactNode } from 'react'
+
 interface Props {
   //  optional override of the spinner
-  alternativeSpinner?: React.ReactNode
+  alternativeSpinner?: ReactNode
   description?: string
   body?: string
   children?: JSX.Element

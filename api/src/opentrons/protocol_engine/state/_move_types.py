@@ -53,15 +53,19 @@ def get_move_type_to_well(
 
 
 def get_edge_point_list(
-    center: Point, x_radius: float, y_radius: float, edge_path_type: EdgePathType
+    center: Point,
+    x_radius: float,
+    y_radius: float,
+    mm_from_edge: float,
+    edge_path_type: EdgePathType,
 ) -> List[Point]:
     """Get list of edge points dependent on edge path type."""
     edges = EdgeList(
-        right=center + Point(x=x_radius, y=0, z=0),
-        left=center + Point(x=-x_radius, y=0, z=0),
+        right=center + Point(x=x_radius - mm_from_edge, y=0, z=0),
+        left=center + Point(x=-x_radius + mm_from_edge, y=0, z=0),
         center=center,
-        forward=center + Point(x=0, y=y_radius, z=0),
-        back=center + Point(x=0, y=-y_radius, z=0),
+        forward=center + Point(x=0, y=y_radius - mm_from_edge, z=0),
+        back=center + Point(x=0, y=-y_radius + mm_from_edge, z=0),
     )
 
     if edge_path_type == EdgePathType.LEFT:

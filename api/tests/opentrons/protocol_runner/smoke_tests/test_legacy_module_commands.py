@@ -75,7 +75,7 @@ async def test_runner_with_modules_in_legacy_python(
     thermocycler_result_captor = matchers.Captor()
     heater_shaker_result_captor = matchers.Captor()
 
-    assert commands_result[0] == commands.Home.construct(
+    assert commands_result[0] == commands.Home.model_construct(
         id=matchers.IsA(str),
         key=matchers.IsA(str),
         status=commands.CommandStatus.SUCCEEDED,
@@ -86,7 +86,7 @@ async def test_runner_with_modules_in_legacy_python(
         notes=[],
         result=commands.HomeResult(),
     )
-    assert commands_result[1] == commands.LoadLabware.construct(
+    assert commands_result[1] == commands.LoadLabware.model_construct(
         id=matchers.IsA(str),
         key=matchers.IsA(str),
         status=commands.CommandStatus.SUCCEEDED,
@@ -98,7 +98,7 @@ async def test_runner_with_modules_in_legacy_python(
         result=matchers.Anything(),
     )
 
-    assert commands_result[2] == commands.LoadModule.construct(
+    assert commands_result[2] == commands.LoadModule.model_construct(
         id=matchers.IsA(str),
         key=matchers.IsA(str),
         status=commands.CommandStatus.SUCCEEDED,
@@ -110,7 +110,7 @@ async def test_runner_with_modules_in_legacy_python(
         result=temp_module_result_captor,
     )
 
-    assert commands_result[3] == commands.LoadModule.construct(
+    assert commands_result[3] == commands.LoadModule.model_construct(
         id=matchers.IsA(str),
         key=matchers.IsA(str),
         status=commands.CommandStatus.SUCCEEDED,
@@ -122,7 +122,7 @@ async def test_runner_with_modules_in_legacy_python(
         result=mag_module_result_captor,
     )
 
-    assert commands_result[4] == commands.LoadModule.construct(
+    assert commands_result[4] == commands.LoadModule.model_construct(
         id=matchers.IsA(str),
         key=matchers.IsA(str),
         status=commands.CommandStatus.SUCCEEDED,
@@ -134,7 +134,7 @@ async def test_runner_with_modules_in_legacy_python(
         result=thermocycler_result_captor,
     )
 
-    assert commands_result[5] == commands.LoadModule.construct(
+    assert commands_result[5] == commands.LoadModule.model_construct(
         id=matchers.IsA(str),
         key=matchers.IsA(str),
         status=commands.CommandStatus.SUCCEEDED,
@@ -146,12 +146,9 @@ async def test_runner_with_modules_in_legacy_python(
         result=heater_shaker_result_captor,
     )
 
-    assert temp_module_result_captor.value["model"] == ModuleModel.TEMPERATURE_MODULE_V1
-    assert mag_module_result_captor.value["model"] == ModuleModel.MAGNETIC_MODULE_V1
+    assert temp_module_result_captor.value.model == ModuleModel.TEMPERATURE_MODULE_V1
+    assert mag_module_result_captor.value.model == ModuleModel.MAGNETIC_MODULE_V1
+    assert thermocycler_result_captor.value.model == ModuleModel.THERMOCYCLER_MODULE_V1
     assert (
-        thermocycler_result_captor.value["model"] == ModuleModel.THERMOCYCLER_MODULE_V1
-    )
-    assert (
-        heater_shaker_result_captor.value["model"]
-        == ModuleModel.HEATER_SHAKER_MODULE_V1
+        heater_shaker_result_captor.value.model == ModuleModel.HEATER_SHAKER_MODULE_V1
     )

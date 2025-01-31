@@ -41,7 +41,6 @@ import {
   OT2_ROBOT_TYPE,
 } from '@opentrons/shared-data'
 
-import { getTopPortalEl } from '../../components/portals/TopPortal'
 import { getAllowAllTipracks } from '../../feature-flags/selectors'
 import {
   getAdditionalEquipment,
@@ -60,14 +59,18 @@ import {
   PIPETTE_TYPES,
   PIPETTE_VOLUMES,
 } from '../../pages/CreateNewProtocolWizard/constants'
-import { getTiprackOptions } from '../../components/modals/utils'
 import { getLabwareDefsByURI } from '../../labware-defs/selectors'
 import { setFeatureFlags } from '../../feature-flags/actions'
 import { createCustomTiprackDef } from '../../labware-defs/actions'
 import { deleteContainer } from '../../labware-ingred/actions'
 import { selectors as stepFormSelectors } from '../../step-forms'
-import { BUTTON_LINK_STYLE } from '../../atoms'
-import { getSectionsFromPipetteName, getShouldShowPipetteType } from './utils'
+import { LINK_BUTTON_STYLE } from '../../atoms'
+import { getMainPagePortalEl } from '../Portal'
+import {
+  getSectionsFromPipetteName,
+  getShouldShowPipetteType,
+  getTiprackOptions,
+} from './utils'
 import { editPipettes } from './editPipettes'
 import { HandleEnter } from '../../atoms/HandleEnter'
 
@@ -89,7 +92,7 @@ export function EditInstrumentsModal(
 ): JSX.Element {
   const { onClose } = props
   const dispatch = useDispatch<ThunkDispatch<any>>()
-  const { t } = useTranslation([
+  const { i18n, t } = useTranslation([
     'create_new_protocol',
     'protocol_overview',
     'shared',
@@ -174,6 +177,7 @@ export function EditInstrumentsModal(
   return createPortal(
     <HandleEnter onEnter={handleOnSave}>
       <Modal
+        marginLeft="0"
         title={
           page === 'add'
             ? t('shared:edit_pipette')
@@ -232,7 +236,7 @@ export function EditInstrumentsModal(
                 {has96Channel ||
                 (leftPipette == null && rightPipette == null) ? null : (
                   <Btn
-                    css={BUTTON_LINK_STYLE}
+                    css={LINK_BUTTON_STYLE}
                     onClick={() =>
                       dispatch(
                         changeSavedStepForm({
@@ -251,7 +255,7 @@ export function EditInstrumentsModal(
                         transform="rotate(90deg)"
                       />
                       <StyledText desktopStyle="captionSemiBold">
-                        {t('swap')}
+                        {t('swap_pipette_mounts')}
                       </StyledText>
                     </Flex>
                   </Btn>
@@ -346,11 +350,11 @@ export function EditInstrumentsModal(
                             desktopStyle="bodyDefaultRegular"
                             color={COLORS.grey60}
                           >
-                            {t('gripper')}
+                            {i18n.format(t('gripper'), 'capitalize')}
                           </StyledText>
                         </Flex>
                         <Btn
-                          css={BUTTON_LINK_STYLE}
+                          css={LINK_BUTTON_STYLE}
                           textDecoration={TYPOGRAPHY.textDecorationUnderline}
                           padding={SPACING.spacing4}
                           id="hello"
@@ -564,11 +568,13 @@ export function EditInstrumentsModal(
                                 TYPOGRAPHY.textDecorationUnderline
                               }
                             >
-                              <StyledText desktopStyle="bodyDefaultRegular">
-                                {allowAllTipracks
-                                  ? t('show_default_tips')
-                                  : t('show_all_tips')}
-                              </StyledText>
+                              <StyledLabel>
+                                <StyledText desktopStyle="bodyDefaultRegular">
+                                  {allowAllTipracks
+                                    ? t('show_default_tips')
+                                    : t('show_all_tips')}
+                                </StyledText>
+                              </StyledLabel>{' '}
                             </Btn>
                           )}
                         </Flex>
@@ -581,7 +587,7 @@ export function EditInstrumentsModal(
         )}
       </Modal>
     </HandleEnter>,
-    getTopPortalEl()
+    getMainPagePortalEl()
   )
 }
 
@@ -592,5 +598,8 @@ const StyledLabel = styled.label`
   cursor: ${CURSOR_POINTER};
   input[type='file'] {
     display: none;
+  }
+  &:hover {
+    color: ${COLORS.blue50};
   }
 `

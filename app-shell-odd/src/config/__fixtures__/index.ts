@@ -13,6 +13,7 @@ import type {
   ConfigV23,
   ConfigV24,
   ConfigV25,
+  ConfigV26,
 } from '@opentrons/app/src/redux/config/types'
 
 const PKG_VERSION: string = _PKG_VERSION_
@@ -179,5 +180,14 @@ export const MOCK_CONFIG_V25: ConfigV25 = {
   language: {
     appLanguage: null,
     systemLanguage: null,
+  },
+}
+
+export const MOCK_CONFIG_V26: ConfigV26 = {
+  ...MOCK_CONFIG_V25,
+  version: 26,
+  onDeviceDisplaySettings: {
+    ...MOCK_CONFIG_V25.onDeviceDisplaySettings,
+    unfinishedUnboxingFlowRoute: '/choose-language',
   },
 }

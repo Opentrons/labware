@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { css } from 'styled-components'
 import { RIGHT, WEIGHT_OF_96_CHANNEL } from '@opentrons/shared-data'
@@ -27,12 +27,14 @@ import { Skeleton } from '/app/atoms/Skeleton'
 import { SmallButton } from '/app/atoms/buttons'
 import { BODY_STYLE, SECTIONS } from './constants'
 import { getPipetteAnimations, getPipetteAnimations96 } from './utils'
-import type { PipetteWizardStepProps } from './types'
+
+import type { Dispatch, ReactNode, SetStateAction } from 'react'
 import type { PipetteData } from '@opentrons/api-client'
+import type { PipetteWizardStepProps } from './types'
 
 interface DetachPipetteProps extends PipetteWizardStepProps {
   isFetching: boolean
-  setFetching: React.Dispatch<React.SetStateAction<boolean>>
+  setFetching: Dispatch<SetStateAction<boolean>>
 }
 const BACKGROUND_SIZE = '47rem'
 
@@ -82,7 +84,7 @@ export const DetachPipette = (props: DetachPipetteProps): JSX.Element => {
     flowType,
     section: SECTIONS.DETACH_PIPETTE,
   }
-  const memoizedAttachedPipettes = React.useMemo(() => attachedPipettes, [])
+  const memoizedAttachedPipettes = useMemo(() => attachedPipettes, [])
   const is96ChannelPipette =
     memoizedAttachedPipettes[mount]?.instrumentName === 'p1000_96'
   const pipetteName =
@@ -121,10 +123,9 @@ export const DetachPipette = (props: DetachPipetteProps): JSX.Element => {
       })
   }
 
-  const [
-    showPipetteStillAttached,
-    setShowPipetteStillAttached,
-  ] = React.useState(false)
+  const [showPipetteStillAttached, setShowPipetteStillAttached] = useState(
+    false
+  )
 
   const handleOnClick = (): void => {
     setFetching(true)
@@ -142,7 +143,7 @@ export const DetachPipette = (props: DetachPipetteProps): JSX.Element => {
   }
 
   const channel = memoizedAttachedPipettes[mount]?.data.channels
-  let bodyText: React.ReactNode = <div></div>
+  let bodyText: ReactNode = <div></div>
   if (isFetching) {
     bodyText = (
       <>

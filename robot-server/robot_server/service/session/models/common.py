@@ -22,4 +22,4 @@ OffsetVector = typing.List[float]
 
 
 class JogPosition(BaseModel):
-    vector: OffsetVector = Field(..., min_items=3, max_items=3)
+    vector: OffsetVector = Field(..., min_length=3, max_length=3)

@@ -33,8 +33,6 @@ export function ThermocyclerState(props: ThermocyclerStateProps): JSX.Element {
     formData,
     isHold = false,
     visibleFormErrors,
-    showFormErrors = true,
-    focusedField,
   } = props
   const { i18n, t } = useTranslation(['application', 'form'])
 
@@ -65,8 +63,9 @@ export function ThermocyclerState(props: ThermocyclerStateProps): JSX.Element {
   return (
     <Flex
       flexDirection={DIRECTION_COLUMN}
-      gridGap={SPACING.spacing8}
-      padding={SPACING.spacing16}
+      gridGap={SPACING.spacing4}
+      paddingX={SPACING.spacing16}
+      paddingTop={SPACING.spacing16}
     >
       <Flex flexDirection={DIRECTION_COLUMN} gridGap={SPACING.spacing4}>
         <StyledText desktopStyle="bodyDefaultSemiBold">
@@ -83,12 +82,7 @@ export function ThermocyclerState(props: ThermocyclerStateProps): JSX.Element {
         isSelected={formData[blockFieldActive] === true}
         onLabel={t('form:step_edit_form.field.heaterShaker.shaker.toggleOn')}
         offLabel={t('form:step_edit_form.field.heaterShaker.shaker.toggleOff')}
-        formLevelError={getFormLevelError(
-          showFormErrors,
-          blockTempField,
-          mappedErrorsToField,
-          focusedField
-        )}
+        formLevelError={getFormLevelError(blockTempField, mappedErrorsToField)}
       />
       <ToggleExpandStepFormField
         {...propsForFields[lidTempField]}
@@ -102,12 +96,7 @@ export function ThermocyclerState(props: ThermocyclerStateProps): JSX.Element {
         offLabel={t(
           'form:step_edit_form.field.thermocyclerState.lid.toggleOff'
         )}
-        formLevelError={getFormLevelError(
-          showFormErrors,
-          lidTempField,
-          mappedErrorsToField,
-          focusedField
-        )}
+        formLevelError={getFormLevelError(lidTempField, mappedErrorsToField)}
       />
       <ToggleStepFormField
         isDisabled={propsForFields[lidPositionField].disabled}

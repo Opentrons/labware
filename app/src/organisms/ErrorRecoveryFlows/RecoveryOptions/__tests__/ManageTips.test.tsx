@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, expect, beforeEach } from 'vitest'
 import {
   screen,
@@ -18,6 +17,7 @@ import { DT_ROUTES } from '/app/organisms/DropTipWizardFlows/constants'
 import { SelectRecoveryOption } from '../SelectRecoveryOption'
 import { clickButtonLabeled } from '../../__tests__/util'
 
+import type { ComponentProps } from 'react'
 import type { Mock } from 'vitest'
 import type { PipetteModelSpecs } from '@opentrons/shared-data'
 
@@ -34,14 +34,14 @@ const MOCK_ACTUAL_PIPETTE = {
   },
 } as PipetteModelSpecs
 
-const render = (props: React.ComponentProps<typeof ManageTips>) => {
+const render = (props: ComponentProps<typeof ManageTips>) => {
   return renderWithProviders(<ManageTips {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('ManageTips', () => {
-  let props: React.ComponentProps<typeof ManageTips>
+  let props: ComponentProps<typeof ManageTips>
   let mockProceedNextStep: Mock
   let mockProceedToRouteAndStep: Mock
   let mockhandleMotionRouting: Mock

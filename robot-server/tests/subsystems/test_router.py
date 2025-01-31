@@ -72,7 +72,7 @@ def thread_manager(decoy: Decoy, ot3_hardware_api: "OT3API") -> ThreadManagedHar
         from opentrons.hardware_control.ot3api import OT3API
     except ImportError:
         pytest.skip("Cannot run on OT-2 (for now)")
-    manager = decoy.mock(cls=ThreadManagedHardware)  # type: ignore[misc]
+    manager = decoy.mock(cls=ThreadManagedHardware)
     decoy.when(manager.wrapped()).then_return(ot3_hardware_api)
     decoy.when(manager.wraps_instance(OT3API)).then_return(True)
     return cast(ThreadManagedHardware, manager)
@@ -104,7 +104,7 @@ def _build_attached_subsystems(
 def _build_subsystem_data(
     subsystem: SubSystem, state: SubSystemState
 ) -> PresentSubsystem:
-    return PresentSubsystem.construct(
+    return PresentSubsystem.model_construct(
         name=subsystem,
         ok=state.ok,
         current_fw_version=str(state.current_fw_version),
@@ -230,25 +230,25 @@ async def test_get_subsystem_updates_with_some(
 
     response = await get_subsystem_updates(update_manager)
     assert response.content.data == [
-        UpdateProgressSummary.construct(
+        UpdateProgressSummary.model_construct(
             id=x_process_details.update_id,
             createdAt=x_process_details.created_at,
             subsystem=x_process_details.subsystem,
             updateStatus=x_state,
         ),
-        UpdateProgressSummary.construct(
+        UpdateProgressSummary.model_construct(
             id=y_process_details.update_id,
             createdAt=y_process_details.created_at,
             subsystem=y_process_details.subsystem,
             updateStatus=y_state,
         ),
-        UpdateProgressSummary.construct(
+        UpdateProgressSummary.model_construct(
             id=head_process_details.update_id,
             createdAt=head_process_details.created_at,
             subsystem=head_process_details.subsystem,
             updateStatus=head_state,
         ),
-        UpdateProgressSummary.construct(
+        UpdateProgressSummary.model_construct(
             id=pipette_process_details.update_id,
             createdAt=pipette_process_details.created_at,
             subsystem=pipette_process_details.subsystem,
@@ -284,7 +284,7 @@ async def test_get_subsystem_update_succeeds(
         await update_manager.get_ongoing_update_process_handle_by_subsystem(subsystem)
     ).then_return(handle)
     response = await get_subsystem_update(subsystem, update_manager)
-    assert response.content.data == UpdateProgressData.construct(
+    assert response.content.data == UpdateProgressData.model_construct(
         id=details.update_id,
         createdAt=details.created_at,
         subsystem=details.subsystem,
@@ -329,7 +329,7 @@ async def test_get_subsystem_update_error(
         await update_manager.get_ongoing_update_process_handle_by_subsystem(subsystem)
     ).then_return(handle)
     response = await get_subsystem_update(subsystem, update_manager)
-    assert response.content.data == UpdateProgressData.construct(
+    assert response.content.data == UpdateProgressData.model_construct(
         id=details.update_id,
         createdAt=details.created_at,
         subsystem=details.subsystem,
@@ -386,25 +386,25 @@ async def test_get_all_updates_some(
     )
     response = await get_update_processes(update_manager)
     assert response.content.data == [
-        UpdateProgressSummary.construct(
+        UpdateProgressSummary.model_construct(
             id=x_process_details.update_id,
             createdAt=x_process_details.created_at,
             subsystem=x_process_details.subsystem,
             updateStatus=x_state,
         ),
-        UpdateProgressSummary.construct(
+        UpdateProgressSummary.model_construct(
             id=y_process_details.update_id,
             createdAt=y_process_details.created_at,
             subsystem=y_process_details.subsystem,
             updateStatus=y_state,
         ),
-        UpdateProgressSummary.construct(
+        UpdateProgressSummary.model_construct(
             id=head_process_details.update_id,
             createdAt=head_process_details.created_at,
             subsystem=head_process_details.subsystem,
             updateStatus=head_state,
         ),
-        UpdateProgressSummary.construct(
+        UpdateProgressSummary.model_construct(
             id=pipette_process_details.update_id,
             createdAt=pipette_process_details.created_at,
             subsystem=pipette_process_details.subsystem,
@@ -526,7 +526,7 @@ async def test_begin_update(
         headers["Location"]
         == f"http://127.0.0.1:31950/subsystems/updates/current/{subsystem.value}"
     )
-    assert response_data.content.data == UpdateProgressData.construct(
+    assert response_data.content.data == UpdateProgressData.model_construct(
         id=update_id,
         createdAt=created_at,
         subsystem=subsystem,

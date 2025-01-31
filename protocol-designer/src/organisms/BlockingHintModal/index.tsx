@@ -15,7 +15,7 @@ import {
   StyledText,
 } from '@opentrons/components'
 import { actions } from '../../tutorial'
-import { getMainPagePortalEl } from '../../components/portals/MainPageModalPortal'
+import { getMainPagePortalEl } from '../Portal'
 import type { ReactNode } from 'react'
 import type { HintKey } from '../../tutorial'
 
@@ -38,7 +38,6 @@ export function BlockingHintModal(props: HintProps): JSX.Element {
   }, [])
 
   const onCancelClick = (): void => {
-    dispatch(actions.removeHint(hintKey, rememberDismissal))
     handleCancel()
   }
 
@@ -49,14 +48,16 @@ export function BlockingHintModal(props: HintProps): JSX.Element {
 
   return createPortal(
     <Modal
+      marginLeft="0"
       type="warning"
+      zIndexOverlay={15}
       title={t(`hint.${hintKey}.title`)}
       onClose={onCancelClick}
       footer={
         <Flex
           alignItems={ALIGN_CENTER}
           justifyContent={JUSTIFY_SPACE_BETWEEN}
-          padding={SPACING.spacing24}
+          padding={`0 ${SPACING.spacing24} ${SPACING.spacing24}`}
         >
           <Flex
             alignItems={ALIGN_CENTER}
@@ -68,12 +69,12 @@ export function BlockingHintModal(props: HintProps): JSX.Element {
               {t('hint.dont_show_again')}
             </StyledText>
           </Flex>
-          <Flex alingItems={ALIGN_CENTER} gridGap={SPACING.spacing8}>
+          <Flex alignItems={ALIGN_CENTER} gridGap={SPACING.spacing8}>
             <SecondaryButton onClick={onCancelClick}>
               {t('shared:cancel')}
             </SecondaryButton>
             <PrimaryButton onClick={onContinueClick}>
-              {i18n.format(t('shared:continue'), 'capitalize')}
+              {i18n.format(t('shared:continue_with_export'), 'capitalize')}
             </PrimaryButton>
           </Flex>
         </Flex>

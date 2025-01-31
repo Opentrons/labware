@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { screen } from '@testing-library/react'
 import { fixtureTiprack300ul as _fixtureTiprack300ul } from '@opentrons/shared-data'
@@ -14,6 +13,7 @@ import {
   MULTI_CHANNEL_PIPETTE_HEIGHT,
 } from '../constants'
 
+import type { ComponentProps } from 'react'
 import type { LabwareDefinition2 } from '@opentrons/shared-data'
 
 vi.mock('../../Deck/RobotCoordsForeignDiv')
@@ -22,12 +22,12 @@ vi.mock('../EightEmanatingNozzles')
 
 const fixtureTiprack300Ul = _fixtureTiprack300ul as LabwareDefinition2
 
-const render = (props: React.ComponentProps<typeof PipetteRender>) => {
+const render = (props: ComponentProps<typeof PipetteRender>) => {
   return renderWithProviders(<PipetteRender {...props} />)[0]
 }
 
 describe('PipetteRender', () => {
-  let props: React.ComponentProps<typeof PipetteRender>
+  let props: ComponentProps<typeof PipetteRender>
   beforeEach(() => {
     props = {
       labwareDef: fixtureTiprack300Ul,

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -7,6 +6,8 @@ import { COLORS } from '@opentrons/components'
 import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { CardButton } from '..'
+
+import type { ComponentProps } from 'react'
 import type { NavigateFunction } from 'react-router-dom'
 
 const mockNavigate = vi.fn()
@@ -19,7 +20,7 @@ vi.mock('react-router-dom', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof CardButton>) => {
+const render = (props: ComponentProps<typeof CardButton>) => {
   return renderWithProviders(
     <MemoryRouter>
       <CardButton {...props} />
@@ -31,7 +32,7 @@ const render = (props: React.ComponentProps<typeof CardButton>) => {
 }
 
 describe('CardButton', () => {
-  let props: React.ComponentProps<typeof CardButton>
+  let props: ComponentProps<typeof CardButton>
 
   beforeEach(() => {
     props = {

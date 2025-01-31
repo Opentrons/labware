@@ -1,6 +1,69 @@
 {
   "$otSharedSchema": "#/pipette/schemas/2/pipetteLiquidPropertiesSchema.json",
   "supportedTips": {
+    "t20": {
+      "uiMaxFlowRate": 26.7,
+      "defaultAspirateFlowRate": {
+        "default": 26.7,
+        "valuesByApiLevel": { "2.14": 26.7 }
+      },
+      "defaultDispenseFlowRate": {
+        "default": 26.7,
+        "valuesByApiLevel": { "2.14": 26.7 }
+      },
+      "defaultBlowOutFlowRate": {
+        "default": 26.7,
+        "valuesByApiLevel": { "2.14": 26.7 }
+      },
+      "defaultFlowAcceleration": 1200.0,
+      "defaultTipLength": 52.0,
+      "defaultReturnTipHeight": 0.71,
+      "aspirate": {
+        "default": {
+          "1": [
+            [0.11, 0.207815, 0.040201],
+            [0.65, 0.43933, 0.014735],
+            [1.04, 0.256666, 0.133466],
+            [1.67, 0.147126, 0.247388],
+            [2.45, 0.078774, 0.361536],
+            [2.89, 0.042387, 0.450684],
+            [3.2, 0.014781, 0.530464],
+            [3.79, 0.071819, 0.347944],
+            [4.22, 0.051592, 0.424605],
+            [4.93, 0.021219, 0.552775],
+            [5.81, 0.023461, 0.541725],
+            [7.21, 0.008959, 0.625982],
+            [8.93, 0.005456, 0.651235],
+            [10.0, 0.007108, 0.636489],
+            [13.61, 0.002591, 0.681656],
+            [21.61, 0.002591, 0.681656]
+          ]
+        }
+      },
+      "dispense": {
+        "default": {
+          "1": [
+            [0.11, 0.207815, 0.040201],
+            [0.65, 0.43933, 0.014735],
+            [1.04, 0.256666, 0.133466],
+            [1.67, 0.147126, 0.247388],
+            [2.45, 0.078774, 0.361536],
+            [2.89, 0.042387, 0.450684],
+            [3.2, 0.014781, 0.530464],
+            [3.79, 0.071819, 0.347944],
+            [4.22, 0.051592, 0.424605],
+            [4.93, 0.021219, 0.552775],
+            [5.81, 0.023461, 0.541725],
+            [7.21, 0.008959, 0.625982],
+            [8.93, 0.005456, 0.651235],
+            [10.0, 0.007108, 0.636489],
+            [13.61, 0.002591, 0.681656],
+            [21.61, 0.002591, 0.681656]
+          ]
+        }
+      },
+      "defaultPushOutVolume": 7
+    },
     "t50": {
       "uiMaxFlowRate": 32.6,
       "defaultAspirateFlowRate": {
@@ -83,6 +146,8 @@
   "minVolume": 1,
   "defaultTipracks": [
     "opentrons/opentrons_flex_96_tiprack_50ul/1",
-    "opentrons/opentrons_flex_96_filtertiprack_50ul/1"
+    "opentrons/opentrons_flex_96_tiprack_20ul/1",
+    "opentrons/opentrons_flex_96_filtertiprack_50ul/1",
+    "opentrons/opentrons_flex_96_filtertiprack_20ul/1"
   ]
 }

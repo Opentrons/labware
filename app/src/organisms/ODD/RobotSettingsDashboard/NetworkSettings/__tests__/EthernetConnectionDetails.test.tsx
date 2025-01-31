@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
@@ -11,13 +10,13 @@ import { getLocalRobot } from '/app/redux/discovery'
 import { mockConnectedRobot } from '/app/redux/discovery/__fixtures__'
 import { EthernetConnectionDetails } from '../EthernetConnectionDetails'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/redux/discovery')
 vi.mock('/app/redux/discovery/selectors')
 vi.mock('/app/redux/networking/selectors')
 
-const render = (
-  props: React.ComponentProps<typeof EthernetConnectionDetails>
-) => {
+const render = (props: ComponentProps<typeof EthernetConnectionDetails>) => {
   return renderWithProviders(<EthernetConnectionDetails {...props} />, {
     i18nInstance: i18n,
   })
@@ -31,7 +30,7 @@ const mockEthernet = {
 }
 
 describe('EthernetConnectionDetails', () => {
-  let props: React.ComponentProps<typeof EthernetConnectionDetails>
+  let props: ComponentProps<typeof EthernetConnectionDetails>
   beforeEach(() => {
     props = {
       handleGoBack: vi.fn(),

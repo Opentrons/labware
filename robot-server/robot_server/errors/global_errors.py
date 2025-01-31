@@ -53,7 +53,7 @@ class FirmwareUpdateRequired(ErrorDetails):
     ) -> "FirmwareUpdateRequired":
         """Build a FirmwareUpdateRequired from a specific exception. Preserves metadata."""
         parent_inst = ErrorDetails.from_exc(exc, **supplemental_kwargs)
-        inst = FirmwareUpdateRequired(**parent_inst.dict())
+        inst = FirmwareUpdateRequired(**parent_inst.model_dump())
         if not inst.meta:
             inst.meta = {"update_url": "/subsystems/update"}
         else:

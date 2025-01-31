@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, describe, beforeEach, expect, it } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 
@@ -14,6 +13,7 @@ import {
   CalibrationError,
 } from '/app/organisms/Desktop/CalibrationError'
 
+import type { ComponentProps, ComponentType } from 'react'
 import type { DeckCalibrationStep } from '/app/redux/sessions/types'
 import type { DispatchRequestsType } from '/app/redux/robot-api'
 
@@ -41,14 +41,14 @@ describe('CalibrateDeck', () => {
     ...mockDeckCalibrationSessionAttributes,
   }
   const render = (
-    props: Partial<React.ComponentProps<typeof CalibrateDeck>> = {}
+    props: Partial<ComponentProps<typeof CalibrateDeck>> = {}
   ) => {
     const {
       showSpinner = false,
       isJogging = false,
       session = mockDeckCalSession,
     } = props
-    return renderWithProviders<React.ComponentType<typeof CalibrateDeck>>(
+    return renderWithProviders<ComponentType<typeof CalibrateDeck>>(
       <CalibrateDeck
         robotName="robot-name"
         session={session}

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
@@ -11,11 +10,13 @@ import {
   TYPOGRAPHY,
 } from '@opentrons/components'
 
+import type { HTMLProps } from 'react'
+
 // TODO(bh, 2022-12-7): finish styling when designs finalized
 export function BackButton({
   onClick,
   children,
-}: React.HTMLProps<HTMLButtonElement>): JSX.Element {
+}: HTMLProps<HTMLButtonElement>): JSX.Element {
   const navigate = useNavigate()
   const { t } = useTranslation('shared')
 

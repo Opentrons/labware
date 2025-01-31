@@ -1,10 +1,6 @@
-# Use Python 3.10 as the base image
-FROM python:3.10-slim-bullseye
+ARG BASE_IMAGE_NAME=opentrons-python-base:3.10
 
-# Update packages and install dependencies
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y git libsystemd-dev build-essential pkg-config network-manager
+FROM ${BASE_IMAGE_NAME}
 
 # Define build arguments
 ARG OPENTRONS_VERSION=edge

@@ -1,6 +1,8 @@
 """Modules routes."""
-from fastapi import APIRouter, Depends, status
 from typing import Annotated, List, Dict
+
+from fastapi import Depends, status
+from server_utils.fastapi_utils.light_router import LightRouter
 
 from opentrons.hardware_control import HardwareControlAPI
 from opentrons.hardware_control.modules import module_calibration
@@ -21,7 +23,7 @@ from .module_models import AttachedModule, ModuleCalibrationData
 from .module_identifier import ModuleIdentifier
 from .module_data_mapper import ModuleDataMapper
 
-modules_router = APIRouter()
+modules_router = LightRouter()
 
 
 @PydanticResponse.wrap_route(
@@ -67,7 +69,7 @@ async def get_attached_modules(
                 module_identity=module_identity,
                 live_data=mod.live_data,
                 usb_port=mod.usb_port,
-                module_offset=ModuleCalibrationData.construct(
+                module_offset=ModuleCalibrationData.model_construct(
                     offset=Vec3f(
                         x=calibrated.offset.x,
                         y=calibrated.offset.y,
@@ -83,7 +85,7 @@ async def get_attached_modules(
         )
 
     return await PydanticResponse.create(
-        content=SimpleMultiBody.construct(
+        content=SimpleMultiBody.model_construct(
             data=response_data,
             meta=MultiBodyMeta(cursor=0, totalLength=len(response_data)),
         ),

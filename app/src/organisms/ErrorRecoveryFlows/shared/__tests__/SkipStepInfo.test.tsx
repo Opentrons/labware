@@ -7,10 +7,11 @@ import { SkipStepInfo } from '../SkipStepInfo'
 import { RECOVERY_MAP } from '../../constants'
 import { clickButtonLabeled } from '/app/organisms/ErrorRecoveryFlows/__tests__/util'
 
+import type { ComponentProps } from 'react'
 import type { Mock } from 'vitest'
 
 describe('SkipStepInfo', () => {
-  let props: React.ComponentProps<typeof SkipStepInfo>
+  let props: ComponentProps<typeof SkipStepInfo>
   let mockHandleMotionRouting: Mock
   let mockSkipFailedCommand: Mock
 
@@ -32,7 +33,7 @@ describe('SkipStepInfo', () => {
     } as any
   })
 
-  const render = (props: React.ComponentProps<typeof SkipStepInfo>) => {
+  const render = (props: ComponentProps<typeof SkipStepInfo>) => {
     return renderWithProviders(<SkipStepInfo {...props} />, {
       i18nInstance: i18n,
     })[0]

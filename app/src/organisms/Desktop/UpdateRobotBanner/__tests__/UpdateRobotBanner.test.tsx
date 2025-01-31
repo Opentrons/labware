@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { fireEvent, screen } from '@testing-library/react'
@@ -12,19 +11,21 @@ import {
 import { handleUpdateBuildroot } from '../../Devices/RobotSettings/UpdateBuildroot'
 import { UpdateRobotBanner } from '..'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/redux/robot-update')
 vi.mock('../../Devices/RobotSettings/UpdateBuildroot')
 
 const getUpdateDisplayInfo = Buildroot.getRobotUpdateDisplayInfo
 
-const render = (props: React.ComponentProps<typeof UpdateRobotBanner>) => {
+const render = (props: ComponentProps<typeof UpdateRobotBanner>) => {
   return renderWithProviders(<UpdateRobotBanner {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('UpdateRobotBanner', () => {
-  let props: React.ComponentProps<typeof UpdateRobotBanner>
+  let props: ComponentProps<typeof UpdateRobotBanner>
 
   beforeEach(() => {
     props = {

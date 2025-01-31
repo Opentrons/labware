@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { describe, it, vi, beforeEach, expect } from 'vitest'
 import '@testing-library/jest-dom/vitest'
@@ -7,11 +6,13 @@ import { when } from 'vitest-when'
 import { i18n } from '/app/i18n'
 import { ModuleInfo } from '../ModuleInfo'
 import { useRunHasStarted } from '/app/resources/runs'
+
+import type { ComponentProps } from 'react'
 import type { ModuleModel, ModuleType } from '@opentrons/shared-data'
 
 vi.mock('/app/resources/runs')
 
-const render = (props: React.ComponentProps<typeof ModuleInfo>) => {
+const render = (props: ComponentProps<typeof ModuleInfo>) => {
   return renderWithProviders(<ModuleInfo {...props} />, {
     i18nInstance: i18n,
   })[0]
@@ -26,7 +27,7 @@ const mockTCModule = {
 const MOCK_RUN_ID = '1'
 
 describe('ModuleInfo', () => {
-  let props: React.ComponentProps<typeof ModuleInfo>
+  let props: ComponentProps<typeof ModuleInfo>
   beforeEach(() => {
     props = {
       moduleModel: mockTCModule.model,

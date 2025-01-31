@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { screen } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -37,6 +36,7 @@ import { RunProgressMeter } from '..'
 import { renderWithProviders } from '/app/__testing-utils__'
 import { useRunningStepCounts } from '/app/resources/protocols/hooks'
 
+import type { ComponentProps } from 'react'
 import type { RunCommandSummary } from '@opentrons/api-client'
 import type * as ApiClient from '@opentrons/react-api-client'
 
@@ -55,7 +55,7 @@ vi.mock('../../Devices/hooks')
 vi.mock('/app/resources/protocols/hooks')
 vi.mock('/app/redux-resources/robots')
 
-const render = (props: React.ComponentProps<typeof RunProgressMeter>) => {
+const render = (props: ComponentProps<typeof RunProgressMeter>) => {
   return renderWithProviders(<RunProgressMeter {...props} />, {
     i18nInstance: i18n,
   })[0]
@@ -65,7 +65,7 @@ const NON_DETERMINISTIC_RUN_ID = 'nonDeterministicID'
 const ROBOT_NAME = 'otie'
 
 describe('RunProgressMeter', () => {
-  let props: React.ComponentProps<typeof RunProgressMeter>
+  let props: ComponentProps<typeof RunProgressMeter>
   beforeEach(() => {
     vi.mocked(ProgressBar).mockReturnValue(<div>MOCK PROGRESS BAR</div>)
     vi.mocked(InterventionModal).mockReturnValue(

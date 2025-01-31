@@ -1,4 +1,6 @@
 """Utilities for calculating motion correctly."""
+from logging import getLogger
+
 from functools import lru_cache
 from typing import Callable, Dict, Union, Optional, cast
 from collections import OrderedDict
@@ -11,6 +13,7 @@ from opentrons.util import linal
 
 from .types import Axis, OT3Mount
 
+log = getLogger(__name__)
 
 # TODO: The offset_for_mount function should be defined with an overload
 # set, as with other functions in this module. Unfortunately, mypy < 0.920
@@ -35,6 +38,19 @@ from .types import Axis, OT3Mount
 #     gripper_mount_offset: Point,
 # ) -> Point:
 #     ...
+
+EMPTY_ORDERED_DICT = OrderedDict(
+    (
+        (Axis.X, 0.0),
+        (Axis.Y, 0.0),
+        (Axis.Z_L, 0.0),
+        (Axis.Z_R, 0.0),
+        (Axis.Z_G, 0.0),
+        (Axis.P_L, 0.0),
+        (Axis.P_R, 0.0),
+        (Axis.Q, 0.0),
+    )
+)
 
 
 @lru_cache(4)
@@ -68,6 +84,7 @@ def target_position_from_absolute(
     )
     primary_cp = get_critical_point(mount)
     primary_z = Axis.by_mount(mount)
+
     target_position = OrderedDict(
         (
             (Axis.X, abs_position.x - offset.x - primary_cp.x),
@@ -94,6 +111,57 @@ def target_position_from_relative(
             (primary_z, current_position[primary_z] + delta[2]),
         )
     )
+    return target_position
+
+
+def target_axis_map_from_absolute(
+    primary_mount: Union[OT3Mount, Mount],
+    axis_map: Dict[Axis, float],
+    get_critical_point: Callable[[Union[Mount, OT3Mount]], Point],
+    left_mount_offset: Point,
+    right_mount_offset: Point,
+    gripper_mount_offset: Optional[Point] = None,
+) -> "OrderedDict[Axis, float]":
+    """Create an absolute target position for all specified machine axes."""
+    keys_for_target_position = list(axis_map.keys())
+
+    offset = offset_for_mount(
+        primary_mount, left_mount_offset, right_mount_offset, gripper_mount_offset
+    )
+    primary_cp = get_critical_point(primary_mount)
+    primary_z = Axis.by_mount(primary_mount)
+    target_position = OrderedDict()
+
+    if Axis.X in keys_for_target_position:
+        target_position[Axis.X] = axis_map[Axis.X] - offset.x - primary_cp.x
+    if Axis.Y in keys_for_target_position:
+        target_position[Axis.Y] = axis_map[Axis.Y] - offset.y - primary_cp.y
+    if primary_z in keys_for_target_position:
+        # Since this function is intended to be used in conjunction with `API.move_axes`
+        # we must leave out the carriage offset subtraction from the target position as
+        # `move_axes` already does this calculation.
+        target_position[primary_z] = axis_map[primary_z] - primary_cp.z
+
+    target_position.update(
+        {ax: val for ax, val in axis_map.items() if ax not in Axis.gantry_axes()}
+    )
+    return target_position
+
+
+def target_axis_map_from_relative(
+    axis_map: Dict[Axis, float],
+    current_position: Dict[Axis, float],
+) -> "OrderedDict[Axis, float]":
+    """Create a target position for all specified machine axes."""
+    target_position = OrderedDict(
+        (
+            (ax, current_position[ax] + axis_map[ax])
+            for ax in EMPTY_ORDERED_DICT.keys()
+            if ax in axis_map.keys()
+        )
+    )
+    log.info(f"Current position {current_position} and axis map delta {axis_map}")
+    log.info(f"Relative move target {target_position}")
     return target_position
 
 

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { vi, it, describe, expect } from 'vitest'
 import { renderWithProviders } from '/app/__testing-utils__'
@@ -11,6 +10,7 @@ import {
 import * as Sessions from '/app/redux/sessions'
 import { DeckSetup } from '../DeckSetup'
 
+import type { ComponentProps } from 'react'
 import type { getDeckDefinitions } from '@opentrons/shared-data'
 
 vi.mock('/app/assets/labware/getLabware')
@@ -27,9 +27,7 @@ describe('DeckSetup', () => {
   const mockSendCommands = vi.fn()
   const mockDeleteSession = vi.fn()
 
-  const render = (
-    props: Partial<React.ComponentProps<typeof DeckSetup>> = {}
-  ) => {
+  const render = (props: Partial<ComponentProps<typeof DeckSetup>> = {}) => {
     const {
       mount = 'left',
       isMulti = false,

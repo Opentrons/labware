@@ -103,3 +103,15 @@ export const ANALYTICS_QUICK_TRANSFER_RERUN = 'quickTransferReRunFromSummary'
  */
 export const ANALYTICS_RESOURCE_MONITOR_REPORT: 'analytics:RESOURCE_MONITOR_REPORT' =
   'analytics:RESOURCE_MONITOR_REPORT'
+
+/**
+ * Internationalization Analytics
+ */
+export const ANALYTICS_LANGUAGE_UPDATED_ODD_UNBOXING_FLOW: 'languageUpdatedOddUnboxingFlow' =
+  'languageUpdatedOddUnboxingFlow'
+export const ANALYTICS_LANGUAGE_UPDATED_ODD_SETTINGS: 'languageUpdatedOddSettings' =
+  'languageUpdatedOddSettings'
+export const ANALYTICS_LANGUAGE_UPDATED_DESKTOP_APP_MODAL: 'languageUpdatedDesktopAppModal' =
+  'languageUpdatedDesktopAppModal'
+export const ANALYTICS_LANGUAGE_UPDATED_DESKTOP_APP_SETTINGS: 'languageUpdatedDesktopAppSettings' =
+  'languageUpdatedDesktopAppSettings'

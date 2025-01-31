@@ -22,18 +22,27 @@ import {
 } from '../../pages/Designer/ProtocolSteps/StepForm/utils'
 import { WarningContents } from './WarningContents'
 
+import type { ReactNode } from 'react'
 import type { ProfileItem } from '@opentrons/step-generation'
 import type { StepFieldName } from '../../form-types'
 import type { ProfileFormError } from '../../steplist/formLevel/profileErrors'
 import type { MakeAlert } from './types'
 
 interface FormAlertsProps {
+  showFormErrors: boolean
   focusedField?: StepFieldName | null
   dirtyFields?: StepFieldName[]
+  page: number
+}
+
+interface WarningType {
+  title: string
+  description: ReactNode | null
 }
 
 function FormAlertsComponent(props: FormAlertsProps): JSX.Element | null {
-  const { focusedField, dirtyFields } = props
+  const { showFormErrors, focusedField, dirtyFields, page } = props
+
   const { t } = useTranslation('alert')
   const dispatch = useDispatch()
   const formLevelErrorsForUnsavedForm = useSelector(
@@ -68,6 +77,8 @@ function FormAlertsComponent(props: FormAlertsProps): JSX.Element | null {
     focusedField,
     dirtyFields: dirtyFields ?? [],
     errors: formLevelErrorsForUnsavedForm,
+    page,
+    showErrors: showFormErrors,
   })
 
   const profileItemsById: Record<string, ProfileItem> | null | undefined =
@@ -107,7 +118,7 @@ function FormAlertsComponent(props: FormAlertsProps): JSX.Element | null {
         width="100%"
         iconMarginLeft={SPACING.spacing4}
       >
-        <Flex flexDirection={DIRECTION_COLUMN} gridGap={SPACING.spacing4}>
+        <Flex flexDirection={DIRECTION_COLUMN}>
           <StyledText desktopStyle="bodyDefaultSemiBold">
             {data.title}
           </StyledText>
@@ -120,26 +131,33 @@ function FormAlertsComponent(props: FormAlertsProps): JSX.Element | null {
       </Banner>
     </Flex>
   )
-  const formErrors = [
-    ...visibleFormErrors.reduce((acc, error) => {
+
+  const filteredFormErrorsForBanner = visibleFormErrors.reduce<WarningType[]>(
+    (acc, error) => {
       return error.showAtForm ?? true
-        ? {
+        ? [
             ...acc,
-            title: error.title,
-            description: error.body || null,
-            showAtForm: error.showAtForm ?? true,
-          }
+            {
+              title: error.title,
+              description: error.body ?? null,
+            },
+          ]
         : acc
-    }, []),
+    },
+    []
+  )
+
+  const formErrors = [
+    ...filteredFormErrorsForBanner,
     ...visibleDynamicFieldFormErrors.map(error => ({
       title: error.title,
-      description: error.body || null,
+      description: error.body ?? null,
     })),
   ]
 
   const formWarnings = visibleFormWarnings.map(warning => ({
     title: warning.title,
-    description: warning.body || null,
+    description: warning.body ?? null,
     dismissId: warning.type,
   }))
 
@@ -161,17 +179,20 @@ function FormAlertsComponent(props: FormAlertsProps): JSX.Element | null {
       )
     }
   }
-  return [...formErrors, ...formWarnings, ...timelineWarnings].length > 0 ? (
+
+  return [...formErrors, ...timelineWarnings, ...formWarnings].length > 0 ? (
     <Flex
       flexDirection={DIRECTION_COLUMN}
-      gridGap={SPACING.spacing4}
       padding={`${SPACING.spacing16} ${SPACING.spacing16} 0`}
+      gridGap={SPACING.spacing4}
     >
-      {formErrors.map((error, key) => makeAlert('error', error, key))}
-      {formWarnings.map((warning, key) => makeAlert('warning', warning, key))}
+      {showFormErrors
+        ? formErrors.map((error, key) => makeAlert('error', error, key))
+        : null}
       {timelineWarnings.map((warning, key) =>
         makeAlert('warning', warning, key)
       )}
+      {formWarnings.map((warning, key) => makeAlert('warning', warning, key))}
     </Flex>
   ) : null
 }

@@ -43,6 +43,7 @@ export function LabwareUploadModal(): JSX.Element | null {
 
   return (
     <Modal
+      marginLeft="0"
       type={
         message.messageType === 'ASK_FOR_LABWARE_OVERWRITE'
           ? 'warning'

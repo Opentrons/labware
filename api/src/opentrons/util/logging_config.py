@@ -36,7 +36,7 @@ def _host_config(level_value: int) -> Dict[str, Any]:
                 "class": "logging.handlers.RotatingFileHandler",
                 "formatter": "basic",
                 "filename": serial_log_filename,
-                "maxBytes": 5000000,
+                "maxBytes": 1000000,
                 "level": logging.DEBUG,
                 "backupCount": 3,
             },

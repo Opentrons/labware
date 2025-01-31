@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, beforeEach, afterEach, vi, expect, it } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
@@ -8,12 +7,14 @@ import { BORDERS, COLORS } from '../../../helix-design-system'
 import { TYPOGRAPHY, SPACING } from '../../../ui-style-constants'
 import { CheckboxField } from '..'
 
-const render = (props: React.ComponentProps<typeof CheckboxField>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof CheckboxField>) => {
   return renderWithProviders(<CheckboxField {...props} />)[0]
 }
 
 describe('CheckboxField', () => {
-  let props: React.ComponentProps<typeof CheckboxField>
+  let props: ComponentProps<typeof CheckboxField>
 
   beforeEach(() => {
     props = {

@@ -29,12 +29,15 @@ export const HOLDING_LABWARE_OPTIONS: HoldingLabwareOption[] = [
 export function GripperIsHoldingLabware({
   routeUpdateActions,
   currentRecoveryOptionUtils,
+  recoveryCommands,
 }: RecoveryContentProps): JSX.Element {
   const {
     proceedNextStep,
     proceedToRouteAndStep,
     goBackPrevStep,
+    handleMotionRouting,
   } = routeUpdateActions
+  const { homeExceptPlungers } = recoveryCommands
   const { selectedRecoveryOption } = currentRecoveryOptionUtils
   const {
     MANUAL_MOVE_AND_SKIP,
@@ -48,24 +51,29 @@ export function GripperIsHoldingLabware({
   const { t } = useTranslation(['error_recovery', 'shared'])
 
   const handleNoOption = (): void => {
-    switch (selectedRecoveryOption) {
-      case MANUAL_MOVE_AND_SKIP.ROUTE:
-        void proceedToRouteAndStep(
-          MANUAL_MOVE_AND_SKIP.ROUTE,
-          MANUAL_MOVE_AND_SKIP.STEPS.MANUAL_MOVE
-        )
-        break
-      case MANUAL_REPLACE_AND_RETRY.ROUTE:
-        void proceedToRouteAndStep(
-          MANUAL_REPLACE_AND_RETRY.ROUTE,
-          MANUAL_REPLACE_AND_RETRY.STEPS.MANUAL_REPLACE
-        )
-        break
-      default: {
-        console.error('Unexpected recovery option for gripper routing.')
-        void proceedToRouteAndStep(OPTION_SELECTION.ROUTE)
-      }
-    }
+    // The "yes" option also contains a home, but it occurs later in the control flow,
+    // after the user has extricated the labware from the gripper jaws.
+    void handleMotionRouting(true)
+      .then(() => homeExceptPlungers())
+      .finally(() => handleMotionRouting(false))
+      .then(() => {
+        switch (selectedRecoveryOption) {
+          case MANUAL_MOVE_AND_SKIP.ROUTE:
+            return proceedToRouteAndStep(
+              MANUAL_MOVE_AND_SKIP.ROUTE,
+              MANUAL_MOVE_AND_SKIP.STEPS.MANUAL_MOVE
+            )
+          case MANUAL_REPLACE_AND_RETRY.ROUTE:
+            return proceedToRouteAndStep(
+              MANUAL_REPLACE_AND_RETRY.ROUTE,
+              MANUAL_REPLACE_AND_RETRY.STEPS.MANUAL_REPLACE
+            )
+          default: {
+            console.error('Unexpected recovery option for gripper routing.')
+            return proceedToRouteAndStep(OPTION_SELECTION.ROUTE)
+          }
+        }
+      })
   }
 
   const primaryOnClick = (): void => {

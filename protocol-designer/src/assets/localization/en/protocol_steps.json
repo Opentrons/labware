@@ -1,7 +1,9 @@
 {
   "add_details": "Add step details",
+  "all": "All",
   "advanced_settings": "Advanced pipetting settings",
   "air_gap_volume": "Air gap volume",
+  "aspirate_labware": "Source labware",
   "aspirate": "Aspirate",
   "aspirated": "Aspirated",
   "batch_edit_steps": "Batch edit steps",
@@ -10,12 +12,14 @@
   "blowout_location": "Blowout location",
   "blowout_position": "Blowout position from bottom",
   "change_tips": "Change tips",
+  "column": "Column",
   "default_flow_rate": "The default flow rate is {{flowRate}}",
   "default_tip_option": "Default - get next tip",
   "delay_duration": "Delay duration",
   "delay_position": "Delay position from bottom",
   "delete_steps": "Delete steps",
   "delete": "Delete step",
+  "dispense_labware": "Destination labware",
   "dispense": "Dispense",
   "dispensed": "Dispensed",
   "disposal_volume": "Disposal volume",
@@ -23,7 +27,7 @@
   "duplicate": "Duplicate step",
   "edit_step": "Edit step",
   "engage_height": "Engage height",
-  "final_deck_state": "Final deck state",
+  "ending_deck": "Ending deck",
   "flow_type_title": "{{type}} flow rate",
   "from": "from",
   "heater_shaker": {
@@ -40,7 +44,7 @@
       "open": "open"
     }
   },
-  "heater_shaker_settings": "Heater-shaker settings",
+  "heater_shaker_settings": "Heater-Shaker Settings",
   "in": "in",
   "into": "into",
   "magnetic_module": {
@@ -48,7 +52,7 @@
     "engage": "<semiBoldText>{{module}}</semiBoldText><text>engaged to</text><tag/>"
   },
   "max_disposal_volume": "Max {{vol}} {{unit}}",
-  "mix_times": "Mix repititions",
+  "mix_times": "Mix repetitions",
   "mix_volume": "Mix volume",
   "mix": "Mix",
   "mix_step": "<text>Mixing</text><tag/><text>{{times}} times in</text><semiBoldText>{{wells}} of {{labware}}</semiBoldText>",
@@ -61,17 +65,22 @@
   "move_liquid": {
     "consolidate": "<text>Consolidating</text><tag/><text>from</text><semiBoldText>{{sourceWells}} of {{source}}</semiBoldText><text>to</text><semiBoldText>{{destinationWells}} of {{destination}}</semiBoldText>",
     "distribute": "<text>Distributing</text><tag/><text>from</text><semiBoldText>{{sourceWells}} of {{source}}</semiBoldText><text>to</text><semiBoldText>{{destinationWells}} of {{destination}}</semiBoldText>",
-    "transfer": "<text>Transferring</text><tag/><text>from</text><semiBoldText>{{sourceWells}} of {{source}}</semiBoldText><text>to</text><semiBoldText>{{destinationWells}} of {{destination}}</semiBoldText>"
+    "transfer": "<text>Transferring</text><tag/><text>from</text><semiBoldText>{{sourceWells}} of {{source}}</semiBoldText><text>to</text><semiBoldText>{{destinationWells}} of {{destination}}</semiBoldText>",
+    "consolidate_disposal": "<text>Consolidating</text><tag/><text>from</text><semiBoldText>{{sourceWells}} of {{source}}</semiBoldText><text>to</text><semiBoldText>{{destination}}</semiBoldText>",
+    "transfer_disposal": "<text>Transferring</text><tag/><text>from</text><semiBoldText>{{sourceWells}} of {{source}}</semiBoldText><text>to</text><semiBoldText>{{destination}}</semiBoldText>"
   },
-  "multi_dispense_options": "Distribute options",
+  "multi_dispense_options": "Disposal volume",
   "multiAspirate": "Consolidate path",
   "multiDispense": "Distribute path",
   "new_location": "New location",
+  "off_deck": "Off-Deck",
   "pause": {
     "untilResume": "Pausing until manually told to resume",
     "untilTemperature": "<text>Pausing until</text><semiBoldText>{{module}}</semiBoldText><text>reaches</text><tag/>",
     "untilTime": "<text>Pausing for</text><tag/>"
   },
+  "pipette": "Pipette",
+  "pipette_path": "Pipette path",
   "protocol_steps": "Protocol steps",
   "protocol_timeline": "Protocol timeline",
   "rename": "Rename",
@@ -87,7 +96,7 @@
   "select_labware": "Select labware",
   "select_mix_labware": "Select a mix labware",
   "select_wells": "Select wells using a {{displayName}}",
-  "select_nozzles": "Select nozzles",
+  "select_nozzles": "Nozzles",
   "select_pipette": "Select a pipette",
   "select_tip_location": "Select pick up tip location",
   "select_tiprack": "Select a tiprack",
@@ -95,7 +104,7 @@
   "shake": "Shake",
   "single": "Single path",
   "speed": "Speed",
-  "starting_deck_state": "Starting deck state",
+  "starting_deck": "Starting deck",
   "step_substeps": "{{stepType}} details",
   "temperature": "Temperature",
   "temperature_module": {
@@ -111,8 +120,8 @@
     "substep_settings": "<text>Set block temperature to</text><tagTemperature/><text>for</text><tagDuration/>",
     "thermocycler_profile": {
       "end_hold": {
-        "block": "<text>End at thermocycler block</text><tag/>",
-        "lid_position": "<text>Thermocycler lid</text><tag/>"
+        "block": "<text>End with block at</text><tag/>",
+        "lid_position": "<text>and lid</text><tag/>"
       },
       "lid_temperature": "<text>and lid temperature at</text><tag/>",
       "volume": "<text>Run thermocycler profile with</text><tag/>"
@@ -124,11 +133,15 @@
     }
   },
   "time": "Time",
+  "timeline": "Timeline",
+  "tiprack": "Tiprack",
+  "tip_handling": "Tip handling",
   "tip_position": "{{prefix}} tip position",
   "touch_tip_position": "Touch tip position from top",
   "valid_range": "Valid range between {{min}} - {{max}} {{unit}}",
   "view_details": "View details",
+  "volume_per_well": "Volume per well",
   "well_name": "Well {{wellName}}",
   "well_order_title": "{{prefix}} well order",
-  "well_position": "Well position (x,y,z): "
+  "well_position": "Well position: X {{x}} Y {{y}} Z {{z}} (mm)"
 }

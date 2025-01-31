@@ -1,5 +1,6 @@
 import { css } from 'styled-components'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   ALIGN_CENTER,
   BORDERS,
@@ -17,7 +18,7 @@ import {
   StyledText,
   TYPOGRAPHY,
 } from '@opentrons/components'
-import { useTranslation } from 'react-i18next'
+import { LINK_BUTTON_STYLE } from '../../../../../../atoms'
 import {
   temperatureRangeFieldValue,
   isTimeFormatMinutesSeconds,
@@ -29,6 +30,7 @@ import {
 import { uuid } from '../../../../../../utils'
 import { getTimeFromString, getStepIndex } from './utils'
 
+import type { ChangeEvent, Dispatch, SetStateAction } from 'react'
 import type { ThermocyclerStepTypeGeneral } from './ThermocyclerProfileModal'
 
 export interface ThermocyclerStepType {
@@ -42,9 +44,9 @@ export interface ThermocyclerStepType {
 
 interface ThermocyclerStepProps {
   steps: ThermocyclerStepTypeGeneral[]
-  setSteps: React.Dispatch<React.SetStateAction<ThermocyclerStepTypeGeneral[]>>
-  setShowCreateNewStep: React.Dispatch<React.SetStateAction<boolean>>
-  setIsInEdit: React.Dispatch<React.SetStateAction<boolean>>
+  setSteps: Dispatch<SetStateAction<ThermocyclerStepTypeGeneral[]>>
+  setShowCreateNewStep: Dispatch<SetStateAction<boolean>>
+  setIsInEdit: Dispatch<SetStateAction<boolean>>
   step?: ThermocyclerStepType
   backgroundColor?: string
   readOnly?: boolean
@@ -133,7 +135,7 @@ export function ThermocyclerStep(props: ThermocyclerStepProps): JSX.Element {
 
   const header = showEdit ? (
     <Flex
-      padding={`${SPACING.spacing12} ${SPACING.spacing16}`}
+      padding={SPACING.spacing12}
       justifyContent={JUSTIFY_SPACE_BETWEEN}
       width="100%"
     >
@@ -158,6 +160,8 @@ export function ThermocyclerStep(props: ThermocyclerStepProps): JSX.Element {
           onClick={handleDeleteStep}
           whiteSpace={NO_WRAP}
           textDecoration={TYPOGRAPHY.textDecorationUnderline}
+          padding={SPACING.spacing4}
+          css={LINK_BUTTON_STYLE}
         >
           <StyledText desktopStyle="bodyDefaultRegular">
             {i18n.format(
@@ -166,7 +170,11 @@ export function ThermocyclerStep(props: ThermocyclerStepProps): JSX.Element {
             )}
           </StyledText>
         </Btn>
-        <PrimaryButton onClick={handleSaveStep} disabled={isStepStateError}>
+        <PrimaryButton
+          onClick={handleSaveStep}
+          disabled={isStepStateError}
+          borderRadius={BORDERS.borderRadiusFull}
+        >
           <StyledText desktopStyle="bodyDefaultRegular">
             {i18n.format(t('save'), 'capitalize')}
           </StyledText>
@@ -175,7 +183,7 @@ export function ThermocyclerStep(props: ThermocyclerStepProps): JSX.Element {
     </Flex>
   ) : (
     <Flex
-      padding={`${SPACING.spacing12} ${SPACING.spacing16}`}
+      padding={SPACING.spacing12}
       justifyContent={JUSTIFY_SPACE_BETWEEN}
       width="100%"
       backgroundColor={backgroundColor}
@@ -205,20 +213,26 @@ export function ThermocyclerStep(props: ThermocyclerStepProps): JSX.Element {
         </StyledText>
       </Flex>
       <Flex gridGap={SPACING.spacing8}>
-        {hover ? (
-          <Btn
-            whiteSpace={NO_WRAP}
-            textDecoration={TYPOGRAPHY.textDecorationUnderline}
-            onClick={() => {
-              setShowEditCurrentStep(true)
-              setIsInEdit(true)
-            }}
-          >
-            <StyledText desktopStyle="bodyDefaultRegular">
-              {i18n.format(t('edit'), 'capitalize')}
-            </StyledText>
-          </Btn>
-        ) : null}
+        <Btn
+          whiteSpace={NO_WRAP}
+          textDecoration={TYPOGRAPHY.textDecorationUnderline}
+          onClick={() => {
+            setShowEditCurrentStep(true)
+            setIsInEdit(true)
+          }}
+          padding={SPACING.spacing4}
+          css={[
+            LINK_BUTTON_STYLE,
+            css`
+              visibility: ${hover ? 'visible' : 'hidden'};
+              opacity: ${hover ? 1 : 0};
+            `,
+          ]}
+        >
+          <StyledText desktopStyle="bodyDefaultRegular">
+            {i18n.format(t('edit'), 'capitalize')}
+          </StyledText>
+        </Btn>
         <Flex
           css={css`
             &:hover {
@@ -250,7 +264,7 @@ export function ThermocyclerStep(props: ThermocyclerStepProps): JSX.Element {
             'capitalize'
           )}
           value={stepState.name.value}
-          onChange={(e: React.ChangeEvent<any>) => {
+          onChange={(e: ChangeEvent<any>) => {
             handleValueUpdate('name', e.target.value as string)
           }}
         />
@@ -267,7 +281,7 @@ export function ThermocyclerStep(props: ThermocyclerStepProps): JSX.Element {
           )}
           units={t('units.degrees')}
           value={stepState.temp.value}
-          onChange={(e: React.ChangeEvent<any>) => {
+          onChange={(e: ChangeEvent<any>) => {
             handleValueUpdate(
               'temp',
               maskToFloat(e.target.value),
@@ -295,7 +309,7 @@ export function ThermocyclerStep(props: ThermocyclerStepProps): JSX.Element {
           )}
           units={t('units.time')}
           value={stepState.time.value}
-          onChange={(e: React.ChangeEvent<any>) => {
+          onChange={(e: ChangeEvent<any>) => {
             handleValueUpdate(
               'time',
               maskToTime(e.target.value),

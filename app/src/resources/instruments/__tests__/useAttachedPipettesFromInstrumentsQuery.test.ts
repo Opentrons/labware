@@ -7,7 +7,7 @@ import {
 } from '@opentrons/api-client'
 import { useIsOEMMode } from '/app/resources/robot-settings/hooks'
 import { useAttachedPipettesFromInstrumentsQuery } from '..'
-import type * as React from 'react'
+import type { FunctionComponent, ReactNode } from 'react'
 
 vi.mock('@opentrons/react-api-client')
 vi.mock('/app/resources/robot-settings/hooks')
@@ -17,7 +17,7 @@ describe('useAttachedPipettesFromInstrumentsQuery hook', () => {
     vi.mocked(useIsOEMMode).mockReturnValue(false)
   })
 
-  let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+  let wrapper: FunctionComponent<{ children: ReactNode }>
   it('returns attached pipettes', () => {
     vi.mocked(useInstrumentsQuery).mockReturnValue({
       data: {

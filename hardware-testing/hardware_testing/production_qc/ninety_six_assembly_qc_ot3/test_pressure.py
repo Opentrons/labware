@@ -1,6 +1,6 @@
 """Test Pressure."""
 from asyncio import sleep
-from typing import List, Union
+from typing import List, Union, Literal
 
 from opentrons_hardware.firmware_bindings.constants import SensorId
 
@@ -94,7 +94,9 @@ def check_value(test_value: float, test_name: str) -> CSVResult:
         return CSVResult.FAIL
 
 
-async def run(api: OT3API, report: CSVReport, section: str) -> None:
+async def run(
+    api: OT3API, report: CSVReport, section: str, pipette: Literal[200, 1000]
+) -> None:
     """Run."""
     await api.home_z(OT3Mount.LEFT)
     slot_5 = helpers_ot3.get_slot_calibration_square_position_ot3(5)

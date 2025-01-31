@@ -41,7 +41,10 @@ async def extract_labware_definitions(
 
 
 async def _extract_from_labware_file(path: Path) -> LabwareDefinition:
-    return await anyio.to_thread.run_sync(LabwareDefinition.parse_file, path)
+    def _do_parse() -> LabwareDefinition:
+        return LabwareDefinition.model_validate_json(path.read_bytes())
+
+    return await anyio.to_thread.run_sync(_do_parse)
 
 
 async def _extract_from_json_protocol_file(path: Path) -> List[LabwareDefinition]:
@@ -52,7 +55,7 @@ async def _extract_from_json_protocol_file(path: Path) -> List[LabwareDefinition
             # which require this labwareDefinitions key.
             unvalidated_definitions = json_contents["labwareDefinitions"].values()
             validated_definitions = [
-                LabwareDefinition.parse_obj(u) for u in unvalidated_definitions
+                LabwareDefinition.model_validate(u) for u in unvalidated_definitions
             ]
             return validated_definitions
 

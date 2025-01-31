@@ -1,10 +1,11 @@
-import * as React from 'react'
+import { memo } from 'react'
 import { C_BLACK, C_BLUE } from '../../../styles/colors'
 import { RobotCoordsText } from '../../Deck'
+import { TYPOGRAPHY } from '../../../ui-style-constants'
 
+import type { MemoExoticComponent } from 'react'
 import type { LabwareDefinition2 } from '@opentrons/shared-data'
 import type { HighlightedWellLabels } from './types'
-import { TYPOGRAPHY } from '../../../ui-style-constants'
 
 // magic layout numbers to make the letters close to the edges of the labware
 // evaluate values for inside/outside labware outline when needed
@@ -113,6 +114,6 @@ export function LabwareWellLabelsComponent(
  * for use in Labware.tsx component
  * has ODD-specific styling
  */
-export const LabwareWellLabels: React.MemoExoticComponent<
+export const LabwareWellLabels: MemoExoticComponent<
   typeof LabwareWellLabelsComponent
-> = React.memo(LabwareWellLabelsComponent)
+> = memo(LabwareWellLabelsComponent)

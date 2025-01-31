@@ -84,7 +84,7 @@ def test_deserialize_pydantic_model_valid() -> None:
     serialized = b'{"integer_field": 123, "! aliased field !": "abc"}'
     assert io.deserialize_pydantic_model(
         serialized, DummyModel
-    ) == DummyModel.construct(integer_field=123, aliased_field="abc")
+    ) == DummyModel.model_construct(integer_field=123, aliased_field="abc")
 
 
 def test_deserialize_pydantic_model_invalid_as_json() -> None:

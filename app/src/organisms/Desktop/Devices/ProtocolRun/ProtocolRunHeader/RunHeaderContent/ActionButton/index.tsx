@@ -1,5 +1,3 @@
-import type * as React from 'react'
-
 import { RUN_STATUS_STOP_REQUESTED } from '@opentrons/api-client'
 import {
   ALIGN_CENTER,
@@ -28,12 +26,13 @@ import { useActionBtnDisabledUtils, useActionButtonProperties } from './hooks'
 import { getFallbackRobotSerialNumber, isRunAgainStatus } from '../../utils'
 import { useIsRobotOnWrongVersionOfSoftware } from '/app/redux/robot-update'
 
+import type { MutableRefObject } from 'react'
 import type { RunHeaderContentProps } from '..'
 
 export type BaseActionButtonProps = RunHeaderContentProps
 
 interface ActionButtonProps extends BaseActionButtonProps {
-  isResetRunLoadingRef: React.MutableRefObject<boolean>
+  isResetRunLoadingRef: MutableRefObject<boolean>
 }
 
 export function ActionButton(props: ActionButtonProps): JSX.Element {

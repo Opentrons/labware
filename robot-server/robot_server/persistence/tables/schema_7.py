@@ -207,7 +207,14 @@ run_command_table = sqlalchemy.Table(
     sqlalchemy.Column("index_in_run", sqlalchemy.Integer, nullable=False),
     sqlalchemy.Column("command_id", sqlalchemy.String, nullable=False),
     sqlalchemy.Column("command", sqlalchemy.String, nullable=False),
-    sqlalchemy.Column("command_intent", sqlalchemy.String, nullable=False, index=True),
+    sqlalchemy.Column(
+        "command_intent",
+        sqlalchemy.String,
+        # nullable=True to match the underlying SQL, which is nullable because of a bug
+        # in the migration that introduced this column. This is not intended to ever be
+        # null in practice.
+        nullable=True,
+    ),
     sqlalchemy.Index(
         "ix_run_run_id_command_id",  # An arbitrary name for the index.
         "run_id",
@@ -251,10 +258,16 @@ data_files_table = sqlalchemy.Table(
             DataFileSourceSQLEnum,
             values_callable=lambda obj: [e.value for e in obj],
             validate_strings=True,
-            create_constraint=True,
+            # create_constraint=False to match the underlying SQL, which omits
+            # the constraint because of a bug in the migration that introduced this
+            # column. This is not intended to ever have values other than those in
+            # DataFileSourceSQLEnum.
+            create_constraint=False,
         ),
-        index=True,
-        nullable=False,
+        # nullable=True to match the underlying SQL, which is nullable because of a bug
+        # in the migration that introduced this column. This is not intended to ever be
+        # null in practice.
+        nullable=True,
     ),
 )
 

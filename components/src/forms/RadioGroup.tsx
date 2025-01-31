@@ -1,19 +1,20 @@
-import type * as React from 'react'
 import cx from 'classnames'
 import { Icon } from '../icons'
 import styles from './forms.module.css'
 
+import type { ChangeEventHandler, FocusEventHandler, ReactNode } from 'react'
+
 export interface RadioOption {
   name: string
   value: string
-  children?: React.ReactNode
+  children?: ReactNode
 }
 
 export interface RadioGroupProps {
   /** blur handler */
-  onBlur?: React.FocusEventHandler<HTMLInputElement>
+  onBlur?: FocusEventHandler<HTMLInputElement>
   /** change handler */
-  onChange: React.ChangeEventHandler
+  onChange: ChangeEventHandler
   /** value that is checked */
   value?: string
   /** Array of {name, value} data with optional children */

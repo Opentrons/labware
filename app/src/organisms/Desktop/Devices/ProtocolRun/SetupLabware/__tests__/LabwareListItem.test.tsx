@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, beforeEach, vi, expect } from 'vitest'
 import { MemoryRouter } from 'react-router-dom'
@@ -18,9 +17,11 @@ import {
   mockThermocycler,
 } from '/app/redux/modules/__fixtures__'
 import { getLocationInfoNames } from '/app/transformations/commands'
-import { mockLabwareDef } from '/app/organisms/LabwarePositionCheck/__fixtures__/mockLabwareDef'
+import { mockLabwareDef } from '/app/organisms/LegacyLabwarePositionCheck/__fixtures__/mockLabwareDef'
 import { SecureLabwareModal } from '../SecureLabwareModal'
 import { LabwareListItem } from '../LabwareListItem'
+
+import type { ComponentProps } from 'react'
 import type {
   LoadLabwareRunTimeCommand,
   ModuleModel,
@@ -78,7 +79,7 @@ const mockThermocyclerModuleDefinition = {
 const mockModuleId = 'moduleId'
 const mockNickName = 'nickName'
 
-const render = (props: React.ComponentProps<typeof LabwareListItem>) => {
+const render = (props: ComponentProps<typeof LabwareListItem>) => {
   return renderWithProviders(
     <MemoryRouter>
       <LabwareListItem {...props} />

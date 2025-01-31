@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { Provider } from 'react-redux'
 import { describe, it, vi, beforeEach, expect } from 'vitest'
 import { createStore } from 'redux'
@@ -10,6 +9,7 @@ import { RUN_ID_1 } from '/app/resources/runs/__fixtures__'
 import { useMostRecentCompletedAnalysis } from '/app/resources/runs'
 import { useHeaterShakerModuleIdsFromRun } from '../hooks'
 
+import type { FunctionComponent, ReactNode } from 'react'
 import type { Store } from 'redux'
 import type { State } from '/app/redux/types'
 
@@ -57,7 +57,7 @@ describe('useHeaterShakerModuleIdsFromRun', () => {
         },
       ],
     } as any)
-    const wrapper: React.FunctionComponent<{ children: React.ReactNode }> = ({
+    const wrapper: FunctionComponent<{ children: ReactNode }> = ({
       children,
     }) => <Provider store={store}>{children}</Provider>
     const { result } = renderHook(
@@ -127,7 +127,7 @@ describe('useHeaterShakerModuleIdsFromRun', () => {
       ],
     } as any)
 
-    const wrapper: React.FunctionComponent<{ children: React.ReactNode }> = ({
+    const wrapper: FunctionComponent<{ children: ReactNode }> = ({
       children,
     }) => <Provider store={store}>{children}</Provider>
     const { result } = renderHook(

@@ -1,5 +1,3 @@
-import type * as React from 'react'
-
 import {
   ALIGN_CENTER,
   Btn,
@@ -17,14 +15,15 @@ import {
 import { SmallButton } from '/app/atoms/buttons'
 import { InlineNotification } from '/app/atoms/InlineNotification'
 
+import type { MouseEventHandler, ReactNode } from 'react'
 import type { InlineNotificationProps } from '/app/atoms/InlineNotification'
 
 interface RobotSetupHeaderProps {
   header: string
-  buttonText?: React.ReactNode
+  buttonText?: ReactNode
   inlineNotification?: InlineNotificationProps
-  onClickBack?: React.MouseEventHandler
-  onClickButton?: React.MouseEventHandler
+  onClickBack?: MouseEventHandler
+  onClickButton?: MouseEventHandler
 }
 
 export function RobotSetupHeader({

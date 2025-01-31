@@ -1,4 +1,5 @@
 {
+  "commandAnnotations": [],
   "commands": [],
   "config": {
     "apiVersion": [
@@ -42,6 +43,7 @@
     }
   ],
   "labware": [],
+  "liquidClasses": [],
   "liquids": [],
   "metadata": {
     "protocolName": "Description Too Long 2.18"

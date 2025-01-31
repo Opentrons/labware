@@ -1,6 +1,5 @@
 """JSON API errors and response models."""
 from pydantic import BaseModel, Field
-from pydantic.generics import GenericModel
 from typing import Any, Dict, Generic, Optional, Sequence, TypeVar, Type
 
 from robot_server.service.json_api import BaseResponseBody, ResourceLinks
@@ -26,27 +25,24 @@ class BaseErrorBody(BaseResponseBody):
 
     def as_error(self, status_code: int) -> ApiError:
         """Serialize the response as an API error to raise in a handler."""
-        return ApiError(
-            status_code=status_code,
-            content=self.dict(),
-        )
+        return ApiError(status_code=status_code, content=self.model_dump())
 
 
 class ErrorSource(BaseModel):
     """An object containing references to the source of the error."""
 
     pointer: Optional[str] = Field(
-        None,
+        default=None,
         description=(
             "A JSON Pointer [RFC6901] to the associated entity in the request document."
         ),
     )
     parameter: Optional[str] = Field(
-        None,
+        default=None,
         description="a string indicating which URI query parameter caused the error.",
     )
     header: Optional[str] = Field(
-        None,
+        default=None,
         description="A string indicating which header caused the error.",
     )
 
@@ -96,18 +92,18 @@ class ErrorDetails(BaseErrorBody):
         ),
     )
     source: Optional[ErrorSource] = Field(
-        None,
+        default=None,
         description="An object containing references to the source of the error.",
     )
     meta: Optional[Dict[str, Any]] = Field(
-        None,
+        default=None,
         description=(
             "An object containing non-standard information about this "
             "occurrence of the error"
         ),
     )
     errorCode: str = Field(
-        ErrorCodes.GENERAL_ERROR.value.code,
+        default=ErrorCodes.GENERAL_ERROR.value.code,
         description=("The Opentrons error code associated with the error"),
     )
 
@@ -175,12 +171,12 @@ class LegacyErrorResponse(BaseErrorBody):
         )
 
 
-class ErrorBody(BaseErrorBody, GenericModel, Generic[ErrorDetailsT]):
+class ErrorBody(BaseErrorBody, Generic[ErrorDetailsT]):
     """A response body for a single error."""
 
     errors: Sequence[ErrorDetailsT] = Field(..., description="Error details.")
     links: Optional[ResourceLinks] = Field(
-        None,
+        default=None,
         description=(
             "Links that leads to further details about "
             "this particular occurrence of the problem."
@@ -188,12 +184,12 @@ class ErrorBody(BaseErrorBody, GenericModel, Generic[ErrorDetailsT]):
     )
 
 
-class MultiErrorResponse(BaseErrorBody, GenericModel, Generic[ErrorDetailsT]):
+class MultiErrorResponse(BaseErrorBody, Generic[ErrorDetailsT]):
     """An response body for multiple errors."""
 
     errors: Sequence[ErrorDetailsT] = Field(..., description="Error details.")
     links: Optional[ResourceLinks] = Field(
-        None,
+        default=None,
         description=(
             "Links that leads to further details about "
             "this particular occurrence of the problem."

@@ -4,8 +4,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Optional, Type, Union
 from typing_extensions import Literal
 
-from opentrons_shared_data.errors.exceptions import PipetteOverpressureError
-
 from opentrons.hardware_control import HardwareControlAPI
 
 from .pipetting_common import (
@@ -14,6 +12,7 @@ from .pipetting_common import (
     FlowRateMixin,
     BaseLiquidHandlingResult,
     OverpressureError,
+    aspirate_in_place,
 )
 from .command import (
     AbstractCommandImpl,
@@ -22,9 +21,8 @@ from .command import (
     SuccessData,
     DefinedErrorData,
 )
-from ..errors.error_occurrence import ErrorOccurrence
 from ..errors.exceptions import PipetteNotReadyToAspirateError
-from ..state.update_types import StateUpdate, CLEAR
+from ..state.update_types import CLEAR
 from ..types import CurrentWell
 
 if TYPE_CHECKING:
@@ -83,8 +81,6 @@ class AspirateInPlaceImplementation(
             TipNotAttachedError: if no tip is attached to the pipette.
             PipetteNotReadyToAspirateError: pipette plunger is not ready.
         """
-        state_update = StateUpdate()
-
         ready_to_aspirate = self._pipetting.get_is_ready_to_aspirate(
             pipette_id=params.pipetteId,
         )
@@ -95,63 +91,71 @@ class AspirateInPlaceImplementation(
                 " so the plunger can be reset in a known safe position."
             )
 
-        current_location = self._state_view.pipettes.get_current_location()
         current_position = await self._gantry_mover.get_position(params.pipetteId)
+        current_location = self._state_view.pipettes.get_current_location()
 
-        try:
-            volume = await self._pipetting.aspirate_in_place(
-                pipette_id=params.pipetteId,
-                volume=params.volume,
-                flow_rate=params.flowRate,
-                command_note_adder=self._command_note_adder,
-            )
-        except PipetteOverpressureError as e:
+        result = await aspirate_in_place(
+            pipette_id=params.pipetteId,
+            volume=params.volume,
+            flow_rate=params.flowRate,
+            location_if_error={
+                "retryLocation": (
+                    current_position.x,
+                    current_position.y,
+                    current_position.z,
+                )
+            },
+            command_note_adder=self._command_note_adder,
+            pipetting=self._pipetting,
+            model_utils=self._model_utils,
+        )
+        if isinstance(result, DefinedErrorData):
             if (
                 isinstance(current_location, CurrentWell)
                 and current_location.pipette_id == params.pipetteId
             ):
-                state_update.set_liquid_operated(
-                    labware_id=current_location.labware_id,
-                    well_name=current_location.well_name,
-                    volume_added=CLEAR,
-                )
-            return DefinedErrorData(
-                public=OverpressureError(
-                    id=self._model_utils.generate_id(),
-                    createdAt=self._model_utils.get_timestamp(),
-                    wrappedErrors=[
-                        ErrorOccurrence.from_failed(
-                            id=self._model_utils.generate_id(),
-                            createdAt=self._model_utils.get_timestamp(),
-                            error=e,
-                        )
-                    ],
-                    errorInfo=(
-                        {
-                            "retryLocation": (
-                                current_position.x,
-                                current_position.y,
-                                current_position.z,
-                            )
-                        }
+                return DefinedErrorData(
+                    public=result.public,
+                    state_update=result.state_update.set_liquid_operated(
+                        labware_id=current_location.labware_id,
+                        well_names=self._state_view.geometry.get_wells_covered_by_pipette_with_active_well(
+                            current_location.labware_id,
+                            current_location.well_name,
+                            params.pipetteId,
+                        ),
+                        volume_added=CLEAR,
                     ),
-                ),
-                state_update=state_update,
-            )
+                    state_update_if_false_positive=result.state_update_if_false_positive,
+                )
+            else:
+                return result
         else:
             if (
                 isinstance(current_location, CurrentWell)
                 and current_location.pipette_id == params.pipetteId
             ):
-                state_update.set_liquid_operated(
-                    labware_id=current_location.labware_id,
-                    well_name=current_location.well_name,
-                    volume_added=-volume,
+                return SuccessData(
+                    public=AspirateInPlaceResult(volume=result.public.volume),
+                    state_update=result.state_update.set_liquid_operated(
+                        labware_id=current_location.labware_id,
+                        well_names=self._state_view.geometry.get_wells_covered_by_pipette_with_active_well(
+                            current_location.labware_id,
+                            current_location.well_name,
+                            params.pipetteId,
+                        ),
+                        volume_added=-result.public.volume
+                        * self._state_view.geometry.get_nozzles_per_well(
+                            current_location.labware_id,
+                            current_location.well_name,
+                            params.pipetteId,
+                        ),
+                    ),
                 )
-            return SuccessData(
-                public=AspirateInPlaceResult(volume=volume),
-                state_update=state_update,
-            )
+            else:
+                return SuccessData(
+                    public=AspirateInPlaceResult(volume=result.public.volume),
+                    state_update=result.state_update,
+                )
 
 
 class AspirateInPlace(
@@ -161,7 +165,7 @@ class AspirateInPlace(
 
     commandType: AspirateInPlaceCommandType = "aspirateInPlace"
     params: AspirateInPlaceParams
-    result: Optional[AspirateInPlaceResult]
+    result: Optional[AspirateInPlaceResult] = None
 
     _ImplementationCls: Type[
         AspirateInPlaceImplementation

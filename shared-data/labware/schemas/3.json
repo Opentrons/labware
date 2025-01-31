@@ -97,6 +97,12 @@
         },
         "bottomHeight": {
           "type": "number"
+        },
+        "xCount": {
+          "type": "integer"
+        },
+        "yCount": {
+          "type": "integer"
         }
       }
     },
@@ -126,6 +132,12 @@
         },
         "bottomHeight": {
           "type": "number"
+        },
+        "xCount": {
+          "type": "integer"
+        },
+        "yCount": {
+          "type": "integer"
         }
       }
     },
@@ -163,6 +175,12 @@
         },
         "bottomHeight": {
           "type": "number"
+        },
+        "xCount": {
+          "type": "integer"
+        },
+        "yCount": {
+          "type": "integer"
         }
       }
     },
@@ -201,6 +219,12 @@
         },
         "bottomHeight": {
           "type": "number"
+        },
+        "xCount": {
+          "type": "integer"
+        },
+        "yCount": {
+          "type": "integer"
         }
       }
     },
@@ -239,6 +263,12 @@
         },
         "bottomHeight": {
           "type": "number"
+        },
+        "xCount": {
+          "type": "integer"
+        },
+        "yCount": {
+          "type": "integer"
         }
       }
     },
@@ -375,6 +405,11 @@
         "isMagneticModuleCompatible": {
           "description": "Flag marking whether a labware is compatible by default with the Magnetic Module",
           "type": "boolean"
+        },
+        "isDeckSlotCompatible": {
+          "description": "Flag marking whether a labware is compatible by with being placed or loaded in a base deck slot, defaults to true.",
+          "type": "boolean",
+          "default": true
         },
         "magneticModuleEngageHeight": {
           "description": "Distance to move magnetic module magnets to engage",
@@ -533,7 +568,14 @@
       "description": "Allowed behaviors and usage of a labware in a protocol.",
       "items": {
         "type": "string",
-        "enum": ["labware", "adapter", "fixture", "maintenance", "lid"]
+        "enum": [
+          "labware",
+          "adapter",
+          "fixture",
+          "maintenance",
+          "lid",
+          "system"
+        ]
       }
     },
     "stackingOffsetWithLabware": {
@@ -548,6 +590,18 @@
       "description": "Supported module that can be stacked upon, with overlap height between labware and module.",
       "additionalProperties": {
         "$ref": "#/definitions/coordinates"
+      }
+    },
+    "stackLimit": {
+      "type": "number",
+      "description": "The limit representing the maximum stack size for a given labware.",
+      "additionalProperties": false
+    },
+    "compatibleParentLabware": {
+      "type": "array",
+      "description": "Array of parent Labware on which a labware may be loaded, primarily the labware which owns a lid.",
+      "items": {
+        "type": "string"
       }
     },
     "gripperOffsets": {

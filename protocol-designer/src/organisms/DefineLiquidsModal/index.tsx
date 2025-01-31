@@ -3,18 +3,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { SketchPicker } from 'react-color'
 import { yupResolver } from '@hookform/resolvers/yup'
-import styled from 'styled-components'
 import * as Yup from 'yup'
 import { Controller, useForm } from 'react-hook-form'
+import styled from 'styled-components'
 import {
   DEFAULT_LIQUID_COLORS,
-  DEPRECATED_WHALE_GREY,
+  getAllLiquidClassDefs,
 } from '@opentrons/shared-data'
 import {
   BORDERS,
   Btn,
   COLORS,
   DIRECTION_COLUMN,
+  DropdownMenu,
   Flex,
   InputField,
   JUSTIFY_END,
@@ -31,9 +32,10 @@ import {
 } from '@opentrons/components'
 import * as labwareIngredActions from '../../labware-ingred/actions'
 import { selectors as labwareIngredSelectors } from '../../labware-ingred/selectors'
-import { swatchColors } from '../../components/swatchColors'
-import { checkColor } from './utils'
 import { HandleEnter } from '../../atoms/HandleEnter'
+import { LINE_CLAMP_TEXT_STYLE } from '../../atoms'
+import { getEnableLiquidClasses } from '../../feature-flags/selectors'
+import { swatchColors } from './swatchColors'
 
 import type { ColorResult, RGBColor } from 'react-color'
 import type { ThunkDispatch } from 'redux-thunk'
@@ -43,31 +45,17 @@ import type { LiquidGroup } from '../../labware-ingred/types'
 interface LiquidEditFormValues {
   name: string
   displayColor: string
-  description?: string | null
-  serialize?: boolean
+  description: string
+  liquidClass: string
+  serialize: boolean
   [key: string]: unknown
 }
 
-const BLACK = '#000000'
-const WHITE = '#ffffff'
-
-const INVALID_DISPLAY_COLORS = [BLACK, WHITE, DEPRECATED_WHALE_GREY]
-
 const liquidEditFormSchema: any = Yup.object().shape({
   name: Yup.string().required('liquid name is required'),
-  displayColor: Yup.string().test(
-    'disallowed-color',
-    'Invalid display color',
-    value => {
-      if (value == null) {
-        return true
-      }
-      return !INVALID_DISPLAY_COLORS.includes(value)
-        ? !checkColor(value)
-        : false
-    }
-  ),
+  displayColor: Yup.string(),
   description: Yup.string(),
+  liquidClass: Yup.string(),
   serialize: Yup.boolean(),
 })
 
@@ -96,6 +84,9 @@ export function DefineLiquidsModal(
   const allIngredientGroupFields = useSelector(
     labwareIngredSelectors.allIngredientGroupFields
   )
+  const enableLiquidClasses = useSelector(getEnableLiquidClasses)
+  const liquidClassDefs = getAllLiquidClassDefs()
+
   const liquidGroupId = selectedLiquidGroupState.liquidGroupId
   const deleteLiquidGroup = (): void => {
     if (liquidGroupId != null) {
@@ -126,13 +117,14 @@ export function DefineLiquidsModal(
   const initialValues: LiquidEditFormValues = {
     name: selectedIngredFields?.name ?? '',
     displayColor: selectedIngredFields?.displayColor ?? swatchColors(liquidId),
+    liquidClass: selectedIngredFields?.liquidClass ?? '',
     description: selectedIngredFields?.description ?? '',
     serialize: selectedIngredFields?.serialize ?? false,
   }
 
   const {
     handleSubmit,
-    formState: { errors, touchedFields },
+    formState,
     control,
     watch,
     setValue,
@@ -144,12 +136,15 @@ export function DefineLiquidsModal(
   })
   const name = watch('name')
   const color = watch('displayColor')
+  const liquidClass = watch('liquidClass')
+  const { errors, touchedFields } = formState
 
   const handleLiquidEdits = (values: LiquidEditFormValues): void => {
     saveForm({
       name: values.name,
       displayColor: values.displayColor,
-      description: values.description ?? null,
+      liquidClass: values.liquidClass ? values.liquidClass : null,
+      description: values.description ? values.description : null,
       serialize: values.serialize ?? false,
     })
   }
@@ -161,6 +156,15 @@ export function DefineLiquidsModal(
     return `#${toHex(r)}${toHex(g)}${toHex(b)}${toHex(alpha)}`
   }
 
+  const liquidClassOptions = [
+    { name: 'Choose an option', value: '' },
+    ...Object.entries(liquidClassDefs).map(
+      ([liquidClassDefName, { displayName }]) => {
+        return { name: displayName, value: liquidClassDefName }
+      }
+    ),
+  ]
+
   return (
     <HandleEnter
       onEnter={() => {
@@ -168,12 +172,17 @@ export function DefineLiquidsModal(
       }}
     >
       <Modal
-        width="42.0625rem"
+        marginLeft="0"
+        zIndexOverlay={15}
+        width="37.125rem"
         title={
           selectedIngredFields != null ? (
             <Flex gridGap={SPACING.spacing8}>
               <LiquidIcon color={initialValues.displayColor} />
-              <StyledText desktopStyle="bodyLargeSemiBold">
+              <StyledText
+                desktopStyle="bodyLargeSemiBold"
+                css={LINE_CLAMP_TEXT_STYLE(1)}
+              >
                 {initialValues.name}
               </StyledText>
             </Flex>
@@ -196,6 +205,7 @@ export function DefineLiquidsModal(
                 left="4.375rem"
                 top="4.6875rem"
                 ref={chooseColorWrapperRef}
+                zIndex={2}
               >
                 <Controller
                   name="displayColor"
@@ -216,7 +226,10 @@ export function DefineLiquidsModal(
             ) : null}
 
             <Flex flexDirection={DIRECTION_COLUMN} gridGap={SPACING.spacing32}>
-              <Flex flexDirection={DIRECTION_COLUMN} gridGap={SPACING.spacing8}>
+              <Flex
+                flexDirection={DIRECTION_COLUMN}
+                gridGap={SPACING.spacing12}
+              >
                 <Flex
                   flexDirection={DIRECTION_COLUMN}
                   color={COLORS.grey60}
@@ -253,6 +266,32 @@ export function DefineLiquidsModal(
                   </StyledText>
                   <DescriptionField {...register('description')} />
                 </Flex>
+                {enableLiquidClasses ? (
+                  <Flex flexDirection={DIRECTION_COLUMN} color={COLORS.grey60}>
+                    <Controller
+                      control={control}
+                      name="liquidClass"
+                      render={({ field }) => (
+                        <DropdownMenu
+                          title={t('liquid_class.title')}
+                          tooltipText={t('liquid_class.tooltip')}
+                          dropdownType="neutral"
+                          width="100%"
+                          filterOptions={liquidClassOptions}
+                          currentOption={
+                            liquidClassOptions.find(
+                              ({ value }) => value === liquidClass
+                            ) ?? liquidClassOptions[0]
+                          }
+                          onClick={value => {
+                            field.onChange(value)
+                            setValue('liquidClass', value)
+                          }}
+                        />
+                      )}
+                    />
+                  </Flex>
+                ) : null}
                 <Flex
                   flexDirection={DIRECTION_COLUMN}
                   color={COLORS.grey60}
@@ -327,10 +366,10 @@ export function DefineLiquidsModal(
   )
 }
 
-const DescriptionField = styled.textarea`
-  height: 6.875rem;
+export const DescriptionField = styled.textarea`
+  min-height: 5rem;
   width: 100%;
-  border: 1px solid ${COLORS.grey50};
+  border: 1px ${BORDERS.styleSolid} ${COLORS.grey50};
   border-radius: ${BORDERS.borderRadius4};
   padding: ${SPACING.spacing8};
   font-size: ${TYPOGRAPHY.fontSizeP};

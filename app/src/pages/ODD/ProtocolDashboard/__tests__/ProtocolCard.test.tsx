@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, describe, expect, beforeEach } from 'vitest'
 import { act, fireEvent, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
@@ -14,6 +13,7 @@ import { i18n } from '/app/i18n'
 import { useFeatureFlag } from '/app/redux/config'
 import { ProtocolCard } from '../ProtocolCard'
 
+import type { ComponentProps } from 'react'
 import type { NavigateFunction } from 'react-router-dom'
 import type { UseQueryResult } from 'react-query'
 import type {
@@ -77,7 +77,7 @@ const mockProtocolWithCSV: ProtocolResource = {
   key: '26ed5a82-502f-4074-8981-57cdda1d066d',
 }
 
-const render = (props: React.ComponentProps<typeof ProtocolCard>) => {
+const render = (props: ComponentProps<typeof ProtocolCard>) => {
   return renderWithProviders(
     <MemoryRouter>
       <ProtocolCard {...props} />
@@ -89,7 +89,7 @@ const render = (props: React.ComponentProps<typeof ProtocolCard>) => {
 }
 
 describe('ProtocolCard', () => {
-  let props: React.ComponentProps<typeof ProtocolCard>
+  let props: ComponentProps<typeof ProtocolCard>
   vi.useFakeTimers()
 
   beforeEach(() => {

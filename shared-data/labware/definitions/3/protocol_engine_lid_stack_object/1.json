@@ -1,0 +1,41 @@
+{
+  "allowedRoles": ["system"],
+  "ordering": [],
+  "brand": {
+    "brand": "Opentrons",
+    "brandId": []
+  },
+  "metadata": {
+    "displayName": "Protocol Engine Lid Stack",
+    "displayCategory": "system",
+    "displayVolumeUnits": "\u00b5L",
+    "tags": []
+  },
+  "dimensions": {
+    "xDimension": 0,
+    "yDimension": 0,
+    "zDimension": 0
+  },
+  "wells": {},
+  "groups": [
+    {
+      "metadata": {},
+      "wells": []
+    }
+  ],
+  "cornerOffsetFromSlot": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "parameters": {
+    "format": "irregular",
+    "quirks": [],
+    "isTiprack": false,
+    "isMagneticModuleCompatible": false,
+    "loadName": "protocol_engine_lid_stack_object"
+  },
+  "namespace": "opentrons",
+  "version": 1,
+  "schemaVersion": 3
+}

@@ -1,11 +1,11 @@
-import type * as React from 'react'
+import type { FC } from 'react'
 
 export interface RouteProps {
   /**
    * the component rendered by a route match
    * drop developed components into slots held by placeholder div components
    */
-  Component: React.FC
+  Component: FC
   /**
    * a route/page name to render in the nav bar
    */

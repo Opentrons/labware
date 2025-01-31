@@ -6,16 +6,18 @@ import { PAUSE_UNTIL_RESUME } from '../../../constants'
 import { renameStep } from '../../../labware-ingred/actions'
 import { RenameStepModal } from '..'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('../../../labware-ingred/actions')
 
-const render = (props: React.ComponentProps<typeof RenameStepModal>) => {
+const render = (props: ComponentProps<typeof RenameStepModal>) => {
   return renderWithProviders(<RenameStepModal {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('EditNickNameModal', () => {
-  let props: React.ComponentProps<typeof RenameStepModal>
+  let props: ComponentProps<typeof RenameStepModal>
 
   beforeEach(() => {
     props = {

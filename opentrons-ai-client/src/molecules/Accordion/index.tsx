@@ -79,7 +79,7 @@ export function Accordion({
           <Icon
             name={OT_CHECK}
             color={COLORS.green50}
-            size={'20px'}
+            size="1.25rem"
             data-testid={`${id}-${OT_CHECK}`}
           />
         )}

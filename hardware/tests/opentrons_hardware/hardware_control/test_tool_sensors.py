@@ -237,6 +237,7 @@ async def test_liquid_probe(
         threshold_pascals=threshold_pascals,
         plunger_impulse_time=0.2,
         num_baseline_reads=20,
+        z_offset_for_plunger_prep=2.0,
         sensor_id=SensorId.S0,
     )
     assert position[motor_node].positions_only()[0] == 14

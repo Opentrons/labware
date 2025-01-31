@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, beforeEach } from 'vitest'
 import { renderWithProviders } from '/app/__testing-utils__'
@@ -6,12 +5,14 @@ import { mockDefinition } from '/app/redux/custom-labware/__fixtures__'
 import { labwareImages } from '../labware-images'
 import { Gallery } from '../Gallery'
 
-const render = (props: React.ComponentProps<typeof Gallery>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof Gallery>) => {
   return renderWithProviders(<Gallery {...props} />)
 }
 
 describe('Gallery', () => {
-  let props: React.ComponentProps<typeof Gallery>
+  let props: ComponentProps<typeof Gallery>
   beforeEach(() => {
     labwareImages.mock_definition = ['image1']
     props = {

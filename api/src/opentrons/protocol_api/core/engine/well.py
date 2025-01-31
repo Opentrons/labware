@@ -130,7 +130,10 @@ class WellCore(AbstractWellCore):
         liquid: Liquid,
         volume: float,
     ) -> None:
-        """Load liquid into a well."""
+        """Load liquid into a well.
+
+        If the well is known to be empty, use ``load_empty()`` instead of calling this with a 0.0 volume.
+        """
         self._engine_client.execute_command(
             cmd.LoadLiquidParams(
                 labwareId=self._labware_id,

@@ -31,7 +31,7 @@ class PipetteOffsetCalibration(DeprecatedResponseDataModel):
     pipette: str = Field(..., description="The pipette ID")
     mount: str = Field(..., description="The pipette mount")
     offset: typing.List[float] = Field(
-        ..., description="The pipette offset vector", max_items=3, min_items=3
+        ..., description="The pipette offset vector", max_length=3, min_length=3
     )
     tiprack: str = Field(
         ...,

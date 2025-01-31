@@ -114,7 +114,7 @@ app.add_middleware(
 )
 
 # main router
-app.include_router(router=router)
+router.install_on_app(app)
 
 
 def _get_persistence_directory(settings: RobotServerSettings) -> Optional[Path]:

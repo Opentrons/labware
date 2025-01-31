@@ -1,11 +1,12 @@
-import type * as React from 'react'
 import { Flex } from '../../../primitives'
 import { DIRECTION_COLUMN } from '../../../styles'
 import { SPACING } from '../../../ui-style-constants'
 import { StyledText } from '../../StyledText'
 
+import type { ReactNode } from 'react'
+
 interface ListButtonAccordionProps {
-  children: React.ReactNode
+  children: ReactNode
   // determines if the accordion is expanded or not
   isExpanded?: boolean
   // is it nested into another accordion?

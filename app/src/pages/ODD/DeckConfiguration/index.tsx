@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -20,6 +20,7 @@ import {
   useNotifyDeckConfigurationQuery,
 } from '/app/resources/deck_configuration'
 
+import type { ComponentProps } from 'react'
 import type { SmallButton } from '/app/atoms/buttons'
 
 export function DeckConfigurationEditor(): JSX.Element {
@@ -32,7 +33,7 @@ export function DeckConfigurationEditor(): JSX.Element {
   const [
     showSetupInstructionsModal,
     setShowSetupInstructionsModal,
-  ] = React.useState<boolean>(false)
+  ] = useState<boolean>(false)
 
   const isOnDevice = true
   const {
@@ -41,10 +42,9 @@ export function DeckConfigurationEditor(): JSX.Element {
     addFixtureModal,
   } = useDeckConfigurationEditingTools(isOnDevice)
 
-  const [
-    showDiscardChangeModal,
-    setShowDiscardChangeModal,
-  ] = React.useState<boolean>(false)
+  const [showDiscardChangeModal, setShowDiscardChangeModal] = useState<boolean>(
+    false
+  )
 
   const deckConfig = useNotifyDeckConfigurationQuery().data ?? []
 
@@ -52,7 +52,7 @@ export function DeckConfigurationEditor(): JSX.Element {
     navigate(-1)
   }
 
-  const secondaryButtonProps: React.ComponentProps<typeof SmallButton> = {
+  const secondaryButtonProps: ComponentProps<typeof SmallButton> = {
     onClick: () => {
       setShowSetupInstructionsModal(true)
     },

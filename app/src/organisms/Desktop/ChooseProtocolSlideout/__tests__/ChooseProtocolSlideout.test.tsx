@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, describe, expect, beforeEach } from 'vitest'
 import { MemoryRouter } from 'react-router-dom'
 import { fireEvent, screen, waitFor } from '@testing-library/react'
@@ -19,6 +18,8 @@ import { useTrackCreateProtocolRunEvent } from '/app/organisms/Desktop/Devices/h
 import { useCreateRunFromProtocol } from '/app/organisms/Desktop/ChooseRobotToRunProtocolSlideout/useCreateRunFromProtocol'
 import { ChooseProtocolSlideout } from '../'
 import { useNotifyDataReady } from '/app/resources/useNotifyDataReady'
+
+import type { ComponentProps } from 'react'
 import type { ProtocolAnalysisOutput } from '@opentrons/shared-data'
 
 vi.mock(
@@ -29,7 +30,7 @@ vi.mock('/app/organisms/Desktop/Devices/hooks')
 vi.mock('/app/redux/config')
 vi.mock('/app/resources/useNotifyDataReady')
 
-const render = (props: React.ComponentProps<typeof ChooseProtocolSlideout>) => {
+const render = (props: ComponentProps<typeof ChooseProtocolSlideout>) => {
   return renderWithProviders(
     <MemoryRouter>
       <ChooseProtocolSlideout {...props} />

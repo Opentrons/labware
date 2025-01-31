@@ -1,4 +1,5 @@
 """Test aspirate-in-place commands."""
+
 from datetime import datetime
 
 import pytest
@@ -25,6 +26,8 @@ from opentrons.protocol_engine.types import (
     CurrentWell,
     CurrentPipetteLocation,
     CurrentAddressableArea,
+    AspiratedFluid,
+    FluidKind,
 )
 from opentrons.protocol_engine.state import update_types
 
@@ -85,6 +88,7 @@ def subject(
 )
 async def test_aspirate_in_place_implementation(
     decoy: Decoy,
+    gantry_mover: GantryMover,
     pipetting: PipettingHandler,
     state_store: StateStore,
     hardware_api: HardwareAPI,
@@ -100,7 +104,19 @@ async def test_aspirate_in_place_implementation(
         volume=123,
         flowRate=1.234,
     )
+    decoy.when(
+        state_store.geometry.get_nozzles_per_well(
+            labware_id=stateupdateLabware,
+            target_well_name=stateupdateWell,
+            pipette_id="pipette-id-abc",
+        )
+    ).then_return(2)
 
+    decoy.when(
+        state_store.geometry.get_wells_covered_by_pipette_with_active_well(
+            stateupdateLabware, stateupdateWell, "pipette-id-abc"
+        )
+    ).then_return(["A3", "A4"])
     decoy.when(
         pipetting.get_is_ready_to_aspirate(
             pipette_id="pipette-id-abc",
@@ -116,6 +132,10 @@ async def test_aspirate_in_place_implementation(
         )
     ).then_return(123)
 
+    decoy.when(await gantry_mover.get_position("pipette-id-abc")).then_return(
+        Point(1, 2, 3)
+    )
+
     decoy.when(state_store.pipettes.get_current_location()).then_return(location)
 
     result = await subject.execute(params=data)
@@ -126,19 +146,30 @@ async def test_aspirate_in_place_implementation(
             state_update=update_types.StateUpdate(
                 liquid_operated=update_types.LiquidOperatedUpdate(
                     labware_id=stateupdateLabware,
-                    well_name=stateupdateWell,
-                    volume_added=-123,
-                )
+                    well_names=["A3", "A4"],
+                    volume_added=-246,
+                ),
+                pipette_aspirated_fluid=update_types.PipetteAspiratedFluidUpdate(
+                    pipette_id="pipette-id-abc",
+                    fluid=AspiratedFluid(kind=FluidKind.LIQUID, volume=123),
+                ),
             ),
         )
     else:
         assert result == SuccessData(
             public=AspirateInPlaceResult(volume=123),
+            state_update=update_types.StateUpdate(
+                pipette_aspirated_fluid=update_types.PipetteAspiratedFluidUpdate(
+                    pipette_id="pipette-id-abc",
+                    fluid=AspiratedFluid(kind=FluidKind.LIQUID, volume=123),
+                )
+            ),
         )
 
 
 async def test_handle_aspirate_in_place_request_not_ready_to_aspirate(
     decoy: Decoy,
+    gantry_mover: GantryMover,
     pipetting: PipettingHandler,
     state_store: StateStore,
     hardware_api: HardwareAPI,
@@ -150,7 +181,9 @@ async def test_handle_aspirate_in_place_request_not_ready_to_aspirate(
         volume=123,
         flowRate=1.234,
     )
-
+    decoy.when(await gantry_mover.get_position("pipette-id-abc")).then_return(
+        Point(1, 2, 3)
+    )
     decoy.when(
         pipetting.get_is_ready_to_aspirate(
             pipette_id="pipette-id-abc",
@@ -171,6 +204,7 @@ async def test_aspirate_raises_volume_error(
     pipetting: PipettingHandler,
     subject: AspirateInPlaceImplementation,
     mock_command_note_adder: CommandNoteAdder,
+    gantry_mover: GantryMover,
 ) -> None:
     """Should raise an assertion error for volume larger than working volume."""
     data = AspirateInPlaceParams(
@@ -178,7 +212,7 @@ async def test_aspirate_raises_volume_error(
         volume=50,
         flowRate=1.23,
     )
-
+    decoy.when(await gantry_mover.get_position("abc")).then_return(Point(x=1, y=2, z=3))
     decoy.when(pipetting.get_is_ready_to_aspirate(pipette_id="abc")).then_return(True)
 
     decoy.when(
@@ -229,7 +263,19 @@ async def test_overpressure_error(
 
     error_id = "error-id"
     error_timestamp = datetime(year=2020, month=1, day=2)
+    decoy.when(
+        state_store.geometry.get_nozzles_per_well(
+            labware_id=stateupdateLabware,
+            target_well_name=stateupdateWell,
+            pipette_id="pipette-id",
+        )
+    ).then_return(2)
 
+    decoy.when(
+        state_store.geometry.get_wells_covered_by_pipette_with_active_well(
+            stateupdateLabware, stateupdateWell, "pipette-id"
+        )
+    ).then_return(["A3", "A4"])
     data = AspirateInPlaceParams(
         pipetteId=pipette_id,
         volume=50,
@@ -258,7 +304,7 @@ async def test_overpressure_error(
 
     if isinstance(location, CurrentWell):
         assert result == DefinedErrorData(
-            public=OverpressureError.construct(
+            public=OverpressureError.model_construct(
                 id=error_id,
                 createdAt=error_timestamp,
                 wrappedErrors=[matchers.Anything()],
@@ -267,17 +313,25 @@ async def test_overpressure_error(
             state_update=update_types.StateUpdate(
                 liquid_operated=update_types.LiquidOperatedUpdate(
                     labware_id=stateupdateLabware,
-                    well_name=stateupdateWell,
+                    well_names=["A3", "A4"],
                     volume_added=update_types.CLEAR,
-                )
+                ),
+                pipette_aspirated_fluid=update_types.PipetteUnknownFluidUpdate(
+                    pipette_id="pipette-id"
+                ),
             ),
         )
     else:
         assert result == DefinedErrorData(
-            public=OverpressureError.construct(
+            public=OverpressureError.model_construct(
                 id=error_id,
                 createdAt=error_timestamp,
                 wrappedErrors=[matchers.Anything()],
                 errorInfo={"retryLocation": (position.x, position.y, position.z)},
+            ),
+            state_update=update_types.StateUpdate(
+                pipette_aspirated_fluid=update_types.PipetteUnknownFluidUpdate(
+                    pipette_id="pipette-id"
+                )
             ),
         )

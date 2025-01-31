@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { fireEvent, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -12,6 +11,8 @@ import { NavigationMenu } from '../NavigationMenu'
 import { Navigation } from '..'
 import { useScrollPosition } from '/app/local-resources/dom-utils'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/resources/networking/hooks/useNetworkConnection')
 vi.mock('/app/redux/discovery')
 vi.mock('../NavigationMenu')
@@ -19,7 +20,7 @@ vi.mock('/app/local-resources/dom-utils')
 
 mockConnectedRobot.name = '12345678901234567'
 
-const render = (props: React.ComponentProps<typeof Navigation>) => {
+const render = (props: ComponentProps<typeof Navigation>) => {
   return renderWithProviders(
     <MemoryRouter>
       <Navigation {...props} />
@@ -29,7 +30,7 @@ const render = (props: React.ComponentProps<typeof Navigation>) => {
 }
 
 describe('Navigation', () => {
-  let props: React.ComponentProps<typeof Navigation>
+  let props: ComponentProps<typeof Navigation>
   beforeEach(() => {
     props = {}
     vi.mocked(getLocalRobot).mockReturnValue(mockConnectedRobot)

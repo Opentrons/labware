@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, afterEach, vi, beforeEach } from 'vitest'
 import { useInstrumentsQuery } from '@opentrons/react-api-client'
@@ -8,17 +7,19 @@ import { i18n } from '/app/i18n'
 import { useIsOEMMode } from '/app/resources/robot-settings/hooks'
 import { SelectPipette } from '../SelectPipette'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('@opentrons/react-api-client')
 vi.mock('/app/resources/robot-settings/hooks')
 
-const render = (props: React.ComponentProps<typeof SelectPipette>) => {
+const render = (props: ComponentProps<typeof SelectPipette>) => {
   return renderWithProviders(<SelectPipette {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('SelectPipette', () => {
-  let props: React.ComponentProps<typeof SelectPipette>
+  let props: ComponentProps<typeof SelectPipette>
 
   beforeEach(() => {
     props = {

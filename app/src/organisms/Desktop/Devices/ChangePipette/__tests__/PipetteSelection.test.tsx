@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, describe, beforeEach } from 'vitest'
 import { screen } from '@testing-library/react'
 
@@ -7,15 +6,17 @@ import { i18n } from '/app/i18n'
 import { PipetteSelect } from '/app/molecules/PipetteSelect'
 import { PipetteSelection } from '../PipetteSelection'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/molecules/PipetteSelect')
 
-const render = (props: React.ComponentProps<typeof PipetteSelection>) => {
+const render = (props: ComponentProps<typeof PipetteSelection>) => {
   return renderWithProviders(<PipetteSelection {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 describe('PipetteSelection', () => {
-  let props: React.ComponentProps<typeof PipetteSelection>
+  let props: ComponentProps<typeof PipetteSelection>
   beforeEach(() => {
     props = {
       pipetteName: null,

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { when } from 'vitest-when'
@@ -9,10 +8,12 @@ import { useIsEstopNotDisengaged } from '/app/resources/devices/hooks/useIsEstop
 import { UpdateBanner } from '..'
 import { renderWithProviders } from '/app/__testing-utils__'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/redux-resources/robots')
 vi.mock('/app/resources/devices/hooks/useIsEstopNotDisengaged')
 
-const render = (props: React.ComponentProps<typeof UpdateBanner>) => {
+const render = (props: ComponentProps<typeof UpdateBanner>) => {
   return renderWithProviders(<UpdateBanner {...props} />, {
     i18nInstance: i18n,
     initialState: { robotsByName: 'test' },
@@ -20,7 +21,7 @@ const render = (props: React.ComponentProps<typeof UpdateBanner>) => {
 }
 
 describe('Module Update Banner', () => {
-  let props: React.ComponentProps<typeof UpdateBanner>
+  let props: ComponentProps<typeof UpdateBanner>
 
   beforeEach(() => {
     props = {

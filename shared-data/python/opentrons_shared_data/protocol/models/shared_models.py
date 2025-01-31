@@ -1,5 +1,4 @@
-from typing import Optional, List, Dict, Any
-from typing_extensions import Literal
+from typing import Optional, List, Dict, Any, Literal
 from enum import Enum
 from pydantic import BaseModel
 
@@ -31,20 +30,20 @@ class WellDefinition(BaseModel):
     x: float
     y: float
     z: float
-    diameter: Optional[float]
-    yDimension: Optional[float]
-    xDimension: Optional[float]
+    diameter: Optional[float] = None
+    yDimension: Optional[float] = None
+    xDimension: Optional[float] = None
 
 
 class Metadata(BaseModel):
-    protocolName: Optional[str]
-    author: Optional[str]
-    description: Optional[str]
-    created: Optional[int]
-    lastModified: Optional[int]
-    category: Optional[str]
-    subcategory: Optional[str]
-    tags: Optional[List[str]]
+    protocolName: Optional[str] = None
+    author: Optional[str] = None
+    description: Optional[str] = None
+    created: Optional[int] = None
+    lastModified: Optional[int] = None
+    category: Optional[str] = None
+    subcategory: Optional[str] = None
+    tags: Optional[List[str]] = None
 
 
 class Module(BaseModel):
@@ -61,9 +60,9 @@ class Robot(BaseModel):
 
 
 class DesignerApplication(BaseModel):
-    name: Optional[str]
-    version: Optional[str]
-    data: Optional[Dict[str, Any]]
+    name: Optional[str] = None
+    version: Optional[str] = None
+    data: Optional[Dict[str, Any]] = None
 
 
 class CommandAnnotation(BaseModel):
@@ -72,16 +71,16 @@ class CommandAnnotation(BaseModel):
 
 
 class OffsetVector(BaseModel):
-    x: Optional[float]
-    y: Optional[float]
-    z: Optional[float]
+    x: Optional[float] = None
+    y: Optional[float] = None
+    z: Optional[float] = None
 
 
 class Location(BaseModel):
-    slotName: Optional[str]
-    moduleId: Optional[str]
-    labwareId: Optional[str]
-    addressableAreaName: Optional[str]
+    slotName: Optional[str] = None
+    moduleId: Optional[str] = None
+    labwareId: Optional[str] = None
+    addressableAreaName: Optional[str] = None
 
 
 class ProfileStep(BaseModel):
@@ -90,22 +89,22 @@ class ProfileStep(BaseModel):
 
 
 class WellLocation(BaseModel):
-    origin: Optional[str]
-    offset: Optional[OffsetVector]
+    origin: Optional[str] = None
+    offset: Optional[OffsetVector] = None
 
 
 class Liquid(BaseModel):
     displayName: str
     description: str
-    displayColor: Optional[str]
+    displayColor: Optional[str] = None
 
 
 class Labware(BaseModel):
-    displayName: Optional[str]
+    displayName: Optional[str] = None
     definitionId: str
 
 
 class NozzleConfigurationParams(BaseModel):
     style: str
-    primaryNozzle: Optional[str]
-    frontRightNozzle: Optional[str]
+    primaryNozzle: Optional[str] = None
+    frontRightNozzle: Optional[str] = None

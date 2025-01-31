@@ -63,6 +63,7 @@ const labwareDisplayCategoryFilters: LabwareFilter[] = [
   'wellPlate',
 ]
 
+// note: we've decided not to translate these categories
 const FILTER_OPTIONS: DropdownOption[] = labwareDisplayCategoryFilters.map(
   category => ({
     name: startCase(category),

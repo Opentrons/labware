@@ -1,18 +1,19 @@
-import type * as React from 'react'
 import { screen, fireEvent } from '@testing-library/react'
 import { describe, it, vi, beforeEach, expect } from 'vitest'
 import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { AboutGripperSlideout } from '../AboutGripperSlideout'
 
-const render = (props: React.ComponentProps<typeof AboutGripperSlideout>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof AboutGripperSlideout>) => {
   return renderWithProviders(<AboutGripperSlideout {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('AboutGripperSlideout', () => {
-  let props: React.ComponentProps<typeof AboutGripperSlideout>
+  let props: ComponentProps<typeof AboutGripperSlideout>
   beforeEach(() => {
     props = {
       serialNumber: '123',

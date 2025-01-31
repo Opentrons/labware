@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { screen } from '@testing-library/react'
 import { describe, it, beforeEach, vi, afterEach, expect } from 'vitest'
@@ -13,6 +12,8 @@ import { getLabwareLocation } from '/app/transformations/commands'
 import { LabwareInfoOverlay } from '../LabwareInfoOverlay'
 import { getLabwareDefinitionUri } from '/app/transformations/protocols'
 import { useLabwareOffsetForLabware } from '../useLabwareOffsetForLabware'
+
+import type { ComponentProps } from 'react'
 import type {
   LabwareDefinition2,
   ProtocolFile,
@@ -33,7 +34,7 @@ vi.mock('@opentrons/shared-data', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof LabwareInfoOverlay>) => {
+const render = (props: ComponentProps<typeof LabwareInfoOverlay>) => {
   return renderWithProviders(
     <svg>
       <LabwareInfoOverlay {...props} />
@@ -51,7 +52,7 @@ const MOCK_LABWARE_VECTOR = { x: 1, y: 2, z: 3 }
 const MOCK_RUN_ID = 'fake_run_id'
 
 describe('LabwareInfoOverlay', () => {
-  let props: React.ComponentProps<typeof LabwareInfoOverlay>
+  let props: ComponentProps<typeof LabwareInfoOverlay>
   let labware: LoadedLabware[]
   let labwareDefinitions: ProtocolFile<{}>['labwareDefinitions']
   beforeEach(() => {

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, beforeEach, afterEach } from 'vitest'
 import { screen } from '@testing-library/react'
 
@@ -6,6 +5,7 @@ import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { ProtocolParameters } from '..'
 
+import type { ComponentProps } from 'react'
 import type { RunTimeParameter } from '@opentrons/shared-data'
 import type * as Components from '@opentrons/components'
 
@@ -80,14 +80,14 @@ const mockRunTimeParameter: RunTimeParameter[] = [
   },
 ]
 
-const render = (props: React.ComponentProps<typeof ProtocolParameters>) => {
+const render = (props: ComponentProps<typeof ProtocolParameters>) => {
   return renderWithProviders(<ProtocolParameters {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('ProtocolParameters', () => {
-  let props: React.ComponentProps<typeof ProtocolParameters>
+  let props: ComponentProps<typeof ProtocolParameters>
 
   beforeEach(() => {
     props = {

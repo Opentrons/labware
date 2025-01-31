@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, vi, beforeEach, afterEach } from 'vitest'
@@ -15,6 +14,7 @@ import { useMostRecentCompletedAnalysis } from '/app/resources/runs'
 import { useNotifyDeckConfigurationQuery } from '/app/resources/deck_configuration'
 import { ProtocolSetupDeckConfiguration } from '..'
 
+import type { ComponentProps } from 'react'
 import type { UseQueryResult } from 'react-query'
 import type {
   CompletedProtocolAnalysis,
@@ -47,7 +47,7 @@ vi.mock('@opentrons/components', async importOriginal => {
 })
 
 const render = (
-  props: React.ComponentProps<typeof ProtocolSetupDeckConfiguration>
+  props: ComponentProps<typeof ProtocolSetupDeckConfiguration>
 ) => {
   return renderWithProviders(<ProtocolSetupDeckConfiguration {...props} />, {
     i18nInstance: i18n,
@@ -55,7 +55,7 @@ const render = (
 }
 
 describe('ProtocolSetupDeckConfiguration', () => {
-  let props: React.ComponentProps<typeof ProtocolSetupDeckConfiguration>
+  let props: ComponentProps<typeof ProtocolSetupDeckConfiguration>
 
   beforeEach(() => {
     props = {

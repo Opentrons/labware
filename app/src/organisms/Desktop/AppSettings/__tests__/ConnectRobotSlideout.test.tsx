@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -8,17 +7,19 @@ import { getConfig } from '/app/redux/config'
 import { renderWithProviders } from '/app/__testing-utils__'
 import { ConnectRobotSlideout } from '../ConnectRobotSlideout'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/redux/discovery')
 vi.mock('/app/redux/config')
 
-const render = (props: React.ComponentProps<typeof ConnectRobotSlideout>) => {
+const render = (props: ComponentProps<typeof ConnectRobotSlideout>) => {
   return renderWithProviders(<ConnectRobotSlideout {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('ConnectRobotSlideout', () => {
-  let props: React.ComponentProps<typeof ConnectRobotSlideout>
+  let props: ComponentProps<typeof ConnectRobotSlideout>
 
   beforeEach(() => {
     vi.mocked(getScanning).mockReturnValue(true)
@@ -54,7 +55,7 @@ describe('ConnectRobotSlideout', () => {
       checkIpAndHostname: vi.fn(),
       isExpanded: true,
       onCloseClick: vi.fn(),
-    } as React.ComponentProps<typeof ConnectRobotSlideout>
+    } as ComponentProps<typeof ConnectRobotSlideout>
   })
 
   it('renders correct title, body, and footer for ConnectRobotSlideout', () => {

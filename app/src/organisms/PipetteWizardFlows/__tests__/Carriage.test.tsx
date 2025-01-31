@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, beforeEach, vi, expect } from 'vitest'
 
@@ -11,14 +10,16 @@ import { RUN_ID_1 } from '/app/resources/runs/__fixtures__'
 import { FLOWS } from '../constants'
 import { Carriage } from '../Carriage'
 
-const render = (props: React.ComponentProps<typeof Carriage>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof Carriage>) => {
   return renderWithProviders(<Carriage {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('Carriage', () => {
-  let props: React.ComponentProps<typeof Carriage>
+  let props: ComponentProps<typeof Carriage>
   beforeEach(() => {
     props = {
       mount: LEFT,

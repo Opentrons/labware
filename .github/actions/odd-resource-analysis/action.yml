@@ -1,0 +1,27 @@
+name: 'ODD Memory Usage Analysis'
+description: >-
+  Analyzes memory usage trends across ODD versions using Mixpanel data.
+  Note that only processes with positive correlation or explicitly whitelisted processes are shown.
+
+inputs:
+  mixpanel-user:
+    description: 'Mixpanel service account username'
+    required: true
+  mixpanel-secret:
+    description: 'Mixpanel service account password'
+    required: true
+  mixpanel-project-id:
+    description: 'Mixpanel project ID'
+    required: true
+  previous-version-count:
+    description: 'Number of previous versions to analyze'
+    required: false
+    default: '2'
+
+outputs:
+  analysis-results:
+    description: 'JSON string containing the complete analysis results'
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'

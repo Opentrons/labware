@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { css } from 'styled-components'
 
@@ -25,6 +25,7 @@ import {
 import { useDownloadRunLog } from '../../../../hooks'
 import { RUN_STATUS_SUCCEEDED } from '@opentrons/api-client'
 
+import type { MouseEventHandler } from 'react'
 import type { RunStatus } from '@opentrons/api-client'
 import type { ModalProps } from '@opentrons/components'
 import type { RunCommandError } from '@opentrons/shared-data'
@@ -41,7 +42,7 @@ export interface UseRunFailedModalResult {
 export function useRunFailedModal(
   runErrors: UseRunErrorsResult
 ): UseRunFailedModalResult {
-  const [showRunFailedModal, setShowRunFailedModal] = React.useState(false)
+  const [showRunFailedModal, setShowRunFailedModal] = useState(false)
 
   const toggleModal = (): void => {
     setShowRunFailedModal(!showRunFailedModal)
@@ -95,7 +96,7 @@ export function RunFailedModal({
     toggleModal()
   }
 
-  const handleDownloadClick: React.MouseEventHandler<HTMLAnchorElement> = e => {
+  const handleDownloadClick: MouseEventHandler<HTMLAnchorElement> = e => {
     e.preventDefault()
     e.stopPropagation()
     downloadRunLog()

@@ -1,8 +1,8 @@
-import type * as React from 'react'
 import cx from 'classnames'
 
 import styles from './Pill.module.css'
 
+import type { ReactNode } from 'react'
 import type { UseHoverTooltipTargetProps } from '../tooltips'
 
 // TODO(bc, 2021-03-29): this component is only used in PD
@@ -17,7 +17,7 @@ export interface PillProps {
   /** additional class name */
   className?: string
   /** contents of the pill */
-  children?: React.ReactNode
+  children?: ReactNode
   /** handlers for HoverTooltipComponent */
   hoverTooltipHandlers?: UseHoverTooltipTargetProps | null | undefined
 }

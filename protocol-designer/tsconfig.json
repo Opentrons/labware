@@ -12,6 +12,9 @@
     },
     {
       "path": "../step-generation"
+    },
+    {
+      "path": "./tsconfig.cypress.json"
     }
   ],
   "compilerOptions": {

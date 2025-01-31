@@ -1,4 +1,5 @@
 """Pipetting execution handler."""
+
 import pytest
 from decoy import Decoy, matchers
 
@@ -51,7 +52,7 @@ def mock_labware_data_provider(decoy: Decoy) -> LabwareDataProvider:
 @pytest.fixture
 def tip_rack_definition() -> LabwareDefinition:
     """Get a tip rack defintion value object."""
-    return LabwareDefinition.construct(namespace="test", version=42)  # type: ignore[call-arg]
+    return LabwareDefinition.model_construct(namespace="test", version=42)  # type: ignore[call-arg]
 
 
 MOCK_MAP = NozzleMap.build(
@@ -114,9 +115,9 @@ async def test_flex_pick_up_tip_state(
     decoy.when(mock_state_view.labware.get_definition("labware-id")).then_return(
         tip_rack_definition
     )
-    decoy.when(mock_state_view.pipettes.state.nozzle_configuration_by_id).then_return(
-        {"pipette-id": MOCK_MAP}
-    )
+    decoy.when(
+        mock_state_view.pipettes.get_nozzle_configuration("pipette-id")
+    ).then_return(MOCK_MAP)
     decoy.when(
         mock_state_view.geometry.get_nominal_tip_geometry(
             pipette_id="pipette-id",
@@ -189,9 +190,9 @@ async def test_pick_up_tip(
         MountType.LEFT
     )
 
-    decoy.when(mock_state_view.pipettes.state.nozzle_configuration_by_id).then_return(
-        {"pipette-id": MOCK_MAP}
-    )
+    decoy.when(
+        mock_state_view.pipettes.get_nozzle_configuration(pipette_id="pipette-id")
+    ).then_return(MOCK_MAP)
 
     decoy.when(
         mock_state_view.geometry.get_nominal_tip_geometry(
@@ -249,14 +250,16 @@ async def test_drop_tip(
     decoy.when(mock_state_view.pipettes.get_mount("pipette-id")).then_return(
         MountType.RIGHT
     )
-    decoy.when(mock_state_view.pipettes.state.nozzle_configuration_by_id).then_return(
-        {"pipette-id": MOCK_MAP}
-    )
+    decoy.when(
+        mock_state_view.pipettes.get_nozzle_configuration("pipette-id")
+    ).then_return(MOCK_MAP)
 
     await subject.drop_tip(pipette_id="pipette-id", home_after=True)
 
     decoy.verify(
-        await mock_hardware_api.tip_drop_moves(mount=Mount.RIGHT, home_after=True)
+        await mock_hardware_api.tip_drop_moves(
+            mount=Mount.RIGHT, ignore_plunger=False, home_after=True
+        )
     )
     decoy.verify(mock_hardware_api.remove_tip(mount=Mount.RIGHT))
     decoy.verify(
@@ -558,8 +561,8 @@ async def test_verify_tip_presence_on_ot3(
         )
 
         decoy.when(
-            mock_state_view.pipettes.state.nozzle_configuration_by_id
-        ).then_return({"pipette-id": MOCK_MAP})
+            mock_state_view.pipettes.get_nozzle_configuration("pipette-id")
+        ).then_return(MOCK_MAP)
 
         await subject.verify_tip_presence("pipette-id", expected, None)
 

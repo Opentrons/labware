@@ -152,6 +152,10 @@ push:
 	sleep 1
 	$(MAKE) -C $(UPDATE_SERVER_DIR) push
 
+.PHONY: push-folder
+PUSH_HELPER := abr-testing/abr_testing/tools/make_push.py
+push-folder:
+	$(OT_PYTHON) $(PUSH_HELPER)
 
 .PHONY: push-ot3
 push-ot3:
@@ -228,7 +232,7 @@ lint-js-prettier:
 
 .PHONY: lint-json
 lint-json:
-	yarn eslint --max-warnings 0 --ext .json .
+	yarn eslint --ignore-pattern "abr-testing/protocols/" --max-warnings 0 --ext .json .
 
 .PHONY: lint-css
 lint-css:

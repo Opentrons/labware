@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { describe, it, beforeEach, vi, expect } from 'vitest'
 
@@ -16,7 +15,9 @@ import { FLOWS } from '../constants'
 import { AttachProbe } from '../AttachProbe'
 import { useNotifyDeckConfigurationQuery } from '/app/resources/deck_configuration'
 
-const render = (props: React.ComponentProps<typeof AttachProbe>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof AttachProbe>) => {
   return renderWithProviders(<AttachProbe {...props} />, {
     i18nInstance: i18n,
   })[0]
@@ -24,7 +25,7 @@ const render = (props: React.ComponentProps<typeof AttachProbe>) => {
 vi.mock('/app/resources/deck_configuration')
 
 describe('AttachProbe', () => {
-  let props: React.ComponentProps<typeof AttachProbe>
+  let props: ComponentProps<typeof AttachProbe>
   beforeEach(() => {
     props = {
       mount: LEFT,

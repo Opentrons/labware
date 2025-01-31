@@ -1,10 +1,10 @@
-import type * as React from 'react'
 import { css, keyframes } from 'styled-components'
 import cx from 'classnames'
 
 import { Svg } from '../primitives'
 import { ICON_DATA_BY_NAME } from './icon-data'
 
+import type { ReactNode } from 'react'
 import type { SvgProps } from '../primitives'
 
 export type IconName = keyof typeof ICON_DATA_BY_NAME
@@ -27,7 +27,7 @@ export interface IconProps extends SvgProps {
   /** inline style passed into the icon svg */
   style?: Record<string, string | number>
   /** optional children */
-  children?: React.ReactNode
+  children?: ReactNode
   id?: string
 }
 

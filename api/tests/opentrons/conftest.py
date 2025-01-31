@@ -608,6 +608,7 @@ def minimal_labware_def() -> LabwareDefinition:
             "displayCategory": "other",
             "displayVolumeUnits": "mL",
         },
+        "allowedRoles": ["labware"],
         "cornerOffsetFromSlot": {"x": 10, "y": 10, "z": 5},
         "parameters": {
             "isTiprack": False,
@@ -804,10 +805,10 @@ def minimal_liquid_class_def2() -> LiquidClassSchemaV1:
         namespace="test-fixture-2",
         byPipette=[
             ByPipetteSetting(
-                pipetteModel="p20_single_gen2",
+                pipetteModel="flex_1channel_50",
                 byTipType=[
                     ByTipTypeSetting(
-                        tiprack="opentrons_96_tiprack_20ul",
+                        tiprack="opentrons_flex_96_tiprack_50ul",
                         aspirate=AspirateProperties(
                             submerge=Submerge(
                                 positionReference=PositionReference.LIQUID_MENISCUS,
@@ -821,13 +822,14 @@ def minimal_liquid_class_def2() -> LiquidClassSchemaV1:
                                 positionReference=PositionReference.WELL_TOP,
                                 offset=Coordinate(x=0, y=0, z=5),
                                 speed=100,
-                                airGapByVolume={"default": 2, "5": 3, "10": 4},
+                                airGapByVolume=[(5.0, 3.0), (10.0, 4.0)],
                                 touchTip=TouchTipProperties(enable=False),
                                 delay=DelayProperties(enable=False),
                             ),
                             positionReference=PositionReference.WELL_BOTTOM,
                             offset=Coordinate(x=0, y=0, z=-5),
-                            flowRateByVolume={"default": 50, "10": 40, "20": 30},
+                            flowRateByVolume=[(10.0, 40.0), (20.0, 30.0)],
+                            correctionByVolume=[(15.0, 1.5), (30.0, -5.0)],
                             preWet=True,
                             mix=MixProperties(enable=False),
                             delay=DelayProperties(
@@ -845,16 +847,17 @@ def minimal_liquid_class_def2() -> LiquidClassSchemaV1:
                                 positionReference=PositionReference.WELL_TOP,
                                 offset=Coordinate(x=0, y=0, z=5),
                                 speed=100,
-                                airGapByVolume={"default": 2, "5": 3, "10": 4},
+                                airGapByVolume=[(5.0, 3.0), (10.0, 4.0)],
                                 blowout=BlowoutProperties(enable=False),
                                 touchTip=TouchTipProperties(enable=False),
                                 delay=DelayProperties(enable=False),
                             ),
                             positionReference=PositionReference.WELL_BOTTOM,
                             offset=Coordinate(x=0, y=0, z=-5),
-                            flowRateByVolume={"default": 50, "10": 40, "20": 30},
+                            flowRateByVolume=[(10.0, 40.0), (20.0, 30.0)],
+                            correctionByVolume=[(15.0, -1.5), (30.0, 5.0)],
                             mix=MixProperties(enable=False),
-                            pushOutByVolume={"default": 5, "10": 7, "20": 10},
+                            pushOutByVolume=[(10.0, 7.0), (20.0, 10.0)],
                             delay=DelayProperties(enable=False),
                         ),
                         multiDispense=None,

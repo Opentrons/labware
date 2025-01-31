@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Side:_Pipette_crosshairs" data-name="Side: Pipette + crosshairs" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 164.9 188.6">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke-dasharray: 0 0 6.8 9;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        stroke: #006cfa;
+        stroke-linecap: square;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4 {
+        fill: none;
+        stroke-miterlimit: 10;
+        stroke-width: 2px;
+      }
+
+      .cls-2 {
+        stroke-dasharray: 0 0 6.2 8.2;
+      }
+
+      .cls-4 {
+        stroke: #737578;
+        stroke-linecap: round;
+      }
+    </style>
+  </defs>
+  <path id="Pipette" class="cls-4" d="M71.2.2l3.5,77c0,1.1.6,2.1,1.5,2.6s1,.4,1.6.4.2,0,.4,0c1.4-.2,2.4-1.5,2.4-3L84.2.2"/>
+  <g id="horizontal_line" data-name="horizontal line">
+    <g>
+      <line class="cls-3" x1="46.5" y1="81.3" x2="49.5" y2="81.3"/>
+      <line class="cls-1" x1="58.5" y1="81.3" x2="101.3" y2="81.3"/>
+      <line class="cls-3" x1="105.8" y1="81.3" x2="108.8" y2="81.3"/>
+    </g>
+  </g>
+  <g id="veritcal_line" data-name="veritcal line">
+    <g>
+      <line class="cls-3" x1="77.7" y1="169.1" x2="77.7" y2="166.1"/>
+      <line class="cls-2" x1="77.7" y1="157.9" x2="77.7" y2="90"/>
+      <line class="cls-3" x1="77.7" y1="85.9" x2="77.7" y2="82.9"/>
+    </g>
+  </g>
+</svg>

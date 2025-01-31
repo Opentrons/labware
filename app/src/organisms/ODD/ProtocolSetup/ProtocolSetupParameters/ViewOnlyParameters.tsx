@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { css } from 'styled-components'
 
@@ -22,11 +21,12 @@ import { useMostRecentCompletedAnalysis } from '/app/resources/runs'
 import { ChildNavigation } from '/app/organisms/ODD/ChildNavigation'
 import { useToaster } from '/app/organisms/ToasterOven'
 
+import type { Dispatch, SetStateAction } from 'react'
 import type { SetupScreens } from '../types'
 
 export interface ViewOnlyParametersProps {
   runId: string
-  setSetupScreen: React.Dispatch<React.SetStateAction<SetupScreens>>
+  setSetupScreen: Dispatch<SetStateAction<SetupScreens>>
 }
 
 export function ViewOnlyParameters({

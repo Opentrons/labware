@@ -1,6 +1,7 @@
 import json
 import pytest
 from typing import Any, Dict
+from pathlib import Path
 
 from opentrons_shared_data import load_shared_data
 from opentrons_shared_data.protocol.models import protocol_schema_v7
@@ -9,10 +10,10 @@ from . import list_fixtures
 
 
 @pytest.mark.parametrize("defpath", list_fixtures(7))
-def test_v7_types(defpath):
+def test_v7_types(defpath: Path) -> None:
     def_data = load_shared_data(defpath)
-    def_model = protocol_schema_v7.ProtocolSchemaV7.parse_raw(def_data)
-    def_dict_from_model = def_model.dict(
+    def_model = protocol_schema_v7.ProtocolSchemaV7.model_validate_json(def_data)
+    def_dict_from_model = def_model.model_dump(
         exclude_unset=True,
         # 'schemaVersion' in python is '$schemaVersion' in JSON
         by_alias=True,

@@ -1,20 +1,23 @@
 """Load pipette command request, result, and implementation models."""
 from __future__ import annotations
+from typing import TYPE_CHECKING, Optional, Type, Any
 
-from opentrons.protocol_engine.state.update_types import StateUpdate
+from pydantic import BaseModel, Field
+from pydantic.json_schema import SkipJsonSchema
+from typing_extensions import Literal
+
 from opentrons_shared_data.pipette.pipette_load_name_conversions import (
     convert_to_pipette_name_type,
 )
 from opentrons_shared_data.pipette.types import PipetteGenerationType
 from opentrons_shared_data.robot import user_facing_robot_type
 from opentrons_shared_data.robot.types import RobotTypeEnum
-from pydantic import BaseModel, Field
-from typing import TYPE_CHECKING, Optional, Type
-from typing_extensions import Literal
+
 
 from opentrons_shared_data.pipette.types import PipetteNameType
 from opentrons.types import MountType
 
+from opentrons.protocol_engine.state.update_types import StateUpdate
 from .command import AbstractCommandImpl, BaseCommand, BaseCommandCreate, SuccessData
 from ..errors.error_occurrence import ErrorOccurrence
 from ..errors import InvalidSpecificationForRobotTypeError, InvalidLoadPipetteSpecsError
@@ -25,6 +28,10 @@ if TYPE_CHECKING:
 
 
 LoadPipetteCommandType = Literal["loadPipette"]
+
+
+def _remove_default(s: dict[str, Any]) -> None:
+    s.pop("default", None)
 
 
 class LoadPipetteParams(BaseModel):
@@ -38,21 +45,24 @@ class LoadPipetteParams(BaseModel):
         ...,
         description="The mount the pipette should be present on.",
     )
-    pipetteId: Optional[str] = Field(
+    pipetteId: str | SkipJsonSchema[None] = Field(
         None,
         description="An optional ID to assign to this pipette. If None, an ID "
         "will be generated.",
+        json_schema_extra=_remove_default,
     )
-    tipOverlapNotAfterVersion: Optional[str] = Field(
+    tipOverlapNotAfterVersion: str | SkipJsonSchema[None] = Field(
         None,
         description="A version of tip overlap data to not exceed. The highest-versioned "
         "tip overlap data that does not exceed this version will be used. Versions are "
         "expressed as vN where N is an integer, counting up from v0. If None, the current "
         "highest version will be used.",
+        json_schema_extra=_remove_default,
     )
-    liquidPresenceDetection: Optional[bool] = Field(
+    liquidPresenceDetection: bool | SkipJsonSchema[None] = Field(
         None,
         description="Enable liquid presence detection for this pipette. Defaults to False.",
+        json_schema_extra=_remove_default,
     )
 
 
@@ -127,6 +137,7 @@ class LoadPipetteImplementation(
             serial_number=loaded_pipette.serial_number,
             config=loaded_pipette.static_config,
         )
+        state_update.set_fluid_unknown(pipette_id=loaded_pipette.pipette_id)
 
         return SuccessData(
             public=LoadPipetteResult(pipetteId=loaded_pipette.pipette_id),
@@ -139,7 +150,7 @@ class LoadPipette(BaseCommand[LoadPipetteParams, LoadPipetteResult, ErrorOccurre
 
     commandType: LoadPipetteCommandType = "loadPipette"
     params: LoadPipetteParams
-    result: Optional[LoadPipetteResult]
+    result: Optional[LoadPipetteResult] = None
 
     _ImplementationCls: Type[LoadPipetteImplementation] = LoadPipetteImplementation
 

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -19,6 +18,7 @@ import {
   updateConfigValue,
 } from '/app/redux/config'
 
+import type { ComponentProps } from 'react'
 import type { SelectOption } from '/app/atoms/SelectField/Select'
 import type { Dispatch } from '/app/redux/types'
 
@@ -31,7 +31,7 @@ export function UpdatedChannel(): JSX.Element {
     dispatch(updateConfigValue('update.channel', value))
   }
 
-  const formatOptionLabel: React.ComponentProps<
+  const formatOptionLabel: ComponentProps<
     typeof SelectField
   >['formatOptionLabel'] = (option, index): JSX.Element => {
     const { label, value } = option

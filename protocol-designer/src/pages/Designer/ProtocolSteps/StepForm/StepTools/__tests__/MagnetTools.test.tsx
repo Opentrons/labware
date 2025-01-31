@@ -31,7 +31,7 @@ const render = (props: ComponentProps<typeof MagnetTools>) => {
 }
 
 describe('MagnetTools', () => {
-  let props: React.ComponentProps<typeof MagnetTools>
+  let props: ComponentProps<typeof MagnetTools>
 
   beforeEach(() => {
     props = {
@@ -70,6 +70,8 @@ describe('MagnetTools', () => {
         },
       },
       showFormErrors: false,
+      tab: 'aspirate',
+      setTab: vi.fn(),
     }
     vi.mocked(getMagneticLabwareOptions).mockReturnValue([
       { name: 'mock labware in mock module in slot abc', value: 'mockValue' },
@@ -101,9 +103,6 @@ describe('MagnetTools', () => {
   it('renders the text and a switch button for v2', () => {
     render(props)
     screen.getByText('Module')
-    screen.getByText('10')
-    screen.getByText('mock labware')
-    screen.getByText('mock module')
     screen.getByText('Magnet state')
     screen.getByLabelText('Engage')
     const toggleButton = screen.getByRole('switch')

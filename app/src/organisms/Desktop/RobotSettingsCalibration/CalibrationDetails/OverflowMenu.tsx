@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { saveAs } from 'file-saver'
 import { css } from 'styled-components'
@@ -35,6 +35,7 @@ import { FLOWS } from '/app/organisms/PipetteWizardFlows/constants'
 import { useIsEstopNotDisengaged } from '/app/resources/devices'
 import { useAttachedPipettesFromInstrumentsQuery } from '/app/resources/instruments'
 
+import type { MouseEvent } from 'react'
 import type { Mount } from '@opentrons/components'
 import type { PipetteName } from '@opentrons/shared-data'
 import type { DeleteCalRequestParams } from '@opentrons/api-client'
@@ -82,10 +83,9 @@ export function OverflowMenu({
 
   const tipLengthCalibrations = useAllTipLengthCalibrationsQuery().data?.data
   const { isRunRunning: isRunning } = useRunStatuses()
-  const [
-    showPipetteWizardFlows,
-    setShowPipetteWizardFlows,
-  ] = React.useState<boolean>(false)
+  const [showPipetteWizardFlows, setShowPipetteWizardFlows] = useState<boolean>(
+    false
+  )
   const isEstopNotDisengaged = useIsEstopNotDisengaged(robotName)
   const isPipetteForFlex = isFlexPipette(pipetteName as PipetteName)
   const ot3PipCal =
@@ -103,7 +103,7 @@ export function OverflowMenu({
     calType === 'pipetteOffset'
       ? applicablePipetteOffsetCal != null
       : applicableTipLengthCal != null
-  const handleRecalibrate = (e: React.MouseEvent): void => {
+  const handleRecalibrate = (e: MouseEvent): void => {
     e.preventDefault()
     if (
       !isRunning &&
@@ -116,7 +116,7 @@ export function OverflowMenu({
     setShowOverflowMenu(currentShowOverflowMenu => !currentShowOverflowMenu)
   }
 
-  const handleDownload = (e: React.MouseEvent): void => {
+  const handleDownload = (e: MouseEvent): void => {
     e.preventDefault()
     doTrackEvent({
       name: ANALYTICS_CALIBRATION_DATA_DOWNLOADED,
@@ -137,19 +137,18 @@ export function OverflowMenu({
     setShowOverflowMenu(currentShowOverflowMenu => !currentShowOverflowMenu)
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isRunning) {
       updateRobotStatus(true)
     }
   }, [isRunning, updateRobotStatus])
 
   const { deleteCalibration } = useDeleteCalibrationMutation()
-  const [
-    selectedPipette,
-    setSelectedPipette,
-  ] = React.useState<SelectablePipettes>(SINGLE_MOUNT_PIPETTES)
+  const [selectedPipette, setSelectedPipette] = useState<SelectablePipettes>(
+    SINGLE_MOUNT_PIPETTES
+  )
 
-  const handleDeleteCalibration = (e: React.MouseEvent): void => {
+  const handleDeleteCalibration = (e: MouseEvent): void => {
     e.preventDefault()
     let params: DeleteCalRequestParams
     if (calType === 'pipetteOffset') {

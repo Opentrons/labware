@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import isEqual from 'lodash/isEqual'
 import { useTranslation } from 'react-i18next'
 import { createPortal } from 'react-dom'
@@ -22,6 +22,7 @@ import { useTrackEventWithRobotSerial } from '/app/redux-resources/analytics'
 import { ChildNavigation } from '/app/organisms/ODD/ChildNavigation'
 import { ACTIONS } from '../constants'
 
+import type { Dispatch } from 'react'
 import type { DeckConfiguration } from '@opentrons/shared-data'
 import type {
   QuickTransferSummaryState,
@@ -35,7 +36,7 @@ import { i18n } from '/app/i18n'
 interface BlowOutProps {
   onBack: () => void
   state: QuickTransferSummaryState
-  dispatch: React.Dispatch<QuickTransferSummaryAction>
+  dispatch: Dispatch<QuickTransferSummaryAction>
   kind: FlowRateKind
 }
 
@@ -96,11 +97,11 @@ export function BlowOut(props: BlowOutProps): JSX.Element {
   const { trackEventWithRobotSerial } = useTrackEventWithRobotSerial()
   const deckConfig = useNotifyDeckConfigurationQuery().data ?? []
 
-  const [isBlowOutEnabled, setisBlowOutEnabled] = React.useState<boolean>(
+  const [isBlowOutEnabled, setisBlowOutEnabled] = useState<boolean>(
     state.blowOut != null
   )
-  const [currentStep, setCurrentStep] = React.useState<number>(1)
-  const [blowOutLocation, setBlowOutLocation] = React.useState<
+  const [currentStep, setCurrentStep] = useState<number>(1)
+  const [blowOutLocation, setBlowOutLocation] = useState<
     BlowOutLocation | undefined
   >(state.blowOut)
 

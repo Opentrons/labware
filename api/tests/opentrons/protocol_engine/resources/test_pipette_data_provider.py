@@ -7,6 +7,7 @@ from opentrons_shared_data.pipette import pipette_definition, types as pip_types
 from opentrons_shared_data.pipette.pipette_definition import (
     PipetteBoundingBoxOffsetDefinition,
     TIP_OVERLAP_VERSION_MAXIMUM,
+    AvailableSensorDefinition,
 )
 
 from opentrons.hardware_control.dev_types import PipetteDict
@@ -25,6 +26,12 @@ from opentrons.types import Point
 
 
 @pytest.fixture
+def available_sensors() -> AvailableSensorDefinition:
+    """Provide a list of sensors."""
+    return AvailableSensorDefinition(sensors=["pressure", "capacitive", "environment"])
+
+
+@pytest.fixture
 def subject_instance() -> VirtualPipetteDataProvider:
     """Instance of a VirtualPipetteDataProvider for test."""
     return VirtualPipetteDataProvider()
@@ -32,6 +39,7 @@ def subject_instance() -> VirtualPipetteDataProvider:
 
 def test_get_virtual_pipette_static_config(
     subject_instance: VirtualPipetteDataProvider,
+    available_sensors: AvailableSensorDefinition,
 ) -> None:
     """It should return config data given a pipette name."""
     result = subject_instance.get_virtual_pipette_static_config(
@@ -65,11 +73,20 @@ def test_get_virtual_pipette_static_config(
         back_left_corner_offset=Point(0, 0, 10.45),
         front_right_corner_offset=Point(0, 0, 10.45),
         pipette_lld_settings={},
+        plunger_positions={
+            "top": 19.5,
+            "bottom": -8.5,
+            "blow_out": -13.0,
+            "drop_tip": -27.0,
+        },
+        shaft_ul_per_mm=0.785,
+        available_sensors=AvailableSensorDefinition(sensors=[]),
     )
 
 
 def test_configure_virtual_pipette_for_volume(
     subject_instance: VirtualPipetteDataProvider,
+    available_sensors: AvailableSensorDefinition,
 ) -> None:
     """It should return an updated config if the liquid class changes."""
     result1 = subject_instance.get_virtual_pipette_static_config(
@@ -94,6 +111,14 @@ def test_configure_virtual_pipette_for_volume(
         back_left_corner_offset=Point(-8.0, -22.0, -259.15),
         front_right_corner_offset=Point(-8.0, -22.0, -259.15),
         pipette_lld_settings={"t50": {"minHeight": 1.0, "minVolume": 0.0}},
+        plunger_positions={
+            "top": 0.0,
+            "bottom": 71.5,
+            "blow_out": 76.5,
+            "drop_tip": 90.5,
+        },
+        shaft_ul_per_mm=0.785,
+        available_sensors=available_sensors,
     )
     subject_instance.configure_virtual_pipette_for_volume(
         "my-pipette", 1, result1.model
@@ -120,11 +145,20 @@ def test_configure_virtual_pipette_for_volume(
         back_left_corner_offset=Point(-8.0, -22.0, -259.15),
         front_right_corner_offset=Point(-8.0, -22.0, -259.15),
         pipette_lld_settings={"t50": {"minHeight": 1.0, "minVolume": 0.0}},
+        plunger_positions={
+            "top": 0.0,
+            "bottom": 61.5,
+            "blow_out": 76.5,
+            "drop_tip": 90.5,
+        },
+        shaft_ul_per_mm=0.785,
+        available_sensors=available_sensors,
     )
 
 
 def test_load_virtual_pipette_by_model_string(
     subject_instance: VirtualPipetteDataProvider,
+    available_sensors: AvailableSensorDefinition,
 ) -> None:
     """It should return config data given a pipette model."""
     result = subject_instance.get_virtual_pipette_static_config_by_model_string(
@@ -149,6 +183,14 @@ def test_load_virtual_pipette_by_model_string(
         back_left_corner_offset=Point(-16.0, 43.15, 35.52),
         front_right_corner_offset=Point(16.0, -43.15, 35.52),
         pipette_lld_settings={},
+        plunger_positions={
+            "top": 19.5,
+            "bottom": -14.5,
+            "blow_out": -19.0,
+            "drop_tip": -33.4,
+        },
+        shaft_ul_per_mm=9.621,
+        available_sensors=AvailableSensorDefinition(sensors=[]),
     )
 
 
@@ -193,6 +235,7 @@ def test_load_virtual_pipette_nozzle_layout(
 @pytest.fixture
 def pipette_dict(
     supported_tip_fixture: pipette_definition.SupportedTipsDefinition,
+    available_sensors: AvailableSensorDefinition,
 ) -> PipetteDict:
     """Get a pipette dict."""
     return {
@@ -246,6 +289,9 @@ def pipette_dict(
             "t200": {"minHeight": 0.5, "minVolume": 0},
             "t1000": {"minHeight": 0.5, "minVolume": 0},
         },
+        "plunger_positions": {"top": 100, "bottom": 20, "blow_out": 10, "drop_tip": 0},
+        "shaft_ul_per_mm": 5.0,
+        "available_sensors": available_sensors,
     }
 
 
@@ -263,6 +309,7 @@ def test_get_pipette_static_config(
     pipette_dict: PipetteDict,
     tip_overlap_version: str,
     overlap_data: Dict[str, float],
+    available_sensors: AvailableSensorDefinition,
 ) -> None:
     """It should return config data given a PipetteDict."""
     result = subject.get_pipette_static_config(pipette_dict, tip_overlap_version)
@@ -292,6 +339,9 @@ def test_get_pipette_static_config(
             "t200": {"minHeight": 0.5, "minVolume": 0},
             "t1000": {"minHeight": 0.5, "minVolume": 0},
         },
+        plunger_positions={"top": 100, "bottom": 20, "blow_out": 10, "drop_tip": 0},
+        shaft_ul_per_mm=5.0,
+        available_sensors=available_sensors,
     )
 
 

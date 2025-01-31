@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, describe, beforeEach, afterEach } from 'vitest'
 import { screen } from '@testing-library/react'
 import { when } from 'vitest-when'
@@ -12,19 +11,21 @@ import { i18n } from '/app/i18n'
 import { useRequiredProtocolHardware } from '/app/resources/protocols'
 import { Hardware } from '../Hardware'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('/app/resources/protocols')
 vi.mock('/app/redux/config')
 
 const MOCK_PROTOCOL_ID = 'mock_protocol_id'
 
-const render = (props: React.ComponentProps<typeof Hardware>) => {
+const render = (props: ComponentProps<typeof Hardware>) => {
   return renderWithProviders(<Hardware {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('Hardware', () => {
-  let props: React.ComponentProps<typeof Hardware>
+  let props: ComponentProps<typeof Hardware>
   beforeEach(() => {
     props = {
       protocolId: MOCK_PROTOCOL_ID,

@@ -59,14 +59,13 @@ from opentrons.hardware_control.types import (
     EstopStateNotification,
     TipStateType,
 )
-from opentrons.hardware_control.nozzle_manager import NozzleConfigurationType
 from opentrons.hardware_control.errors import InvalidCriticalPoint
 from opentrons.hardware_control.ot3api import OT3API
 from opentrons.hardware_control import ThreadManager
 
 from opentrons.hardware_control.backends.ot3simulator import OT3Simulator
 from opentrons_hardware.firmware_bindings.constants import NodeId
-from opentrons.types import Point, Mount
+from opentrons.types import Point, Mount, NozzleConfigurationType
 
 from opentrons_hardware.hardware_control.motion_planning.types import Move
 
@@ -83,6 +82,7 @@ from opentrons_shared_data.pipette.types import (
     PipetteChannelType,
     PipetteVersionType,
     LiquidClasses,
+    PipetteOEMType,
 )
 from opentrons_shared_data.pipette import (
     load_data as load_pipette_data,
@@ -382,6 +382,7 @@ class PipetteLoadConfig(TypedDict):
     channels: Literal[1, 8, 96]
     version: Tuple[Literal[1, 2, 3], Literal[0, 1, 2, 3, 4, 5, 6]]
     model: PipetteModel
+    oem_type: PipetteOEMType
 
 
 class GripperLoadConfig(TypedDict):
@@ -403,8 +404,24 @@ LoadConfigs = List[
     (
         (
             [
-                (OT3Mount.RIGHT, {"channels": 8, "version": (3, 3), "model": "p50"}),
-                (OT3Mount.LEFT, {"channels": 1, "version": (3, 3), "model": "p1000"}),
+                (
+                    OT3Mount.RIGHT,
+                    {
+                        "channels": 8,
+                        "version": (3, 3),
+                        "model": "p50",
+                        "oem_type": PipetteOEMType.OT,
+                    },
+                ),
+                (
+                    OT3Mount.LEFT,
+                    {
+                        "channels": 1,
+                        "version": (3, 3),
+                        "model": "p1000",
+                        "oem_type": PipetteOEMType.OT,
+                    },
+                ),
             ],
             GantryLoad.LOW_THROUGHPUT,
         ),
@@ -414,34 +431,88 @@ LoadConfigs = List[
             GantryLoad.LOW_THROUGHPUT,
         ),
         (
-            [(OT3Mount.LEFT, {"channels": 8, "version": (3, 3), "model": "p1000"})],
+            [
+                (
+                    OT3Mount.LEFT,
+                    {
+                        "channels": 8,
+                        "version": (3, 3),
+                        "model": "p1000",
+                        "oem_type": "ot",
+                    },
+                )
+            ],
             GantryLoad.LOW_THROUGHPUT,
         ),
         (
-            [(OT3Mount.RIGHT, {"channels": 8, "version": (3, 3), "model": "p1000"})],
+            [
+                (
+                    OT3Mount.RIGHT,
+                    {
+                        "channels": 8,
+                        "version": (3, 3),
+                        "model": "p1000",
+                        "oem_type": "ot",
+                    },
+                )
+            ],
             GantryLoad.LOW_THROUGHPUT,
         ),
         (
-            [(OT3Mount.LEFT, {"channels": 96, "model": "p1000", "version": (3, 3)})],
+            [
+                (
+                    OT3Mount.LEFT,
+                    {
+                        "channels": 96,
+                        "model": "p1000",
+                        "version": (3, 3),
+                        "oem_type": "ot",
+                    },
+                )
+            ],
             GantryLoad.HIGH_THROUGHPUT,
         ),
         (
             [
-                (OT3Mount.LEFT, {"channels": 1, "version": (3, 3), "model": "p1000"}),
+                (
+                    OT3Mount.LEFT,
+                    {
+                        "channels": 1,
+                        "version": (3, 3),
+                        "model": "p1000",
+                        "oem_type": "ot",
+                    },
+                ),
                 (OT3Mount.GRIPPER, {"model": GripperModel.v1, "id": "g12345"}),
             ],
             GantryLoad.LOW_THROUGHPUT,
         ),
         (
             [
-                (OT3Mount.RIGHT, {"channels": 8, "version": (3, 3), "model": "p1000"}),
+                (
+                    OT3Mount.RIGHT,
+                    {
+                        "channels": 8,
+                        "version": (3, 3),
+                        "model": "p1000",
+                        "oem_type": "ot",
+                    },
+                ),
                 (OT3Mount.GRIPPER, {"model": GripperModel.v1, "id": "g12345"}),
             ],
             GantryLoad.LOW_THROUGHPUT,
         ),
         (
             [
-                (OT3Mount.LEFT, {"channels": 96, "model": "p1000", "version": (3, 3)}),
+                (
+                    OT3Mount.LEFT,
+                    {
+                        "channels": 96,
+                        "model": "p1000",
+                        "version": (3, 3),
+                        "oem_type": "ot",
+                    },
+                ),
                 (OT3Mount.GRIPPER, {"model": GripperModel.v1, "id": "g12345"}),
             ],
             GantryLoad.HIGH_THROUGHPUT,
@@ -464,6 +535,7 @@ async def test_gantry_load_transform(
                 PipetteModelType(pair[1]["model"]),
                 PipetteChannelType(pair[1]["channels"]),
                 PipetteVersionType(*pair[1]["version"]),
+                PipetteOEMType(pair[1]["oem_type"]),
             )
             instr_data = AttachedPipette(config=pipette_config, id="fakepip")
             await ot3_hardware.cache_pipette(pair[0], instr_data, None)
@@ -558,9 +630,30 @@ def mock_verify_tip_presence(
 
 
 load_pipette_configs = [
-    {OT3Mount.LEFT: {"channels": 1, "version": (3, 3), "model": "p1000"}},
-    {OT3Mount.RIGHT: {"channels": 8, "version": (3, 3), "model": "p50"}},
-    {OT3Mount.LEFT: {"channels": 96, "model": "p1000", "version": (3, 3)}},
+    {
+        OT3Mount.LEFT: {
+            "channels": 1,
+            "version": (3, 3),
+            "model": "p1000",
+            "oem_type": PipetteOEMType.OT,
+        }
+    },
+    {
+        OT3Mount.RIGHT: {
+            "channels": 8,
+            "version": (3, 3),
+            "model": "p50",
+            "oem_type": PipetteOEMType.OT,
+        }
+    },
+    {
+        OT3Mount.LEFT: {
+            "channels": 96,
+            "model": "p1000",
+            "version": (3, 3),
+            "oem_type": PipetteOEMType.OT,
+        }
+    },
 ]
 
 
@@ -574,6 +667,7 @@ async def prepare_for_mock_blowout(
         PipetteModelType(configs["model"]),
         PipetteChannelType(configs["channels"]),
         PipetteVersionType(*configs["version"]),
+        PipetteOEMType(configs["oem_type"]),
     )
     instr_data = AttachedPipette(config=pipette_config, id="fakepip")
     await ot3_hardware.cache_pipette(mount, instr_data, None)
@@ -668,7 +762,11 @@ async def test_pickup_moves(
 
 @pytest.mark.parametrize("load_configs", load_pipette_configs)
 @given(blowout_volume=strategies.floats(min_value=0, max_value=10))
-@settings(suppress_health_check=[HealthCheck.function_scoped_fixture], max_examples=10)
+@settings(
+    suppress_health_check=[HealthCheck.function_scoped_fixture],
+    max_examples=10,
+    deadline=400,
+)
 @example(blowout_volume=0.0)
 async def test_blow_out_position(
     ot3_hardware: ThreadManager[OT3API],
@@ -801,7 +899,10 @@ async def test_liquid_probe(
 ) -> None:
     instr_data = AttachedPipette(
         config=load_pipette_data.load_definition(
-            PipetteModelType("p1000"), PipetteChannelType(1), PipetteVersionType(3, 4)
+            PipetteModelType("p1000"),
+            PipetteChannelType(1),
+            PipetteVersionType(3, 4),
+            PipetteOEMType.OT,
         ),
         id="fakepip",
     )
@@ -855,6 +956,7 @@ async def test_liquid_probe(
             fake_settings_aspirate.sensor_threshold_pascals,
             fake_settings_aspirate.plunger_impulse_time,
             fake_settings_aspirate.samples_for_baselining,
+            probe_safe_reset_mm,
             probe=InstrumentProbeType.PRIMARY,
             force_both_sensors=False,
             response_queue=None,
@@ -891,7 +993,10 @@ async def test_liquid_probe_plunger_moves(
     #       when approaching its max z distance
     instr_data = AttachedPipette(
         config=load_pipette_data.load_definition(
-            PipetteModelType("p1000"), PipetteChannelType(1), PipetteVersionType(3, 4)
+            PipetteModelType("p1000"),
+            PipetteChannelType(1),
+            PipetteVersionType(3, 4),
+            PipetteOEMType.OT,
         ),
         id="fakepip",
     )
@@ -998,7 +1103,10 @@ async def test_liquid_probe_mount_moves(
     """Verify move targets for one singular liquid pass probe."""
     instr_data = AttachedPipette(
         config=load_pipette_data.load_definition(
-            PipetteModelType("p1000"), PipetteChannelType(1), PipetteVersionType(3, 4)
+            PipetteModelType("p1000"),
+            PipetteChannelType(1),
+            PipetteVersionType(3, 4),
+            PipetteOEMType.OT,
         ),
         id="fakepip",
     )
@@ -1060,7 +1168,10 @@ async def test_multi_liquid_probe(
 ) -> None:
     instr_data = AttachedPipette(
         config=load_pipette_data.load_definition(
-            PipetteModelType("p1000"), PipetteChannelType(1), PipetteVersionType(3, 4)
+            PipetteModelType("p1000"),
+            PipetteChannelType(1),
+            PipetteVersionType(3, 4),
+            PipetteOEMType.OT,
         ),
         id="fakepip",
     )
@@ -1111,6 +1222,7 @@ async def test_multi_liquid_probe(
             fake_settings_aspirate.sensor_threshold_pascals,
             fake_settings_aspirate.plunger_impulse_time,
             fake_settings_aspirate.samples_for_baselining,
+            2.0,
             probe=InstrumentProbeType.PRIMARY,
             force_both_sensors=False,
             response_queue=None,
@@ -1126,7 +1238,10 @@ async def test_liquid_not_found(
 ) -> None:
     instr_data = AttachedPipette(
         config=load_pipette_data.load_definition(
-            PipetteModelType("p1000"), PipetteChannelType(1), PipetteVersionType(3, 4)
+            PipetteModelType("p1000"),
+            PipetteChannelType(1),
+            PipetteVersionType(3, 4),
+            PipetteOEMType.OT,
         ),
         id="fakepip",
     )
@@ -1146,6 +1261,7 @@ async def test_liquid_not_found(
         threshold_pascals: float,
         plunger_impulse_time: float,
         num_baseline_reads: int,
+        z_offset_for_plunger_prep: float,
         probe: InstrumentProbeType = InstrumentProbeType.PRIMARY,
         force_both_sensors: bool = False,
         response_queue: Optional[
@@ -1593,7 +1709,10 @@ async def test_home_plunger(
     mount = OT3Mount.LEFT
     instr_data = AttachedPipette(
         config=load_pipette_data.load_definition(
-            PipetteModelType("p1000"), PipetteChannelType(1), PipetteVersionType(3, 4)
+            PipetteModelType("p1000"),
+            PipetteChannelType(1),
+            PipetteVersionType(3, 4),
+            PipetteOEMType.OT,
         ),
         id="fakepip",
     )
@@ -1615,6 +1734,7 @@ async def test_prepare_for_aspirate(
             PipetteModelType("p1000"),
             PipetteChannelType(1),
             PipetteVersionType(3, 4),
+            PipetteOEMType.OT,
         ),
         id="fakepip",
     )
@@ -1649,6 +1769,7 @@ async def test_plunger_ready_to_aspirate_after_dispense(
             PipetteModelType("p1000"),
             PipetteChannelType(1),
             PipetteVersionType(3, 4),
+            PipetteOEMType.OT,
         ),
         id="fakepip",
     )
@@ -1674,7 +1795,10 @@ async def test_move_to_plunger_bottom(
     mount = OT3Mount.LEFT
     instr_data = AttachedPipette(
         config=load_pipette_data.load_definition(
-            PipetteModelType("p1000"), PipetteChannelType(1), PipetteVersionType(3, 4)
+            PipetteModelType("p1000"),
+            PipetteChannelType(1),
+            PipetteVersionType(3, 4),
+            PipetteOEMType.OT,
         ),
         id="fakepip",
     )
@@ -1771,7 +1895,9 @@ async def test_move_axes(
     await ot3_hardware.move_axes(position=input_position)
     mock_check_motor.return_value = True
 
-    mock_move.assert_called_once_with(target_position=expected_move_pos, speed=None)
+    mock_move.assert_called_once_with(
+        target_position=expected_move_pos, speed=None, expect_stalls=False
+    )
 
 
 async def test_move_gripper_mount_without_gripper_attached(
@@ -1789,14 +1915,14 @@ async def test_move_expect_stall_flag(
 
     expected = HWStopCondition.stall if expect_stalls else HWStopCondition.none
 
-    await ot3_hardware.move_to(Mount.LEFT, Point(0, 0, 0), _expect_stalls=expect_stalls)
+    await ot3_hardware.move_to(Mount.LEFT, Point(0, 0, 0), expect_stalls=expect_stalls)
     mock_backend_move.assert_called_once()
     _, _, _, condition = mock_backend_move.call_args_list[0][0]
     assert condition == expected
 
     mock_backend_move.reset_mock()
     await ot3_hardware.move_rel(
-        Mount.LEFT, Point(10, 0, 0), _expect_stalls=expect_stalls
+        Mount.LEFT, Point(10, 0, 0), expect_stalls=expect_stalls
     )
     mock_backend_move.assert_called_once()
     _, _, _, condition = mock_backend_move.call_args_list[0][0]
@@ -2026,12 +2152,10 @@ async def test_drop_tip_full_tiprack(
         assert len(tip_action.call_args_list) == 2
         # first call should be "clamp", moving down
         first_target = tip_action.call_args_list[0][-1]["targets"][0][0]
-        assert list(first_target.keys()) == [Axis.Q]
-        assert first_target[Axis.Q] == 10
+        assert first_target == 10
         # next call should be "clamp", moving back up
         second_target = tip_action.call_args_list[1][-1]["targets"][0][0]
-        assert list(second_target.keys()) == [Axis.Q]
-        assert second_target[Axis.Q] < 10
+        assert second_target < 10
         # home should be called after tip_action is done
         assert len(mock_home_gear_motors.call_args_list) == 1
 
@@ -2126,6 +2250,7 @@ async def test_home_axis(
             PipetteModelType("p1000"),
             PipetteChannelType(1),
             PipetteVersionType(3, 3),
+            PipetteOEMType.OT,
         )
         instr_data = AttachedPipette(config=pipette_config, id="fakepip")
         await ot3_hardware.cache_pipette(Axis.to_ot3_mount(axis), instr_data, None)

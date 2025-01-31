@@ -43,7 +43,7 @@ export function HeaderWithMeter({
       justifyContent={JUSTIFY_SPACE_BETWEEN}
       width="100%"
     >
-      <Header />
+      <Header isExitButton />
       <SquareProgressBar value={progressPercentage}></SquareProgressBar>
     </Flex>
   )

@@ -16,6 +16,8 @@ import {
 import { useAuth0 } from '@auth0/auth0-react'
 import { CLIENT_MAX_WIDTH } from '../../resources/constants'
 import { useTrackEvent } from '../../resources/hooks/useTrackEvent'
+import { useAtom } from 'jotai'
+import { displayExitConfirmModalAtom } from '../../resources/atoms'
 
 const HeaderBar = styled(Flex)`
   position: ${POSITION_RELATIVE};
@@ -45,18 +47,28 @@ const HeaderTitle = styled(StyledText)`
   font-size: 16px;
 `
 
-const LogoutButton = styled(LinkButton)`
+const LogoutOrExitButton = styled(LinkButton)`
   color: ${COLORS.grey50};
   font-size: ${TYPOGRAPHY.fontSizeH3};
 `
 
-export function Header(): JSX.Element {
+interface HeaderProps {
+  isExitButton?: boolean
+}
+
+export function Header({ isExitButton = false }: HeaderProps): JSX.Element {
   const { t } = useTranslation('protocol_generator')
   const { logout } = useAuth0()
   const trackEvent = useTrackEvent()
+  const [, setDisplayExitConfirmModal] = useAtom(displayExitConfirmModalAtom)
 
-  function handleLogout(): void {
-    logout()
+  async function handleLoginOrExitClick(): Promise<void> {
+    if (isExitButton) {
+      setDisplayExitConfirmModal(true)
+      return
+    }
+
+    await logout()
     trackEvent({ name: 'user-logout', properties: {} })
   }
 
@@ -67,7 +79,9 @@ export function Header(): JSX.Element {
           <HeaderTitle>{t('opentrons')}</HeaderTitle>
           <HeaderGradientTitle>{t('ai')}</HeaderGradientTitle>
         </Flex>
-        <LogoutButton onClick={handleLogout}>{t('logout')}</LogoutButton>
+        <LogoutOrExitButton onClick={handleLoginOrExitClick}>
+          {isExitButton ? t('exit') : t('logout')}
+        </LogoutOrExitButton>
       </HeaderBarContent>
     </HeaderBar>
   )

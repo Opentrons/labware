@@ -398,3 +398,24 @@ def sql_engine(tmp_path: Path) -> Generator[SQLEngine, None, None]:
     with sql_engine_ctx(db_file_path) as engine:
         metadata.create_all(engine)
         yield engine
+
+
+def datetime_to_zulu_iso8601(dt: datetime) -> str:
+    """Serialize a datetime to an ISO8601 string.
+
+    If the timezone is UTC, represent that with "Z", which matches what Pydantic does,
+    instead instead of with "+00:00", which is Python's default.
+
+    e.g. "2024-12-10T19:40:55.984327Z" vs. "2024-12-10T19:40:55.984327+00:00".
+    """
+    return dt.isoformat().replace("+00:00", "Z")
+
+
+# todo(mm, 2024-12-10):
+# In Python 3.11+, we can replace this with just datetime.fromisoformat().
+def zulu_iso8601_to_datetime(iso8601_str: str) -> datetime:
+    """Parse an ISO8601 datetime string with a "Z" timezone.
+
+    See `datetime_to_zulu_iso8601()`.
+    """
+    return datetime.fromisoformat(iso8601_str.replace("Z", "+00:00"))

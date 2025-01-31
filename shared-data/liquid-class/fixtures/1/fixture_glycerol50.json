@@ -1,0 +1,236 @@
+{
+  "liquidClassName": "fixture_glycerol50",
+  "displayName": "Glycerol 50%",
+  "schemaVersion": 1,
+  "namespace": "opentrons",
+  "byPipette": [
+    {
+      "pipetteModel": "p20_single_gen2",
+      "byTipType": [
+        {
+          "tiprack": "opentrons_96_tiprack_20ul",
+          "aspirate": {
+            "submerge": {
+              "positionReference": "liquid-meniscus",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": -5
+              },
+              "speed": 100,
+              "delay": {
+                "enable": true,
+                "params": {
+                  "duration": 1.5
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 5
+              },
+              "speed": 100,
+              "airGapByVolume": [
+                [5.0, 3.0],
+                [10.0, 4.0]
+              ],
+              "touchTip": {
+                "enable": true,
+                "params": {
+                  "zOffset": 2,
+                  "mmToEdge": 1,
+                  "speed": 50
+                }
+              },
+              "delay": {
+                "enable": true,
+                "params": {
+                  "duration": 1
+                }
+              }
+            },
+            "positionReference": "well-bottom",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": -5
+            },
+            "flowRateByVolume": [[10.0, 50.0]],
+            "correctionByVolume": [
+              [1.0, -2.5],
+              [10.0, 3.0]
+            ],
+            "preWet": true,
+            "mix": {
+              "enable": true,
+              "params": {
+                "repetitions": 3,
+                "volume": 15
+              }
+            },
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 2
+              }
+            }
+          },
+          "singleDispense": {
+            "submerge": {
+              "positionReference": "liquid-meniscus",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": -5
+              },
+              "speed": 100,
+              "delay": {
+                "enable": true,
+                "params": {
+                  "duration": 1.5
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 5
+              },
+              "speed": 100,
+              "airGapByVolume": [
+                [5.0, 3.0],
+                [10.0, 4.0]
+              ],
+              "blowout": {
+                "enable": true,
+                "params": {
+                  "location": "trash",
+                  "flowRate": 100
+                }
+              },
+              "touchTip": {
+                "enable": true,
+                "params": {
+                  "zOffset": 2,
+                  "mmToEdge": 1,
+                  "speed": 50
+                }
+              },
+              "delay": {
+                "enable": true,
+                "params": {
+                  "duration": 1
+                }
+              }
+            },
+            "positionReference": "well-bottom",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": -5
+            },
+            "flowRateByVolume": [
+              [10.0, 40.0],
+              [20.0, 30.0]
+            ],
+            "correctionByVolume": [
+              [2.0, -1.5],
+              [20.0, 2.0]
+            ],
+            "mix": {
+              "enable": true,
+              "params": {
+                "repetitions": 3,
+                "volume": 15
+              }
+            },
+            "pushOutByVolume": [
+              [10.0, 7.0],
+              [20.0, 10.0]
+            ],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 2.5
+              }
+            }
+          },
+          "multiDispense": {
+            "submerge": {
+              "positionReference": "liquid-meniscus",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": -5
+              },
+              "speed": 100,
+              "delay": {
+                "enable": true,
+                "params": {
+                  "duration": 1.5
+                }
+              }
+            },
+            "retract": {
+              "positionReference": "well-top",
+              "offset": {
+                "x": 0,
+                "y": 0,
+                "z": 5
+              },
+              "speed": 100,
+              "airGapByVolume": [
+                [5.0, 3.0],
+                [10.0, 4.0]
+              ],
+              "touchTip": {
+                "enable": true,
+                "params": {
+                  "zOffset": 2,
+                  "mmToEdge": 1,
+                  "speed": 50
+                }
+              },
+              "delay": {
+                "enable": true,
+                "params": {
+                  "duration": 1
+                }
+              },
+              "blowout": {
+                "enable": false
+              }
+            },
+            "positionReference": "well-bottom",
+            "offset": {
+              "x": 0,
+              "y": 0,
+              "z": -5
+            },
+            "flowRateByVolume": [
+              [10.0, 40.0],
+              [20.0, 30.0]
+            ],
+            "correctionByVolume": [
+              [3.0, -0.5],
+              [30.0, 1.0]
+            ],
+            "conditioningByVolume": [[5.0, 5.0]],
+            "disposalByVolume": [[5.0, 3.0]],
+            "delay": {
+              "enable": true,
+              "params": {
+                "duration": 1
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

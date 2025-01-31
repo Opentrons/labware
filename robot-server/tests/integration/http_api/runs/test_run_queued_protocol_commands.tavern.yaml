@@ -95,6 +95,7 @@ stages:
           labware: []
           labwareOffsets: []
           liquids: []
+          liquidClasses: []
           runTimeParameters: []
           outputFileIds: []
           modules: []

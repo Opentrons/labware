@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { describe, it, beforeEach, vi } from 'vitest'
 import { screen } from '@testing-library/react'
@@ -9,13 +8,15 @@ import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { SetupLabwareList } from '../SetupLabwareList'
 import { LabwareListItem } from '../LabwareListItem'
+
+import type { ComponentProps } from 'react'
 import type { CompletedProtocolAnalysis } from '@opentrons/shared-data'
 
 vi.mock('../LabwareListItem')
 
 const protocolWithTC = (multiple_tipacks_with_tc as unknown) as CompletedProtocolAnalysis
 
-const render = (props: React.ComponentProps<typeof SetupLabwareList>) => {
+const render = (props: ComponentProps<typeof SetupLabwareList>) => {
   return renderWithProviders(
     <MemoryRouter>
       <SetupLabwareList {...props} />

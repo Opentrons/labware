@@ -20,6 +20,7 @@ export const DEFINED_ERROR_TYPES = {
   TIP_PHYSICALLY_MISSING: 'tipPhysicallyMissing',
   TIP_PHYSICALLY_ATTACHED: 'tipPhysicallyAttached',
   GRIPPER_MOVEMENT: 'gripperMovement',
+  STALL_OR_COLLISION: 'stallOrCollision',
 }
 
 // Client-defined error-handling flows.
@@ -32,6 +33,7 @@ export const ERROR_KINDS = {
   TIP_NOT_DETECTED: 'TIP_NOT_DETECTED',
   TIP_DROP_FAILED: 'TIP_DROP_FAILED',
   GRIPPER_ERROR: 'GRIPPER_ERROR',
+  STALL_OR_COLLISION: 'STALL_OR_COLLISION',
 } as const
 
 // TODO(jh, 06-14-24): Consolidate motion routes to a single route with several steps.
@@ -53,6 +55,18 @@ export const RECOVERY_MAP = {
       DROP_TIP_BLOWOUT_FAILED: 'drop-tip-blowout-failed',
       DROP_TIP_TIP_DROP_FAILED: 'drop-tip-tip-drop-failed',
       DROP_TIP_GENERAL_ERROR: 'drop-tip-general-error',
+    },
+  },
+  HOME_AND_RETRY: {
+    ROUTE: 'home-and-retry',
+    STEPS: {
+      PREPARE_DECK_FOR_HOME: 'prepare-deck-for-home',
+      REMOVE_TIPS_FROM_PIPETTE: 'remove-tips-from-pipette',
+      REPLACE_TIPS: 'replace-tips',
+      SELECT_TIPS: 'select-tips',
+      HOME_BEFORE_RETRY: 'home-before-retry',
+      CLOSE_DOOR_AND_HOME: 'close-door-and-home',
+      CONFIRM_RETRY: 'confirm-retry',
     },
   },
   ROBOT_CANCELING: {
@@ -210,6 +224,7 @@ const {
   MANUAL_REPLACE_AND_RETRY,
   SKIP_STEP_WITH_NEW_TIPS,
   SKIP_STEP_WITH_SAME_TIPS,
+  HOME_AND_RETRY,
 } = RECOVERY_MAP
 
 // The deterministic ordering of steps for a given route.
@@ -277,6 +292,15 @@ export const STEP_ORDER: StepOrder = {
     ERROR_WHILE_RECOVERING.STEPS.DROP_TIP_TIP_DROP_FAILED,
     ERROR_WHILE_RECOVERING.STEPS.DROP_TIP_BLOWOUT_FAILED,
   ],
+  [HOME_AND_RETRY.ROUTE]: [
+    HOME_AND_RETRY.STEPS.PREPARE_DECK_FOR_HOME,
+    HOME_AND_RETRY.STEPS.REMOVE_TIPS_FROM_PIPETTE,
+    HOME_AND_RETRY.STEPS.REPLACE_TIPS,
+    HOME_AND_RETRY.STEPS.SELECT_TIPS,
+    HOME_AND_RETRY.STEPS.HOME_BEFORE_RETRY,
+    HOME_AND_RETRY.STEPS.CLOSE_DOOR_AND_HOME,
+    HOME_AND_RETRY.STEPS.CONFIRM_RETRY,
+  ],
 }
 
 // Contains metadata specific to all routes and/or steps.
@@ -332,6 +356,15 @@ export const RECOVERY_MAP_METADATA: RecoveryRouteStepMetadata = {
   },
   [ROBOT_DOOR_OPEN.ROUTE]: {
     [ROBOT_DOOR_OPEN.STEPS.DOOR_OPEN]: { allowDoorOpen: false },
+  },
+  [HOME_AND_RETRY.ROUTE]: {
+    [HOME_AND_RETRY.STEPS.PREPARE_DECK_FOR_HOME]: { allowDoorOpen: true },
+    [HOME_AND_RETRY.STEPS.REMOVE_TIPS_FROM_PIPETTE]: { allowDoorOpen: true },
+    [HOME_AND_RETRY.STEPS.REPLACE_TIPS]: { allowDoorOpen: true },
+    [HOME_AND_RETRY.STEPS.SELECT_TIPS]: { allowDoorOpen: true },
+    [HOME_AND_RETRY.STEPS.HOME_BEFORE_RETRY]: { allowDoorOpen: true },
+    [HOME_AND_RETRY.STEPS.CLOSE_DOOR_AND_HOME]: { allowDoorOpen: true },
+    [HOME_AND_RETRY.STEPS.CONFIRM_RETRY]: { allowDoorOpen: true },
   },
   [ROBOT_DOOR_OPEN_SPECIAL.ROUTE]: {
     [ROBOT_DOOR_OPEN_SPECIAL.STEPS.DOOR_OPEN]: { allowDoorOpen: true },

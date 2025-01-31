@@ -1,6 +1,8 @@
 import { migration } from './migration'
 import { selectors as fileDataSelectors } from '../file-data'
 import { saveFile } from './utils'
+
+import type { SyntheticEvent } from 'react'
 import type { PDProtocolFile } from '../file-types'
 import type { GetState, ThunkAction, ThunkDispatch } from '../types'
 import type {
@@ -32,7 +34,7 @@ export const loadFileAction = (payload: PDProtocolFile): LoadFileAction => ({
 })
 // load file thunk, handles file loading errors
 export const loadProtocolFile = (
-  event: React.SyntheticEvent<HTMLInputElement>
+  event: SyntheticEvent<HTMLInputElement>
 ): ThunkAction<any> => (dispatch: ThunkDispatch<any>, getState: GetState) => {
   const fileError = (
     errorType: FileUploadErrorType,

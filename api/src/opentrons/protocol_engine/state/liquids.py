@@ -1,11 +1,11 @@
 """Basic liquid data state and store."""
 from dataclasses import dataclass
 from typing import Dict, List
-from opentrons.protocol_engine.types import Liquid
+from opentrons.protocol_engine.types import Liquid, LiquidId
 
 from ._abstract_store import HasState, HandlesActions
 from ..actions import Action, AddLiquidAction
-from ..errors import LiquidDoesNotExistError
+from ..errors import LiquidDoesNotExistError, InvalidLiquidError
 
 
 @dataclass
@@ -34,7 +34,7 @@ class LiquidStore(HasState[LiquidState], HandlesActions):
         self._state.liquids_by_id[action.liquid.id] = action.liquid
 
 
-class LiquidView(HasState[LiquidState]):
+class LiquidView:
     """Read-only liquid state view."""
 
     _state: LiquidState
@@ -51,11 +51,23 @@ class LiquidView(HasState[LiquidState]):
         """Get all protocol liquids."""
         return list(self._state.liquids_by_id.values())
 
-    def validate_liquid_id(self, liquid_id: str) -> str:
+    def validate_liquid_id(self, liquid_id: LiquidId) -> LiquidId:
         """Check if liquid_id exists in liquids."""
+        is_empty = liquid_id == "EMPTY"
+        if is_empty:
+            return liquid_id
         has_liquid = liquid_id in self._state.liquids_by_id
         if not has_liquid:
             raise LiquidDoesNotExistError(
                 f"Supplied liquidId: {liquid_id} does not exist in the loaded liquids."
             )
         return liquid_id
+
+    def validate_liquid_allowed(self, liquid: Liquid) -> Liquid:
+        """Validate that a liquid is legal to load."""
+        is_empty = liquid.id == "EMPTY"
+        if is_empty:
+            raise InvalidLiquidError(
+                message='Protocols may not define a liquid with the special id "EMPTY".'
+            )
+        return liquid

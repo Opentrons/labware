@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import {
   Checkbox,
   Flex,
@@ -7,13 +6,15 @@ import {
   Tooltip,
   useHoverTooltip,
 } from '@opentrons/components'
+
+import type { ReactElement, ReactNode } from 'react'
 import type { Placement } from '@opentrons/components'
 import type { FieldProps } from '../../pages/Designer/ProtocolSteps/StepForm/types'
 
 type CheckboxStepFormFieldProps = FieldProps & {
-  children?: React.ReactElement
+  children?: ReactElement
   label?: string
-  tooltipContent?: React.ReactNode
+  tooltipContent?: ReactNode
   tooltipPlacement?: Placement
 }
 
@@ -29,6 +30,7 @@ export function CheckboxStepFormField(
     value,
     children,
     tooltipPlacement = TOOLTIP_TOP,
+    padding = `0 ${SPACING.spacing16}`,
   } = props
 
   const [targetProps, tooltipProps] = useHoverTooltip({
@@ -39,7 +41,7 @@ export function CheckboxStepFormField(
       {tooltipContent && (
         <Tooltip tooltipProps={tooltipProps}>{tooltipContent}</Tooltip>
       )}
-      <Flex gridGap={SPACING.spacing8} padding={SPACING.spacing16}>
+      <Flex gridGap={SPACING.spacing8} padding={padding}>
         <Flex {...targetProps} width="100%">
           <Checkbox
             width="100%"

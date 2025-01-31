@@ -145,7 +145,10 @@ function installDevtools(): Promise<Logger> {
   log.debug('Installing devtools')
 
   if (typeof install === 'function') {
-    return install(extensions, forceReinstall)
+    return install(extensions, {
+      loadExtensionOptions: { allowFileAccess: true },
+      forceDownload: forceReinstall,
+    })
       .then(() => log.debug('Devtools extensions installed'))
       .catch((error: unknown) => {
         log.warn('Failed to install devtools extensions', {

@@ -1,9 +1,10 @@
-import type * as React from 'react'
 import { css } from 'styled-components'
 import { SPACING, LegacyStyledText } from '@opentrons/components'
 
+import type { ReactNode } from 'react'
+
 interface UnorderedListProps {
-  items: React.ReactNode[]
+  items: ReactNode[]
 }
 export function UnorderedList(props: UnorderedListProps): JSX.Element {
   const { items } = props

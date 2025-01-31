@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useDeleteMaintenanceRunMutation } from '@opentrons/react-api-client'
@@ -7,8 +7,10 @@ import { TakeoverModal } from './TakeoverModal'
 import { MaintenanceRunStatusProvider } from './MaintenanceRunStatusProvider'
 import { useMaintenanceRunTakeover } from './useMaintenanceRunTakeover'
 
+import type { ReactNode } from 'react'
+
 interface MaintenanceRunTakeoverProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export function MaintenanceRunTakeover({
@@ -22,18 +24,18 @@ export function MaintenanceRunTakeover({
 }
 
 interface MaintenanceRunTakeoverModalProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export function MaintenanceRunTakeoverModal(
   props: MaintenanceRunTakeoverModalProps
 ): JSX.Element {
   const { i18n, t } = useTranslation(['shared', 'branded'])
-  const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [
     showConfirmTerminateModal,
     setShowConfirmTerminateModal,
-  ] = React.useState<boolean>(false)
+  ] = useState<boolean>(false)
 
   const { oddRunId, currentRunId } = useMaintenanceRunTakeover().getRunIds()
   const isMaintenanceRunCurrent = currentRunId != null
@@ -50,7 +52,7 @@ export function MaintenanceRunTakeoverModal(
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (currentRunId == null) {
       setIsLoading(false)
       setShowConfirmTerminateModal(false)

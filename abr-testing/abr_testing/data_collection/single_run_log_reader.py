@@ -38,10 +38,9 @@ if __name__ == "__main__":
         run_ids_in_storage,
         run_log_file_path,
         "",
-        "",
-        "",
-        hellma_plate_standards=file_values,
+        file_values,
     )
+    print("list_of_heights not recorded.")
     transposed_list = list(zip(*runs_and_robots))
     # Adds Run to local csv
     sheet_location = os.path.join(run_log_file_path, "saved_data.csv")

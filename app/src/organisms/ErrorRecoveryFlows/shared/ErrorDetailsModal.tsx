@@ -1,17 +1,17 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { createPortal } from 'react-dom'
 import { css } from 'styled-components'
 
 import {
-  Flex,
-  StyledText,
-  SPACING,
-  COLORS,
-  ModalShell,
-  ModalHeader,
   BORDERS,
+  COLORS,
   DIRECTION_COLUMN,
+  Flex,
+  ModalHeader,
+  ModalShell,
+  SPACING,
+  StyledText,
 } from '@opentrons/components'
 
 import { useErrorName } from '../hooks'
@@ -22,6 +22,7 @@ import { InlineNotification } from '/app/atoms/InlineNotification'
 import { StepInfo } from './StepInfo'
 import { getErrorKind } from '../utils'
 
+import type { ReactNode } from 'react'
 import type { LabwareDefinition2, RobotType } from '@opentrons/shared-data'
 import type { IconProps } from '@opentrons/components'
 import type { OddModalHeaderBaseProps } from '/app/molecules/OddModal/types'
@@ -33,7 +34,7 @@ export function useErrorDetailsModal(): {
   showModal: boolean
   toggleModal: () => void
 } {
-  const [showModal, setShowModal] = React.useState(false)
+  const [showModal, setShowModal] = useState(false)
 
   const toggleModal = (): void => {
     setShowModal(!showModal)
@@ -67,6 +68,7 @@ export function ErrorDetailsModal(props: ErrorDetailsModalProps): JSX.Element {
       case ERROR_KINDS.OVERPRESSURE_WHILE_DISPENSING:
       case ERROR_KINDS.TIP_NOT_DETECTED:
       case ERROR_KINDS.GRIPPER_ERROR:
+      case ERROR_KINDS.STALL_OR_COLLISION:
         return true
       default:
         return false
@@ -112,7 +114,7 @@ export function ErrorDetailsModal(props: ErrorDetailsModalProps): JSX.Element {
 }
 
 type ErrorDetailsModalType = ErrorDetailsModalProps & {
-  children: React.ReactNode
+  children: ReactNode
   modalHeader: OddModalHeaderBaseProps
   toggleModal: () => void
   desktopType: DesktopSizeType
@@ -213,6 +215,8 @@ export function NotificationBanner({
         return <TipNotDetectedBanner />
       case ERROR_KINDS.GRIPPER_ERROR:
         return <GripperErrorBanner />
+      case ERROR_KINDS.STALL_OR_COLLISION:
+        return <StallErrorBanner />
       default:
         console.error('Handle error kind notification banners explicitly.')
         return <div />
@@ -254,6 +258,18 @@ export function GripperErrorBanner(): JSX.Element {
       type="alert"
       heading={t('gripper_errors_occur_when')}
       message={t('if_issue_persists_gripper_error')}
+    />
+  )
+}
+
+export function StallErrorBanner(): JSX.Element {
+  const { t } = useTranslation('error_recovery')
+
+  return (
+    <InlineNotification
+      type="alert"
+      heading={t('stall_or_collision_detected_when')}
+      message={t('the_robot_must_return_to_home_position')}
     />
   )
 }

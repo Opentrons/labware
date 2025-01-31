@@ -191,7 +191,6 @@ export function MoveLabwareInterventionContent({
         <Flex width="50%">
           <Box margin="0 auto" width="100%">
             <MoveLabwareOnDeck
-              key={command.id} // important so that back to back move labware commands bust the cache
               robotType={robotType}
               deckFill={isOnDevice ? COLORS.grey35 : '#e6e6e6'}
               initialLabwareLocation={oldLabwareLocation}

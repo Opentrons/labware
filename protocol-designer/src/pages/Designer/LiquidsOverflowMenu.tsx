@@ -1,5 +1,4 @@
-import type * as React from 'react'
-import styled from 'styled-components'
+import { css } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
@@ -8,19 +7,23 @@ import {
   BORDERS,
   Box,
   COLORS,
-  CURSOR_AUTO,
   CURSOR_POINTER,
   DIRECTION_COLUMN,
   Flex,
   Icon,
   LiquidIcon,
-  NO_WRAP,
+  MenuItem,
+  OVERFLOW_AUTO,
   POSITION_ABSOLUTE,
   SPACING,
   StyledText,
+  TYPOGRAPHY,
 } from '@opentrons/components'
+import { LINE_CLAMP_TEXT_STYLE } from '../../atoms'
 import { selectors as labwareIngredSelectors } from '../../labware-ingred/selectors'
 import * as labwareIngredActions from '../../labware-ingred/actions'
+
+import type { MouseEvent, RefObject } from 'react'
 import type { ThunkDispatch } from '../../types'
 
 const NAV_HEIGHT = '64px'
@@ -28,7 +31,7 @@ const NAV_HEIGHT = '64px'
 interface LiquidsOverflowMenuProps {
   onClose: () => void
   showLiquidsModal: () => void
-  overflowWrapperRef: React.RefObject<HTMLDivElement>
+  overflowWrapperRef: RefObject<HTMLDivElement>
 }
 
 export function LiquidsOverflowMenu(
@@ -43,23 +46,25 @@ export function LiquidsOverflowMenu(
   return (
     <Flex
       position={POSITION_ABSOLUTE}
-      zIndex={5}
+      zIndex={12}
       right={location.pathname === '/liquids' ? SPACING.spacing12 : '3.125rem'}
       top={`calc(${NAV_HEIGHT} - 6px)`}
-      whiteSpace={NO_WRAP}
       ref={overflowWrapperRef}
       borderRadius={BORDERS.borderRadius8}
       boxShadow="0px 1px 3px rgba(0, 0, 0, 0.2)"
       backgroundColor={COLORS.white}
       flexDirection={DIRECTION_COLUMN}
-      onClick={(e: React.MouseEvent) => {
+      onClick={(e: MouseEvent) => {
         e.preventDefault()
         e.stopPropagation()
       }}
+      width="9.375rem"
+      maxHeight="18.75rem"
+      overflowY={OVERFLOW_AUTO}
     >
       {liquids.map(({ name, displayColor, ingredientId }) => {
         return (
-          <MenuButton
+          <MenuItem
             data-testid={`${name}_${ingredientId}`}
             onClick={() => {
               onClose()
@@ -67,18 +72,29 @@ export function LiquidsOverflowMenu(
               dispatch(labwareIngredActions.selectLiquidGroup(ingredientId))
             }}
             key={ingredientId}
+            css={css`
+              cursor: ${CURSOR_POINTER};
+            `}
           >
             <Flex alignItems={ALIGN_CENTER} gridGap={SPACING.spacing8}>
               <LiquidIcon color={displayColor ?? ''} />
-              <StyledText desktopStyle="bodyDefaultRegular">{name}</StyledText>
+              <StyledText
+                desktopStyle="bodyDefaultRegular"
+                css={`
+                  ${LINE_CLAMP_TEXT_STYLE(3)}
+                  text-align: ${TYPOGRAPHY.textAlignLeft}
+                `}
+              >
+                {name}
+              </StyledText>
             </Flex>
-          </MenuButton>
+          </MenuItem>
         )
       })}
       {liquids.length > 0 ? (
         <Box width="100%" border={`1px solid ${COLORS.grey20}`} />
       ) : null}
-      <MenuButton
+      <MenuItem
         data-testid="defineLiquid"
         onClick={() => {
           onClose()
@@ -86,28 +102,17 @@ export function LiquidsOverflowMenu(
           dispatch(labwareIngredActions.createNewLiquidGroup())
         }}
         key="defineLiquid"
+        css={css`
+          cursor: ${CURSOR_POINTER};
+        `}
       >
-        <Flex alignItems={ALIGN_CENTER} gridGap={SPACING.spacing4}>
+        <Flex alignItems={ALIGN_CENTER} gridGap={SPACING.spacing8}>
           <Icon name="plus" size="1rem" />
           <StyledText desktopStyle="bodyDefaultRegular">
             {t('define_liquid')}
           </StyledText>
         </Flex>
-      </MenuButton>
+      </MenuItem>
     </Flex>
   )
 }
-const MenuButton = styled.button`
-  background-color: ${COLORS.transparent};
-  cursor: ${CURSOR_POINTER};
-  padding: ${SPACING.spacing8} ${SPACING.spacing12};
-  border: none;
-  border-radius: inherit;
-  &:hover {
-    background-color: ${COLORS.blue10};
-  }
-  &:disabled {
-    color: ${COLORS.grey40};
-    cursor: ${CURSOR_AUTO};
-  }
-`

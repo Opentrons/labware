@@ -1,5 +1,4 @@
 export * from './DeprecatedCheckboxField'
-export * from './DropdownField'
 export * from './FormGroup'
 export * from './LegacyInputField'
 export * from './RadioGroup'

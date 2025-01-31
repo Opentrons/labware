@@ -35,7 +35,7 @@ def make_error_recovery_debug_note(type: "ErrorRecoveryType") -> CommandNote:
     This is intended to be read by developers and support people, not computers.
     """
     message = f"Handling this command failure with {type.name}."
-    return CommandNote.construct(
+    return CommandNote.model_construct(
         noteKind="debugErrorRecovery",
         shortMessage=message,
         longMessage=message,

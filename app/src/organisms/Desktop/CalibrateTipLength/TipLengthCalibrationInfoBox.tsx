@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import {
   Box,
   Text,
@@ -7,9 +6,11 @@ import {
   SPACING,
 } from '@opentrons/components'
 
+import type { ReactNode } from 'react'
+
 export interface TipLengthCalibrationInfoBoxProps {
   title: string
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export function TipLengthCalibrationInfoBox(

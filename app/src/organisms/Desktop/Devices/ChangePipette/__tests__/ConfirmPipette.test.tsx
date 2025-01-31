@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { vi, it, describe, expect } from 'vitest'
 
@@ -9,6 +8,7 @@ import { mockPipetteInfo } from '/app/redux/pipettes/__fixtures__'
 import { CheckPipettesButton } from '../CheckPipettesButton'
 import { ConfirmPipette } from '../ConfirmPipette'
 
+import type { ComponentProps } from 'react'
 import type {
   PipetteModelSpecs,
   PipetteNameSpecs,
@@ -25,7 +25,7 @@ vi.mock('../LevelPipette', async importOriginal => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof ConfirmPipette>) => {
+const render = (props: ComponentProps<typeof ConfirmPipette>) => {
   return renderWithProviders(<ConfirmPipette {...props} />, {
     i18nInstance: i18n,
   })[0]
@@ -87,7 +87,7 @@ const MOCK_WANTED_PIPETTE = {
 } as PipetteNameSpecs
 
 describe('ConfirmPipette', () => {
-  let props: React.ComponentProps<typeof ConfirmPipette>
+  let props: ComponentProps<typeof ConfirmPipette>
 
   it('Should detach a pipette successfully', () => {
     props = {

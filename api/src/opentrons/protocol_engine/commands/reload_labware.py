@@ -89,7 +89,7 @@ class ReloadLabware(
 
     commandType: ReloadLabwareCommandType = "reloadLabware"
     params: ReloadLabwareParams
-    result: Optional[ReloadLabwareResult]
+    result: Optional[ReloadLabwareResult] = None
 
     _ImplementationCls: Type[ReloadLabwareImplementation] = ReloadLabwareImplementation
 

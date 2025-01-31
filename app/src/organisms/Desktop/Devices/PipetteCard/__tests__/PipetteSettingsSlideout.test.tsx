@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { when } from 'vitest-when'
 import { fireEvent, waitFor, screen } from '@testing-library/react'
 import { describe, it, vi, beforeEach, expect } from 'vitest'
@@ -16,13 +15,12 @@ import {
   mockPipetteSettingsFieldsMap,
 } from '/app/redux/pipettes/__fixtures__'
 
+import type { ComponentProps } from 'react'
 import type { Mock } from 'vitest'
 
 vi.mock('@opentrons/react-api-client')
 
-const render = (
-  props: React.ComponentProps<typeof PipetteSettingsSlideout>
-) => {
+const render = (props: ComponentProps<typeof PipetteSettingsSlideout>) => {
   return renderWithProviders(<PipetteSettingsSlideout {...props} />, {
     i18nInstance: i18n,
   })[0]
@@ -31,7 +29,7 @@ const render = (
 const mockRobotName = 'mockRobotName'
 
 describe('PipetteSettingsSlideout', () => {
-  let props: React.ComponentProps<typeof PipetteSettingsSlideout>
+  let props: ComponentProps<typeof PipetteSettingsSlideout>
   let mockUpdatePipetteSettings: Mock
 
   beforeEach(() => {

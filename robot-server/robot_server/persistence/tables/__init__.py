@@ -1,7 +1,7 @@
 """SQL database schemas."""
 
 # Re-export the latest schema.
-from .schema_7 import (
+from .schema_8 import (
     metadata,
     protocol_table,
     analysis_table,
@@ -17,6 +17,7 @@ from .schema_7 import (
     ProtocolKindSQLEnum,
     BooleanSettingKey,
     DataFileSourceSQLEnum,
+    CommandStatusSQLEnum,
 )
 
 
@@ -36,4 +37,5 @@ __all__ = [
     "ProtocolKindSQLEnum",
     "BooleanSettingKey",
     "DataFileSourceSQLEnum",
+    "CommandStatusSQLEnum",
 ]

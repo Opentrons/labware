@@ -26,7 +26,7 @@ const render = (longPress: UseLongPressResult) => {
     <MemoryRouter>
       <LongPressModal
         longpress={longPress}
-        transferId={'mockProtocol1'}
+        transferId="mockProtocol1"
         setShowDeleteConfirmationModal={mockFunc}
         setTargetTransferId={mockSetTargetTransferId}
       />

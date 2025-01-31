@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
@@ -7,16 +6,18 @@ import { i18n } from '/app/i18n'
 import { InterventionTicks } from '../InterventionTicks'
 import { Tick } from '../Tick'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('../Tick')
 
-const render = (props: React.ComponentProps<typeof InterventionTicks>) => {
+const render = (props: ComponentProps<typeof InterventionTicks>) => {
   return renderWithProviders(<InterventionTicks {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('InterventionTicks', () => {
-  let props: React.ComponentProps<typeof InterventionTicks>
+  let props: ComponentProps<typeof InterventionTicks>
   beforeEach(() => {
     vi.mocked(Tick).mockImplementation(({ index }) => (
       <div>MOCK TICK at index: {index}</div>

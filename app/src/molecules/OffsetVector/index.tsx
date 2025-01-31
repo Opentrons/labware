@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import {
   Flex,
   SPACING,
@@ -6,13 +5,14 @@ import {
   LegacyStyledText,
 } from '@opentrons/components'
 
+import type { ComponentProps } from 'react'
 import type { StyleProps } from '@opentrons/components'
 
 interface OffsetVectorProps extends StyleProps {
   x: number
   y: number
   z: number
-  as?: React.ComponentProps<typeof LegacyStyledText>['as']
+  as?: ComponentProps<typeof LegacyStyledText>['as']
 }
 
 export function OffsetVector(props: OffsetVectorProps): JSX.Element {

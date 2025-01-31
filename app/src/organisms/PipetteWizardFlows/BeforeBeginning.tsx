@@ -107,6 +107,10 @@ export const BeforeBeginning = (
 
   let equipmentList = [CALIBRATION_PROBE]
   const proceedButtonText = t('move_gantry_to_front')
+  const hexScrewdriverWithSubtitle = {
+    ...HEX_SCREWDRIVER,
+    subtitle: t('provided_with_robot'),
+  }
   let bodyTranslationKey: string = ''
 
   switch (flowType) {
@@ -124,7 +128,7 @@ export const BeforeBeginning = (
         equipmentList = [
           { ...PIPETTE, displayName: displayName ?? PIPETTE.displayName },
           CALIBRATION_PROBE,
-          HEX_SCREWDRIVER,
+          hexScrewdriverWithSubtitle,
         ]
       } else {
         equipmentList = [
@@ -133,7 +137,7 @@ export const BeforeBeginning = (
             displayName: displayName ?? NINETY_SIX_CHANNEL_PIPETTE.displayName,
           },
           CALIBRATION_PROBE,
-          HEX_SCREWDRIVER,
+          hexScrewdriverWithSubtitle,
           NINETY_SIX_CHANNEL_MOUNTING_PLATE,
         ]
       }
@@ -148,19 +152,19 @@ export const BeforeBeginning = (
           equipmentList = [
             { ...NINETY_SIX_CHANNEL_PIPETTE, displayName },
             CALIBRATION_PROBE,
-            HEX_SCREWDRIVER,
+            hexScrewdriverWithSubtitle,
             NINETY_SIX_CHANNEL_MOUNTING_PLATE,
           ]
         } else {
           equipmentList = [
             { ...PIPETTE, displayName },
             CALIBRATION_PROBE,
-            HEX_SCREWDRIVER,
+            hexScrewdriverWithSubtitle,
           ]
         }
       } else {
         bodyTranslationKey = 'get_started_detach'
-        equipmentList = [HEX_SCREWDRIVER]
+        equipmentList = [hexScrewdriverWithSubtitle]
       }
       break
     }

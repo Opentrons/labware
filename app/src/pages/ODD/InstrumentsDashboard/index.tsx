@@ -7,6 +7,7 @@ import { AttachedInstrumentMountItem } from '/app/organisms/ODD/InstrumentMountI
 import { GripperWizardFlows } from '/app/organisms/GripperWizardFlows'
 import { getShowPipetteCalibrationWarning } from '/app/transformations/instruments'
 import { PipetteRecalibrationODDWarning } from '/app/organisms/ODD/PipetteRecalibrationODDWarning'
+import type { ComponentProps } from 'react'
 import type { GripperData, PipetteData } from '@opentrons/api-client'
 
 const FETCH_PIPETTE_CAL_POLL = 10000
@@ -16,8 +17,8 @@ export const InstrumentsDashboard = (): JSX.Element => {
     refetchInterval: FETCH_PIPETTE_CAL_POLL,
   })
   const [wizardProps, setWizardProps] = useState<
-    | React.ComponentProps<typeof GripperWizardFlows>
-    | React.ComponentProps<typeof PipetteWizardFlows>
+    | ComponentProps<typeof GripperWizardFlows>
+    | ComponentProps<typeof PipetteWizardFlows>
     | null
   >(null)
 

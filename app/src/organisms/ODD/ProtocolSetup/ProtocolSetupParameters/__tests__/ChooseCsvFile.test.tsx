@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, beforeEach, vi, expect } from 'vitest'
 import { screen, fireEvent } from '@testing-library/react'
 import { when } from 'vitest-when'
@@ -13,6 +12,7 @@ import { getShellUpdateDataFiles } from '/app/redux/shell'
 import { EmptyFile } from '../EmptyFile'
 import { ChooseCsvFile } from '../ChooseCsvFile'
 
+import type { ComponentProps } from 'react'
 import type { CsvFileParameter } from '@opentrons/shared-data'
 
 vi.mock('@opentrons/react-api-client')
@@ -47,14 +47,14 @@ const mockDataOnRobot = {
   },
 }
 
-const render = (props: React.ComponentProps<typeof ChooseCsvFile>) => {
+const render = (props: ComponentProps<typeof ChooseCsvFile>) => {
   return renderWithProviders(<ChooseCsvFile {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('ChooseCsvFile', () => {
-  let props: React.ComponentProps<typeof ChooseCsvFile>
+  let props: ComponentProps<typeof ChooseCsvFile>
   beforeEach(() => {
     props = {
       protocolId: PROTOCOL_ID,

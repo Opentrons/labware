@@ -11,6 +11,7 @@ from opentrons_shared_data.errors import ErrorCodes
 from opentrons.protocol_engine.types import (
     RunTimeParameter,
     CSVParameter,
+    CommandAnnotation,
 )
 from opentrons.protocol_engine import (
     Command,
@@ -19,6 +20,7 @@ from opentrons.protocol_engine import (
     LoadedLabware,
     LoadedModule,
     Liquid,
+    LiquidClassRecordWithId,
 )
 from opentrons.protocol_engine.protocol_engine import code_in_error_tree
 
@@ -152,6 +154,8 @@ class AnalysisStore:
         pipettes: List[LoadedPipette],
         errors: List[ErrorOccurrence],
         liquids: List[Liquid],
+        liquidClasses: List[LiquidClassRecordWithId],
+        command_annotations: List[CommandAnnotation],
     ) -> None:
         """Promote a pending analysis to completed, adding details of its results.
 
@@ -167,7 +171,9 @@ class AnalysisStore:
             errors: See `CompletedAnalysis.errors`. Also used to infer whether
                 the completed analysis result is `OK` or `NOT_OK`.
             liquids: See `CompletedAnalysis.liquids`.
+            liquidClasses: See `CompletedAnalysis.liquidClasses`.
             robot_type: See `CompletedAnalysis.robotType`.
+            command_annotations: See `CompletedAnalysis.command_annotations`.
         """
         protocol_id = self._pending_store.get_protocol_id(analysis_id=analysis_id)
 
@@ -189,7 +195,7 @@ class AnalysisStore:
         else:
             result = AnalysisResult.OK
 
-        completed_analysis = CompletedAnalysis.construct(
+        completed_analysis = CompletedAnalysis.model_construct(
             id=analysis_id,
             result=result,
             robotType=robot_type,
@@ -201,6 +207,8 @@ class AnalysisStore:
             pipettes=pipettes,
             errors=errors,
             liquids=liquids,
+            liquidClasses=liquidClasses,
+            commandAnnotations=command_annotations,
         )
         completed_analysis_resource = CompletedAnalysisResource(
             id=completed_analysis.id,
@@ -229,7 +237,7 @@ class AnalysisStore:
         errors: List[ErrorOccurrence],
     ) -> None:
         """Commit the failed analysis to store."""
-        completed_analysis = CompletedAnalysis.construct(
+        completed_analysis = CompletedAnalysis.model_construct(
             id=analysis_id,
             result=AnalysisResult.NOT_OK,
             robotType=robot_type,
@@ -241,6 +249,7 @@ class AnalysisStore:
             pipettes=[],
             errors=errors,
             liquids=[],
+            liquidClasses=[],
         )
         completed_analysis_resource = CompletedAnalysisResource(
             id=completed_analysis.id,
@@ -296,7 +305,9 @@ class AnalysisStore:
             protocol_id=protocol_id
         )
         completed_analysis_summaries = [
-            AnalysisSummary.construct(id=analysis_id, status=AnalysisStatus.COMPLETED)
+            AnalysisSummary.model_construct(
+                id=analysis_id, status=AnalysisStatus.COMPLETED
+            )
             for analysis_id in completed_analysis_ids
         ]
 
@@ -446,7 +457,7 @@ class _PendingAnalysisStore:
             protocol_id not in self._analysis_ids_by_protocol_id
         ), "Protocol must not already have a pending analysis."
 
-        new_pending_analysis = PendingAnalysis.construct(
+        new_pending_analysis = PendingAnalysis.model_construct(
             id=analysis_id,
             runTimeParameters=run_time_parameters,
         )

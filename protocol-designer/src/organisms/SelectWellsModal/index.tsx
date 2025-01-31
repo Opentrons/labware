@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import omit from 'lodash/omit'
@@ -16,14 +16,12 @@ import {
   JUSTIFY_END,
 } from '@opentrons/components'
 import { sortWells } from '@opentrons/shared-data'
-import {
-  SelectableLabware,
-  wellFillFromWellContents,
-} from '../../components/labware'
 import { arrayToWellGroup } from '../../utils'
 import * as wellContentsSelectors from '../../top-selectors/well-contents'
 import { selectors } from '../../labware-ingred/selectors'
 import { selectors as stepFormSelectors } from '../../step-forms'
+import { wellFillFromWellContents } from '../LabwareOnDeck/utils'
+import { SelectableLabware } from '../Labware/SelectableLabware'
 
 import type { WellGroup } from '@opentrons/components'
 import type { StepFieldName } from '../../form-types'
@@ -65,15 +63,22 @@ export const SelectWellsModal = (
     (labwareId != null ? labwareEntities[labwareId]?.def : null) ?? null
   const pipette = pipetteId != null ? pipetteEntities[pipetteId] : null
 
-  const initialSelectedPrimaryWells = Array.isArray(wellFieldData)
-    ? arrayToWellGroup(wellFieldData as string[])
-    : {}
+  const [selectedPrimaryWells, setSelectedPrimaryWells] = useState<WellGroup>(
+    Array.isArray(wellFieldData)
+      ? arrayToWellGroup(wellFieldData as string[])
+      : {}
+  )
+  useEffect(() => {
+    if (Array.isArray(wellFieldData)) {
+      setSelectedPrimaryWells(
+        wellFieldData.length === 0
+          ? {}
+          : arrayToWellGroup(wellFieldData as string[])
+      )
+    }
+  }, [wellFieldData])
 
-  const [
-    selectedPrimaryWells,
-    setSelectedPrimaryWells,
-  ] = React.useState<WellGroup>(initialSelectedPrimaryWells)
-  const [highlightedWells, setHighlightedWells] = React.useState<WellGroup>({})
+  const [highlightedWells, setHighlightedWells] = useState<WellGroup>({})
 
   if (!isOpen) return null
 
@@ -101,6 +106,7 @@ export const SelectWellsModal = (
 
   return (
     <Modal
+      marginLeft="0"
       width="42.0625rem"
       zIndex={15}
       zIndexOverlay={11}

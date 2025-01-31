@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom/vitest'
@@ -8,11 +7,11 @@ import { i18n } from '/app/i18n'
 import { CalibrationStatusBanner } from '../CalibrationStatusBanner'
 import { useCalibrationTaskList } from '../hooks'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('../hooks')
 
-const render = (
-  props: React.ComponentProps<typeof CalibrationStatusBanner>
-) => {
+const render = (props: ComponentProps<typeof CalibrationStatusBanner>) => {
   return renderWithProviders(
     <MemoryRouter>
       <CalibrationStatusBanner {...props} />
@@ -24,7 +23,7 @@ const render = (
 }
 
 describe('CalibrationStatusBanner', () => {
-  let props: React.ComponentProps<typeof CalibrationStatusBanner>
+  let props: ComponentProps<typeof CalibrationStatusBanner>
   beforeEach(() => {
     props = { robotName: 'otie' }
   })

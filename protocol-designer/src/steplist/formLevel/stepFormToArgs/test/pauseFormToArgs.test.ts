@@ -16,6 +16,7 @@ describe('pauseFormToArgs', () => {
       pauseTemperature: '20',
       pauseMessage: 'pause message',
       moduleId: 'some_id',
+      pauseTime: null,
     }
     const expected = {
       commandCreatorFnName: 'waitForTemperature',
@@ -55,10 +56,7 @@ describe('pauseFormToArgs', () => {
       pauseAction: PAUSE_UNTIL_TIME,
       description: 'some description',
       pauseMessage: 'some message',
-      pauseHour: 1,
-      pauseMinute: 20,
-      pauseSecond: 5,
-      pauseTime: null,
+      pauseTime: '01:20:05',
     }
     const expected = {
       commandCreatorFnName: 'delay',

@@ -1,5 +1,5 @@
 // Tip Length Calibration Orchestration Component
-import * as React from 'react'
+import { useMemo } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
@@ -30,6 +30,7 @@ import {
 import slotOneRemoveBlockAsset from '/app/assets/videos/tip-length-cal/Slot_1_Remove_CalBlock_(330x260)REV1.webm'
 import slotThreeRemoveBlockAsset from '/app/assets/videos/tip-length-cal/Slot_3_Remove_CalBlock_(330x260)REV1.webm'
 
+import type { ComponentType } from 'react'
 import type { Mount } from '@opentrons/components'
 import type {
   SessionCommandParams,
@@ -43,7 +44,7 @@ export { AskForCalibrationBlockModal } from './AskForCalibrationBlockModal'
 export { ConfirmRecalibrationModal } from './ConfirmRecalibrationModal'
 
 const PANEL_BY_STEP: Partial<
-  Record<CalibrationSessionStep, React.ComponentType<CalibrationPanelProps>>
+  Record<CalibrationSessionStep, ComponentType<CalibrationPanelProps>>
 > = {
   sessionStarted: Introduction,
   labwareLoaded: DeckSetup,
@@ -80,7 +81,7 @@ export function CalibrateTipLength({
   const queryClient = useQueryClient()
   const host = useHost()
 
-  const isMulti = React.useMemo(() => {
+  const isMulti = useMemo(() => {
     const spec =
       instrument != null ? getPipetteModelSpecs(instrument.model) : null
     return spec != null ? spec.channels > 1 : false

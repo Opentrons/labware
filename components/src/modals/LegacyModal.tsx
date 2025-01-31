@@ -1,17 +1,19 @@
-import * as React from 'react'
+import { Fragment } from 'react'
 import cx from 'classnames'
 import { RemoveScroll } from 'react-remove-scroll'
 
 import { Overlay } from './Overlay'
 import styles from './modals.module.css'
 
+import type { MouseEventHandler, ReactNode, Ref } from 'react'
+
 export interface LegacyModalProps {
   /** handler to close the modal (attached to `Overlay` onClick) */
-  onCloseClick?: React.MouseEventHandler
+  onCloseClick?: MouseEventHandler
   /** Optional styled heading **/
   heading?: string
   /** modal contents */
-  children: React.ReactNode
+  children: ReactNode
   /** classes to apply */
   className?: string
   /** classes to apply to the contents box */
@@ -20,7 +22,7 @@ export interface LegacyModalProps {
   alertOverlay?: boolean
   /** restricts scroll outside of Modal when open, true by default */
   restrictOuterScroll?: boolean
-  innerRef?: React.Ref<HTMLDivElement>
+  innerRef?: Ref<HTMLDivElement>
 }
 
 /**
@@ -37,7 +39,7 @@ export function LegacyModal(props: LegacyModalProps): JSX.Element {
     innerRef,
     restrictOuterScroll = true,
   } = props
-  const Wrapper = restrictOuterScroll ? RemoveScroll : React.Fragment
+  const Wrapper = restrictOuterScroll ? RemoveScroll : Fragment
   return (
     <Wrapper>
       <div

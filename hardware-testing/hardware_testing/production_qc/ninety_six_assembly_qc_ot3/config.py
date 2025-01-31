@@ -1,7 +1,7 @@
 """Config."""
 from dataclasses import dataclass
 import enum
-from typing import Dict, Callable
+from typing import Dict, Callable, Literal
 
 from hardware_testing.data.csv_report import CSVReport, CSVSection
 
@@ -34,6 +34,7 @@ class TestConfig:
 
     simulate: bool
     tests: Dict[TestSection, Callable]
+    pipette: Literal[200, 1000]
 
 
 TESTS = [

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { vi, it, expect, describe, beforeEach, afterEach } from 'vitest'
 import { when } from 'vitest-when'
 import { Provider } from 'react-redux'
@@ -9,6 +8,8 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { getRobotModelByName } from '/app/redux/discovery'
 
 import { useIsFlex } from '..'
+
+import type { FunctionComponent, ReactNode } from 'react'
 import type { Store } from 'redux'
 
 vi.mock('/app/redux/discovery/selectors')
@@ -16,7 +17,7 @@ vi.mock('/app/redux/discovery/selectors')
 const store: Store<any> = createStore(vi.fn(), {})
 
 describe('useIsFlex hook', () => {
-  let wrapper: React.FunctionComponent<{ children: React.ReactNode }>
+  let wrapper: FunctionComponent<{ children: ReactNode }>
   beforeEach(() => {
     const queryClient = new QueryClient()
     wrapper = ({ children }) => (

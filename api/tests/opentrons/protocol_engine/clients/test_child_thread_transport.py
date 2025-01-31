@@ -1,4 +1,5 @@
 """Tests for am ChildThreadTransport."""
+
 import threading
 from asyncio import get_running_loop
 from datetime import datetime
@@ -104,7 +105,7 @@ async def test_call_method(
     subject: ChildThreadTransport,
 ) -> None:
     """It should call a synchronous method in a thread-safe manner."""
-    labware_def = LabwareDefinition.construct(namespace="hello")  # type: ignore[call-arg]
+    labware_def = LabwareDefinition.model_construct(namespace="hello")  # type: ignore[call-arg]
     labware_uri = LabwareUri("hello/world/123")
     calling_thread_id = None
 

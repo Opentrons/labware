@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Flex,
@@ -11,9 +10,11 @@ import {
   SPACING,
 } from '@opentrons/components'
 
+import type { ComponentProps } from 'react'
+
 const SUPPORT_PAGE_URL = 'https://support.opentrons.com/s/ot2-calibration'
 
-interface NeedHelpLinkProps extends React.ComponentProps<typeof Flex> {
+interface NeedHelpLinkProps extends ComponentProps<typeof Flex> {
   href?: string
 }
 

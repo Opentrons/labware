@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import '@testing-library/jest-dom/vitest'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
@@ -6,12 +5,14 @@ import { COLORS } from '@opentrons/components'
 import { renderWithProviders } from '/app/__testing-utils__'
 import { OddModalHeader } from '../OddModalHeader'
 
-const render = (props: React.ComponentProps<typeof OddModalHeader>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof OddModalHeader>) => {
   return renderWithProviders(<OddModalHeader {...props} />)[0]
 }
 
 describe('OddModalHeader', () => {
-  let props: React.ComponentProps<typeof OddModalHeader>
+  let props: ComponentProps<typeof OddModalHeader>
   beforeEach(() => {
     props = {
       title: 'title',

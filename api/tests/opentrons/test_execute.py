@@ -131,6 +131,7 @@ def test_execute_function_apiv2(
             converted_model_v15.pipette_type,
             converted_model_v15.pipette_channels,
             converted_model_v15.pipette_version,
+            converted_model_v15.oem_type,
         ),
         "id": "testid",
     }
@@ -139,6 +140,7 @@ def test_execute_function_apiv2(
             converted_model_v1.pipette_type,
             converted_model_v1.pipette_channels,
             converted_model_v1.pipette_version,
+            converted_model_v1.oem_type,
         ),
         "id": "testid2",
     }
@@ -177,6 +179,7 @@ def test_execute_function_json_v3(
             converted_model_v15.pipette_type,
             converted_model_v15.pipette_channels,
             converted_model_v15.pipette_version,
+            converted_model_v15.oem_type,
         ),
         "id": "testid",
     }
@@ -215,6 +218,7 @@ def test_execute_function_json_v4(
             converted_model_v15.pipette_type,
             converted_model_v15.pipette_channels,
             converted_model_v15.pipette_version,
+            converted_model_v15.oem_type,
         ),
         "id": "testid",
     }
@@ -253,6 +257,7 @@ def test_execute_function_json_v5(
             converted_model_v15.pipette_type,
             converted_model_v15.pipette_channels,
             converted_model_v15.pipette_version,
+            converted_model_v15.oem_type,
         ),
         "id": "testid",
     }
@@ -292,6 +297,7 @@ def test_execute_function_bundle_apiv2(
             converted_model_v15.pipette_type,
             converted_model_v15.pipette_channels,
             converted_model_v15.pipette_version,
+            converted_model_v15.oem_type,
         ),
         "id": "testid",
     }

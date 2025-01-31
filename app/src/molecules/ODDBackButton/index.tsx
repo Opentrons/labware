@@ -1,5 +1,3 @@
-import type * as React from 'react'
-
 import {
   ALIGN_CENTER,
   Btn,
@@ -11,8 +9,10 @@ import {
   TYPOGRAPHY,
 } from '@opentrons/components'
 
+import type { HTMLProps } from 'react'
+
 export function ODDBackButton(
-  props: React.HTMLProps<HTMLButtonElement>
+  props: HTMLProps<HTMLButtonElement>
 ): JSX.Element {
   const { onClick, label } = props
 

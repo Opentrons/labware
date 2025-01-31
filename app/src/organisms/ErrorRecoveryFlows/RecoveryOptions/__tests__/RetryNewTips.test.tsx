@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, expect, beforeEach, afterEach } from 'vitest'
 import { screen, waitFor } from '@testing-library/react'
 
@@ -10,6 +9,7 @@ import { RECOVERY_MAP } from '../../constants'
 import { SelectRecoveryOption } from '../SelectRecoveryOption'
 import { clickButtonLabeled } from '../../__tests__/util'
 
+import type { ComponentProps } from 'react'
 import type { Mock } from 'vitest'
 
 vi.mock('/app/molecules/Command')
@@ -23,14 +23,14 @@ vi.mock('../../shared', async () => {
   }
 })
 
-const render = (props: React.ComponentProps<typeof RetryNewTips>) => {
+const render = (props: ComponentProps<typeof RetryNewTips>) => {
   return renderWithProviders(<RetryNewTips {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 const renderRetryWithNewTips = (
-  props: React.ComponentProps<typeof RetryWithNewTips>
+  props: ComponentProps<typeof RetryWithNewTips>
 ) => {
   return renderWithProviders(<RetryWithNewTips {...props} />, {
     i18nInstance: i18n,
@@ -38,7 +38,7 @@ const renderRetryWithNewTips = (
 }
 
 describe('RetryNewTips', () => {
-  let props: React.ComponentProps<typeof RetryNewTips>
+  let props: ComponentProps<typeof RetryNewTips>
   let mockProceedToRouteAndStep: Mock
 
   beforeEach(() => {
@@ -121,7 +121,7 @@ describe('RetryNewTips', () => {
 })
 
 describe('RetryWithNewTips', () => {
-  let props: React.ComponentProps<typeof RetryWithNewTips>
+  let props: ComponentProps<typeof RetryWithNewTips>
   let mockhandleMotionRouting: Mock
   let mockRetryFailedCommand: Mock
   let mockResumeRun: Mock

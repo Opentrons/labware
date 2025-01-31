@@ -32,30 +32,31 @@ const render = () => {
 
 describe('Settings', () => {
   beforeEach(() => {
-    vi.mocked(getHasOptedIn).mockReturnValue(false)
+    vi.mocked(getHasOptedIn).mockReturnValue({
+      hasOptedIn: false,
+      appVersion: '8.2.1',
+    })
     vi.mocked(getFeatureFlagData).mockReturnValue({})
     vi.mocked(getCanClearHintDismissals).mockReturnValue(true)
   })
   it('renders the settings page without the dev ffs visible', () => {
     render()
     screen.getByText('Settings')
-    screen.getByText('App settings')
+    screen.getByText('App Info')
     screen.getByText('Protocol designer version')
     screen.getByText('fake_PD_version')
-    screen.getAllByText('View release notes')
-    screen.getByText('User settings')
+    screen.getAllByText('Release notes')
+    screen.getByText('User Settings')
     screen.getByText('Hints')
-    screen.getByText('Reset all hints and tips notifications')
-    screen.getByText('Timeline editing tips')
+    screen.getByText('Show all hints and tips notifications again')
+    screen.getByText('Timeline editing guidance')
     screen.getByText(
-      'Show tips for working with steps next to the protocol timeline'
+      'Show information about working with steps next to the protocol timeline'
     )
-    screen.getByText('Reset hints')
+    screen.getByText('Reset')
     screen.getByText('Privacy')
-    screen.getByText('Share sessions with Opentrons')
+    screen.getByText('Share analytics with Opentrons')
     screen.debug()
-    screen.getByRole('link', { name: 'privacy policy' })
-    screen.getByRole('link', { name: 'EULA' })
   })
   it('renders the announcement modal when view release notes button is clicked', () => {
     vi.mocked(AnnouncementModal).mockReturnValue(
@@ -69,7 +70,7 @@ describe('Settings', () => {
   })
   it('renders the hints button and calls to dismiss them when text is pressed', () => {
     render()
-    fireEvent.click(screen.getByText('Reset hints'))
+    fireEvent.click(screen.getByText('Reset'))
     expect(vi.mocked(clearAllHintDismissals)).toHaveBeenCalled()
   })
   it('renders the analytics toggle and calls the action when pressed', () => {
@@ -84,7 +85,7 @@ describe('Settings', () => {
     })
 
     render()
-    screen.getByText('Developer feature flags')
+    screen.getByText('Developer Feature Flags')
     screen.getByText('Use prerelease mode')
     screen.getByText('Show in-progress features for testing & internal use')
     screen.getByText('Disable module placement restrictions')

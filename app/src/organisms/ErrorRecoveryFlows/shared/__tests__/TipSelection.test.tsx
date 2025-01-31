@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, expect, beforeEach } from 'vitest'
 import { screen } from '@testing-library/react'
 
@@ -8,16 +7,18 @@ import { i18n } from '/app/i18n'
 import { TipSelection } from '../TipSelection'
 import { WellSelection } from '../../../WellSelection'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('../../../WellSelection')
 
-const render = (props: React.ComponentProps<typeof TipSelection>) => {
+const render = (props: ComponentProps<typeof TipSelection>) => {
   return renderWithProviders(<TipSelection {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('TipSelection', () => {
-  let props: React.ComponentProps<typeof TipSelection>
+  let props: ComponentProps<typeof TipSelection>
   beforeEach(() => {
     props = {
       ...mockRecoveryContentProps,

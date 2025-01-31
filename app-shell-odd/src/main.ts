@@ -197,7 +197,10 @@ function installDevtools(): void {
 
   log.debug('Installing devtools')
 
-  install(extensions, forceReinstall)
+  install(extensions, {
+    loadExtensionOptions: { allowFileAccess: true },
+    forceDownload: forceReinstall,
+  })
     .then(() => log.debug('Devtools extensions installed'))
     .catch((error: unknown) => {
       log.warn('Failed to install devtools extensions', {

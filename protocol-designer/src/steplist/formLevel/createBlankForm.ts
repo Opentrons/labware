@@ -17,7 +17,7 @@ const getStepType = (stepType: StepType): string => {
       return 'heater-shaker'
     }
     case 'moveLabware': {
-      return 'move labware'
+      return 'move'
     }
     case 'moveLiquid': {
       return 'transfer'

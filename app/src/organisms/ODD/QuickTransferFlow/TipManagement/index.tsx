@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   ALIGN_CENTER,
@@ -21,6 +21,7 @@ import { useTrackEventWithRobotSerial } from '/app/redux-resources/analytics'
 import { ChangeTip } from './ChangeTip'
 import { TipDropLocation } from './TipDropLocation'
 
+import type { Dispatch } from 'react'
 import type {
   QuickTransferSummaryAction,
   QuickTransferSummaryState,
@@ -28,18 +29,16 @@ import type {
 
 interface TipManagementProps {
   state: QuickTransferSummaryState
-  dispatch: React.Dispatch<QuickTransferSummaryAction>
+  dispatch: Dispatch<QuickTransferSummaryAction>
 }
 
 export function TipManagement(props: TipManagementProps): JSX.Element | null {
   const { state, dispatch } = props
   const { t } = useTranslation(['quick_transfer', 'shared'])
   const { trackEventWithRobotSerial } = useTrackEventWithRobotSerial()
-  const [selectedSetting, setSelectedSetting] = React.useState<string | null>(
-    null
-  )
+  const [selectedSetting, setSelectedSetting] = useState<string | null>(null)
 
-  React.useEffect(() => {
+  useEffect(() => {
     trackEventWithRobotSerial({
       name: ANALYTICS_QUICK_TRANSFER_TIP_MANAGEMENT_TAB,
       properties: {},

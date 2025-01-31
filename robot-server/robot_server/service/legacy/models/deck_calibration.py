@@ -31,19 +31,19 @@ AttitudeMatrix = typing.Sequence[
 class InstrumentOffset(BaseModel):
     single: Offset = Field(
         ...,
-        deprecated=True,
         description=(
             "This will always be `[0, 0, 0]`."
             " Use the `GET /calibration/pipette_offset` endpoint instead."
         ),
+        json_schema_extra={"deprecated": True},
     )
     multi: Offset = Field(
         ...,
-        deprecated=True,
         description=(
             "This will always be `[0, 0, 0]`."
             " Use the `GET /calibration/pipette_offset` endpoint instead."
         ),
+        json_schema_extra={"deprecated": True},
     )
 
 
@@ -78,7 +78,7 @@ class DeckCalibrationData(BaseModel):
         " was used in this calibration."
         " This is deprecated because it was prone to bugs where semantically identical"
         " definitions had different hashes.",
-        deprecated=True,
+        json_schema_extra={"deprecated": True},
     )
     source: typing.Optional[SourceType] = Field(
         None, description="The calibration source"

@@ -1,0 +1,226 @@
+{
+  "ordering": [
+    ["A1"],
+    ["A2"],
+    ["A3"],
+    ["A4"],
+    ["A5"],
+    ["A6"],
+    ["A7"],
+    ["A8"],
+    ["A9"],
+    ["A10"],
+    ["A11"],
+    ["A12"]
+  ],
+  "brand": {
+    "brand": "NEST",
+    "brandId": ["360102"],
+    "links": ["https://www.nest-biotech.com/reagent-reserviors/59178414.html"]
+  },
+  "metadata": {
+    "displayName": "NEST 12 Well Reservoir 15 mL",
+    "displayCategory": "reservoir",
+    "displayVolumeUnits": "mL",
+    "tags": []
+  },
+  "dimensions": {
+    "xDimension": 127.76,
+    "yDimension": 85.48,
+    "zDimension": 31.4
+  },
+  "wells": {
+    "A1": {
+      "depth": 26.85,
+      "shape": "rectangular",
+      "xDimension": 8.2,
+      "yDimension": 71.2,
+      "totalLiquidVolume": 15000,
+      "x": 14.38,
+      "y": 42.78,
+      "z": 4.55,
+      "geometryDefinitionId": "cuboidalWell"
+    },
+    "A2": {
+      "depth": 26.85,
+      "shape": "rectangular",
+      "xDimension": 8.2,
+      "yDimension": 71.2,
+      "totalLiquidVolume": 15000,
+      "x": 23.38,
+      "y": 42.78,
+      "z": 4.55,
+      "geometryDefinitionId": "cuboidalWell"
+    },
+    "A3": {
+      "depth": 26.85,
+      "shape": "rectangular",
+      "xDimension": 8.2,
+      "yDimension": 71.2,
+      "totalLiquidVolume": 15000,
+      "x": 32.38,
+      "y": 42.78,
+      "z": 4.55,
+      "geometryDefinitionId": "cuboidalWell"
+    },
+    "A4": {
+      "depth": 26.85,
+      "shape": "rectangular",
+      "xDimension": 8.2,
+      "yDimension": 71.2,
+      "totalLiquidVolume": 15000,
+      "x": 41.38,
+      "y": 42.78,
+      "z": 4.55,
+      "geometryDefinitionId": "cuboidalWell"
+    },
+    "A5": {
+      "depth": 26.85,
+      "shape": "rectangular",
+      "xDimension": 8.2,
+      "yDimension": 71.2,
+      "totalLiquidVolume": 15000,
+      "x": 50.38,
+      "y": 42.78,
+      "z": 4.55,
+      "geometryDefinitionId": "cuboidalWell"
+    },
+    "A6": {
+      "depth": 26.85,
+      "shape": "rectangular",
+      "xDimension": 8.2,
+      "yDimension": 71.2,
+      "totalLiquidVolume": 15000,
+      "x": 59.38,
+      "y": 42.78,
+      "z": 4.55,
+      "geometryDefinitionId": "cuboidalWell"
+    },
+    "A7": {
+      "depth": 26.85,
+      "shape": "rectangular",
+      "xDimension": 8.2,
+      "yDimension": 71.2,
+      "totalLiquidVolume": 15000,
+      "x": 68.38,
+      "y": 42.78,
+      "z": 4.55,
+      "geometryDefinitionId": "cuboidalWell"
+    },
+    "A8": {
+      "depth": 26.85,
+      "shape": "rectangular",
+      "xDimension": 8.2,
+      "yDimension": 71.2,
+      "totalLiquidVolume": 15000,
+      "x": 77.38,
+      "y": 42.78,
+      "z": 4.55,
+      "geometryDefinitionId": "cuboidalWell"
+    },
+    "A9": {
+      "depth": 26.85,
+      "shape": "rectangular",
+      "xDimension": 8.2,
+      "yDimension": 71.2,
+      "totalLiquidVolume": 15000,
+      "x": 86.38,
+      "y": 42.78,
+      "z": 4.55,
+      "geometryDefinitionId": "cuboidalWell"
+    },
+    "A10": {
+      "depth": 26.85,
+      "shape": "rectangular",
+      "xDimension": 8.2,
+      "yDimension": 71.2,
+      "totalLiquidVolume": 15000,
+      "x": 95.38,
+      "y": 42.78,
+      "z": 4.55,
+      "geometryDefinitionId": "cuboidalWell"
+    },
+    "A11": {
+      "depth": 26.85,
+      "shape": "rectangular",
+      "xDimension": 8.2,
+      "yDimension": 71.2,
+      "totalLiquidVolume": 15000,
+      "x": 104.38,
+      "y": 42.78,
+      "z": 4.55,
+      "geometryDefinitionId": "cuboidalWell"
+    },
+    "A12": {
+      "depth": 26.85,
+      "shape": "rectangular",
+      "xDimension": 8.2,
+      "yDimension": 71.2,
+      "totalLiquidVolume": 15000,
+      "x": 113.38,
+      "y": 42.78,
+      "z": 4.55,
+      "geometryDefinitionId": "cuboidalWell"
+    }
+  },
+  "groups": [
+    {
+      "metadata": {
+        "wellBottomShape": "v"
+      },
+      "wells": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "A8",
+        "A9",
+        "A10",
+        "A11",
+        "A12"
+      ]
+    }
+  ],
+  "parameters": {
+    "format": "trough",
+    "isTiprack": false,
+    "isMagneticModuleCompatible": false,
+    "quirks": ["centerMultichannelOnWells", "touchTipDisabled"],
+    "loadName": "nest_12_reservoir_15ml"
+  },
+  "namespace": "opentrons",
+  "version": 2,
+  "schemaVersion": 3,
+  "cornerOffsetFromSlot": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "innerLabwareGeometry": {
+    "cuboidalWell": {
+      "sections": [
+        {
+          "shape": "cuboidal",
+          "topXDimension": 7.95,
+          "topYDimension": 70.53,
+          "bottomXDimension": 1.87,
+          "bottomYDimension": 64.45,
+          "topHeight": 2.05,
+          "bottomHeight": 0.0
+        },
+        {
+          "shape": "cuboidal",
+          "topXDimension": 8.35,
+          "topYDimension": 71.25,
+          "bottomXDimension": 7.95,
+          "bottomYDimension": 70.53,
+          "topHeight": 26.85,
+          "bottomHeight": 2.05
+        }
+      ]
+    }
+  }
+}

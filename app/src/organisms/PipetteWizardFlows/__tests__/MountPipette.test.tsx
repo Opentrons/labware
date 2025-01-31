@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 
@@ -16,16 +15,18 @@ import { FLOWS } from '../constants'
 import { CheckPipetteButton } from '../CheckPipetteButton'
 import { MountPipette } from '../MountPipette'
 
+import type { ComponentProps } from 'react'
+
 vi.mock('../CheckPipetteButton')
 
-const render = (props: React.ComponentProps<typeof MountPipette>) => {
+const render = (props: ComponentProps<typeof MountPipette>) => {
   return renderWithProviders(<MountPipette {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('MountPipette', () => {
-  let props: React.ComponentProps<typeof MountPipette>
+  let props: ComponentProps<typeof MountPipette>
   beforeEach(() => {
     props = {
       selectedPipette: SINGLE_MOUNT_PIPETTES,

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, vi, beforeEach, expect } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { FLEX_ROBOT_TYPE } from '@opentrons/shared-data'
@@ -7,9 +6,10 @@ import { i18n } from '../../../assets/localization'
 import { renderWithProviders } from '../../../__testing-utils__'
 import { AddMetadata } from '../AddMetadata'
 
+import type { ComponentProps } from 'react'
 import type { WizardFormState, WizardTileProps } from '../types'
 
-const render = (props: React.ComponentProps<typeof AddMetadata>) => {
+const render = (props: ComponentProps<typeof AddMetadata>) => {
   return renderWithProviders(<AddMetadata {...props} />, {
     i18nInstance: i18n,
   })[0]
@@ -35,13 +35,14 @@ const mockWizardTileProps: Partial<WizardTileProps> = {
 }
 
 describe('AddMetadata', () => {
-  let props: React.ComponentProps<typeof AddMetadata>
+  let props: ComponentProps<typeof AddMetadata>
 
   beforeEach(() => {
     props = {
       ...props,
       ...mockWizardTileProps,
-    } as WizardTileProps
+      analyticsStartTime: new Date('2024-01-01T00:00:00Z'),
+    }
   })
 
   it('renders all the text and fields', () => {

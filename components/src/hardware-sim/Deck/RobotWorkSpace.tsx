@@ -1,8 +1,9 @@
-import * as React from 'react'
+import { useRef } from 'react'
 import { OT2_ROBOT_TYPE } from '@opentrons/shared-data'
 import { Svg } from '../../primitives'
 import { DeckFromLayers } from './DeckFromLayers'
 
+import type { ReactNode } from 'react'
 import type { StyleProps } from '../../primitives'
 import type { DeckDefinition, DeckSlot } from '@opentrons/shared-data'
 
@@ -17,7 +18,7 @@ export interface RobotWorkSpaceRenderProps {
 export interface RobotWorkSpaceProps extends StyleProps {
   deckDef?: DeckDefinition
   viewBox?: string | null
-  children?: (props: RobotWorkSpaceRenderProps) => React.ReactNode
+  children?: (props: RobotWorkSpaceRenderProps) => ReactNode
   deckLayerBlocklist?: string[]
   // optional boolean to show the OT-2 deck from deck defintion layers
   showDeckLayers?: boolean
@@ -36,7 +37,7 @@ export function RobotWorkSpace(props: RobotWorkSpaceProps): JSX.Element | null {
     id,
     ...styleProps
   } = props
-  const wrapperRef = React.useRef<SVGSVGElement>(null)
+  const wrapperRef = useRef<SVGSVGElement>(null)
 
   // NOTE: getScreenCTM in Chrome a DOMMatrix type,
   // in Firefox the same fn returns a deprecated SVGMatrix.

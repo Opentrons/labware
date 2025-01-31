@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { css } from 'styled-components'
 
 import { BORDERS, COLORS } from '../../helix-design-system'
@@ -24,18 +24,19 @@ import { MenuItem } from '../../atoms/MenuList/MenuItem'
 import { Tooltip } from '../../atoms/Tooltip'
 import { StyledText } from '../../atoms/StyledText'
 import { LiquidIcon } from '../LiquidIcon'
+import { DeckInfoLabel } from '../DeckInfoLabel'
 
-/** this is the max height to display 10 items */
-const MAX_HEIGHT = 316
-
-/** this is for adjustment variable for the case that the space of the bottom and the space of the top are very close */
-const HEIGHT_ADJUSTMENT = 100
+import type { FocusEventHandler } from 'react'
 
 export interface DropdownOption {
   name: string
   value: string
   /** optional dropdown option for adding the liquid color icon */
   liquidColor?: string
+  /** optional dropdown option for adding the deck label */
+  deckLabel?: string
+  /** subtext below the name */
+  subtext?: string
   disabled?: boolean
   tooltipText?: string
 }
@@ -64,9 +65,15 @@ export interface DropdownMenuProps {
   /** optional error */
   error?: string | null
   /** focus handler */
-  onFocus?: React.FocusEventHandler<HTMLButtonElement>
+  onFocus?: FocusEventHandler<HTMLButtonElement>
   /** blur handler */
-  onBlur?: React.FocusEventHandler<HTMLButtonElement>
+  onBlur?: FocusEventHandler<HTMLButtonElement>
+  /** optional disabled */
+  disabled?: boolean
+  /** optional placement of the menu */
+  menuPlacement?: 'auto' | 'top' | 'bottom'
+  onEnter?: (id: string) => void
+  onExit?: () => void
 }
 
 // TODO: (smb: 4/15/22) refactor this to use html select for accessibility
@@ -83,55 +90,64 @@ export function DropdownMenu(props: DropdownMenuProps): JSX.Element {
     tooltipText,
     tabIndex = 0,
     error,
+    disabled = false,
     onFocus,
     onBlur,
+    onEnter,
+    onExit,
+    menuPlacement = 'auto',
   } = props
   const [targetProps, tooltipProps] = useHoverTooltip()
-  const [showDropdownMenu, setShowDropdownMenu] = React.useState<boolean>(false)
+  const [showDropdownMenu, setShowDropdownMenu] = useState<boolean>(false)
   const [optionTargetProps, optionTooltipProps] = useHoverTooltip({
     placement: 'top-end',
   })
 
-  const [dropdownPosition, setDropdownPosition] = React.useState<
-    'top' | 'bottom'
-  >('bottom')
+  const [dropdownPosition, setDropdownPosition] = useState<'top' | 'bottom'>(
+    'bottom'
+  )
   const dropDownMenuWrapperRef = useOnClickOutside<HTMLDivElement>({
     onClickOutside: () => {
       setShowDropdownMenu(false)
     },
   })
 
-  React.useEffect(() => {
+  useEffect(() => {
+    if (menuPlacement !== 'auto') {
+      setDropdownPosition(menuPlacement)
+      return
+    }
+
     const handlePositionCalculation = (): void => {
       const dropdownRect = dropDownMenuWrapperRef.current?.getBoundingClientRect()
-      if (dropdownRect != null) {
-        const parentElement = dropDownMenuWrapperRef?.current?.parentElement
-        const grandParentElement = parentElement?.parentElement?.parentElement
-        let availableHeight = window.innerHeight
-        let scrollOffset = 0
+      if (!dropdownRect) return
 
-        if (grandParentElement != null) {
-          const grandParentRect = grandParentElement.getBoundingClientRect()
-          availableHeight = grandParentRect.bottom - grandParentRect.top
-          scrollOffset = grandParentRect.top
-        } else if (parentElement != null) {
-          const parentRect = parentElement.getBoundingClientRect()
-          availableHeight = parentRect.bottom - parentRect.top
-          scrollOffset = parentRect.top
-        }
+      const parentElement = dropDownMenuWrapperRef.current?.parentElement
+      const grandParentElement = parentElement?.parentElement?.parentElement
 
-        const downSpace =
-          filterOptions.length + 1 > 10
-            ? MAX_HEIGHT
-            : (filterOptions.length + 1) * 34
-        const dropdownBottom = dropdownRect.bottom + downSpace - scrollOffset
+      let availableHeight = window.innerHeight
+      let scrollOffset = 0
 
-        setDropdownPosition(
-          dropdownBottom > availableHeight &&
-            Math.abs(dropdownBottom - availableHeight) > HEIGHT_ADJUSTMENT
-            ? 'top'
-            : 'bottom'
-        )
+      if (grandParentElement) {
+        const grandParentRect = grandParentElement.getBoundingClientRect()
+        availableHeight = grandParentRect.bottom - grandParentRect.top
+        scrollOffset = grandParentRect.top
+      } else if (parentElement) {
+        const parentRect = parentElement.getBoundingClientRect()
+        availableHeight = parentRect.bottom - parentRect.top
+        scrollOffset = parentRect.top
+      }
+
+      const dropdownHeight = filterOptions.length * 34 + 10 // note (kk:2024/12/06) need to modify the value since design uses different height in desktop and pd
+      const dropdownBottom = dropdownRect.bottom + dropdownHeight - scrollOffset
+
+      const fitsBelow = dropdownBottom <= availableHeight
+      const fitsAbove = dropdownRect.top - dropdownHeight >= scrollOffset
+
+      if (menuPlacement === 'auto') {
+        setDropdownPosition(fitsBelow ? 'bottom' : fitsAbove ? 'top' : 'bottom')
+      } else {
+        setDropdownPosition(menuPlacement)
       }
     }
 
@@ -165,10 +181,12 @@ export function DropdownMenu(props: DropdownMenuProps): JSX.Element {
 
   const DROPDOWN_STYLE = css`
     flex-direction: ${DIRECTION_ROW};
+    color: ${disabled ? COLORS.grey40 : COLORS.black90};
     background-color: ${COLORS.white};
     cursor: ${isDisabled ? CURSOR_DEFAULT : CURSOR_POINTER};
     padding: ${SPACING.spacing8} ${SPACING.spacing12};
-    border: 1px ${BORDERS.styleSolid} ${defaultBorderColor};
+    border: 1px ${BORDERS.styleSolid}
+      ${disabled ? COLORS.grey35 : defaultBorderColor};
     border-radius: ${dropdownType === 'rounded'
       ? BORDERS.borderRadiusFull
       : BORDERS.borderRadius4};
@@ -178,7 +196,8 @@ export function DropdownMenu(props: DropdownMenuProps): JSX.Element {
     height: 2.25rem;
 
     &:hover {
-      border: 1px ${BORDERS.styleSolid} ${hoverBorderColor};
+      border: 1px ${BORDERS.styleSolid}
+        ${disabled ? COLORS.grey35 : hoverBorderColor};
     }
 
     &:active {
@@ -190,21 +209,20 @@ export function DropdownMenu(props: DropdownMenuProps): JSX.Element {
       outline: 2px ${BORDERS.styleSolid} ${COLORS.blue50};
       outline-offset: 2px;
     }
-
-    &:disabled {
-      background-color: ${COLORS.transparent};
-      color: ${COLORS.grey40};
-    }
   `
   return (
     <Flex
       flexDirection={DIRECTION_COLUMN}
       ref={dropDownMenuWrapperRef}
-      gridGap={SPACING.spacing4}
+      gridGap={SPACING.spacing8}
+      width={width}
     >
       {title !== null ? (
-        <Flex gridGap={SPACING.spacing8} paddingBottom={SPACING.spacing8}>
-          <StyledText desktopStyle="captionRegular" color={COLORS.grey60}>
+        <Flex gridGap={SPACING.spacing8} alignItems={ALIGN_CENTER}>
+          <StyledText
+            desktopStyle="bodyDefaultRegular"
+            color={disabled ? COLORS.grey35 : COLORS.grey60}
+          >
             {title}
           </StyledText>
           {tooltipText != null ? (
@@ -237,14 +255,21 @@ export function DropdownMenu(props: DropdownMenuProps): JSX.Element {
             {currentOption.liquidColor != null ? (
               <LiquidIcon color={currentOption.liquidColor} />
             ) : null}
+            {currentOption.deckLabel != null ? (
+              <DeckInfoLabel deckLabel={currentOption.deckLabel} svgSize={13} />
+            ) : null}
             <Flex
+              flexDirection={DIRECTION_COLUMN}
               css={css`
                 font-weight: ${dropdownType === 'rounded'
                   ? TYPOGRAPHY.pSemiBold
                   : TYPOGRAPHY.pRegular};
               `}
             >
-              <StyledText desktopStyle="captionRegular" css={MENU_TEXT_STYLE}>
+              <StyledText
+                desktopStyle="captionRegular"
+                css={LINE_CLAMP_TEXT_STYLE}
+              >
                 {currentOption.name}
               </StyledText>
             </Flex>
@@ -270,7 +295,7 @@ export function DropdownMenu(props: DropdownMenuProps): JSX.Element {
             maxHeight="20rem" // Set the maximum display number to 10.
           >
             {filterOptions.map((option, index) => (
-              <React.Fragment key={`${option.name}-${index}`}>
+              <Fragment key={`${option.name}-${index}`}>
                 <MenuItem
                   disabled={option.disabled}
                   zIndex={3}
@@ -280,6 +305,8 @@ export function DropdownMenu(props: DropdownMenuProps): JSX.Element {
                     setShowDropdownMenu(false)
                   }}
                   border="none"
+                  onMouseEnter={() => onEnter?.(option.value)}
+                  onMouseLeave={onExit}
                 >
                   <Flex
                     gridGap={SPACING.spacing8}
@@ -289,7 +316,26 @@ export function DropdownMenu(props: DropdownMenuProps): JSX.Element {
                     {option.liquidColor != null ? (
                       <LiquidIcon color={option.liquidColor} />
                     ) : null}
-                    {option.name}
+                    {option.deckLabel != null ? (
+                      <DeckInfoLabel
+                        deckLabel={option.deckLabel}
+                        svgSize={13}
+                      />
+                    ) : null}
+                    <Flex
+                      flexDirection={DIRECTION_COLUMN}
+                      gridGap={option.subtext != null ? SPACING.spacing4 : '0'}
+                    >
+                      <StyledText desktopStyle="captionRegular">
+                        {option.name}
+                      </StyledText>
+                      <StyledText
+                        desktopStyle="captionRegular"
+                        color={COLORS.black70}
+                      >
+                        {option.subtext}
+                      </StyledText>
+                    </Flex>
                   </Flex>
                 </MenuItem>
                 {option.tooltipText != null ? (
@@ -297,7 +343,7 @@ export function DropdownMenu(props: DropdownMenuProps): JSX.Element {
                     {option.tooltipText}
                   </Tooltip>
                 ) : null}
-              </React.Fragment>
+              </Fragment>
             ))}
           </Flex>
         )}
@@ -316,11 +362,12 @@ export function DropdownMenu(props: DropdownMenuProps): JSX.Element {
   )
 }
 
-const MENU_TEXT_STYLE = css`
+const LINE_CLAMP_TEXT_STYLE = css`
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: ${OVERFLOW_HIDDEN};
   text-overflow: ellipsis;
   word-wrap: break-word;
   -webkit-line-clamp: 1;
+  word-break: break-all;
 `

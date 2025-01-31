@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { css } from 'styled-components'
@@ -18,6 +17,7 @@ import {
 } from '@opentrons/components'
 import { getDeckSetupForActiveItem } from '../../../top-selectors/labware-locations'
 
+import type { Dispatch, SetStateAction } from 'react'
 import type {
   CoordinateTuple,
   DeckSlotId,
@@ -27,12 +27,12 @@ import type { DeckSetupTabType } from '../types'
 
 interface DeckItemHoverProps extends DeckSetupTabType {
   hover: string | null
-  setHover: React.Dispatch<React.SetStateAction<string | null>>
+  setHover: Dispatch<SetStateAction<string | null>>
   slotBoundingBox: Dimensions
   //  can be slotId or labwareId (for off-deck labware)
   itemId: string
   slotPosition: CoordinateTuple | null
-  setShowMenuListForId: React.Dispatch<React.SetStateAction<string | null>>
+  setShowMenuListForId: Dispatch<SetStateAction<string | null>>
   menuListId: DeckSlotId | null
   isSelected?: boolean
 }

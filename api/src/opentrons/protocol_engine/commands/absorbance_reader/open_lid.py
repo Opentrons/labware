@@ -91,7 +91,6 @@ class OpenLidImpl(AbstractCommandImpl[OpenLidParams, SuccessData[OpenLidResult]]
                     deck_slot=self._state_view.modules.get_location(
                         params.moduleId
                     ).slotName,
-                    deck_type=self._state_view.config.deck_type,
                     model=absorbance_model,
                 )
             )
@@ -134,7 +133,7 @@ class OpenLid(BaseCommand[OpenLidParams, OpenLidResult, ErrorOccurrence]):
 
     commandType: OpenLidCommandType = "absorbanceReader/openLid"
     params: OpenLidParams
-    result: Optional[OpenLidResult]
+    result: Optional[OpenLidResult] = None
 
     _ImplementationCls: Type[OpenLidImpl] = OpenLidImpl
 

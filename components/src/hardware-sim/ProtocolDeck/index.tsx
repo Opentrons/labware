@@ -1,5 +1,3 @@
-import type * as React from 'react'
-
 import {
   FLEX_ROBOT_TYPE,
   getLabwareDisplayName,
@@ -15,6 +13,7 @@ import { getTopMostLabwareInSlots } from './utils/getLabwareInSlots'
 import { getModulesInSlots } from './utils/getModulesInSlots'
 import { getWellFillFromLabwareId } from './utils/getWellFillFromLabwareId'
 
+import type { ComponentProps } from 'react'
 import type {
   CompletedProtocolAnalysis,
   LabwareDefinition2,
@@ -35,7 +34,7 @@ interface ProtocolDeckProps {
     labwareId: string
   ) => void
   /** extra props to pass through to BaseDeck component */
-  baseDeckProps?: Partial<React.ComponentProps<typeof BaseDeck>>
+  baseDeckProps?: Partial<ComponentProps<typeof BaseDeck>>
 }
 
 export function ProtocolDeck(props: ProtocolDeckProps): JSX.Element | null {

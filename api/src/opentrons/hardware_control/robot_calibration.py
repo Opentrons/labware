@@ -154,7 +154,7 @@ def load_attitude_matrix() -> DeckCalibration:
         return DeckCalibration(
             attitude=calibration_data.attitude,
             source=calibration_data.source,
-            status=types.CalibrationStatus(**calibration_data.status.dict()),
+            status=types.CalibrationStatus(**calibration_data.status.model_dump()),
             last_modified=calibration_data.last_modified,
             pipette_calibrated_with=calibration_data.pipette_calibrated_with,
             tiprack=calibration_data.tiprack,

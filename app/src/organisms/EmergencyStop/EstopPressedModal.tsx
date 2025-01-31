@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
@@ -30,11 +30,12 @@ import { SmallButton } from '/app/atoms/buttons'
 import { OddModal } from '/app/molecules/OddModal'
 import { getIsOnDevice } from '/app/redux/config'
 
+import type { MouseEventHandler } from 'react'
+import type { ModalProps } from '@opentrons/components'
 import type {
   OddModalHeaderBaseProps,
   ModalSize,
 } from '/app/molecules/OddModal/types'
-import type { ModalProps } from '@opentrons/components'
 
 // Note (07/13/2023) After the launch, we will unify the modal components into one component.
 // Then TouchScreenModal and DesktopModal will be TouchScreenContent and DesktopContent that only render each content.
@@ -81,7 +82,7 @@ function TouchscreenModal({
   setIsWaitingForResumeOperation,
 }: EstopPressedModalProps): JSX.Element {
   const { t } = useTranslation(['device_settings', 'branded'])
-  const [isResuming, setIsResuming] = React.useState<boolean>(false)
+  const [isResuming, setIsResuming] = useState<boolean>(false)
   const { acknowledgeEstopDisengage } = useAcknowledgeEstopDisengageMutation()
 
   const {
@@ -156,7 +157,7 @@ function DesktopModal({
   setIsWaitingForResumeOperation,
 }: EstopPressedModalProps): JSX.Element {
   const { t } = useTranslation('device_settings')
-  const [isResuming, setIsResuming] = React.useState<boolean>(false)
+  const [isResuming, setIsResuming] = useState<boolean>(false)
   const { acknowledgeEstopDisengage } = useAcknowledgeEstopDisengageMutation()
   const {
     handlePlaceReaderLid,
@@ -174,7 +175,7 @@ function DesktopModal({
     width: '47rem',
   }
 
-  const handleClick: React.MouseEventHandler<HTMLButtonElement> = (e): void => {
+  const handleClick: MouseEventHandler<HTMLButtonElement> = (e): void => {
     e.preventDefault()
     setIsResuming(true)
     setIsWaitingForResumeOperation()

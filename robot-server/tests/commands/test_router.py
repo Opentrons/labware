@@ -11,10 +11,9 @@ from opentrons.protocol_engine import (
 from opentrons.protocol_engine.errors import CommandDoesNotExistError
 from opentrons.protocol_runner import RunOrchestrator
 
-from robot_server.service.json_api import MultiBodyMeta
+from robot_server.service.json_api import MultiBodyMeta, RequestModel
 from robot_server.errors.error_responses import ApiError
 from robot_server.commands.router import (
-    RequestModelWithStatelessCommandCreate,
     create_command,
     get_commands_list,
     get_command,
@@ -58,7 +57,7 @@ async def test_create_command(
     ).then_do(_stub_queued_command_state)
 
     result = await create_command(
-        RequestModelWithStatelessCommandCreate(data=command_create),
+        RequestModel(data=command_create),
         waitUntilComplete=False,
         timeout=42,
         orchestrator=run_orchestrator,
@@ -99,7 +98,7 @@ async def test_create_command_wait_for_complete(
     decoy.when(run_orchestrator.get_command("abc123")).then_return(completed_command)
 
     result = await create_command(
-        RequestModelWithStatelessCommandCreate(data=command_create),
+        RequestModel(data=command_create),
         waitUntilComplete=True,
         timeout=42,
         orchestrator=run_orchestrator,

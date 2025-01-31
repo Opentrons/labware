@@ -1,38 +1,56 @@
+BASE_IMAGE_NAME ?= opentrons-python-base:3.10
+CACHEBUST ?= $(shell date +%s)
+ANALYSIS_REF ?= edge
+PROTOCOL_NAMES ?= all
+OVERRIDE_PROTOCOL_NAMES ?= all
+LOCAL_IMAGE_TAG ?= local
+ANALYZER_IMAGE_NAME ?= opentrons-analysis
+
+export ANALYSIS_REF # tag, branch or commit for the opentrons repository. Used as the image tag for the analyzer image
+export PROTOCOL_NAMES # tell the test which protocols to run
+export OVERRIDE_PROTOCOL_NAMES # tell the test which override protocols to run
+
+ifeq ($(CI), true)
+	PYTHON=python
+else
+	PYTHON=pyenv exec python
+endif
+
 .PHONY: black
 black:
-	python -m pipenv run python -m black .
+	$(PYTHON) -m pipenv run python -m black .
 
 .PHONY: black-check
 black-check:
-	python -m pipenv run python -m black . --check
+	$(PYTHON) -m pipenv run python -m black . --check
 
 .PHONY: ruff
 ruff:
-	python -m pipenv run python -m ruff check . --fix
+	$(PYTHON) -m pipenv run python -m ruff check . --fix
 
 .PHONY: ruff-check
 ruff-check:
-	python -m pipenv run python -m ruff check .
+	$(PYTHON) -m pipenv run python -m ruff check .
 
 .PHONY: mypy
 mypy:
-	python -m pipenv run python -m mypy automation tests citools
+	$(PYTHON) -m pipenv run python -m mypy automation tests citools
 
 .PHONY: lint
 lint: black-check ruff-check mypy
 
 .PHONY: format
 format: 
-	@echo runnning black
+	@echo "Running black"
 	$(MAKE) black
-	@echo running ruff
+	@echo "Running ruff"
 	$(MAKE) ruff
-	@echo formatting the readme with yarn prettier
+	@echo "Formatting the readme with yarn prettier"
 	$(MAKE) format-readme
 
 .PHONY: test-ci
 test-ci:
-	python -m pipenv run python -m pytest -m "emulated_alpha"
+	$(PYTHON) -m pipenv run python -m pytest -m "emulated_alpha"
 
 .PHONY: test-protocol-analysis
 test-protocol-analysis:
@@ -40,66 +58,88 @@ test-protocol-analysis:
 
 .PHONY: setup
 setup: install-pipenv
-	python -m pipenv install
+	$(PYTHON) -m pipenv install
 
 .PHONY: teardown
 teardown:
-	python -m pipenv --rm
+	$(PYTHON) -m pipenv --rm
 
 .PHONY: format-readme
 format-readme:
-	yarn prettier --ignore-path .eslintignore --write analyses-snapshot-testing/**/*.md
+	yarn prettier --ignore-path .eslintignore --write analyses-snapshot-testing/**/*.md .github/workflows/analyses-snapshot-test.yaml
 
 .PHONY: install-pipenv
 install-pipenv:
-	python -m pip install -U pipenv
-
-ANALYSIS_REF ?= edge
-PROTOCOL_NAMES ?= all
-OVERRIDE_PROTOCOL_NAMES ?= all
-
-export ANALYSIS_REF
-export PROTOCOL_NAMES
-export OVERRIDE_PROTOCOL_NAMES
+	$(PYTHON) -m pip install -U pipenv
 
 .PHONY: snapshot-test
 snapshot-test:
 	@echo "ANALYSIS_REF is $(ANALYSIS_REF)"
 	@echo "PROTOCOL_NAMES is $(PROTOCOL_NAMES)"
 	@echo "OVERRIDE_PROTOCOL_NAMES is $(OVERRIDE_PROTOCOL_NAMES)"
-	python -m pipenv run pytest -k analyses_snapshot_test -vv
+	$(PYTHON) -m pipenv run pytest -k analyses_snapshot_test -vv
 
 .PHONY: snapshot-test-update
 snapshot-test-update:
 	@echo "ANALYSIS_REF is $(ANALYSIS_REF)"
 	@echo "PROTOCOL_NAMES is $(PROTOCOL_NAMES)"
 	@echo "OVERRIDE_PROTOCOL_NAMES is $(OVERRIDE_PROTOCOL_NAMES)"
-	python -m pipenv run pytest -k analyses_snapshot_test --snapshot-update
+	$(PYTHON) -m pipenv run pytest -k analyses_snapshot_test --snapshot-update
 
-CACHEBUST := $(shell date +%s)
+.PHONY: build-base-image
+build-base-image:
+	@echo "Building the base image $(BASE_IMAGE_NAME)"
+	docker build --build-arg BASE_IMAGE_NAME=$(BASE_IMAGE_NAME) -f citools/Dockerfile.base -t $(BASE_IMAGE_NAME) citools/.
 
 .PHONY: build-opentrons-analysis
 build-opentrons-analysis:
-	@echo "Building docker image for $(ANALYSIS_REF)"
-	@echo "The image will be named opentrons-analysis:$(ANALYSIS_REF)"
-	@echo "If you want to build a different version, run 'make build-opentrons-analysis ANALYSIS_REF=<version>'"
-	@echo "Cache is always busted to ensure latest version of the code is used"
-	docker build --build-arg ANALYSIS_REF=$(ANALYSIS_REF) --build-arg CACHEBUST=$(CACHEBUST) -t opentrons-analysis:$(ANALYSIS_REF) citools/.
+	@echo "Building docker image for opentrons repository reference$(ANALYSIS_REF)"
+	@echo "The image will be named $(ANALYZER_IMAGE_NAME):$(ANALYSIS_REF)"
+	@echo "If you want to build a different version, run 'make build-opentrons-analysis ANALYSIS_REF=<tag, branch, or commit>'"
+	docker build --build-arg BASE_IMAGE_NAME=$(BASE_IMAGE_NAME) --build-arg ANALYSIS_REF=$(ANALYSIS_REF) --build-arg CACHEBUST=$(CACHEBUST) -t $(ANALYZER_IMAGE_NAME):$(ANALYSIS_REF) -f citools/Dockerfile.analyze citools/.
+
+.PHONY: build-local
+build-local:
+	@echo "Building docker image for your local opentrons code"
+	@echo "This image will be named $(ANALYZER_IMAGE_NAME):$(LOCAL_IMAGE_TAG)"
+	docker build --build-arg BASE_IMAGE_NAME=$(BASE_IMAGE_NAME) -t $(ANALYZER_IMAGE_NAME):$(LOCAL_IMAGE_TAG) -f citools/Dockerfile.local ..
+	@echo "Build complete"
+
+.PHONY: snapshot-test-local
+snapshot-test-local: ANALYSIS_REF=$(LOCAL_IMAGE_TAG)
+snapshot-test-local: build-base-image build-local
+	@echo "This target is overriding the ANALYSIS_REF to the LOCAL_IMAGE_TAG: $(LOCAL_IMAGE_TAG)"
+	@echo "ANALYSIS_REF is $(ANALYSIS_REF). The the test maps this env variable to the image tag."
+	@echo "The image the test will use is $(ANALYZER_IMAGE_NAME):$(LOCAL_IMAGE_TAG)"
+	@echo "PROTOCOL_NAMES is $(PROTOCOL_NAMES)"
+	@echo "OVERRIDE_PROTOCOL_NAMES is $(OVERRIDE_PROTOCOL_NAMES)"
+	$(PYTHON) -m pipenv run pytest -k analyses_snapshot_test -vv
+
+.PHONY: snapshot-test-update-local
+snapshot-test-update-local: ANALYSIS_REF=$(LOCAL_IMAGE_TAG)
+snapshot-test-update-local: build-base-image build-local
+	@echo "This target is overriding the ANALYSIS_REF to the LOCAL_IMAGE_TAG: $(LOCAL_IMAGE_TAG)"
+	@echo "ANALYSIS_REF is $(ANALYSIS_REF). The the test maps this env variable to the image tag."
+	@echo "The image the test will use is $(ANALYZER_IMAGE_NAME):$(LOCAL_IMAGE_TAG)"
+	@echo "PROTOCOL_NAMES is $(PROTOCOL_NAMES)"
+	@echo "OVERRIDE_PROTOCOL_NAMES is $(OVERRIDE_PROTOCOL_NAMES)"
+	$(PYTHON) -m pipenv run pytest -k analyses_snapshot_test --snapshot-update
 
 .PHONY: generate-protocols
 generate-protocols:
-	python -m pipenv run python -m automation.data.protocol_registry
+	$(PYTHON) -m pipenv run python -m automation.data.protocol_registry
 
+# Tools for running the robot server in a container
 
 OPENTRONS_VERSION ?= edge
-export OPENTRONS_VERSION
+export OPENTRONS_VERSION # used for the robot server image as the tag, branch or commit for the opentrons repository
 
 .PHONY: build-rs
 build-rs:
 	@echo "Building docker image for opentrons-robot-server:$(OPENTRONS_VERSION)"
 	@echo "Cache is always busted to ensure latest version of the code is used"
 	@echo "If you want to build a different version, run 'make build-rs OPENTRONS_VERSION=chore_release-8.0.0'"
-	docker build --build-arg OPENTRONS_VERSION=$(OPENTRONS_VERSION) --build-arg CACHEBUST=$(CACHEBUST) -t opentrons-robot-server:$(OPENTRONS_VERSION) -f citools/Dockerfile.server .
+	docker build --build-arg BASE_IMAGE_NAME=$(BASE_IMAGE_NAME) --build-arg OPENTRONS_VERSION=$(OPENTRONS_VERSION) --build-arg CACHEBUST=$(CACHEBUST) -t opentrons-robot-server:$(OPENTRONS_VERSION) -f citools/Dockerfile.server .
 
 .PHONY: run-flex
 run-flex:

@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, renderHook, screen } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
@@ -18,6 +17,7 @@ import {
 import { InterventionModal, useInterventionModal } from '..'
 import { useIsFlex } from '/app/redux-resources/robots'
 
+import type { ComponentProps } from 'react'
 import type { CompletedProtocolAnalysis } from '@opentrons/shared-data'
 import type { RunData } from '@opentrons/api-client'
 
@@ -90,14 +90,14 @@ describe('useInterventionModal', () => {
   })
 })
 
-const render = (props: React.ComponentProps<typeof InterventionModal>) => {
+const render = (props: ComponentProps<typeof InterventionModal>) => {
   return renderWithProviders(<InterventionModal {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('InterventionModal', () => {
-  let props: React.ComponentProps<typeof InterventionModal>
+  let props: ComponentProps<typeof InterventionModal>
   beforeEach(() => {
     props = {
       robotName: ROBOT_NAME,

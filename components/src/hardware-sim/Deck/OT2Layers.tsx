@@ -1,3 +1,5 @@
+import { COLORS } from '../../helix-design-system'
+
 export function FixedBase(): JSX.Element {
   return (
     <g id="fixedBase">
@@ -14,15 +16,20 @@ export function FixedBase(): JSX.Element {
   )
 }
 
-export function FixedTrash(): JSX.Element {
+interface FixedTrashProps {
+  highlight?: boolean
+}
+export function FixedTrash(props: FixedTrashProps): JSX.Element {
+  const { highlight = false } = props
   return (
     <g id="fixedTrash">
       <path
         d="M441.107,289.57v135.86c0,8.368-6.808,15.176-15.176,15.176H283.07c-8.368,0-15.176-6.808-15.176-15.176V289.57c0-8.368,6.808-15.177,15.176-15.177h142.86C434.298,274.394,441.107,281.202,441.107,289.57z M425.053,434H283.947c-1.24,0-2.484-0.034-3.702-0.287c-2-0.416-3.81-1.446-4.884-3.227c-1.152-1.91-1.289-4.185-1.289-6.359v-88.629c0-2.683,0.259-5.609,2.263-7.612c2.004-2.003,4.928-2.263,7.612-2.263h25.939c1.693,0.006,3.545-0.167,4.807-1.429c1.262-1.262,1.435-3.115,1.429-4.807v-28.94c0-2.124,0.129-4.338,1.209-6.225c1.059-1.851,2.904-2.933,4.954-3.36c1.222-0.255,2.468-0.289,3.712-0.289h99.056c2.124,0,4.339,0.129,6.226,1.209c1.851,1.06,2.933,2.904,3.36,4.954c0.255,1.222,0.289,2.468,0.289,3.712v133.68c0,2.684-0.259,5.607-2.263,7.611C430.661,433.741,427.737,434,425.053,434z"
         style={{
-          fill: 'rgb(237, 237, 237)',
-          stroke: 'none',
+          fill: highlight ? 'none' : 'rgb(237, 237, 237)',
+          stroke: highlight ? COLORS.blue50 : 'none',
           fillRule: 'evenodd',
+          strokeWidth: 2,
         }}
       ></path>
     </g>

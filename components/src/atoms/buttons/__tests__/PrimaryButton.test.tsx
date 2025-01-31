@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { describe, it, beforeEach, expect } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
@@ -7,12 +6,14 @@ import { BORDERS, COLORS } from '../../../helix-design-system'
 import { TYPOGRAPHY, SPACING } from '../../../ui-style-constants'
 import { PrimaryButton } from '../PrimaryButton'
 
-const render = (props: React.ComponentProps<typeof PrimaryButton>) => {
+import type { ComponentProps } from 'react'
+
+const render = (props: ComponentProps<typeof PrimaryButton>) => {
   return renderWithProviders(<PrimaryButton {...props} />)[0]
 }
 
 describe('PrimaryButton', () => {
-  let props: React.ComponentProps<typeof PrimaryButton>
+  let props: ComponentProps<typeof PrimaryButton>
 
   beforeEach(() => {
     props = {

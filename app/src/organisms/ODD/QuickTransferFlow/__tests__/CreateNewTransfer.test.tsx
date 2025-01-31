@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, afterEach, vi, beforeEach } from 'vitest'
 import { DeckConfigurator } from '@opentrons/components'
@@ -7,6 +6,7 @@ import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
 import { CreateNewTransfer } from '../CreateNewTransfer'
 
+import type { ComponentProps } from 'react'
 import type * as OpentronsComponents from '@opentrons/components'
 
 vi.mock('@opentrons/components', async importOriginal => {
@@ -16,14 +16,14 @@ vi.mock('@opentrons/components', async importOriginal => {
     DeckConfigurator: vi.fn(),
   }
 })
-const render = (props: React.ComponentProps<typeof CreateNewTransfer>) => {
+const render = (props: ComponentProps<typeof CreateNewTransfer>) => {
   return renderWithProviders(<CreateNewTransfer {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('CreateNewTransfer', () => {
-  let props: React.ComponentProps<typeof CreateNewTransfer>
+  let props: ComponentProps<typeof CreateNewTransfer>
 
   beforeEach(() => {
     props = {

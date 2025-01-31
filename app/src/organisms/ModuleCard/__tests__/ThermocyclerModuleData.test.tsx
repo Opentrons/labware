@@ -1,6 +1,4 @@
-import type * as React from 'react'
 import { screen } from '@testing-library/react'
-
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { renderWithProviders } from '/app/__testing-utils__'
@@ -11,9 +9,10 @@ import {
 } from '/app/redux/modules/__fixtures__'
 import { ThermocyclerModuleData } from '../ThermocyclerModuleData'
 
+import type { ComponentProps } from 'react'
 import type { ThermocyclerData } from '/app/redux/modules/api-types'
 
-const render = (props: React.ComponentProps<typeof ThermocyclerModuleData>) => {
+const render = (props: ComponentProps<typeof ThermocyclerModuleData>) => {
   return renderWithProviders(<ThermocyclerModuleData {...props} />, {
     i18nInstance: i18n,
   })[0]
@@ -49,7 +48,7 @@ const mockDataHeating = {
 } as ThermocyclerData
 
 describe('ThermocyclerModuleData', () => {
-  let props: React.ComponentProps<typeof ThermocyclerModuleData>
+  let props: ComponentProps<typeof ThermocyclerModuleData>
   beforeEach(() => {
     props = {
       data: mockThermocycler.data,

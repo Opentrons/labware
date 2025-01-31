@@ -1,8 +1,9 @@
 // app info card with version and updated
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { useSelector, useDispatch } from 'react-redux'
+import uuidv1 from 'uuid/v4'
 
 import {
   ALIGN_CENTER,
@@ -41,12 +42,9 @@ import {
 import {
   useTrackEvent,
   ANALYTICS_APP_UPDATE_NOTIFICATIONS_TOGGLED,
+  ANALYTICS_LANGUAGE_UPDATED_DESKTOP_APP_SETTINGS,
 } from '/app/redux/analytics'
-import {
-  getAppLanguage,
-  updateConfigValue,
-  useFeatureFlag,
-} from '/app/redux/config'
+import { getAppLanguage, updateConfigValue } from '/app/redux/config'
 import { UpdateAppModal } from '/app/organisms/Desktop/UpdateAppModal'
 import { PreviousVersionModal } from '/app/organisms/Desktop/AppSettings/PreviousVersionModal'
 import { ConnectRobotSlideout } from '/app/organisms/Desktop/AppSettings/ConnectRobotSlideout'
@@ -59,6 +57,7 @@ const GITHUB_LINK =
   'https://github.com/Opentrons/opentrons/blob/edge/app-shell/build/release-notes.md'
 
 const ENABLE_APP_UPDATE_NOTIFICATIONS = 'Enable app update notifications'
+const uuid: () => string = uuidv1
 
 export function GeneralSettings(): JSX.Element {
   const { t } = useTranslation(['app_settings', 'shared', 'branded'])
@@ -70,12 +69,21 @@ export function GeneralSettings(): JSX.Element {
   ] = useState<boolean>(false)
   const updateAvailable = Boolean(useSelector(getAvailableShellUpdate))
 
-  const enableLocalization = useFeatureFlag('enableLocalization')
   const appLanguage = useSelector(getAppLanguage)
   const currentLanguageOption = LANGUAGES.find(lng => lng.value === appLanguage)
-
+  let transactionId = ''
+  useEffect(() => {
+    transactionId = uuid()
+  }, [])
   const handleDropdownClick = (value: string): void => {
     dispatch(updateConfigValue('language.appLanguage', value))
+    trackEvent({
+      name: ANALYTICS_LANGUAGE_UPDATED_DESKTOP_APP_SETTINGS,
+      properties: {
+        language: value,
+        transactionId,
+      },
+    })
   }
 
   const [showUpdateBanner, setShowUpdateBanner] = useState<boolean>(
@@ -277,11 +285,12 @@ export function GeneralSettings(): JSX.Element {
           </TertiaryButton>
         </Flex>
         <Divider marginY={SPACING.spacing24} />
-        {enableLocalization && currentLanguageOption != null ? (
+        {currentLanguageOption != null ? (
           <>
             <Flex
               flexDirection={DIRECTION_ROW}
               justifyContent={JUSTIFY_SPACE_BETWEEN}
+              gridGap={SPACING.spacing24}
             >
               <Flex flexDirection={DIRECTION_COLUMN} gridGap={SPACING.spacing8}>
                 <LegacyStyledText

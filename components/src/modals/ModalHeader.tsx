@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { css } from 'styled-components'
 
 import { Icon } from '../icons'
@@ -7,17 +6,19 @@ import { LegacyStyledText } from '../atoms'
 import { ALIGN_CENTER, JUSTIFY_CENTER, JUSTIFY_SPACE_BETWEEN } from '../styles'
 import { SPACING, TYPOGRAPHY } from '../ui-style-constants'
 import { COLORS } from '../helix-design-system'
+
+import type { MouseEventHandler, ReactNode } from 'react'
 import type { IconProps } from '../icons'
 
 export interface ModalHeaderProps {
-  title: React.ReactNode
-  onClose?: React.MouseEventHandler
+  title: ReactNode
+  onClose?: MouseEventHandler
   titleElement1?: JSX.Element
   titleElement2?: JSX.Element
   backgroundColor?: string
   color?: string
   icon?: IconProps
-  closeButton?: React.ReactNode
+  closeButton?: ReactNode
 }
 
 const closeIconStyles = css`

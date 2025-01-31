@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, vi, beforeEach, expect } from 'vitest'
 import { when } from 'vitest-when'
@@ -23,6 +22,7 @@ import { useIsEstopNotDisengaged } from '/app/resources/devices'
 import { HistoricalProtocolRunOverflowMenu } from '../HistoricalProtocolRunOverflowMenu'
 import { useNotifyAllCommandsQuery } from '/app/resources/runs'
 
+import type { ComponentProps } from 'react'
 import type { UseQueryResult } from 'react-query'
 import type { CommandsData } from '@opentrons/api-client'
 
@@ -40,7 +40,7 @@ vi.mock('/app/redux-resources/analytics')
 vi.mock('@opentrons/react-api-client')
 
 const render = (
-  props: React.ComponentProps<typeof HistoricalProtocolRunOverflowMenu>
+  props: ComponentProps<typeof HistoricalProtocolRunOverflowMenu>
 ) => {
   return renderWithProviders(
     <MemoryRouter>
@@ -59,7 +59,7 @@ let mockTrackProtocolRunEvent: any
 const mockDownloadRunLog = vi.fn()
 
 describe('HistoricalProtocolRunOverflowMenu', () => {
-  let props: React.ComponentProps<typeof HistoricalProtocolRunOverflowMenu>
+  let props: ComponentProps<typeof HistoricalProtocolRunOverflowMenu>
   beforeEach(() => {
     mockTrackEvent = vi.fn()
     vi.mocked(useTrackEvent).mockReturnValue(mockTrackEvent)

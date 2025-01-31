@@ -244,6 +244,19 @@ class LiquidDoesNotExistError(ProtocolEngineError):
         super().__init__(ErrorCodes.GENERAL_ERROR, message, details, wrapping)
 
 
+class InvalidLiquidError(ProtocolEngineError):
+    """Raised when attempting to add a liquid with an invalid property."""
+
+    def __init__(
+        self,
+        message: Optional[str] = None,
+        details: Optional[Dict[str, Any]] = None,
+        wrapping: Optional[Sequence[EnumeratedError]] = None,
+    ) -> None:
+        """Build an InvalidLiquidError."""
+        super().__init__(ErrorCodes.INVALID_PROTOCOL_DATA, message, details, wrapping)
+
+
 class LabwareDefinitionDoesNotExistError(ProtocolEngineError):
     """Raised when referencing a labware definition that does not exist."""
 
@@ -267,6 +280,19 @@ class LabwareCannotBeStackedError(ProtocolEngineError):
         wrapping: Optional[Sequence[EnumeratedError]] = None,
     ) -> None:
         """Build a LabwareCannotBeStackedError."""
+        super().__init__(ErrorCodes.GENERAL_ERROR, message, details, wrapping)
+
+
+class LabwareCannotSitOnDeckError(ProtocolEngineError):
+    """Raised when a labware is incompatible with a deck slot."""
+
+    def __init__(
+        self,
+        message: Optional[str] = None,
+        details: Optional[Dict[str, Any]] = None,
+        wrapping: Optional[Sequence[EnumeratedError]] = None,
+    ) -> None:
+        """Build a LabwareCannotSitOnDeckError."""
         super().__init__(ErrorCodes.GENERAL_ERROR, message, details, wrapping)
 
 
@@ -345,6 +371,32 @@ class TouchTipDisabledError(ProtocolEngineError):
         wrapping: Optional[Sequence[EnumeratedError]] = None,
     ) -> None:
         """Build a TouchTipDisabledError."""
+        super().__init__(ErrorCodes.GENERAL_ERROR, message, details, wrapping)
+
+
+class TouchTipIncompatibleArgumentsError(ProtocolEngineError):
+    """Raised when touch tip is used with both a custom radius and a mmFromEdge argument."""
+
+    def __init__(
+        self,
+        message: Optional[str] = None,
+        details: Optional[Dict[str, Any]] = None,
+        wrapping: Optional[Sequence[EnumeratedError]] = None,
+    ) -> None:
+        """Build a TouchTipIncompatibleArgumentsError."""
+        super().__init__(ErrorCodes.GENERAL_ERROR, message, details, wrapping)
+
+
+class UnsupportedLabwareForActionError(ProtocolEngineError):
+    """Raised when trying to use an unsupported labware for a command."""
+
+    def __init__(
+        self,
+        message: Optional[str] = None,
+        details: Optional[Dict[str, Any]] = None,
+        wrapping: Optional[Sequence[EnumeratedError]] = None,
+    ) -> None:
+        """Build a UnsupportedLabwareForActionError."""
         super().__init__(ErrorCodes.GENERAL_ERROR, message, details, wrapping)
 
 
@@ -1155,3 +1207,27 @@ class StorageLimitReachedError(ProtocolEngineError):
     ) -> None:
         """Build an StorageLimitReached."""
         super().__init__(ErrorCodes.GENERAL_ERROR, message, detail, wrapping)
+
+
+class LiquidClassDoesNotExistError(ProtocolEngineError):
+    """Raised when referencing a liquid class that has not been loaded."""
+
+    def __init__(
+        self,
+        message: Optional[str] = None,
+        details: Optional[Dict[str, Any]] = None,
+        wrapping: Optional[Sequence[EnumeratedError]] = None,
+    ) -> None:
+        super().__init__(ErrorCodes.GENERAL_ERROR, message, details, wrapping)
+
+
+class LiquidClassRedefinitionError(ProtocolEngineError):
+    """Raised when attempting to load a liquid class that conflicts with a liquid class already loaded."""
+
+    def __init__(
+        self,
+        message: Optional[str] = None,
+        details: Optional[Dict[str, Any]] = None,
+        wrapping: Optional[Sequence[EnumeratedError]] = None,
+    ) -> None:
+        super().__init__(ErrorCodes.GENERAL_ERROR, message, details, wrapping)

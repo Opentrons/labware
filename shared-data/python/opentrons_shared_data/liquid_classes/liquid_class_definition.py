@@ -1,25 +1,22 @@
 """Python shared data models for liquid class definitions."""
 
 from enum import Enum
-from typing import TYPE_CHECKING, Literal, Union, Optional, Dict, Any, Sequence
+from typing import Literal, Union, Optional, Sequence, Tuple, Any
 
 from pydantic import (
     BaseModel,
-    validator,
+    field_validator,
+    ValidationInfo,
     Field,
-    conint,
-    confloat,
     StrictInt,
     StrictFloat,
 )
+from pydantic.json_schema import SkipJsonSchema
+from typing_extensions import Annotated
 
 
-if TYPE_CHECKING:
-    _StrictNonNegativeInt = int
-    _StrictNonNegativeFloat = float
-else:
-    _StrictNonNegativeInt = conint(strict=True, ge=0)
-    _StrictNonNegativeFloat = confloat(strict=True, ge=0.0)
+_StrictNonNegativeInt = Annotated[int, Field(strict=True, ge=0)]
+_StrictNonNegativeFloat = Annotated[float, Field(strict=True, ge=0.0)]
 
 
 _Number = Union[StrictInt, StrictFloat]
@@ -28,8 +25,15 @@ _Number = Union[StrictInt, StrictFloat]
 _NonNegativeNumber = Union[_StrictNonNegativeInt, _StrictNonNegativeFloat]
 """Non-negative JSON number type, written to preserve lack of decimal point."""
 
-LiquidHandlingPropertyByVolume = Dict[str, _NonNegativeNumber]
-"""Settings for liquid class settings keyed by target aspiration/dispense volume."""
+LiquidHandlingPropertyByVolume = Sequence[Tuple[_NonNegativeNumber, _NonNegativeNumber]]
+"""Settings for liquid class settings that are interpolated by volume."""
+
+CorrectionByVolume = Sequence[Tuple[_NonNegativeNumber, _Number]]
+"""Settings for correctionByVolume, which unlike other `byVolume` properties allows negative values with volume."""
+
+
+def _remove_default(s: dict[str, Any]) -> None:
+    s.pop("default")
 
 
 class PositionReference(Enum):
@@ -69,21 +73,28 @@ class DelayProperties(BaseModel):
     """Shared properties for delay.."""
 
     enable: bool = Field(..., description="Whether delay is enabled.")
-    params: Optional[DelayParams] = Field(
-        None, description="Parameters for the delay function."
+    params: DelayParams | SkipJsonSchema[None] = Field(
+        None,
+        description="Parameters for the delay function.",
+        json_schema_extra=_remove_default,
     )
 
-    @validator("params")
+    @field_validator("params")
+    @classmethod
     def _validate_params(
-        cls, v: Optional[DelayParams], values: Dict[str, Any]
+        cls, v: Optional[DelayParams], info: ValidationInfo
     ) -> Optional[DelayParams]:
-        if v is None and values["enable"]:
+        if v is None and info.data.get("enable", False):
             raise ValueError("If enable is true parameters for delay must be defined.")
         return v
 
 
-class TouchTipParams(BaseModel):
+class LiquidClassTouchTipParams(BaseModel):
     """Parameters for touch-tip."""
+
+    # Note: Do not call this `TouchTipParams`, because that class name is used by the
+    # unrelated touchTip command in PE. Both classes are exported to things like the
+    # command schema JSON files, so the classes can't have the same name.
 
     zOffset: _Number = Field(
         ...,
@@ -101,15 +112,18 @@ class TouchTipProperties(BaseModel):
     """Shared properties for the touch-tip function."""
 
     enable: bool = Field(..., description="Whether touch-tip is enabled.")
-    params: Optional[TouchTipParams] = Field(
-        None, description="Parameters for the touch-tip function."
+    params: LiquidClassTouchTipParams | SkipJsonSchema[None] = Field(
+        None,
+        description="Parameters for the touch-tip function.",
+        json_schema_extra=_remove_default,
     )
 
-    @validator("params")
+    @field_validator("params")
+    @classmethod
     def _validate_params(
-        cls, v: Optional[TouchTipParams], values: Dict[str, Any]
-    ) -> Optional[TouchTipParams]:
-        if v is None and values["enable"]:
+        cls, v: Optional[LiquidClassTouchTipParams], info: ValidationInfo
+    ) -> Optional[LiquidClassTouchTipParams]:
+        if v is None and info.data.get("enable", False):
             raise ValueError(
                 "If enable is true parameters for touch tip must be defined."
             )
@@ -129,15 +143,18 @@ class MixProperties(BaseModel):
     """Mixing properties."""
 
     enable: bool = Field(..., description="Whether mix is enabled.")
-    params: Optional[MixParams] = Field(
-        None, description="Parameters for the mix function."
+    params: MixParams | SkipJsonSchema[None] = Field(
+        None,
+        description="Parameters for the mix function.",
+        json_schema_extra=_remove_default,
     )
 
-    @validator("params")
+    @field_validator("params")
+    @classmethod
     def _validate_params(
-        cls, v: Optional[MixParams], values: Dict[str, Any]
+        cls, v: Optional[MixParams], info: ValidationInfo
     ) -> Optional[MixParams]:
-        if v is None and values["enable"]:
+        if v is None and info.data.get("enable", False):
             raise ValueError("If enable is true parameters for mix must be defined.")
         return v
 
@@ -157,15 +174,18 @@ class BlowoutProperties(BaseModel):
     """Blowout properties."""
 
     enable: bool = Field(..., description="Whether blow-out is enabled.")
-    params: Optional[BlowoutParams] = Field(
-        None, description="Parameters for the blowout function."
+    params: BlowoutParams | SkipJsonSchema[None] = Field(
+        None,
+        description="Parameters for the blowout function.",
+        json_schema_extra=_remove_default,
     )
 
-    @validator("params")
+    @field_validator("params")
+    @classmethod
     def _validate_params(
-        cls, v: Optional[BlowoutParams], values: Dict[str, Any]
+        cls, v: Optional[BlowoutParams], info: ValidationInfo
     ) -> Optional[BlowoutParams]:
-        if v is None and values["enable"]:
+        if v is None and info.data.get("enable", False):
             raise ValueError(
                 "If enable is true parameters for blowout must be defined."
             )
@@ -249,6 +269,11 @@ class AspirateProperties(BaseModel):
         ...,
         description="Settings for flow rate keyed by target aspiration volume.",
     )
+    correctionByVolume: CorrectionByVolume = Field(
+        ...,
+        description="Settings for volume correction keyed by by target aspiration volume,"
+        " representing additional volume the plunger should move to accurately hit target volume.",
+    )
     preWet: bool = Field(..., description="Whether to perform a pre-wet action.")
     mix: MixProperties = Field(
         ..., description="Mixing settings for before an aspirate"
@@ -273,6 +298,11 @@ class SingleDispenseProperties(BaseModel):
         ...,
         description="Settings for flow rate keyed by target dispense volume.",
     )
+    correctionByVolume: CorrectionByVolume = Field(
+        ...,
+        description="Settings for volume correction keyed by by target dispense volume,"
+        " representing additional volume the plunger should move to accurately hit target volume.",
+    )
     mix: MixProperties = Field(..., description="Mixing settings for after a dispense")
     pushOutByVolume: LiquidHandlingPropertyByVolume = Field(
         ..., description="Settings for pushout keyed by target dispense volume."
@@ -296,6 +326,11 @@ class MultiDispenseProperties(BaseModel):
     flowRateByVolume: LiquidHandlingPropertyByVolume = Field(
         ...,
         description="Settings for flow rate keyed by target dispense volume.",
+    )
+    correctionByVolume: CorrectionByVolume = Field(
+        ...,
+        description="Settings for volume correction keyed by by target dispense volume,"
+        " representing additional volume the plunger should move to accurately hit target volume.",
     )
     conditioningByVolume: LiquidHandlingPropertyByVolume = Field(
         ...,
@@ -322,8 +357,10 @@ class ByTipTypeSetting(BaseModel):
     singleDispense: SingleDispenseProperties = Field(
         ..., description="Single dispense parameters for this tip type."
     )
-    multiDispense: Optional[MultiDispenseProperties] = Field(
-        None, description="Optional multi-dispense parameters for this tip type."
+    multiDispense: MultiDispenseProperties | SkipJsonSchema[None] = Field(
+        None,
+        description="Optional multi-dispense parameters for this tip type.",
+        json_schema_extra=_remove_default,
     )
 
 

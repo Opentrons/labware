@@ -8,8 +8,9 @@ export function VolumeField(props: FieldProps): JSX.Element {
 
   return (
     <InputStepFormField
-      title={t('select_volume')}
+      title={t('volume_per_well')}
       units={t('application:units.microliter')}
+      showTooltip={false}
       {...props}
     />
   )

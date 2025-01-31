@@ -171,6 +171,7 @@ function handleRecoveryOptionAction<T>(
     case RECOVERY_MAP.RETRY_NEW_TIPS.ROUTE:
     case RECOVERY_MAP.RETRY_STEP.ROUTE:
     case RECOVERY_MAP.MANUAL_REPLACE_AND_RETRY.ROUTE:
+    case RECOVERY_MAP.HOME_AND_RETRY.ROUTE:
       return currentStepReturnVal
     default: {
       return null

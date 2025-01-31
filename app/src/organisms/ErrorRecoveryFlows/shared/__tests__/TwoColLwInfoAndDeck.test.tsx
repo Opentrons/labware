@@ -11,7 +11,7 @@ import { RECOVERY_MAP } from '../../constants'
 import { LeftColumnLabwareInfo } from '../LeftColumnLabwareInfo'
 import { getSlotNameAndLwLocFrom } from '../../hooks/useDeckMapUtils'
 
-import type * as React from 'react'
+import type { ComponentProps } from 'react'
 import type { Mock } from 'vitest'
 
 vi.mock('@opentrons/components', async () => {
@@ -26,14 +26,14 @@ vi.mock('../../hooks/useDeckMapUtils')
 
 let mockProceedNextStep: Mock
 
-const render = (props: React.ComponentProps<typeof TwoColLwInfoAndDeck>) => {
+const render = (props: ComponentProps<typeof TwoColLwInfoAndDeck>) => {
   return renderWithProviders(<TwoColLwInfoAndDeck {...props} />, {
     i18nInstance: i18n,
   })[0]
 }
 
 describe('TwoColLwInfoAndDeck', () => {
-  let props: React.ComponentProps<typeof TwoColLwInfoAndDeck>
+  let props: ComponentProps<typeof TwoColLwInfoAndDeck>
 
   beforeEach(() => {
     mockProceedNextStep = vi.fn()

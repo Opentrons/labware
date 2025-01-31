@@ -13,13 +13,12 @@ export function getConfigureNozzleLayoutCommandText({
     pip => pip.id === pipetteId
   )?.pipetteName
 
-  // TODO(cb, 2024-09-10): confirm these strings for copy consistency and add them to i18n
   const ConfigAmount = {
-    SINGLE: 'single nozzle layout',
-    COLUMN: 'column layout',
-    ROW: 'row layout',
-    QUADRANT: 'partial layout',
-    ALL: 'all nozzles',
+    SINGLE: t('single_nozzle_layout'),
+    COLUMN: t('column_layout'),
+    ROW: t('row_layout'),
+    QUADRANT: t('partial_layout'),
+    ALL: t('all_nozzles'),
   }
 
   return t('configure_nozzle_layout', {

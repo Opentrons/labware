@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import without from 'lodash/without'
 import { useLocation } from 'react-router-dom'
-
+import { FLEX_ROBOT_TYPE } from '@opentrons/shared-data'
 import {
   Flex,
   SPACING,
@@ -43,6 +43,7 @@ export function SelectGripper(props: WizardTileProps): JSX.Element | null {
   return (
     <HandleEnter onEnter={handleProceed}>
       <WizardBody
+        robotType={FLEX_ROBOT_TYPE}
         stepNumber={3}
         header={t('add_gripper')}
         disabled={gripperStatus == null}

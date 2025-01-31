@@ -27,7 +27,7 @@ Environment=RUNNING_ON_PI=true
 Environment=OT_ROBOT_SERVER_persistence_directory=/data/opentrons_robot_server
 
 Restart=on-failure
-TimeoutStartSec=3min
+TimeoutStartSec=10min
 
 
 [Install]

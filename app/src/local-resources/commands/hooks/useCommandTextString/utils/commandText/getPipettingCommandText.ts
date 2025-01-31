@@ -52,19 +52,21 @@ export const getPipettingCommandText = ({
     t,
   })
 
+  const labwareName =
+    commandTextData != null
+      ? getLabwareName({
+          loadedLabwares: commandTextData.labware ?? [],
+          labwareId,
+          allRunDefs,
+        })
+      : null
+
   switch (command?.commandType) {
     case 'aspirate': {
       const { volume, flowRate } = command.params
       return t('aspirate', {
         well_name: wellName,
-        labware:
-          commandTextData != null
-            ? getLabwareName({
-                loadedLabwares: commandTextData.labware ?? [],
-                labwareId,
-                allRunDefs,
-              })
-            : null,
+        labware: labwareName,
         labware_location: displayLocation,
         volume,
         flow_rate: flowRate,
@@ -75,14 +77,7 @@ export const getPipettingCommandText = ({
       return pushOut != null
         ? t('dispense_push_out', {
             well_name: wellName,
-            labware:
-              commandTextData != null
-                ? getLabwareName({
-                    loadedLabwares: commandTextData.labware ?? [],
-                    labwareId,
-                    allRunDefs,
-                  })
-                : null,
+            labware: labwareName,
             labware_location: displayLocation,
             volume,
             flow_rate: flowRate,
@@ -90,14 +85,7 @@ export const getPipettingCommandText = ({
           })
         : t('dispense', {
             well_name: wellName,
-            labware:
-              commandTextData != null
-                ? getLabwareName({
-                    loadedLabwares: commandTextData.labware ?? [],
-                    labwareId,
-                    allRunDefs,
-                  })
-                : null,
+            labware: labwareName,
             labware_location: displayLocation,
             volume,
             flow_rate: flowRate,
@@ -107,14 +95,7 @@ export const getPipettingCommandText = ({
       const { flowRate } = command.params
       return t('blowout', {
         well_name: wellName,
-        labware:
-          commandTextData != null
-            ? getLabwareName({
-                loadedLabwares: commandTextData.labware ?? [],
-                labwareId,
-                allRunDefs,
-              })
-            : null,
+        labware: labwareName,
         labware_location: displayLocation,
         flow_rate: flowRate,
       })
@@ -136,26 +117,12 @@ export const getPipettingCommandText = ({
       return Boolean(labwareDef?.parameters.isTiprack)
         ? t('return_tip', {
             well_name: wellName,
-            labware:
-              commandTextData != null
-                ? getLabwareName({
-                    loadedLabwares: commandTextData.labware ?? [],
-                    labwareId,
-                    allRunDefs,
-                  })
-                : null,
+            labware: labwareName,
             labware_location: displayLocation,
           })
         : t('drop_tip', {
             well_name: wellName,
-            labware:
-              commandTextData != null
-                ? getLabwareName({
-                    loadedLabwares: commandTextData.labware ?? [],
-                    labwareId,
-                    allRunDefs,
-                  })
-                : null,
+            labware: labwareName,
           })
     }
     case 'pickUpTip': {
@@ -176,14 +143,7 @@ export const getPipettingCommandText = ({
                 pipetteName
               )
             : null,
-        labware:
-          commandTextData != null
-            ? getLabwareName({
-                loadedLabwares: commandTextData.labware ?? [],
-                labwareId,
-                allRunDefs,
-              })
-            : null,
+        labware: labwareName,
         labware_location: displayLocation,
       })
     }
@@ -208,6 +168,26 @@ export const getPipettingCommandText = ({
     case 'aspirateInPlace': {
       const { flowRate, volume } = command.params
       return t('aspirate_in_place', { volume, flow_rate: flowRate })
+    }
+    case 'airGapInPlace': {
+      const { volume } = command.params
+      return t('air_gap_in_place', { volume })
+    }
+    case 'evotipSealPipette': {
+      return t('sealing_to_location', {
+        labware: labwareName,
+        location: displayLocation,
+      })
+    }
+    case 'evotipUnsealPipette': {
+      return t('unsealing_from_location', {
+        labware: labwareName,
+        location: displayLocation,
+      })
+    }
+    case 'evotipDispense': {
+      const { flowRate, volume } = command.params
+      return t('pressurizing_to_dispense', { volume, flow_rate: flowRate })
     }
     default: {
       console.warn(

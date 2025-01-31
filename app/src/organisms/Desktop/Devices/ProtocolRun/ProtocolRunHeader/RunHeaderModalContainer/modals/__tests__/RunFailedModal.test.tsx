@@ -1,5 +1,5 @@
-import type * as React from 'react'
 import { describe, it, beforeEach, vi, expect, afterEach } from 'vitest'
+import { fireEvent, screen } from '@testing-library/react'
 
 import { renderWithProviders } from '/app/__testing-utils__'
 import { i18n } from '/app/i18n'
@@ -7,8 +7,9 @@ import { useDownloadRunLog } from '../../../../../hooks'
 import { RunFailedModal } from '../RunFailedModal'
 
 import { RUN_STATUS_FAILED } from '@opentrons/api-client'
+
+import type { ComponentProps } from 'react'
 import type { RunError } from '@opentrons/api-client'
-import { fireEvent, screen } from '@testing-library/react'
 
 vi.mock('../../../../../hooks')
 
@@ -25,14 +26,14 @@ const mockError: RunError = {
   wrappedErrors: [],
 }
 
-const render = (props: React.ComponentProps<typeof RunFailedModal>) => {
+const render = (props: ComponentProps<typeof RunFailedModal>) => {
   return renderWithProviders(<RunFailedModal {...props} />, {
     i18nInstance: i18n,
   })
 }
 
 describe('RunFailedModal - DesktopApp', () => {
-  let props: React.ComponentProps<typeof RunFailedModal>
+  let props: ComponentProps<typeof RunFailedModal>
 
   beforeEach(() => {
     props = {

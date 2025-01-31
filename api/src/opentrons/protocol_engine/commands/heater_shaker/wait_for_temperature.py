@@ -1,9 +1,10 @@
 """Command models to wait for a Heater-Shaker Module's target temperature."""
 from __future__ import annotations
-from typing import Optional, TYPE_CHECKING
-from typing_extensions import Literal, Type
+from typing import Optional, TYPE_CHECKING, Any
 
+from typing_extensions import Literal, Type
 from pydantic import BaseModel, Field
+from pydantic.json_schema import SkipJsonSchema
 
 from ..command import AbstractCommandImpl, BaseCommand, BaseCommandCreate, SuccessData
 from ...errors.error_occurrence import ErrorOccurrence
@@ -16,11 +17,15 @@ if TYPE_CHECKING:
 WaitForTemperatureCommandType = Literal["heaterShaker/waitForTemperature"]
 
 
+def _remove_default(s: dict[str, Any]) -> None:
+    s.pop("default", None)
+
+
 class WaitForTemperatureParams(BaseModel):
     """Input parameters to wait for a Heater-Shaker's target temperature."""
 
     moduleId: str = Field(..., description="Unique ID of the Heater-Shaker Module.")
-    celsius: Optional[float] = Field(
+    celsius: float | SkipJsonSchema[None] = Field(
         None,
         description="Target temperature in °C. If not specified, will "
         "default to the module's target temperature. "
@@ -28,6 +33,7 @@ class WaitForTemperatureParams(BaseModel):
         "could lead to unpredictable behavior and hence is not "
         "recommended for use. This parameter can be removed in a "
         "future version without prior notice.",
+        json_schema_extra=_remove_default,
     )
 
 
@@ -82,7 +88,7 @@ class WaitForTemperature(
 
     commandType: WaitForTemperatureCommandType = "heaterShaker/waitForTemperature"
     params: WaitForTemperatureParams
-    result: Optional[WaitForTemperatureResult]
+    result: Optional[WaitForTemperatureResult] = None
 
     _ImplementationCls: Type[WaitForTemperatureImpl] = WaitForTemperatureImpl
 

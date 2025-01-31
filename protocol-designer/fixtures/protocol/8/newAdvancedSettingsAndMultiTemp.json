@@ -6,16 +6,16 @@
     "author": "",
     "description": "",
     "created": 1714565695341,
-    "lastModified": 1714565808161,
+    "lastModified": 1731355906825,
     "category": null,
     "subcategory": null,
     "tags": []
   },
   "designerApplication": {
     "name": "opentrons/protocol-designer",
-    "version": "8.1.0",
+    "version": "8.2.2",
     "data": {
-      "_internalAppBuildDate": "Wed, 01 May 2024 12:14:18 GMT",
+      "_internalAppBuildDate": "Mon, 11 Nov 2024 20:10:44 GMT",
       "defaultValues": {
         "aspirate_mmFromBottom": 1,
         "dispense_mmFromBottom": 1,
@@ -32,140 +32,136 @@
       "ingredLocations": {},
       "savedStepForms": {
         "__INITIAL_DECK_SETUP_STEP__": {
-          "stepType": "manualIntervention",
-          "id": "__INITIAL_DECK_SETUP_STEP__",
           "labwareLocationUpdate": {
             "0d39213c-49c2-4170-bf19-4c09e1b72aca:opentrons/opentrons_flex_96_tiprack_50ul/1": "C2",
             "c3c4e3fd-069f-4f3d-9b70-016a20f36de7:opentrons/opentrons_24_aluminumblock_nest_1.5ml_screwcap/1": "b9c56153-9026-42d1-8113-949e15254571:temperatureModuleType",
             "32b596f6-79bb-4ad8-a34a-c44620fdb68f:opentrons/opentrons_96_well_aluminum_block/1": "d6966555-6c0e-45e0-8056-428d7c486401:temperatureModuleType",
             "c0093e5f-3f7d-4cbf-aa17-d88394108501:opentrons/nest_96_wellplate_100ul_pcr_full_skirt/2": "32b596f6-79bb-4ad8-a34a-c44620fdb68f:opentrons/opentrons_96_well_aluminum_block/1"
           },
-          "pipetteLocationUpdate": {
-            "21087f15-4c03-4587-8a2b-1ba0b5a501a0": "left"
-          },
           "moduleLocationUpdate": {
             "d6966555-6c0e-45e0-8056-428d7c486401:temperatureModuleType": "D3",
             "b9c56153-9026-42d1-8113-949e15254571:temperatureModuleType": "C3"
-          }
+          },
+          "pipetteLocationUpdate": {
+            "21087f15-4c03-4587-8a2b-1ba0b5a501a0": "left"
+          },
+          "stepType": "manualIntervention",
+          "id": "__INITIAL_DECK_SETUP_STEP__"
         },
         "292e8b18-f59e-4c63-b0f3-e242bf50094b": {
-          "id": "292e8b18-f59e-4c63-b0f3-e242bf50094b",
-          "stepType": "moveLiquid",
-          "stepName": "transfer",
-          "stepDetails": "",
-          "pipette": "21087f15-4c03-4587-8a2b-1ba0b5a501a0",
-          "volume": "10",
-          "tipRack": "opentrons/opentrons_flex_96_tiprack_50ul/1",
-          "changeTip": "always",
-          "path": "single",
-          "aspirate_wells_grouped": false,
+          "aspirate_airGap_checkbox": false,
+          "aspirate_airGap_volume": "1",
+          "aspirate_delay_checkbox": false,
+          "aspirate_delay_mmFromBottom": null,
+          "aspirate_delay_seconds": "1",
           "aspirate_flowRate": null,
           "aspirate_labware": "c0093e5f-3f7d-4cbf-aa17-d88394108501:opentrons/nest_96_wellplate_100ul_pcr_full_skirt/2",
-          "aspirate_wells": ["C1"],
-          "aspirate_wellOrder_first": "t2b",
-          "aspirate_wellOrder_second": "l2r",
           "aspirate_mix_checkbox": false,
           "aspirate_mix_times": null,
           "aspirate_mix_volume": null,
           "aspirate_mmFromBottom": 29,
           "aspirate_touchTip_checkbox": false,
           "aspirate_touchTip_mmFromBottom": null,
+          "aspirate_wellOrder_first": "t2b",
+          "aspirate_wellOrder_second": "l2r",
+          "aspirate_wells_grouped": false,
+          "aspirate_wells": ["C1"],
+          "aspirate_x_position": 2,
+          "aspirate_y_position": -2,
+          "blowout_checkbox": true,
+          "blowout_flowRate": 20,
+          "blowout_location": "source_well",
+          "blowout_z_offset": -12,
+          "changeTip": "always",
+          "dispense_airGap_checkbox": false,
+          "dispense_airGap_volume": "1",
+          "dispense_delay_checkbox": false,
+          "dispense_delay_mmFromBottom": null,
+          "dispense_delay_seconds": "1",
           "dispense_flowRate": null,
           "dispense_labware": "c3c4e3fd-069f-4f3d-9b70-016a20f36de7:opentrons/opentrons_24_aluminumblock_nest_1.5ml_screwcap/1",
-          "dispense_wells": ["B3"],
-          "dispense_wellOrder_first": "t2b",
-          "dispense_wellOrder_second": "l2r",
           "dispense_mix_checkbox": false,
           "dispense_mix_times": null,
           "dispense_mix_volume": null,
           "dispense_mmFromBottom": null,
           "dispense_touchTip_checkbox": false,
           "dispense_touchTip_mmFromBottom": null,
-          "disposalVolume_checkbox": true,
-          "disposalVolume_volume": "1",
-          "blowout_checkbox": true,
-          "blowout_location": "source_well",
-          "preWetTip": false,
-          "aspirate_airGap_checkbox": false,
-          "aspirate_airGap_volume": "1",
-          "aspirate_delay_checkbox": false,
-          "aspirate_delay_mmFromBottom": null,
-          "aspirate_delay_seconds": "1",
-          "dispense_airGap_checkbox": false,
-          "dispense_airGap_volume": "1",
-          "dispense_delay_checkbox": false,
-          "dispense_delay_seconds": "1",
-          "dispense_delay_mmFromBottom": null,
-          "dropTip_location": "20ab923c-1290-402e-8476-bba30991f24e:trashBin",
-          "nozzles": null,
+          "dispense_wellOrder_first": "t2b",
+          "dispense_wellOrder_second": "l2r",
+          "dispense_wells": ["B3"],
           "dispense_x_position": 0,
           "dispense_y_position": 0,
-          "aspirate_x_position": 2,
-          "aspirate_y_position": -2,
-          "blowout_z_offset": -12,
-          "blowout_flowRate": 20
+          "disposalVolume_checkbox": true,
+          "disposalVolume_volume": "1",
+          "dropTip_location": "20ab923c-1290-402e-8476-bba30991f24e:trashBin",
+          "nozzles": null,
+          "path": "single",
+          "pipette": "21087f15-4c03-4587-8a2b-1ba0b5a501a0",
+          "preWetTip": false,
+          "tipRack": "opentrons/opentrons_flex_96_tiprack_50ul/1",
+          "volume": "10",
+          "id": "292e8b18-f59e-4c63-b0f3-e242bf50094b",
+          "stepType": "moveLiquid",
+          "stepName": "transfer",
+          "stepDetails": ""
         },
         "960c2d3b-9cf9-49b0-ab4c-af4113f6671a": {
+          "moduleId": "d6966555-6c0e-45e0-8056-428d7c486401:temperatureModuleType",
+          "setTemperature": "true",
+          "targetTemperature": "40",
           "id": "960c2d3b-9cf9-49b0-ab4c-af4113f6671a",
           "stepType": "temperature",
           "stepName": "temperature",
-          "stepDetails": "",
-          "moduleId": "d6966555-6c0e-45e0-8056-428d7c486401:temperatureModuleType",
-          "setTemperature": "true",
-          "targetTemperature": "40"
+          "stepDetails": ""
         },
         "5055c5a3-92b7-41e5-935d-e8150e9f4f1c": {
+          "moduleId": "d6966555-6c0e-45e0-8056-428d7c486401:temperatureModuleType",
+          "pauseAction": "untilTemperature",
+          "pauseMessage": "",
+          "pauseTemperature": "40",
+          "pauseTime": null,
           "id": "5055c5a3-92b7-41e5-935d-e8150e9f4f1c",
           "stepType": "pause",
           "stepName": "pause",
-          "stepDetails": "",
-          "pauseAction": "untilTemperature",
-          "pauseHour": null,
-          "pauseMinute": null,
-          "pauseSecond": null,
-          "pauseMessage": "",
-          "moduleId": "d6966555-6c0e-45e0-8056-428d7c486401:temperatureModuleType",
-          "pauseTemperature": "40"
+          "stepDetails": ""
         },
         "68a83fc0-726b-4df4-9a14-c43802aa9d0f": {
+          "moduleId": "b9c56153-9026-42d1-8113-949e15254571:temperatureModuleType",
+          "setTemperature": "true",
+          "targetTemperature": "4",
           "id": "68a83fc0-726b-4df4-9a14-c43802aa9d0f",
           "stepType": "temperature",
           "stepName": "temperature",
-          "stepDetails": "",
-          "moduleId": "b9c56153-9026-42d1-8113-949e15254571:temperatureModuleType",
-          "setTemperature": "true",
-          "targetTemperature": "4"
+          "stepDetails": ""
         },
         "c72b4af9-7488-4109-8221-15a5433f4fd8": {
+          "moduleId": "b9c56153-9026-42d1-8113-949e15254571:temperatureModuleType",
+          "pauseAction": "untilTemperature",
+          "pauseMessage": "",
+          "pauseTemperature": "4",
+          "pauseTime": null,
           "id": "c72b4af9-7488-4109-8221-15a5433f4fd8",
           "stepType": "pause",
           "stepName": "pause",
-          "stepDetails": "",
-          "pauseAction": "untilTemperature",
-          "pauseHour": null,
-          "pauseMinute": null,
-          "pauseSecond": null,
-          "pauseMessage": "",
-          "moduleId": "b9c56153-9026-42d1-8113-949e15254571:temperatureModuleType",
-          "pauseTemperature": "4"
+          "stepDetails": ""
         },
         "ffb0d1ff-8146-409c-9248-2065a3b27c4d": {
+          "moduleId": "d6966555-6c0e-45e0-8056-428d7c486401:temperatureModuleType",
+          "setTemperature": "false",
+          "targetTemperature": null,
           "id": "ffb0d1ff-8146-409c-9248-2065a3b27c4d",
           "stepType": "temperature",
           "stepName": "temperature",
-          "stepDetails": "",
-          "moduleId": "d6966555-6c0e-45e0-8056-428d7c486401:temperatureModuleType",
-          "setTemperature": "false",
-          "targetTemperature": null
+          "stepDetails": ""
         },
         "eab2ec89-6d11-4246-ae91-d451cb3a5b1d": {
+          "moduleId": "b9c56153-9026-42d1-8113-949e15254571:temperatureModuleType",
+          "setTemperature": "false",
+          "targetTemperature": null,
           "id": "eab2ec89-6d11-4246-ae91-d451cb3a5b1d",
           "stepType": "temperature",
           "stepName": "temperature",
-          "stepDetails": "",
-          "moduleId": "b9c56153-9026-42d1-8113-949e15254571:temperatureModuleType",
-          "setTemperature": "false",
-          "targetTemperature": null
+          "stepDetails": ""
         }
       },
       "orderedStepIds": [
@@ -1197,301 +1193,6 @@
         "opentrons_flex_96_tiprack_adapter": { "x": 0, "y": 0, "z": 121 }
       }
     },
-    "opentrons/opentrons_24_aluminumblock_nest_1.5ml_screwcap/1": {
-      "ordering": [
-        ["A1", "B1", "C1", "D1"],
-        ["A2", "B2", "C2", "D2"],
-        ["A3", "B3", "C3", "D3"],
-        ["A4", "B4", "C4", "D4"],
-        ["A5", "B5", "C5", "D5"],
-        ["A6", "B6", "C6", "D6"]
-      ],
-      "brand": {
-        "brand": "Opentrons",
-        "brandId": [],
-        "links": ["https://shop.opentrons.com/aluminum-block-set/"]
-      },
-      "metadata": {
-        "displayName": "Opentrons 24 Well Aluminum Block with NEST 1.5 mL Screwcap",
-        "displayCategory": "aluminumBlock",
-        "displayVolumeUnits": "mL",
-        "tags": []
-      },
-      "dimensions": {
-        "xDimension": 127.75,
-        "yDimension": 85.5,
-        "zDimension": 49.35
-      },
-      "wells": {
-        "A1": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 20.75,
-          "y": 68.62,
-          "z": 5.45
-        },
-        "B1": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 20.75,
-          "y": 51.37,
-          "z": 5.45
-        },
-        "C1": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 20.75,
-          "y": 34.12,
-          "z": 5.45
-        },
-        "D1": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 20.75,
-          "y": 16.87,
-          "z": 5.45
-        },
-        "A2": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 38,
-          "y": 68.62,
-          "z": 5.45
-        },
-        "B2": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 38,
-          "y": 51.37,
-          "z": 5.45
-        },
-        "C2": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 38,
-          "y": 34.12,
-          "z": 5.45
-        },
-        "D2": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 38,
-          "y": 16.87,
-          "z": 5.45
-        },
-        "A3": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 55.25,
-          "y": 68.62,
-          "z": 5.45
-        },
-        "B3": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 55.25,
-          "y": 51.37,
-          "z": 5.45
-        },
-        "C3": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 55.25,
-          "y": 34.12,
-          "z": 5.45
-        },
-        "D3": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 55.25,
-          "y": 16.87,
-          "z": 5.45
-        },
-        "A4": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 72.5,
-          "y": 68.62,
-          "z": 5.45
-        },
-        "B4": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 72.5,
-          "y": 51.37,
-          "z": 5.45
-        },
-        "C4": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 72.5,
-          "y": 34.12,
-          "z": 5.45
-        },
-        "D4": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 72.5,
-          "y": 16.87,
-          "z": 5.45
-        },
-        "A5": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 89.75,
-          "y": 68.62,
-          "z": 5.45
-        },
-        "B5": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 89.75,
-          "y": 51.37,
-          "z": 5.45
-        },
-        "C5": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 89.75,
-          "y": 34.12,
-          "z": 5.45
-        },
-        "D5": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 89.75,
-          "y": 16.87,
-          "z": 5.45
-        },
-        "A6": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 107,
-          "y": 68.62,
-          "z": 5.45
-        },
-        "B6": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 107,
-          "y": 51.37,
-          "z": 5.45
-        },
-        "C6": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 107,
-          "y": 34.12,
-          "z": 5.45
-        },
-        "D6": {
-          "depth": 43.9,
-          "shape": "circular",
-          "diameter": 8.69,
-          "totalLiquidVolume": 1500,
-          "x": 107,
-          "y": 16.87,
-          "z": 5.45
-        }
-      },
-      "groups": [
-        {
-          "metadata": {
-            "displayName": "NEST 24x1.5 mL Screwcap",
-            "displayCategory": "tubeRack",
-            "wellBottomShape": "v"
-          },
-          "brand": {
-            "brand": "NEST",
-            "brandId": ["634001"],
-            "links": ["https://www.nest-biotech.com/sample-vials/59299027.html"]
-          },
-          "wells": [
-            "A1",
-            "B1",
-            "C1",
-            "D1",
-            "A2",
-            "B2",
-            "C2",
-            "D2",
-            "A3",
-            "B3",
-            "C3",
-            "D3",
-            "A4",
-            "B4",
-            "C4",
-            "D4",
-            "A5",
-            "B5",
-            "C5",
-            "D5",
-            "A6",
-            "B6",
-            "C6",
-            "D6"
-          ]
-        }
-      ],
-      "parameters": {
-        "format": "irregular",
-        "quirks": ["gripperIncompatible"],
-        "isTiprack": false,
-        "isMagneticModuleCompatible": false,
-        "loadName": "opentrons_24_aluminumblock_nest_1.5ml_screwcap"
-      },
-      "namespace": "opentrons",
-      "version": 1,
-      "schemaVersion": 2,
-      "cornerOffsetFromSlot": { "x": 0, "y": 0, "z": 0 }
-    },
     "opentrons/opentrons_96_well_aluminum_block/1": {
       "ordering": [
         ["A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1"],
@@ -2506,6 +2207,301 @@
           "dropOffset": { "x": 0, "y": 0, "z": 1 }
         }
       }
+    },
+    "opentrons/opentrons_24_aluminumblock_nest_1.5ml_screwcap/1": {
+      "ordering": [
+        ["A1", "B1", "C1", "D1"],
+        ["A2", "B2", "C2", "D2"],
+        ["A3", "B3", "C3", "D3"],
+        ["A4", "B4", "C4", "D4"],
+        ["A5", "B5", "C5", "D5"],
+        ["A6", "B6", "C6", "D6"]
+      ],
+      "brand": {
+        "brand": "Opentrons",
+        "brandId": [],
+        "links": ["https://shop.opentrons.com/aluminum-block-set/"]
+      },
+      "metadata": {
+        "displayName": "Opentrons 24 Well Aluminum Block with NEST 1.5 mL Screwcap",
+        "displayCategory": "aluminumBlock",
+        "displayVolumeUnits": "mL",
+        "tags": []
+      },
+      "dimensions": {
+        "xDimension": 127.75,
+        "yDimension": 85.5,
+        "zDimension": 49.35
+      },
+      "wells": {
+        "A1": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 20.75,
+          "y": 68.62,
+          "z": 5.45
+        },
+        "B1": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 20.75,
+          "y": 51.37,
+          "z": 5.45
+        },
+        "C1": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 20.75,
+          "y": 34.12,
+          "z": 5.45
+        },
+        "D1": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 20.75,
+          "y": 16.87,
+          "z": 5.45
+        },
+        "A2": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 38,
+          "y": 68.62,
+          "z": 5.45
+        },
+        "B2": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 38,
+          "y": 51.37,
+          "z": 5.45
+        },
+        "C2": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 38,
+          "y": 34.12,
+          "z": 5.45
+        },
+        "D2": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 38,
+          "y": 16.87,
+          "z": 5.45
+        },
+        "A3": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 55.25,
+          "y": 68.62,
+          "z": 5.45
+        },
+        "B3": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 55.25,
+          "y": 51.37,
+          "z": 5.45
+        },
+        "C3": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 55.25,
+          "y": 34.12,
+          "z": 5.45
+        },
+        "D3": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 55.25,
+          "y": 16.87,
+          "z": 5.45
+        },
+        "A4": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 72.5,
+          "y": 68.62,
+          "z": 5.45
+        },
+        "B4": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 72.5,
+          "y": 51.37,
+          "z": 5.45
+        },
+        "C4": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 72.5,
+          "y": 34.12,
+          "z": 5.45
+        },
+        "D4": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 72.5,
+          "y": 16.87,
+          "z": 5.45
+        },
+        "A5": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 89.75,
+          "y": 68.62,
+          "z": 5.45
+        },
+        "B5": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 89.75,
+          "y": 51.37,
+          "z": 5.45
+        },
+        "C5": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 89.75,
+          "y": 34.12,
+          "z": 5.45
+        },
+        "D5": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 89.75,
+          "y": 16.87,
+          "z": 5.45
+        },
+        "A6": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 107,
+          "y": 68.62,
+          "z": 5.45
+        },
+        "B6": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 107,
+          "y": 51.37,
+          "z": 5.45
+        },
+        "C6": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 107,
+          "y": 34.12,
+          "z": 5.45
+        },
+        "D6": {
+          "depth": 43.9,
+          "shape": "circular",
+          "diameter": 8.69,
+          "totalLiquidVolume": 1500,
+          "x": 107,
+          "y": 16.87,
+          "z": 5.45
+        }
+      },
+      "groups": [
+        {
+          "metadata": {
+            "displayName": "NEST 24x1.5 mL Screwcap",
+            "displayCategory": "tubeRack",
+            "wellBottomShape": "v"
+          },
+          "brand": {
+            "brand": "NEST",
+            "brandId": ["634001"],
+            "links": ["https://www.nest-biotech.com/sample-vials/59299027.html"]
+          },
+          "wells": [
+            "A1",
+            "B1",
+            "C1",
+            "D1",
+            "A2",
+            "B2",
+            "C2",
+            "D2",
+            "A3",
+            "B3",
+            "C3",
+            "D3",
+            "A4",
+            "B4",
+            "C4",
+            "D4",
+            "A5",
+            "B5",
+            "C5",
+            "D5",
+            "A6",
+            "B6",
+            "C6",
+            "D6"
+          ]
+        }
+      ],
+      "parameters": {
+        "format": "irregular",
+        "quirks": ["gripperIncompatible"],
+        "isTiprack": false,
+        "isMagneticModuleCompatible": false,
+        "loadName": "opentrons_24_aluminumblock_nest_1.5ml_screwcap"
+      },
+      "namespace": "opentrons",
+      "version": 1,
+      "schemaVersion": 2,
+      "cornerOffsetFromSlot": { "x": 0, "y": 0, "z": 0 }
     },
     "opentrons/nest_96_wellplate_100ul_pcr_full_skirt/2": {
       "ordering": [
@@ -3534,7 +3530,7 @@
   "commandSchemaId": "opentronsCommandSchemaV8",
   "commands": [
     {
-      "key": "dd8e7395-4f5d-47da-932c-581e6b330102",
+      "key": "8ba6b5e2-1555-4259-bd70-275c02af22f6",
       "commandType": "loadPipette",
       "params": {
         "pipetteName": "p50_single_flex",
@@ -3543,7 +3539,7 @@
       }
     },
     {
-      "key": "069341d0-374a-457f-811a-beb25f824ceb",
+      "key": "b786c5b3-97d1-4deb-ab20-1b7ae2a92e96",
       "commandType": "loadModule",
       "params": {
         "model": "temperatureModuleV2",
@@ -3552,7 +3548,7 @@
       }
     },
     {
-      "key": "f2dbc8cc-b373-4043-b9f3-68f5eae4d69d",
+      "key": "d2f656f7-bb89-4430-8443-01c4f5d558c7",
       "commandType": "loadModule",
       "params": {
         "model": "temperatureModuleV2",
@@ -3561,7 +3557,7 @@
       }
     },
     {
-      "key": "f425f1d1-02c9-488b-865b-13f95497c9e8",
+      "key": "4295d596-2722-4575-97fe-615528c84168",
       "commandType": "loadLabware",
       "params": {
         "displayName": "Opentrons 96 Well Aluminum Block",
@@ -3575,7 +3571,7 @@
       }
     },
     {
-      "key": "ecc436f2-34ab-42bc-9dcd-12cbcd00a835",
+      "key": "858ef51a-50ac-49d9-81d8-3ab0b9d195c2",
       "commandType": "loadLabware",
       "params": {
         "displayName": "Opentrons Flex 96 Tip Rack 50 µL",
@@ -3587,7 +3583,7 @@
       }
     },
     {
-      "key": "212e0de6-00dc-460b-ac07-cd6a12fbc04f",
+      "key": "461afa60-d04a-40c1-bd25-0dae844c29b9",
       "commandType": "loadLabware",
       "params": {
         "displayName": "Opentrons 24 Well Aluminum Block with NEST 1.5 mL Screwcap",
@@ -3601,7 +3597,7 @@
       }
     },
     {
-      "key": "a8b0443f-afad-4e59-91a7-5b61f7e6836e",
+      "key": "f0fd22f2-6318-4a78-9fe4-f28b97ea1bc3",
       "commandType": "loadLabware",
       "params": {
         "displayName": "NEST 96 Well Plate 100 µL PCR Full Skirt",
@@ -3616,7 +3612,7 @@
     },
     {
       "commandType": "pickUpTip",
-      "key": "ae442c49-0f55-4982-9796-91213f5c51f9",
+      "key": "5c52fcb4-a8a9-47b4-8b0f-2a7ef9aea904",
       "params": {
         "pipetteId": "21087f15-4c03-4587-8a2b-1ba0b5a501a0",
         "labwareId": "0d39213c-49c2-4170-bf19-4c09e1b72aca:opentrons/opentrons_flex_96_tiprack_50ul/1",
@@ -3625,15 +3621,15 @@
     },
     {
       "commandType": "configureForVolume",
-      "key": "1d992cbb-79cc-426e-9b4a-29768a75f092",
+      "key": "dd1b37d6-eb8c-4616-bc8a-e1f17556234a",
       "params": {
         "pipetteId": "21087f15-4c03-4587-8a2b-1ba0b5a501a0",
-        "volume": 10
+        "volume": 1
       }
     },
     {
       "commandType": "aspirate",
-      "key": "5e59176d-a8e7-4c39-9337-053a2d6e02db",
+      "key": "c8ba3637-892e-45c1-8b31-0a975060cdff",
       "params": {
         "pipetteId": "21087f15-4c03-4587-8a2b-1ba0b5a501a0",
         "volume": 10,
@@ -3648,7 +3644,7 @@
     },
     {
       "commandType": "dispense",
-      "key": "4e9f4b46-e095-40e2-95c8-abed29538675",
+      "key": "eb95a3e1-091d-4646-9324-a2594284bf8f",
       "params": {
         "pipetteId": "21087f15-4c03-4587-8a2b-1ba0b5a501a0",
         "volume": 10,
@@ -3663,7 +3659,7 @@
     },
     {
       "commandType": "blowout",
-      "key": "5ae1dc28-2095-453a-88e4-2e6dd50e5c4d",
+      "key": "98f2eee6-1ee5-4ba8-acd5-3b3316560957",
       "params": {
         "pipetteId": "21087f15-4c03-4587-8a2b-1ba0b5a501a0",
         "labwareId": "c0093e5f-3f7d-4cbf-aa17-d88394108501:opentrons/nest_96_wellplate_100ul_pcr_full_skirt/2",
@@ -3674,7 +3670,7 @@
     },
     {
       "commandType": "moveToAddressableAreaForDropTip",
-      "key": "7786878c-2a71-41b6-9971-14ea88c3bf9d",
+      "key": "09bd3532-aa71-4795-a9c9-32ad271aa852",
       "params": {
         "pipetteId": "21087f15-4c03-4587-8a2b-1ba0b5a501a0",
         "addressableAreaName": "movableTrashA3",
@@ -3684,12 +3680,12 @@
     },
     {
       "commandType": "dropTipInPlace",
-      "key": "77da638e-5609-40a6-be69-1309b7ae9eb6",
+      "key": "ec86f079-6e0e-4eda-a0a1-97199bc852fd",
       "params": { "pipetteId": "21087f15-4c03-4587-8a2b-1ba0b5a501a0" }
     },
     {
       "commandType": "temperatureModule/setTargetTemperature",
-      "key": "8eedd2c4-7474-4246-a896-f93040722a01",
+      "key": "74a68fe2-9e03-4bff-9ba4-0f125a2cea49",
       "params": {
         "moduleId": "d6966555-6c0e-45e0-8056-428d7c486401:temperatureModuleType",
         "celsius": 40
@@ -3697,7 +3693,7 @@
     },
     {
       "commandType": "temperatureModule/waitForTemperature",
-      "key": "a4cad3c5-b771-4278-8776-5b5417ac659e",
+      "key": "9c4a7f7c-6ce3-48a8-ad05-06d2e6b29fdf",
       "params": {
         "moduleId": "d6966555-6c0e-45e0-8056-428d7c486401:temperatureModuleType",
         "celsius": 40
@@ -3705,7 +3701,7 @@
     },
     {
       "commandType": "temperatureModule/setTargetTemperature",
-      "key": "9849f4ff-8723-4851-a637-3d311d9af210",
+      "key": "c70e216e-7e4d-4b78-9c4d-e605ed05a5e3",
       "params": {
         "moduleId": "b9c56153-9026-42d1-8113-949e15254571:temperatureModuleType",
         "celsius": 4
@@ -3713,24 +3709,10 @@
     },
     {
       "commandType": "temperatureModule/waitForTemperature",
-      "key": "d3c30460-b6a7-4834-8c86-f1f3302e670f",
+      "key": "6b9cd83e-c6d3-41f0-a31f-6645ada88d6d",
       "params": {
         "moduleId": "b9c56153-9026-42d1-8113-949e15254571:temperatureModuleType",
         "celsius": 4
-      }
-    },
-    {
-      "commandType": "temperatureModule/deactivate",
-      "key": "82b767e6-0bfb-4175-8780-e48fbbc8f35c",
-      "params": {
-        "moduleId": "d6966555-6c0e-45e0-8056-428d7c486401:temperatureModuleType"
-      }
-    },
-    {
-      "commandType": "temperatureModule/deactivate",
-      "key": "60f2762f-a1ef-40cc-a729-95cf514640ea",
-      "params": {
-        "moduleId": "b9c56153-9026-42d1-8113-949e15254571:temperatureModuleType"
       }
     }
   ],

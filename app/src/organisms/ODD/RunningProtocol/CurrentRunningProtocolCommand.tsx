@@ -75,32 +75,31 @@ const RUN_TIMER_STYLE = css`
   color: ${COLORS.black90};
 `
 
-const COMMAND_ROW_STYLE_ANIMATED = css`
+const COMMAND_ROW_STYLE_BASE = css`
   font-size: 1.375rem;
   line-height: 1.75rem;
   font-weight: ${TYPOGRAPHY.fontWeightRegular};
   text-align: center;
-  width: fit-content;
+  width: 100%;
+  max-width: 100%;
   margin: auto;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
+  max-height: 4.6rem; // This ensures we don't show any extra text after truncating.
+  word-break: break-word;
+  white-space: normal;
+`
+
+const COMMAND_ROW_STYLE_ANIMATED = css`
+  ${COMMAND_ROW_STYLE_BASE}
   animation: ${fadeIn} 1.5s ease-in-out;
   ${ODD_ANIMATION_OPTIMIZATIONS}
 `
 
 const COMMAND_ROW_STYLE = css`
-  font-size: 1.375rem;
-  line-height: 1.75rem;
-  font-weight: ${TYPOGRAPHY.fontWeightRegular};
-  text-align: center;
-  width: fit-content;
-  margin: auto;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
+  ${COMMAND_ROW_STYLE_BASE}
 `
 
 interface RunTimerInfo {

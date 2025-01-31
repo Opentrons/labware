@@ -3,7 +3,7 @@ import base64
 import datetime
 import subprocess
 from dataclasses import dataclass
-from typing import Dict, List
+from typing import Any, Dict, List
 
 import boto3
 import docker
@@ -12,7 +12,7 @@ from pydantic import SecretStr
 from rich import print
 from rich.prompt import Prompt
 
-ENVIRONMENTS = ["crt", "dev", "sandbox", "staging", "prod"]
+ENVIRONMENTS = ["staging", "prod"]
 
 
 def get_aws_account_id() -> str:
@@ -28,6 +28,7 @@ def get_aws_region() -> str:
 
 @dataclass(frozen=True)
 class BaseDeploymentConfig:
+    ENV: str
     IMAGE_NAME: str  # local image name
     ECR_URL: str
     ECR_REPOSITORY: str
@@ -41,41 +42,8 @@ class BaseDeploymentConfig:
 
 
 @dataclass(frozen=True)
-class CrtDeploymentConfig(BaseDeploymentConfig):
-    ECR_REPOSITORY: str = "crt-ecr-repo"
-    ECR_URL: str = f"{get_aws_account_id()}.dkr.ecr.{get_aws_region()}.amazonaws.com"
-    IMAGE_NAME: str = "crt-ai-server"
-    CLUSTER_NAME: str = "crt-ai-cluster"
-    SERVICE_NAME: str = "crt-ai-service"
-    CONTAINER_NAME: str = "crt-ai-api"
-    ENV_VARIABLES_SECRET_NAME: str = "crt-environment-variables"
-
-
-@dataclass(frozen=True)
-class SandboxDeploymentConfig(BaseDeploymentConfig):
-    ECR_REPOSITORY: str = "sandbox-ecr-repo"
-    ECR_URL: str = f"{get_aws_account_id()}.dkr.ecr.{get_aws_region()}.amazonaws.com"
-    IMAGE_NAME: str = "sandbox-ai-server"
-    CLUSTER_NAME: str = "sandbox-ai-cluster"
-    SERVICE_NAME: str = "sandbox-ai-service"
-    CONTAINER_NAME: str = "sandbox-ai-api"
-    ENV_VARIABLES_SECRET_NAME: str = "sandbox-environment-variables"
-
-
-@dataclass(frozen=True)
-class DevDeploymentConfig(BaseDeploymentConfig):
-    ECR_REPOSITORY: str = "dev-ecr-repo"
-    ECR_URL: str = f"{get_aws_account_id()}.dkr.ecr.{get_aws_region()}.amazonaws.com"
-    FUNCTION_NAME: str = "dev-api-function"
-    IMAGE_NAME: str = "dev-ai-server"
-    CLUSTER_NAME: str = "dev-ai-cluster"
-    SERVICE_NAME: str = "dev-ai-service"
-    CONTAINER_NAME: str = "dev-ai-api"
-    ENV_VARIABLES_SECRET_NAME: str = "dev-environment-variables"
-
-
-@dataclass(frozen=True)
 class StagingDeploymentConfig(BaseDeploymentConfig):
+    ENV: str = "staging"
     ECR_REPOSITORY: str = "staging-ecr-repo"
     ECR_URL: str = f"{get_aws_account_id()}.dkr.ecr.{get_aws_region()}.amazonaws.com"
     IMAGE_NAME: str = "staging-ai-server"
@@ -87,6 +55,7 @@ class StagingDeploymentConfig(BaseDeploymentConfig):
 
 @dataclass(frozen=True)
 class ProdDeploymentConfig(BaseDeploymentConfig):
+    ENV: str = "prod"
     ECR_REPOSITORY: str = "prod-ecr-repo"
     ECR_URL: str = f"{get_aws_account_id()}.dkr.ecr.{get_aws_region()}.amazonaws.com"
     IMAGE_NAME: str = "prod-ai-server"
@@ -156,7 +125,43 @@ class Deploy:
 
         return updated_environment_variables
 
-    def update_ecs_task(self) -> None:
+    def get_secret_arn(self, secret_name: str) -> str:
+        response = self.secret_manager_client.describe_secret(SecretId=secret_name)
+        return str(response["ARN"])
+
+    def update_secrets_in_container_definition(self, container_definition: dict[str, Any]) -> None:
+        expected_secrets = {field.upper() for field, field_type in self.env_variables.__annotations__.items() if field_type == SecretStr}
+        print(f"Expected secrets: {expected_secrets}")
+
+        task_secrets = {secret["name"].upper() for secret in container_definition.get("secrets", [])}
+        print(f"Existing secrets: {task_secrets}")
+
+        if not task_secrets:
+            raise ValueError("No secrets found in the api container definition ...")
+
+        unexpected_secrets = [secret.upper() for secret in task_secrets if secret not in expected_secrets]
+        if unexpected_secrets:
+            raise ValueError(f"Secrets found in the api container definition that are NOT in Settings: {', '.join(unexpected_secrets)}")
+
+        missing_secrets = [secret.upper() for secret in expected_secrets if secret.upper() not in task_secrets]
+
+        if missing_secrets:
+            print(f"Missing secrets: {missing_secrets}")
+            for secret in missing_secrets:
+                print(f"Adding missing secret: {secret}")
+                # secret name is the same as the property name
+                # of the secret in the Settings class
+                # but with _ replaced with -
+                secret_name = f"{self.config.ENV}-{secret.lower().replace("_", "-")}"
+                value_from = self.get_secret_arn(secret_name)
+                # name is the all caps version of the secret name
+                # valueFrom is the ARN of the secret
+                new_secret = {"name": secret, "valueFrom": value_from}
+                container_definition["secrets"].append(new_secret)
+        else:
+            print("No secrets need to be added.")
+
+    def update_ecs_task(self, dry: bool) -> None:
         print(f"Updating ECS task with new image: {self.full_image_name}")
         response = self.ecs_client.describe_services(cluster=self.config.CLUSTER_NAME, services=[self.config.SERVICE_NAME])
         task_definition_arn = response["services"][0]["taskDefinition"]
@@ -164,6 +169,9 @@ class Deploy:
         task_definition = self.ecs_client.describe_task_definition(taskDefinition=task_definition_arn)["taskDefinition"]
         container_definitions = task_definition["containerDefinitions"]
         for container_definition in container_definitions:
+            # ENV--datadog-agent container has one secret and 2 environment variables
+            # ENV--log-router container has no secrets or environment variables
+            # These are managed in the infra repo, NOT here
             if container_definition["name"] == self.config.CONTAINER_NAME:
                 container_definition["image"] = self.full_image_name
                 environment_variables = container_definition.get("environment", [])
@@ -171,13 +179,15 @@ class Deploy:
                 for key, value in self.env_variables.model_dump().items():
                     if not isinstance(value, SecretStr):
                         # Secrets are not set here
-                        # They are set in the secrets key of ECS task definition
+                        # They are set in the secrets key of the containerDefinition
                         environment_variables = self.update_environment_variables(environment_variables, key, value)
                 # Overwrite the DD_VERSION environment variable
                 # with the current deployment tag
                 # this is what we are using for version currently
                 environment_variables = self.update_environment_variables(environment_variables, "DD_VERSION", self.config.TAG)
                 container_definition["environment"] = environment_variables
+                # Update the secrets in the container definition
+                self.update_secrets_in_container_definition(container_definition)
                 print("Updated container definition:")
                 print(container_definition)
                 break
@@ -195,6 +205,11 @@ class Deploy:
         }
         print("New task definition:")
         print(new_task_definition)
+
+        if dry:
+            print("Dry run, not updating the ECS task.")
+            return
+
         register_response = self.ecs_client.register_task_definition(**new_task_definition)
         new_task_definition_arn = register_response["taskDefinition"]["taskDefinitionArn"]
 
@@ -204,14 +219,21 @@ class Deploy:
             taskDefinition=new_task_definition_arn,
             forceNewDeployment=True,
         )
+        print(f"Deployment to {self.config.ENV} started.")
+        print("The API container definition was updated.")
+        print("A new Task definition was defined and registered.")
+        print("Then we told the ECS service to deploy the new definition.")
+        print("Monitor the deployment in the ECS console.")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Manage ECS Fargate deployment.")
     parser.add_argument("--env", type=str, help=f"Deployment environment {ENVIRONMENTS}")
     parser.add_argument("--tag", type=str, help="The tag and therefore version of the container to use")
+    # action="store_true" sets args.dry to True only if --dry is provided on the command line
+    parser.add_argument("--dry", action="store_true", help="Dry run, do not make any changes")
     args = parser.parse_args()
-    # Determine if the script was called with command-line arguments
+
     if args.env:
         if args.env.lower() not in ENVIRONMENTS:
             print(f"[red]Invalid environment specified: {args.env}[/red]")
@@ -221,7 +243,6 @@ def main() -> None:
             tag = args.tag
         else:
             if args.env:
-                # Passing --env alone generates a tag and does not prompt!
                 tag = str(int(datetime.datetime.now().timestamp()))
     else:
         # Interactive prompts if env not set
@@ -237,24 +258,17 @@ def main() -> None:
         config = ProdDeploymentConfig(TAG=tag)
     elif env == "staging":
         config = StagingDeploymentConfig(TAG=tag)
-    elif env == "crt":
-        config = CrtDeploymentConfig(TAG=tag)
-    elif env == "dev":
-        config = DevDeploymentConfig(TAG=tag)
-    elif env == "sandbox":
-        config = SandboxDeploymentConfig(TAG=tag)
     else:
         print(f"[red]Invalid environment specified: {env}[/red]")
         exit(1)
     aws = Deploy(config)
     aws.build_docker_image()
-    aws.push_docker_image_to_ecr()
-    aws.update_ecs_task()
-    print(f"Deployment to {env} started.")
-    print(f"A new image was built and pushed to ECR with tag: {tag}")
-    print("A new Task definition was defined and registered.")
-    print("Then we told the ECS service to deploy the new definition.")
-    print("Monitor the deployment in the ECS console.")
+    if args.dry:
+        print("Dry run, not pushing image to ECR.")
+    else:
+        aws.push_docker_image_to_ecr()
+        print(f"A new image was built and pushed to ECR with tag: {tag}")
+    aws.update_ecs_task(dry=args.dry)
 
 
 if __name__ == "__main__":

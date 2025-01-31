@@ -13,7 +13,7 @@ const meta: Meta<typeof PromptPreview> = {
         <Flex
           backgroundColor={COLORS.grey10}
           padding={SPACING.spacing40}
-          width={'596px'}
+          width="596px"
         >
           <Story />
         </Flex>

@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import head from 'lodash/head'
 
-import { useHost, useRunCurrentState } from '@opentrons/react-api-client'
+import { useRunCurrentState } from '@opentrons/react-api-client'
 import { getPipetteModelSpecs } from '@opentrons/shared-data'
-import { useTipAttachmentStatus } from '/app/organisms/DropTipWizardFlows'
+import { useTipAttachmentStatus } from '/app/resources/instruments'
 import { ERROR_KINDS } from '/app/organisms/ErrorRecoveryFlows/constants'
 import { getErrorKind } from '/app/organisms/ErrorRecoveryFlows/utils'
 
@@ -11,7 +11,7 @@ import type { Run, Instruments, PipetteData } from '@opentrons/api-client'
 import type {
   PipetteWithTip,
   TipAttachmentStatusResult,
-} from '/app/organisms/DropTipWizardFlows'
+} from '/app/resources/instruments'
 import type { ERUtilsProps } from '/app/organisms/ErrorRecoveryFlows/hooks/useERUtils'
 
 interface UseRecoveryTipStatusProps {
@@ -38,11 +38,9 @@ export function useRecoveryTipStatus(
     failedCommandPipette,
     setFailedCommandPipette,
   ] = useState<PipetteWithTip | null>(null)
-  const host = useHost()
 
   const tipAttachmentStatusUtils = useTipAttachmentStatus({
     ...props,
-    host,
     runRecord: props.runRecord ?? null,
   })
 

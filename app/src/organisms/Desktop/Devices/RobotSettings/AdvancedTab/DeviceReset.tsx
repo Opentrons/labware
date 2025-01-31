@@ -1,4 +1,3 @@
-import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -14,6 +13,8 @@ import {
 
 import { TertiaryButton } from '/app/atoms/buttons'
 
+import type { MouseEventHandler } from 'react'
+
 interface DeviceResetProps {
   updateIsExpanded: (
     isExpanded: boolean,
@@ -28,7 +29,7 @@ export function DeviceReset({
 }: DeviceResetProps): JSX.Element {
   const { t } = useTranslation('device_settings')
 
-  const handleClick: React.MouseEventHandler<HTMLButtonElement> = () => {
+  const handleClick: MouseEventHandler<HTMLButtonElement> = () => {
     if (!isRobotBusy) {
       updateIsExpanded(true, 'deviceReset')
     }

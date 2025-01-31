@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useEffect, useState, Fragment } from 'react'
 import first from 'lodash/first'
 import { Trans, useTranslation } from 'react-i18next'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
@@ -53,8 +53,8 @@ import { MiniCard } from '/app/molecules/MiniCard'
 import { UploadInput } from '/app/molecules/UploadInput'
 import { useTrackCreateProtocolRunEvent } from '/app/organisms/Desktop/Devices/hooks'
 import { useCreateRunFromProtocol } from '/app/organisms/Desktop/ChooseRobotToRunProtocolSlideout/useCreateRunFromProtocol'
-import { ApplyHistoricOffsets } from '/app/organisms/ApplyHistoricOffsets'
-import { useOffsetCandidatesForAnalysis } from '/app/organisms/ApplyHistoricOffsets/hooks/useOffsetCandidatesForAnalysis'
+import { LegacyApplyHistoricOffsets } from '/app/organisms/LegacyApplyHistoricOffsets'
+import { useOffsetCandidatesForAnalysis } from '/app/organisms/LegacyApplyHistoricOffsets/hooks/useOffsetCandidatesForAnalysis'
 import { FileCard } from '../ChooseRobotSlideout/FileCard'
 import {
   getRunTimeParameterFilesForRun,
@@ -62,11 +62,13 @@ import {
 } from '/app/transformations/runs'
 import { getAnalysisStatus } from '/app/organisms/Desktop/ProtocolsLanding/utils'
 
+import type { MouseEventHandler } from 'react'
 import type { DropdownOption } from '@opentrons/components'
 import type { RunTimeParameter } from '@opentrons/shared-data'
 import type { Robot } from '/app/redux/discovery/types'
 import type { StoredProtocolData } from '/app/redux/protocol-storage'
 import type { State } from '/app/redux/types'
+import { useFeatureFlag } from '/app/redux/config'
 
 export const CARD_OUTLINE_BORDER_STYLE = css`
   border-style: ${BORDERS.styleSolid};
@@ -100,34 +102,35 @@ export function ChooseProtocolSlideoutComponent(
   const [
     showRestoreValuesTooltip,
     setShowRestoreValuesTooltip,
-  ] = React.useState<boolean>(false)
+  ] = useState<boolean>(false)
 
   const { robot, showSlideout, onCloseClick } = props
   const { name } = robot
 
+  const isNewLpc = useFeatureFlag('lpcRedesign')
+
   const [
     selectedProtocol,
     setSelectedProtocol,
-  ] = React.useState<StoredProtocolData | null>(null)
-  const [
-    runTimeParametersOverrides,
-    setRunTimeParametersOverrides,
-  ] = React.useState<RunTimeParameter[]>([])
-  const [currentPage, setCurrentPage] = React.useState<number>(1)
-  const [hasParamError, setHasParamError] = React.useState<boolean>(false)
-  const [hasMissingFileParam, setHasMissingFileParam] = React.useState<boolean>(
+  ] = useState<StoredProtocolData | null>(null)
+  const [runTimeParametersOverrides, setRunTimeParametersOverrides] = useState<
+    RunTimeParameter[]
+  >([])
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [hasParamError, setHasParamError] = useState<boolean>(false)
+  const [hasMissingFileParam, setHasMissingFileParam] = useState<boolean>(
     runTimeParametersOverrides?.some(
       parameter => parameter.type === 'csv_file'
     ) ?? false
   )
-  const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
+  const [isInputFocused, setIsInputFocused] = useState<boolean>(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     setRunTimeParametersOverrides(
       selectedProtocol?.mostRecentAnalysis?.runTimeParameters ?? []
     )
   }, [selectedProtocol])
-  React.useEffect(() => {
+  useEffect(() => {
     setHasParamError(errors.length > 0)
     setHasMissingFileParam(
       runTimeParametersOverrides.some(
@@ -149,7 +152,7 @@ export function ChooseProtocolSlideoutComponent(
   const missingAnalysisData =
     analysisStatus === 'error' || analysisStatus === 'stale'
 
-  const [shouldApplyOffsets, setShouldApplyOffsets] = React.useState(true)
+  const [shouldApplyOffsets, setShouldApplyOffsets] = useState(true)
   const offsetCandidates = useOffsetCandidatesForAnalysis(
     (!missingAnalysisData ? selectedProtocol?.mostRecentAnalysis : null) ??
       null,
@@ -211,7 +214,7 @@ export function ChooseProtocolSlideoutComponent(
         }))
       : []
   )
-  const handleProceed: React.MouseEventHandler<HTMLButtonElement> = () => {
+  const handleProceed: MouseEventHandler<HTMLButtonElement> = () => {
     if (selectedProtocol != null) {
       trackCreateProtocolRunEvent({ name: 'createProtocolRecordRequest' })
       const dataFilesForProtocolMap = runTimeParametersOverrides.reduce<
@@ -489,7 +492,7 @@ export function ChooseProtocolSlideoutComponent(
                                 <LinkComponent
                                   color={COLORS.blue55}
                                   role="button"
-                                  to={''}
+                                  to=""
                                 />
                               ),
                             }}
@@ -651,28 +654,30 @@ export function ChooseProtocolSlideoutComponent(
             robot?.ip === OPENTRONS_USB ? appShellRequestor : undefined
           }
         >
-          {currentPage === 1 ? (
-            <ApplyHistoricOffsets
-              offsetCandidates={offsetCandidates}
-              shouldApplyOffsets={shouldApplyOffsets}
-              setShouldApplyOffsets={setShouldApplyOffsets}
-              commands={
-                (!missingAnalysisData
-                  ? selectedProtocol?.mostRecentAnalysis?.commands
-                  : []) ?? []
-              }
-              labware={
-                (!missingAnalysisData
-                  ? selectedProtocol?.mostRecentAnalysis?.labware
-                  : []) ?? []
-              }
-              modules={
-                (!missingAnalysisData
-                  ? selectedProtocol?.mostRecentAnalysis?.modules
-                  : []) ?? []
-              }
-            />
-          ) : null}
+          {currentPage === 1
+            ? !isNewLpc && (
+                <LegacyApplyHistoricOffsets
+                  offsetCandidates={offsetCandidates}
+                  shouldApplyOffsets={shouldApplyOffsets}
+                  setShouldApplyOffsets={setShouldApplyOffsets}
+                  commands={
+                    (!missingAnalysisData
+                      ? selectedProtocol?.mostRecentAnalysis?.commands
+                      : []) ?? []
+                  }
+                  labware={
+                    (!missingAnalysisData
+                      ? selectedProtocol?.mostRecentAnalysis?.labware
+                      : []) ?? []
+                  }
+                  modules={
+                    (!missingAnalysisData
+                      ? selectedProtocol?.mostRecentAnalysis?.modules
+                      : []) ?? []
+                  }
+                />
+              )
+            : null}
           {hasRunTimeParameters ? multiPageFooter : singlePageFooter}
         </ApiHostProvider>
       }
@@ -725,7 +730,7 @@ function StoredProtocolList(props: StoredProtocolListProps): JSX.Element {
   ).filter(
     protocol => protocol.mostRecentAnalysis?.robotType === robot.robotModel
   )
-  React.useEffect(() => {
+  useEffect(() => {
     handleSelectProtocol(first(storedProtocols) ?? null)
   }, [])
 
@@ -744,7 +749,7 @@ function StoredProtocolList(props: StoredProtocolListProps): JSX.Element {
         const requiresCsvRunTimeParameter =
           analysisStatus === 'parameterRequired'
         return (
-          <React.Fragment key={storedProtocol.protocolKey}>
+          <Fragment key={storedProtocol.protocolKey}>
             <Flex flexDirection={DIRECTION_COLUMN}>
               <MiniCard
                 isSelected={isSelected}
@@ -883,7 +888,7 @@ function StoredProtocolList(props: StoredProtocolListProps): JSX.Element {
                 }
               </LegacyStyledText>
             ) : null}
-          </React.Fragment>
+          </Fragment>
         )
       })}
     </Flex>

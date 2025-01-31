@@ -11,6 +11,9 @@ import type { LabwareDefByDefURI } from '../labware-defs'
 import type { LabwareOnDeck } from '../step-forms'
 import type { LabwareDefinition2, ModuleType } from '@opentrons/shared-data'
 // NOTE: this does not distinguish btw versions. Standard labware only (assumes namespace is 'opentrons')
+
+const PLATE_READER_MAX_LABWARE_Z_MM = 16
+
 export const COMPATIBLE_LABWARE_ALLOWLIST_BY_MODULE_TYPE: Record<
   ModuleType,
   Readonly<string[]>
@@ -153,6 +156,18 @@ export const getLabwareIsCustom = (
   labwareOnDeck: LabwareOnDeck
 ): boolean => {
   return labwareOnDeck.labwareDefURI in customLabwares
+}
+
+// This breaks pattern with other module compatibility checks, but it more exactly mirrors Protocol Engine's logic
+// See api/src/opentrons/protocol_engine/state/labware.py for details
+export const getLabwareCompatibleWithAbsorbanceReader = (
+  def: LabwareDefinition2
+): boolean => {
+  return (
+    Object.entries(def.wells).length === 96 &&
+    !def.parameters.isTiprack &&
+    def.dimensions.zDimension <= PLATE_READER_MAX_LABWARE_Z_MM
+  )
 }
 
 export const getAdapterLabwareIsAMatch = (

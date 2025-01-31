@@ -2,7 +2,6 @@
 
 export * from './useConditionalConfirm'
 export * from './useDrag'
-export * from './useIdle'
 export * from './useInterval'
 export * from './useLongPress'
 export * from './useMountEffect'

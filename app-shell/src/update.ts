@@ -11,6 +11,7 @@ const autoUpdater = updater.autoUpdater
 
 autoUpdater.logger = createLogger('update')
 autoUpdater.autoDownload = false
+autoUpdater.forceDevUpdateConfig = true
 
 export const CURRENT_VERSION: string = autoUpdater.currentVersion.version
 
@@ -77,16 +78,9 @@ interface ProgressInfo {
   percent: number
   bytesPerSecond: number
 }
-interface DownloadingPayload {
-  progress: ProgressInfo
-  bytesPerSecond: number
-  percent: number
-  total: number
-  transferred: number
-}
 
 function downloadUpdate(dispatch: Dispatch): void {
-  const onDownloading = (payload: DownloadingPayload): void => {
+  const onDownloading = (payload: ProgressInfo): void => {
     dispatch({ type: 'shell:DOWNLOAD_PERCENTAGE', payload })
   }
   const onDownloaded = (): void => {

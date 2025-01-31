@@ -17,14 +17,14 @@ def test_gripper_definition() -> None:
 
 
 def test_gripper_definition_type() -> None:
-    assert GripperDefinition.parse_obj(GRIPPER_DEF)
+    assert GripperDefinition.model_validate(GRIPPER_DEF)
 
     # missing key
     del GRIPPER_DEF["gripForceProfile"]
     with pytest.raises(ValidationError):
-        assert GripperDefinition.parse_obj(GRIPPER_DEF)
+        assert GripperDefinition.model_validate(GRIPPER_DEF)
 
     # no missing key but with incorrect value
     GRIPPER_DEF["geometry"]["gripForceProfile"] = {"min": 1.0, "max": "0.0"}
     with pytest.raises(ValidationError):
-        assert GripperDefinition.parse_obj(GRIPPER_DEF)
+        assert GripperDefinition.model_validate(GRIPPER_DEF)

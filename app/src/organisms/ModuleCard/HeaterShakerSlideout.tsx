@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCreateLiveCommandMutation } from '@opentrons/react-api-client'
 
@@ -21,6 +21,7 @@ import {
 import { Slideout } from '/app/atoms/Slideout'
 import { SubmitPrimaryButton } from '/app/atoms/buttons'
 
+import type { MouseEventHandler } from 'react'
 import type { HeaterShakerModule } from '/app/redux/modules/types'
 import type { HeaterShakerSetTargetTemperatureCreateCommand } from '@opentrons/shared-data'
 
@@ -35,12 +36,12 @@ export const HeaterShakerSlideout = (
 ): JSX.Element | null => {
   const { module, onCloseClick, isExpanded } = props
   const { t } = useTranslation('device_details')
-  const [hsValue, setHsValue] = React.useState<number | null>(null)
+  const [hsValue, setHsValue] = useState<number | null>(null)
   const { createLiveCommand } = useCreateLiveCommandMutation()
   const moduleName = getModuleDisplayName(module.moduleModel)
   const modulePart = t('temperature')
 
-  const sendSetTemperatureCommand: React.MouseEventHandler<HTMLInputElement> = e => {
+  const sendSetTemperatureCommand: MouseEventHandler<HTMLInputElement> = e => {
     e.preventDefault()
     e.stopPropagation()
 

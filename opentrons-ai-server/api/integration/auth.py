@@ -1,10 +1,9 @@
-from typing import Any, Optional
-
 import jwt
 import structlog
 from fastapi import HTTPException, Security, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer, SecurityScopes
 
+from api.models.user import User
 from api.settings import Settings
 
 settings: Settings = Settings()
@@ -28,8 +27,8 @@ class VerifyToken:
         self.jwks_client = jwt.PyJWKClient(jwks_url)
 
     async def verify(
-        self, security_scopes: SecurityScopes, credentials: Optional[HTTPAuthorizationCredentials] = Security(HTTPBearer())  # noqa: B008
-    ) -> Any:
+        self, security_scopes: SecurityScopes, credentials: HTTPAuthorizationCredentials = Security(HTTPBearer())  # noqa: B008
+    ) -> User:
         if credentials is None:
             raise UnauthenticatedException()
 
@@ -50,8 +49,9 @@ class VerifyToken:
                 audience=self.config.auth0_api_audience,
                 issuer=self.config.auth0_issuer,
             )
-            logger.info("Decoded token", extra={"token": payload})
-            return payload
+            user = User(**payload)
+            logger.info("User object", extra={"user": user})
+            return user
         except jwt.ExpiredSignatureError:
             logger.error("Expired Signature", extra={"credentials": credentials}, exc_info=True)
             # Handle token expiration, e.g., refresh token, re-authenticate, etc.

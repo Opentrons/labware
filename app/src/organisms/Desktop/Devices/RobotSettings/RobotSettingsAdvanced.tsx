@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -50,6 +50,7 @@ import { getRobotSerialNumber, UNREACHABLE } from '/app/redux/discovery'
 import { getTopPortalEl } from '/app/App/portal'
 import { useIsEstopNotDisengaged } from '/app/resources/devices/hooks/useIsEstopNotDisengaged'
 
+import type { MouseEventHandler } from 'react'
 import type { State, Dispatch } from '/app/redux/types'
 import type {
   RobotSettings,
@@ -69,19 +70,18 @@ export function RobotSettingsAdvanced({
   const [
     showRenameRobotSlideout,
     setShowRenameRobotSlideout,
-  ] = React.useState<boolean>(false)
+  ] = useState<boolean>(false)
   const [
     showDeviceResetSlideout,
     setShowDeviceResetSlideout,
-  ] = React.useState<boolean>(false)
-  const [
-    showDeviceResetModal,
-    setShowDeviceResetModal,
-  ] = React.useState<boolean>(false)
+  ] = useState<boolean>(false)
+  const [showDeviceResetModal, setShowDeviceResetModal] = useState<boolean>(
+    false
+  )
   const [
     showFactoryModeSlideout,
     setShowFactoryModeSlideout,
-  ] = React.useState<boolean>(false)
+  ] = useState<boolean>(false)
 
   const isRobotBusy = useIsRobotBusy({ poll: true })
   const isEstopNotDisengaged = useIsEstopNotDisengaged(robotName)
@@ -95,10 +95,8 @@ export function RobotSettingsAdvanced({
   const reachable = robot?.status !== UNREACHABLE
   const sn = robot?.status != null ? getRobotSerialNumber(robot) : null
 
-  const [isRobotReachable, setIsRobotReachable] = React.useState<boolean>(
-    reachable
-  )
-  const [resetOptions, setResetOptions] = React.useState<ResetConfigRequest>({})
+  const [isRobotReachable, setIsRobotReachable] = useState<boolean>(reachable)
+  const [resetOptions, setResetOptions] = useState<ResetConfigRequest>({})
   const findSettings = (id: string): RobotSettingsField | undefined =>
     settings?.find(s => s.id === id)
 
@@ -124,11 +122,11 @@ export function RobotSettingsAdvanced({
 
   const dispatch = useDispatch<Dispatch>()
 
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(fetchSettings(robotName))
   }, [dispatch, robotName])
 
-  React.useEffect(() => {
+  useEffect(() => {
     updateRobotStatus(isRobotBusy)
   }, [isRobotBusy, updateRobotStatus])
 
@@ -291,7 +289,7 @@ export function FeatureFlagToggle({
 
   if (id == null) return null
 
-  const handleClick: React.MouseEventHandler<Element> = () => {
+  const handleClick: MouseEventHandler<Element> = () => {
     if (!isRobotBusy) {
       dispatch(updateSetting(robotName, id, !value))
     }

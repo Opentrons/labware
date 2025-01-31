@@ -237,12 +237,22 @@ class MoveGroupRunner:
             log.warning("Clear move group failed")
 
     def all_nodes(self) -> Set[NodeId]:
-        """Get all of the nodes in the move group runner's move gruops."""
+        """Get all of the nodes in the move group runner's move groups."""
         node_set: Set[NodeId] = set()
         for group in self._move_groups:
             for sequence in group:
                 for node in sequence.keys():
                     node_set.add(node)
+        return node_set
+
+    def all_moving_nodes(self) -> Set[NodeId]:
+        """Get all of the moving nodes in the move group runner's move groups."""
+        node_set: Set[NodeId] = set()
+        for group in self._move_groups:
+            for sequence in group:
+                for node, node_step in sequence.items():
+                    if node_step.is_moving_step():
+                        node_set.add(node)
         return node_set
 
     async def _send_groups(self, can_messenger: CanMessenger) -> None:
@@ -459,6 +469,10 @@ class MoveScheduler:
                 f"Received completion for {node_id} group {group_id} seq {seq_id}"
                 f", which {'is' if in_group else 'isn''t'} in group"
             )
+            if self._moves[group_id] and len(self._moves[group_id]) == 0:
+                log.error(
+                    f"Python bug proven if check {bool(not self._moves[group_id])} len check {len(self._moves[group_id]) == 0}"
+                )
             if not self._moves[group_id]:
                 log.debug(f"Move group {group_id+self._start_at_index} has completed.")
                 self._event.set()

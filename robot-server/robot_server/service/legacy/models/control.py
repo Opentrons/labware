@@ -3,7 +3,7 @@ from functools import partial
 from enum import Enum
 
 from opentrons import types
-from pydantic import BaseModel, Field, root_validator
+from pydantic import model_validator, ConfigDict, BaseModel, Field
 
 
 class MotionTarget(str, Enum):
@@ -28,8 +28,8 @@ PointField = partial(
     Field,
     ...,
     description="A point in deck coordinates (x, y, z)",
-    min_items=3,
-    max_items=3,
+    min_length=3,
+    max_length=3,
 )
 
 
@@ -51,9 +51,8 @@ class RobotPositions(BaseModel):
 
 class RobotPositionsResponse(BaseModel):
     positions: RobotPositions
-
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "positions": {
                     "change_pipette": {
@@ -65,6 +64,7 @@ class RobotPositionsResponse(BaseModel):
                 }
             }
         }
+    )
 
 
 class Mount(str, Enum):
@@ -95,7 +95,8 @@ class RobotMoveTarget(BaseModel):
         "if target is pipette",
     )
 
-    @root_validator(pre=True)
+    @model_validator(mode="before")
+    @classmethod
     def root_validator(cls, values):
         points = values.get("point", [])
         target = values.get("target")
@@ -108,8 +109,8 @@ class RobotMoveTarget(BaseModel):
             )
         return values
 
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "examples": [
                 {
                     "target": "mount",
@@ -124,6 +125,7 @@ class RobotMoveTarget(BaseModel):
                 },
             ]
         }
+    )
 
 
 class RobotHomeTarget(BaseModel):
@@ -141,17 +143,19 @@ class RobotHomeTarget(BaseModel):
         " in that case)",
     )
 
-    @root_validator(pre=True)
+    @model_validator(mode="before")
+    @classmethod
     def root_validate(cls, values):
         # Make sure that mount is present if target is pipette
         if values.get("target") == HomeTarget.pipette.value and not values.get("mount"):
             raise ValueError("mount must be specified if target is pipette")
         return values
 
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "examples": [{"target": "robot"}, {"target": "pipette", "mount": "right"}]
         }
+    )
 
 
 class RobotLightState(BaseModel):
