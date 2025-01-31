@@ -7,7 +7,13 @@ from typing import Optional, List, Tuple, Union, cast, TypeVar, Dict
 from dataclasses import dataclass
 from functools import cached_property
 
-from opentrons.types import Point, DeckSlotName, StagingSlotName, MountType
+from opentrons.types import (
+    Point,
+    DeckSlotName,
+    StagingSlotName,
+    MountType,
+    MeniscusTrackingTarget,
+)
 
 from opentrons_shared_data.errors.exceptions import InvalidStoredData
 from opentrons_shared_data.labware.constants import WELL_NAME_PATTERN
@@ -537,23 +543,29 @@ class GeometryView:
         labware_id: str,
         well_name: str,
         absolute_point: Point,
-        is_meniscus: Optional[bool] = None,
-    ) -> LiquidHandlingWellLocation:
+        meniscus_tracking: Optional[MeniscusTrackingTarget] = None,
+    ) -> Tuple[LiquidHandlingWellLocation, bool]:
         """Given absolute position, get relative location of a well in a labware.
 
         If is_meniscus is True, absolute_point will hold the z-offset in its z field.
         """
-        if is_meniscus:
-            return LiquidHandlingWellLocation(
+        dynamic_liquid_tracking = False
+        if meniscus_tracking:
+            location = LiquidHandlingWellLocation(
                 origin=WellOrigin.MENISCUS,
                 offset=WellOffset(x=0, y=0, z=absolute_point.z),
             )
+            if meniscus_tracking == MeniscusTrackingTarget.END:
+                location.volumeOffset = "operationVolume"
+            elif meniscus_tracking == MeniscusTrackingTarget.DYNAMIC_MENISCUS:
+                dynamic_liquid_tracking = True
         else:
             well_absolute_point = self.get_well_position(labware_id, well_name)
             delta = absolute_point - well_absolute_point
-            return LiquidHandlingWellLocation(
+            location = LiquidHandlingWellLocation(
                 offset=WellOffset(x=delta.x, y=delta.y, z=delta.z)
             )
+        return location, dynamic_liquid_tracking
 
     def get_relative_pick_up_tip_well_location(
         self,
@@ -1469,6 +1481,13 @@ class GeometryView:
             well_location=well_location,
             well_depth=well_depth,
         )
+        # if we're tracking a MENISCUS origin, and targeting either the beginning
+        #   position of the liquid or doing dynamic tracking, return the initial height
+        if (
+            well_location.origin == WellOrigin.MENISCUS
+            and not well_location.volumeOffset
+        ):
+            return initial_handling_height
         if isinstance(well_location, PickUpTipWellLocation):
             volume = 0.0
         elif isinstance(well_location.volumeOffset, float):

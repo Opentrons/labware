@@ -169,7 +169,6 @@ class TransferComponentsExecutor:
             rate=1,
             flow_rate=aspirate_props.flow_rate_by_volume.get_for_volume(volume),
             in_place=True,
-            is_meniscus=None,  # TODO: update this once meniscus is implemented
             correction_volume=correction_volume,
         )
         self._tip_state.append_liquid(volume)
@@ -194,7 +193,6 @@ class TransferComponentsExecutor:
             flow_rate=dispense_props.flow_rate_by_volume.get_for_volume(volume),
             in_place=True,
             push_out=push_out_override,
-            is_meniscus=None,
             correction_volume=correction_volume,
         )
         if push_out_override:
@@ -550,7 +548,6 @@ class TransferComponentsExecutor:
             rate=1,
             flow_rate=flow_rate,
             in_place=True,
-            is_meniscus=None,
             push_out=0,
             correction_volume=correction_volume,
         )

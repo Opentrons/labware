@@ -53,7 +53,7 @@ from opentrons.protocol_api.core.legacy.legacy_instrument_core import (
 
 from opentrons.hardware_control.nozzle_manager import NozzleMap
 from opentrons.protocol_api.disposal_locations import TrashBin, WasteChute
-from opentrons.types import Location, Mount, Point
+from opentrons.types import Location, Mount, Point, MeniscusTrackingTarget
 
 from opentrons_shared_data.pipette.pipette_definition import ValidNozzleMaps
 from opentrons_shared_data.errors.exceptions import (
@@ -341,7 +341,7 @@ def test_aspirate(
             volume=42.0,
             rate=1.23,
             flow_rate=5.67,
-            is_meniscus=None,
+            meniscus_tracking=None,
         ),
         times=1,
     )
@@ -379,22 +379,31 @@ def test_aspirate_well_location(
             volume=42.0,
             rate=1.23,
             flow_rate=5.67,
-            is_meniscus=None,
+            meniscus_tracking=None,
         ),
         times=1,
     )
 
 
+@pytest.mark.parametrize(
+    "meniscus_target",
+    [
+        MeniscusTrackingTarget.BEGINNING,
+        MeniscusTrackingTarget.END,
+        MeniscusTrackingTarget.DYNAMIC_MENISCUS,
+    ],
+)
 def test_aspirate_meniscus_well_location(
     decoy: Decoy,
     mock_instrument_core: InstrumentCore,
     subject: InstrumentContext,
     mock_protocol_core: ProtocolCore,
+    meniscus_target: MeniscusTrackingTarget,
 ) -> None:
     """It should aspirate to a well."""
     mock_well = decoy.mock(cls=Well)
     input_location = Location(
-        point=Point(2, 2, 2), labware=mock_well, _ot_internal_is_meniscus=True
+        point=Point(2, 2, 2), labware=mock_well, _meniscus_tracking=meniscus_target
     )
     last_location = Location(point=Point(9, 9, 9), labware=None)
     decoy.when(mock_instrument_core.get_mount()).then_return(Mount.RIGHT)
@@ -419,7 +428,7 @@ def test_aspirate_meniscus_well_location(
             volume=42.0,
             rate=1.23,
             flow_rate=5.67,
-            is_meniscus=True,
+            meniscus_tracking=meniscus_target,
         ),
         times=1,
     )
@@ -456,7 +465,7 @@ def test_aspirate_from_coordinates(
             volume=42.0,
             rate=1.23,
             flow_rate=5.67,
-            is_meniscus=None,
+            meniscus_tracking=None,
         ),
         times=1,
     )
@@ -970,7 +979,7 @@ def test_dispense_with_location(
             rate=1.23,
             flow_rate=5.67,
             push_out=None,
-            is_meniscus=None,
+            meniscus_tracking=None,
         ),
         times=1,
     )
@@ -1009,7 +1018,7 @@ def test_dispense_with_well_location(
             rate=1.23,
             flow_rate=3.0,
             push_out=7,
-            is_meniscus=None,
+            meniscus_tracking=None,
         ),
         times=1,
     )
@@ -1050,7 +1059,7 @@ def test_dispense_with_well(
             rate=1.23,
             flow_rate=5.67,
             push_out=None,
-            is_meniscus=None,
+            meniscus_tracking=None,
         ),
         times=1,
     )
@@ -1305,7 +1314,7 @@ def test_dispense_0_volume_means_dispense_everything(
             rate=1.23,
             flow_rate=5.67,
             push_out=None,
-            is_meniscus=None,
+            meniscus_tracking=None,
         ),
         times=1,
     )
@@ -1335,7 +1344,7 @@ def test_dispense_0_volume_means_dispense_nothing(
             rate=1.23,
             flow_rate=5.67,
             push_out=None,
-            is_meniscus=None,
+            meniscus_tracking=None,
         ),
         times=1,
     )
@@ -1375,7 +1384,7 @@ def test_aspirate_0_volume_means_aspirate_everything(
             volume=200,
             rate=1.23,
             flow_rate=5.67,
-            is_meniscus=None,
+            meniscus_tracking=None,
         ),
         times=1,
     )
@@ -1415,7 +1424,7 @@ def test_aspirate_0_volume_means_aspirate_nothing(
             volume=0,
             rate=1.23,
             flow_rate=5.67,
-            is_meniscus=None,
+            meniscus_tracking=None,
         ),
         times=1,
     )
@@ -1538,6 +1547,7 @@ def test_mix_no_lpd(
             1.23,
             5.67,
             False,
+            0.0,
             None,
         ),
         times=10,
@@ -1554,6 +1564,7 @@ def test_mix_no_lpd(
                 5.67,
                 False,
                 None,
+                0.0,
                 None,
             ),
             times=10,
@@ -1568,6 +1579,7 @@ def test_mix_no_lpd(
                 5.67,
                 False,
                 0.0,
+                0.0,
                 None,
             ),
             times=9,
@@ -1581,6 +1593,7 @@ def test_mix_no_lpd(
                 5.67,
                 False,
                 None,
+                0.0,
                 None,
             ),
             times=1,
@@ -1638,6 +1651,7 @@ def test_mix_with_lpd(
             1.23,
             5.67,
             False,
+            0.0,
             None,
         ),
         times=10,
@@ -1650,6 +1664,7 @@ def test_mix_with_lpd(
             1.23,
             5.67,
             False,
+            0.0,
             0.0,
             None,
         ),
@@ -1664,6 +1679,7 @@ def test_mix_with_lpd(
             5.67,
             False,
             None,
+            0.0,
             None,
         ),
         times=1,

@@ -100,8 +100,8 @@ class LegacyInstrumentCoreSimulator(
         rate: float,
         flow_rate: float,
         in_place: bool,
-        is_meniscus: Optional[bool] = None,
-        correction_volume: Optional[float] = None,
+        correction_volume: float = 0.0,
+        meniscus_tracking: Optional[types.MeniscusTrackingTarget] = None,
     ) -> None:
         if self.get_current_volume() == 0:
             # Make sure we're at the top of the labware and clear of any
@@ -143,8 +143,8 @@ class LegacyInstrumentCoreSimulator(
         flow_rate: float,
         in_place: bool,
         push_out: Optional[float],
-        is_meniscus: Optional[bool] = None,
-        correction_volume: Optional[float] = None,
+        correction_volume: float = 0.0,
+        meniscus_tracking: Optional[types.MeniscusTrackingTarget] = None,
     ) -> None:
         if isinstance(location, (TrashBin, WasteChute)):
             raise APIVersionError(

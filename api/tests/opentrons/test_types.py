@@ -29,7 +29,7 @@ def test_location_repr_labware(min_lw: Labware) -> None:
     loc = Location(point=Point(x=1.1, y=2.1, z=3.5), labware=min_lw)
     assert (
         f"{loc}"
-        == "Location(point=Point(x=1.1, y=2.1, z=3.5), labware=minimal labware on deck, is_meniscus=False)"
+        == "Location(point=Point(x=1.1, y=2.1, z=3.5), labware=minimal labware on deck, meniscus_tracking=None)"
     )
 
 
@@ -38,7 +38,7 @@ def test_location_repr_well(min_lw: Labware) -> None:
     loc = Location(point=Point(x=1, y=2, z=3), labware=min_lw.wells()[0])
     assert (
         f"{loc}"
-        == "Location(point=Point(x=1, y=2, z=3), labware=A1 of minimal labware on deck, is_meniscus=False)"
+        == "Location(point=Point(x=1, y=2, z=3), labware=A1 of minimal labware on deck, meniscus_tracking=None)"
     )
 
 
@@ -47,7 +47,7 @@ def test_location_repr_slot() -> None:
     loc = Location(point=Point(x=-1, y=2, z=3), labware="1")
     assert (
         f"{loc}"
-        == "Location(point=Point(x=-1, y=2, z=3), labware=1, is_meniscus=False)"
+        == "Location(point=Point(x=-1, y=2, z=3), labware=1, meniscus_tracking=None)"
     )
 
 
