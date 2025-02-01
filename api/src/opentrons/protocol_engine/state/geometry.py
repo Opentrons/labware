@@ -1477,7 +1477,7 @@ class GeometryView:
             volume = operation_volume or 0.0
 
         if volume:
-            return self.get_well_height_after_volume(
+            return self.get_well_height_after_liquid_handling(
                 labware_id=labware_id,
                 well_name=well_name,
                 initial_height=initial_handling_height,
@@ -1485,6 +1485,49 @@ class GeometryView:
             )
         else:
             return initial_handling_height
+
+    def get_current_well_volume(
+        self,
+        labware_id: str,
+        well_name: str,
+    ) -> float:
+        """Returns most recently updated volume in specified well."""
+        last_updated = self._wells.get_last_liquid_update(labware_id, well_name)
+        if last_updated is None:
+            raise errors.LiquidHeightUnknownError(
+                "Must LiquidProbe or LoadLiquid before specifying WellOrigin.MENISCUS."
+            )
+
+        well_liquid = self._wells.get_well_liquid_info(
+            labware_id=labware_id, well_name=well_name
+        )
+        if (
+            well_liquid.probed_height is not None
+            and well_liquid.probed_height.height is not None
+            and well_liquid.probed_height.last_probed == last_updated
+        ):
+            return self.get_well_volume_at_height(
+                labware_id=labware_id,
+                well_name=well_name,
+                height=well_liquid.probed_height.height,
+            )
+        elif (
+            well_liquid.loaded_volume is not None
+            and well_liquid.loaded_volume.volume is not None
+            and well_liquid.loaded_volume.last_loaded == last_updated
+        ):
+            return well_liquid.loaded_volume.volume
+        elif (
+            well_liquid.probed_volume is not None
+            and well_liquid.probed_volume.volume is not None
+            and well_liquid.probed_volume.last_probed == last_updated
+        ):
+            return well_liquid.probed_volume.volume
+        else:
+            # This should not happen if there was an update but who knows
+            raise errors.LiquidVolumeUnknownError(
+                f"Unable to find liquid volume despite an update at {last_updated}."
+            )
 
     def get_meniscus_height(
         self,
@@ -1552,7 +1595,7 @@ class GeometryView:
             )
         return float(handling_height)
 
-    def get_well_height_after_volume(
+    def get_well_height_after_liquid_handling(
         self, labware_id: str, well_name: str, initial_height: float, volume: float
     ) -> float:
         """Return the height of liquid in a labware well after a given volume has been handled.
@@ -1569,6 +1612,28 @@ class GeometryView:
         return find_height_at_well_volume(
             target_volume=final_volume, well_geometry=well_geometry
         )
+
+    def get_well_height_after_liquid_handling_no_error(
+        self, labware_id: str, well_name: str, initial_height: float, volume: float
+    ) -> float:
+        """Return what the height of liquid in a labware well after liquid handling will be.
+
+        This raises no error if the value returned is an invalid physical location, so it should never be
+        used for navigation, only for a pre-emptive estimate.
+        """
+        well_geometry = self._labware.get_well_geometry(
+            labware_id=labware_id, well_name=well_name
+        )
+        initial_volume = find_volume_at_well_height(
+            target_height=initial_height, well_geometry=well_geometry
+        )
+        final_volume = initial_volume + volume
+        well_volume = find_height_at_well_volume(
+            target_volume=final_volume,
+            well_geometry=well_geometry,
+            raise_error_if_result_invalid=False,
+        )
+        return well_volume
 
     def get_well_height_at_volume(
         self, labware_id: str, well_name: str, volume: float

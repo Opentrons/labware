@@ -1155,6 +1155,49 @@ def test_get_display_name(
     assert subject.get_display_name() == "display-name"
 
 
+@pytest.mark.parametrize("tip", [50, 200, 1000])
+def test_get_minimum_liquid_sense_height(
+    decoy: Decoy, subject: InstrumentCore, mock_engine_client: EngineClient, tip: int
+) -> None:
+    """Make sure get minimum liquid sense height returns the appropriate minHeight for its tip."""
+    dummy_lld_settings = {
+        "t50": {"minHeight": 1.0, "minVolume": 11},
+        "t200": {"minHeight": 2.0, "minVolume": 22},
+        "t1000": {"minHeight": 3.0, "minVolume": 33},
+    }
+    decoy.when(
+        mock_engine_client.state.pipettes.get_pipette_lld_settings(subject.pipette_id)
+    ).then_return(dummy_lld_settings)
+    decoy.when(
+        mock_engine_client.state.pipettes.get_attached_tip("abc123")
+    ).then_return(TipGeometry(length=1, diameter=2, volume=tip))
+    assert (
+        subject.get_minimum_liquid_sense_height()
+        == dummy_lld_settings[f"t{tip}"]["minHeight"]
+    )
+
+
+def test_get_minimum_liquid_sense_height_requires_tip_presence(
+    decoy: Decoy,
+    subject: InstrumentCore,
+    mock_engine_client: EngineClient,
+) -> None:
+    """Make sure get_minimum_liquid_sense_height propagates a TipNotAttachedError."""
+    dummy_lld_settings = {
+        "t50": {"minHeight": 1.0, "minVolume": 11},
+        "t200": {"minHeight": 2.0, "minVolume": 22},
+        "t1000": {"minHeight": 3.0, "minVolume": 33},
+    }
+    decoy.when(
+        mock_engine_client.state.pipettes.get_pipette_lld_settings(subject.pipette_id)
+    ).then_return(dummy_lld_settings)
+    decoy.when(
+        mock_engine_client.state.pipettes.get_attached_tip("abc123")
+    ).then_return(None)
+    with pytest.raises(TipNotAttachedError):
+        subject.get_minimum_liquid_sense_height()
+
+
 def test_get_min_volume(
     decoy: Decoy,
     subject: InstrumentCore,

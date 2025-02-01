@@ -36,7 +36,6 @@ from opentrons.protocols.api_support.util import (
     UnsupportedAPIError,
 )
 
-
 # TODO(mc, 2022-09-02): re-exports provided for backwards compatibility
 # remove when their usage is no longer needed
 from opentrons.protocols.labware import (  # noqa: F401
@@ -49,7 +48,10 @@ from . import validation
 from ._liquid import Liquid
 from ._types import OffDeckType
 from .core import well_grid
-from .core.engine import ENGINE_CORE_API_VERSION, SET_OFFSET_RESTORED_API_VERSION
+from .core.engine import (
+    ENGINE_CORE_API_VERSION,
+    SET_OFFSET_RESTORED_API_VERSION,
+)
 from .core.labware import AbstractLabware
 from .core.module import AbstractModuleCore
 from .core.core_map import LoadedCoreMap
@@ -300,6 +302,32 @@ class Well:
             liquid=liquid,
             volume=volume,
         )
+
+    @requires_version(2, 21)
+    def current_liquid_height(self) -> float:
+        """Get the current liquid height in a well."""
+        return self._core.current_liquid_height()
+
+    @requires_version(2, 21)
+    def current_well_volume(self) -> float:
+        """Get the current liquid volume in a well."""
+        return self._core.get_well_volume()
+
+    @requires_version(2, 21)
+    def estimate_liquid_height_after_pipetting(self, operation_volume: float) -> float:
+        """Check the height of the liquid within a well.
+
+        :returns: The height, in mm, of the liquid from the deck.
+
+        :meta private:
+
+        This is intended for Opentrons internal use only and is not a guaranteed API.
+        """
+
+        projected_final_height = self._core.estimate_liquid_height_after_pipetting(
+            operation_volume=operation_volume,
+        )
+        return projected_final_height
 
     def _from_center_cartesian(self, x: float, y: float, z: float) -> Point:
         """

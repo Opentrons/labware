@@ -226,6 +226,10 @@ class AbstractInstrument(ABC, Generic[WellCoreType, LabwareCoreType]):
         ...
 
     @abstractmethod
+    def get_minimum_liquid_sense_height(self) -> float:
+        ...
+
+    @abstractmethod
     def get_hardware_state(self) -> PipetteDict:
         """Get the current state of the pipette hardware as a dictionary."""
         ...
