@@ -106,7 +106,7 @@ const POSITION_PROPS = [
 
 const TRANSITION_PROPS = ['transition'] as const
 
-const STYLE_PROPS = [
+export const STYLE_PROPS = [
   ...COLOR_PROPS,
   ...TYPOGRAPHY_PROPS,
   ...SPACING_PROPS,

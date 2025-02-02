@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { COLORS } from '../../helix-design-system'
+import { BORDERS, COLORS } from '../../helix-design-system'
 import { RESPONSIVENESS, SPACING, TYPOGRAPHY } from '../../ui-style-constants'
 import { ALIGN_CENTER } from '../../styles'
 import type { StyleProps } from '../../primitives'
@@ -26,6 +26,11 @@ export const MenuItem = styled.button<ButtonProps>`
   &:disabled {
     background-color: ${COLORS.transparent};
     color: ${COLORS.grey40};
+  }
+
+  &:focus-visible {
+    outline: 3px ${BORDERS.styleSolid} ${COLORS.blue50};
+    outline-offset: 2px;
   }
 
   @media ${RESPONSIVENESS.touchscreenMediaQuerySpecs} {

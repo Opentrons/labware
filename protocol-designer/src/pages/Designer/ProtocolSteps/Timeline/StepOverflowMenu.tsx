@@ -1,16 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 
-import {
-  BORDERS,
-  COLORS,
-  DIRECTION_COLUMN,
-  Divider,
-  Flex,
-  MenuItem,
-  NO_WRAP,
-  POSITION_ABSOLUTE,
-} from '@opentrons/components'
+import { Divider, MenuItem, MenuList, NO_WRAP } from '@opentrons/components'
 import { analyticsEvent } from '../../../../analytics/actions'
 import { actions as stepsActions } from '../../../../ui/steps'
 import {
@@ -26,7 +17,12 @@ import {
   getUnsavedForm,
 } from '../../../../step-forms/selectors'
 
-import type { Dispatch, MutableRefObject, SetStateAction } from 'react'
+import type {
+  Dispatch,
+  MouseEvent,
+  MutableRefObject,
+  SetStateAction,
+} from 'react'
 import type { ThunkDispatch } from 'redux-thunk'
 import type { BaseState } from '../../../../types'
 import type { StepIdType } from '../../../../form-types'
@@ -97,17 +93,13 @@ export function StepOverflowMenu(props: StepOverflowMenuProps): JSX.Element {
 
   return (
     <>
-      <Flex
-        ref={menuRootRef}
+      <MenuList
         zIndex={12}
+        ref={menuRootRef}
         top={top}
         left="18.75rem"
-        position={POSITION_ABSOLUTE}
+        right={undefined}
         whiteSpace={NO_WRAP}
-        borderRadius={BORDERS.borderRadius8}
-        boxShadow="0px 1px 3px rgba(0, 0, 0, 0.2)"
-        backgroundColor={COLORS.white}
-        flexDirection={DIRECTION_COLUMN}
         onClick={(e: MouseEvent) => {
           e.preventDefault()
           e.stopPropagation()
@@ -173,7 +165,7 @@ export function StepOverflowMenu(props: StepOverflowMenuProps): JSX.Element {
             </MenuItem>
           </>
         )}
-      </Flex>
+      </MenuList>
     </>
   )
 }

@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import {
   ALIGN_CENTER,
-  BORDERS,
   COLORS,
   CURSOR_POINTER,
   DIRECTION_COLUMN,
@@ -13,8 +12,8 @@ import {
   Icon,
   LiquidIcon,
   MenuItem,
+  MenuList,
   OVERFLOW_AUTO,
-  POSITION_ABSOLUTE,
   SPACING,
   StyledText,
   TYPOGRAPHY,
@@ -42,17 +41,12 @@ export function LiquidsOverflowMenu(
   const { t } = useTranslation(['starting_deck_state'])
   const liquids = useSelector(labwareIngredSelectors.allIngredientNamesIds)
   const dispatch: ThunkDispatch<any> = useDispatch()
-
   return (
-    <Flex
-      position={POSITION_ABSOLUTE}
+    <MenuList
       zIndex={12}
       right={location.pathname === '/liquids' ? SPACING.spacing12 : '3.125rem'}
       top={`calc(${NAV_HEIGHT} - 6px)`}
       ref={overflowWrapperRef}
-      borderRadius={BORDERS.borderRadius8}
-      boxShadow="0px 1px 3px rgba(0, 0, 0, 0.2)"
-      backgroundColor={COLORS.white}
       flexDirection={DIRECTION_COLUMN}
       onClick={(e: MouseEvent) => {
         e.preventDefault()
@@ -113,6 +107,6 @@ export function LiquidsOverflowMenu(
           </StyledText>
         </Flex>
       </MenuItem>
-    </Flex>
+    </MenuList>
   )
 }
