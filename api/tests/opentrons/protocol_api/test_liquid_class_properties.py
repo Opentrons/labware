@@ -37,7 +37,7 @@ def test_build_aspirate_settings() -> None:
     }
     assert aspirate_properties.retract.touch_tip.enabled is True
     assert aspirate_properties.retract.touch_tip.z_offset == 2
-    assert aspirate_properties.retract.touch_tip.mm_to_edge == 1
+    assert aspirate_properties.retract.touch_tip.mm_from_edge == 1
     assert aspirate_properties.retract.touch_tip.speed == 50
     assert aspirate_properties.retract.delay.enabled is True
     assert aspirate_properties.retract.delay.duration == 1
@@ -87,8 +87,8 @@ def test_aspirate_settings_overrides() -> None:
     assert aspirate_properties.retract.touch_tip.enabled is False
     aspirate_properties.retract.touch_tip.z_offset = 2.34
     assert aspirate_properties.retract.touch_tip.z_offset == 2.34
-    aspirate_properties.retract.touch_tip.mm_to_edge = 4.56
-    assert aspirate_properties.retract.touch_tip.mm_to_edge == 4.56
+    aspirate_properties.retract.touch_tip.mm_from_edge = 4.56
+    assert aspirate_properties.retract.touch_tip.mm_from_edge == 4.56
     aspirate_properties.retract.touch_tip.speed = 501
     assert aspirate_properties.retract.touch_tip.speed == 501
     aspirate_properties.retract.delay.enabled = False
@@ -140,7 +140,7 @@ def test_build_single_dispense_settings() -> None:
     }
     assert single_dispense_properties.retract.touch_tip.enabled is True
     assert single_dispense_properties.retract.touch_tip.z_offset == 2
-    assert single_dispense_properties.retract.touch_tip.mm_to_edge == 1
+    assert single_dispense_properties.retract.touch_tip.mm_from_edge == 1
     assert single_dispense_properties.retract.touch_tip.speed == 50
     assert single_dispense_properties.retract.blowout.enabled is True
     assert single_dispense_properties.retract.blowout.location is not None
@@ -200,8 +200,8 @@ def test_single_dispense_settings_override() -> None:
     assert single_dispense_properties.retract.touch_tip.enabled is False
     single_dispense_properties.retract.touch_tip.z_offset = 2.34
     assert single_dispense_properties.retract.touch_tip.z_offset == 2.34
-    single_dispense_properties.retract.touch_tip.mm_to_edge = 1.11
-    assert single_dispense_properties.retract.touch_tip.mm_to_edge == 1.11
+    single_dispense_properties.retract.touch_tip.mm_from_edge = 1.11
+    assert single_dispense_properties.retract.touch_tip.mm_from_edge == 1.11
     single_dispense_properties.retract.touch_tip.speed = 543
     assert single_dispense_properties.retract.touch_tip.speed == 543
     single_dispense_properties.retract.blowout.enabled = False
@@ -259,7 +259,7 @@ def test_build_multi_dispense_settings() -> None:
     }
     assert multi_dispense_properties.retract.touch_tip.enabled is True
     assert multi_dispense_properties.retract.touch_tip.z_offset == 2
-    assert multi_dispense_properties.retract.touch_tip.mm_to_edge == 1
+    assert multi_dispense_properties.retract.touch_tip.mm_from_edge == 1
     assert multi_dispense_properties.retract.touch_tip.speed == 50
     assert multi_dispense_properties.retract.blowout.enabled is False
     assert multi_dispense_properties.retract.blowout.location is None
@@ -318,8 +318,8 @@ def test_multi_dispense_settings_override() -> None:
     assert multi_dispense_properties.retract.touch_tip.enabled is False
     multi_dispense_properties.retract.touch_tip.z_offset = 2.34
     assert multi_dispense_properties.retract.touch_tip.z_offset == 2.34
-    multi_dispense_properties.retract.touch_tip.mm_to_edge = 1.11
-    assert multi_dispense_properties.retract.touch_tip.mm_to_edge == 1.11
+    multi_dispense_properties.retract.touch_tip.mm_from_edge = 1.11
+    assert multi_dispense_properties.retract.touch_tip.mm_from_edge == 1.11
     multi_dispense_properties.retract.touch_tip.speed = 543
     assert multi_dispense_properties.retract.touch_tip.speed == 543
     multi_dispense_properties.retract.blowout.enabled = False

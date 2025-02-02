@@ -41,7 +41,7 @@
                 "enable": true,
                 "params": {
                   "zOffset": 2,
-                  "mmToEdge": 1,
+                  "mmFromEdge": 1,
                   "speed": 50
                 }
               },
@@ -117,7 +117,7 @@
                 "enable": true,
                 "params": {
                   "zOffset": 2,
-                  "mmToEdge": 1,
+                  "mmFromEdge": 1,
                   "speed": 50
                 }
               },
@@ -192,7 +192,7 @@
                 "enable": true,
                 "params": {
                   "zOffset": 2,
-                  "mmToEdge": 1,
+                  "mmFromEdge": 1,
                   "speed": 50
                 }
               },

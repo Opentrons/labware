@@ -126,7 +126,7 @@ class TouchTipProperties:
 
     _enabled: bool
     _z_offset: Optional[float]
-    _mm_to_edge: Optional[float]
+    _mm_from_edge: Optional[float]
     _speed: Optional[float]
 
     @property
@@ -137,10 +137,10 @@ class TouchTipProperties:
     def enabled(self, enable: bool) -> None:
         validated_enable = validation.ensure_boolean(enable)
         if validated_enable and (
-            self._z_offset is None or self._mm_to_edge is None or self._speed is None
+            self._z_offset is None or self._mm_from_edge is None or self._speed is None
         ):
             raise ValueError(
-                "z_offset, mm_to_edge and speed must be set before enabling touch tip."
+                "z_offset, mm_from_edge and speed must be set before enabling touch tip."
             )
         self._enabled = validated_enable
 
@@ -154,13 +154,13 @@ class TouchTipProperties:
         self._z_offset = validated_offset
 
     @property
-    def mm_to_edge(self) -> Optional[float]:
-        return self._mm_to_edge
+    def mm_from_edge(self) -> Optional[float]:
+        return self._mm_from_edge
 
-    @mm_to_edge.setter
-    def mm_to_edge(self, new_mm: float) -> None:
+    @mm_from_edge.setter
+    def mm_from_edge(self, new_mm: float) -> None:
         validated_mm = validation.ensure_float(new_mm)
-        self._mm_to_edge = validated_mm
+        self._mm_from_edge = validated_mm
 
     @property
     def speed(self) -> Optional[float]:
@@ -175,12 +175,12 @@ class TouchTipProperties:
         """Get the touch tip params in schema v1 shape."""
         if (
             self._z_offset is not None
-            and self._mm_to_edge is not None
+            and self._mm_from_edge is not None
             and self._speed is not None
         ):
             return SharedDataTouchTipParams(
                 zOffset=self._z_offset,
-                mmToEdge=self._mm_to_edge,
+                mmFromEdge=self._mm_from_edge,
                 speed=self._speed,
             )
         else:
@@ -591,16 +591,16 @@ def _build_touch_tip_properties(
 ) -> TouchTipProperties:
     if touch_tip_properties.params is not None:
         z_offset = touch_tip_properties.params.zOffset
-        mm_to_edge = touch_tip_properties.params.mmToEdge
+        mm_from_edge = touch_tip_properties.params.mmFromEdge
         speed = touch_tip_properties.params.speed
     else:
         z_offset = None
-        mm_to_edge = None
+        mm_from_edge = None
         speed = None
     return TouchTipProperties(
         _enabled=touch_tip_properties.enable,
         _z_offset=z_offset,
-        _mm_to_edge=mm_to_edge,
+        _mm_from_edge=mm_from_edge,
         _speed=speed,
     )
 

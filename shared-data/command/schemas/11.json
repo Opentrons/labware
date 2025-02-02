@@ -2062,7 +2062,7 @@
     "LiquidClassTouchTipParams": {
       "description": "Parameters for touch-tip.",
       "properties": {
-        "mmToEdge": {
+        "mmFromEdge": {
           "anyOf": [
             {
               "type": "integer"
@@ -2072,7 +2072,7 @@
             }
           ],
           "description": "Offset away from the the well edge, in millimeters.",
-          "title": "Mmtoedge"
+          "title": "Mmfromedge"
         },
         "speed": {
           "anyOf": [
@@ -2101,7 +2101,7 @@
           "title": "Zoffset"
         }
       },
-      "required": ["zOffset", "mmToEdge", "speed"],
+      "required": ["zOffset", "mmFromEdge", "speed"],
       "title": "LiquidClassTouchTipParams",
       "type": "object"
     },

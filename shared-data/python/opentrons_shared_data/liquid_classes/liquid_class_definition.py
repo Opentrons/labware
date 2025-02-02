@@ -100,7 +100,7 @@ class LiquidClassTouchTipParams(BaseModel):
         ...,
         description="Offset from the top of the well for touch-tip, in millimeters.",
     )
-    mmToEdge: _Number = Field(
+    mmFromEdge: _Number = Field(
         ..., description="Offset away from the the well edge, in millimeters."
     )
     speed: _NonNegativeNumber = Field(

@@ -904,7 +904,7 @@ def maximal_liquid_class_def() -> LiquidClassSchemaV1:
                                 touchTip=TouchTipProperties(
                                     enable=True,
                                     params=LiquidClassTouchTipParams(
-                                        zOffset=-1, mmToEdge=0.5, speed=30
+                                        zOffset=-1, mmFromEdge=0.5, speed=30
                                     ),
                                 ),
                                 delay=DelayProperties(
@@ -947,7 +947,7 @@ def maximal_liquid_class_def() -> LiquidClassSchemaV1:
                                 touchTip=TouchTipProperties(
                                     enable=True,
                                     params=LiquidClassTouchTipParams(
-                                        zOffset=-1, mmToEdge=0.75, speed=30
+                                        zOffset=-1, mmFromEdge=0.75, speed=30
                                     ),
                                 ),
                                 delay=DelayProperties(
@@ -990,7 +990,7 @@ def maximal_liquid_class_def() -> LiquidClassSchemaV1:
                                 touchTip=TouchTipProperties(
                                     enable=False,
                                     params=LiquidClassTouchTipParams(
-                                        zOffset=-1, mmToEdge=0.5, speed=30
+                                        zOffset=-1, mmFromEdge=0.5, speed=30
                                     ),
                                 ),
                                 delay=DelayProperties(

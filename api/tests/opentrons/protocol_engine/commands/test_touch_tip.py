@@ -150,7 +150,7 @@ async def test_touch_tip_implementation(
     )
 
 
-async def test_touch_tip_implementation_with_mm_to_edge(
+async def test_touch_tip_implementation_with_mm_from_edge(
     decoy: Decoy,
     mock_state_view: StateView,
     mock_movement_handler: MovementHandler,

@@ -295,7 +295,7 @@ class TransferComponentsExecutor:
             assert (
                 touch_tip_props.speed is not None
                 and touch_tip_props.z_offset is not None
-                and touch_tip_props.mm_to_edge is not None
+                and touch_tip_props.mm_from_edge is not None
             )
             self._instrument.touch_tip(
                 location=retract_location,
@@ -303,7 +303,7 @@ class TransferComponentsExecutor:
                 radius=1,
                 z_offset=touch_tip_props.z_offset,
                 speed=touch_tip_props.speed,
-                mm_from_edge=touch_tip_props.mm_to_edge,
+                mm_from_edge=touch_tip_props.mm_from_edge,
             )
             self._instrument.move_to(
                 location=retract_location,
@@ -462,7 +462,7 @@ class TransferComponentsExecutor:
             assert (
                 touch_tip_props.speed is not None
                 and touch_tip_props.z_offset is not None
-                and touch_tip_props.mm_to_edge is not None
+                and touch_tip_props.mm_from_edge is not None
             )
             # TODO:, check that when blow out is a non-dest-well,
             #  whether the touch tip params from transfer props should be used for
@@ -475,7 +475,7 @@ class TransferComponentsExecutor:
                         radius=1,
                         z_offset=touch_tip_props.z_offset,
                         speed=touch_tip_props.speed,
-                        mm_from_edge=touch_tip_props.mm_to_edge,
+                        mm_from_edge=touch_tip_props.mm_from_edge,
                     )
                 except TouchTipDisabledError:
                     # TODO: log a warning

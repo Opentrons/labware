@@ -73,7 +73,7 @@
               "type": "number",
               "description": "Offset from the top of the well for touch-tip, in millimeters."
             },
-            "mmToEdge": {
+            "mmFromEdge": {
               "type": "number",
               "description": "Offset away from the the well edge, in millimeters."
             },
@@ -82,7 +82,7 @@
               "description": "Touch-tip speed, in millimeters per second."
             }
           },
-          "required": ["zOffset", "mmToEdge", "speed"],
+          "required": ["zOffset", "mmFromEdge", "speed"],
           "additionalProperties": false
         }
       },
