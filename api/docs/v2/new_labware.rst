@@ -253,7 +253,6 @@ Equivalently, using ``rows_by_name``::
 
 .. versionadded:: 2.0
 
-
 .. _labeling-liquids:
 
 *************************
@@ -324,6 +323,7 @@ The ``load_liquid`` arguments include a volume amount (``volume=n`` in µL). Thi
 
 .. _v2-location-within-wells:
 .. _new-labware-well-properties:
+
 
 ***************
 Well Dimensions
