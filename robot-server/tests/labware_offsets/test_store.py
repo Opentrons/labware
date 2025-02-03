@@ -6,16 +6,21 @@ import pytest
 import sqlalchemy
 
 from opentrons.protocol_engine import (
-    LabwareOffset,
-    LegacyLabwareOffsetLocation,
     LabwareOffsetVector,
+    OnLabwareOffsetLocationSequenceComponent,
+    OnModuleOffsetLocationSequenceComponent,
+    OnAddressableAreaOffsetLocationSequenceComponent,
 )
 from opentrons.protocol_engine.types import ModuleModel
-from opentrons.types import DeckSlotName
 
 from robot_server.labware_offsets.store import (
     LabwareOffsetStore,
     LabwareOffsetNotFoundError,
+)
+from robot_server.labware_offsets.models import (
+    StoredLabwareOffset,
+    DoNotFilterType,
+    DO_NOT_FILTER,
 )
 
 
@@ -25,64 +30,228 @@ def subject(sql_engine: sqlalchemy.engine.Engine) -> LabwareOffsetStore:
     return LabwareOffsetStore(sql_engine)
 
 
-def _get_all(store: LabwareOffsetStore) -> list[LabwareOffset]:
+def _get_all(store: LabwareOffsetStore) -> list[StoredLabwareOffset]:
     return store.search()
 
 
-def test_filter_fields(subject: LabwareOffsetStore) -> None:
+@pytest.mark.parametrize(
+    argnames=[
+        "id_filter",
+        "definition_uri_filter",
+        "location_addressable_area_filter",
+        "location_module_model_filter",
+        "location_labware_uri_filter",
+        "returned_ids",
+    ],
+    argvalues=[
+        pytest.param(
+            "a",
+            DO_NOT_FILTER,
+            DO_NOT_FILTER,
+            DO_NOT_FILTER,
+            DO_NOT_FILTER,
+            ["a"],
+            id="id-only",
+        ),
+        pytest.param(
+            DO_NOT_FILTER,
+            "definitionUri a",
+            DO_NOT_FILTER,
+            DO_NOT_FILTER,
+            DO_NOT_FILTER,
+            ["a", "c", "d", "e"],
+            id="labware-only",
+        ),
+        pytest.param(
+            "a",
+            "definitionUri a",
+            DO_NOT_FILTER,
+            DO_NOT_FILTER,
+            DO_NOT_FILTER,
+            ["a"],
+            id="labware-and-id-matching",
+        ),
+        pytest.param(
+            "a",
+            "definitionUri b",
+            DO_NOT_FILTER,
+            DO_NOT_FILTER,
+            DO_NOT_FILTER,
+            [],
+            id="labware-and-id-conflicting",
+        ),
+        pytest.param(
+            DO_NOT_FILTER,
+            DO_NOT_FILTER,
+            "A1",
+            DO_NOT_FILTER,
+            DO_NOT_FILTER,
+            ["a", "c", "d", "e"],
+            id="aa-only",
+        ),
+        pytest.param(
+            DO_NOT_FILTER,
+            DO_NOT_FILTER,
+            "A1",
+            None,
+            None,
+            ["c"],
+            id="aa-and-not-mod-or-lw",
+        ),
+        pytest.param(
+            DO_NOT_FILTER,
+            DO_NOT_FILTER,
+            "A1",
+            None,
+            DO_NOT_FILTER,
+            ["c", "d"],
+            id="aa-and-not-module",
+        ),
+        pytest.param(
+            DO_NOT_FILTER,
+            DO_NOT_FILTER,
+            "A1",
+            DO_NOT_FILTER,
+            None,
+            ["c", "e"],
+            id="aa-and-not-lw",
+        ),
+        pytest.param(
+            DO_NOT_FILTER,
+            DO_NOT_FILTER,
+            DO_NOT_FILTER,
+            ModuleModel.MAGNETIC_BLOCK_V1,
+            DO_NOT_FILTER,
+            ["b", "e"],
+            id="module-only",
+        ),
+        pytest.param(
+            DO_NOT_FILTER,
+            DO_NOT_FILTER,
+            DO_NOT_FILTER,
+            ModuleModel.MAGNETIC_BLOCK_V1,
+            None,
+            ["e"],
+            id="module-and-not-lw",
+        ),
+        pytest.param(
+            DO_NOT_FILTER,
+            DO_NOT_FILTER,
+            DO_NOT_FILTER,
+            DO_NOT_FILTER,
+            "location.definitionUri a",
+            ["a", "d"],
+            id="lw-only",
+        ),
+        pytest.param(
+            DO_NOT_FILTER,
+            DO_NOT_FILTER,
+            DO_NOT_FILTER,
+            None,
+            "location.definitionUri a",
+            ["d"],
+            id="lw-and-not-module",
+        ),
+    ],
+)
+def test_filter_fields(
+    subject: LabwareOffsetStore,
+    id_filter: str | DoNotFilterType,
+    definition_uri_filter: str | DoNotFilterType,
+    location_addressable_area_filter: str | DoNotFilterType,
+    location_module_model_filter: ModuleModel | None | DoNotFilterType,
+    location_labware_uri_filter: str | None | DoNotFilterType,
+    returned_ids: list[str],
+) -> None:
     """Test each filterable field to make sure it returns only matching entries."""
-    offset_a = LabwareOffset(
-        id="a",
-        createdAt=datetime.now(timezone.utc),
-        definitionUri="definitionUri a",
-        location=LegacyLabwareOffsetLocation(
-            slotName=DeckSlotName.SLOT_A1,
-            moduleModel=ModuleModel.THERMOCYCLER_MODULE_V1,
-            definitionUri="location.definitionUri a",
+    offsets = {
+        "a": StoredLabwareOffset(
+            id="a",
+            createdAt=datetime.now(timezone.utc),
+            definitionUri="definitionUri a",
+            locationSequence=[
+                OnLabwareOffsetLocationSequenceComponent(
+                    labwareUri="location.definitionUri a"
+                ),
+                OnModuleOffsetLocationSequenceComponent(
+                    moduleModel=ModuleModel.THERMOCYCLER_MODULE_V1
+                ),
+                OnAddressableAreaOffsetLocationSequenceComponent(
+                    addressableAreaName="A1"
+                ),
+            ],
+            vector=LabwareOffsetVector(x=1, y=2, z=3),
         ),
-        vector=LabwareOffsetVector(x=1, y=2, z=3),
-    )
-    offset_b = LabwareOffset(
-        id="b",
-        createdAt=datetime.now(timezone.utc),
-        definitionUri="definitionUri b",
-        location=LegacyLabwareOffsetLocation(
-            slotName=DeckSlotName.SLOT_B1,
-            moduleModel=ModuleModel.MAGNETIC_BLOCK_V1,
-            definitionUri="location.definitionUri b",
+        "b": StoredLabwareOffset(
+            id="b",
+            createdAt=datetime.now(timezone.utc),
+            definitionUri="definitionUri b",
+            locationSequence=[
+                OnLabwareOffsetLocationSequenceComponent(
+                    labwareUri="location.definitionUri b"
+                ),
+                OnModuleOffsetLocationSequenceComponent(
+                    moduleModel=ModuleModel.MAGNETIC_BLOCK_V1
+                ),
+                OnAddressableAreaOffsetLocationSequenceComponent(
+                    addressableAreaName="B1"
+                ),
+            ],
+            vector=LabwareOffsetVector(x=2, y=4, z=6),
         ),
-        vector=LabwareOffsetVector(x=1, y=2, z=3),
+        "c": StoredLabwareOffset(
+            id="c",
+            createdAt=datetime.now(timezone.utc),
+            definitionUri="definitionUri a",
+            locationSequence=[
+                OnAddressableAreaOffsetLocationSequenceComponent(
+                    addressableAreaName="A1"
+                )
+            ],
+            vector=LabwareOffsetVector(x=3, y=6, z=9),
+        ),
+        "d": StoredLabwareOffset(
+            id="d",
+            createdAt=datetime.now(timezone.utc),
+            definitionUri="definitionUri a",
+            locationSequence=[
+                OnLabwareOffsetLocationSequenceComponent(
+                    labwareUri="location.definitionUri a"
+                ),
+                OnAddressableAreaOffsetLocationSequenceComponent(
+                    addressableAreaName="A1"
+                ),
+            ],
+            vector=LabwareOffsetVector(x=4, y=8, z=12),
+        ),
+        "e": StoredLabwareOffset(
+            id="e",
+            createdAt=datetime.now(timezone.utc),
+            definitionUri="definitionUri a",
+            locationSequence=[
+                OnModuleOffsetLocationSequenceComponent(
+                    moduleModel=ModuleModel.MAGNETIC_BLOCK_V1
+                ),
+                OnAddressableAreaOffsetLocationSequenceComponent(
+                    addressableAreaName="A1"
+                ),
+            ],
+            vector=LabwareOffsetVector(x=5, y=10, z=15),
+        ),
+    }
+    for offset in offsets.values():
+        subject.add(offset)
+    results = subject.search(
+        id_filter=id_filter,
+        definition_uri_filter=definition_uri_filter,
+        location_addressable_area_filter=location_addressable_area_filter,
+        location_module_model_filter=location_module_model_filter,
+        location_definition_uri_filter=location_labware_uri_filter,
     )
-
-    subject.add(offset_a)
-    subject.add(offset_b)
-
-    assert subject.search(id_filter=offset_a.id) == [offset_a]
-    assert subject.search(id_filter=offset_b.id) == [offset_b]
-
-    assert subject.search(definition_uri_filter=offset_a.definitionUri) == [offset_a]
-    assert subject.search(definition_uri_filter=offset_b.definitionUri) == [offset_b]
-
-    assert subject.search(location_slot_name_filter=offset_a.location.slotName) == [
-        offset_a
-    ]
-    assert subject.search(location_slot_name_filter=offset_b.location.slotName) == [
-        offset_b
-    ]
-
-    assert subject.search(
-        location_module_model_filter=offset_a.location.moduleModel
-    ) == [offset_a]
-    assert subject.search(
-        location_module_model_filter=offset_b.location.moduleModel
-    ) == [offset_b]
-
-    assert subject.search(
-        location_definition_uri_filter=offset_a.location.definitionUri
-    ) == [offset_a]
-    assert subject.search(
-        location_definition_uri_filter=offset_b.location.definitionUri
-    ) == [offset_b]
+    assert sorted(
+        results,
+        key=lambda o: o.id,
+    ) == sorted([offsets[id_] for id_ in returned_ids], key=lambda o: o.id)
 
 
 def test_filter_combinations(subject: LabwareOffsetStore) -> None:
@@ -96,11 +265,15 @@ def test_filter_combinations(subject: LabwareOffsetStore) -> None:
         ("id-6", "definition-uri-b"),
     ]
     labware_offsets = [
-        LabwareOffset(
+        StoredLabwareOffset(
             id=id,
             createdAt=datetime.now(timezone.utc),
             definitionUri=definition_uri,
-            location=LegacyLabwareOffsetLocation(slotName=DeckSlotName.SLOT_A1),
+            locationSequence=[
+                OnAddressableAreaOffsetLocationSequenceComponent(
+                    addressableAreaName="A1"
+                )
+            ],
             vector=LabwareOffsetVector(x=1, y=2, z=3),
         )
         for (id, definition_uri) in ids_and_definition_uris
@@ -137,11 +310,15 @@ def test_filter_combinations(subject: LabwareOffsetStore) -> None:
 def test_delete(subject: LabwareOffsetStore) -> None:
     """Test the `delete()` and `delete_all()` methods."""
     a, b, c = [
-        LabwareOffset(
+        StoredLabwareOffset(
             id=id,
             createdAt=datetime.now(timezone.utc),
             definitionUri="",
-            location=LegacyLabwareOffsetLocation(slotName=DeckSlotName.SLOT_A1),
+            locationSequence=[
+                OnAddressableAreaOffsetLocationSequenceComponent(
+                    addressableAreaName="A1"
+                )
+            ],
             vector=LabwareOffsetVector(x=1, y=2, z=3),
         )
         for id in ["id-a", "id-b", "id-c"]

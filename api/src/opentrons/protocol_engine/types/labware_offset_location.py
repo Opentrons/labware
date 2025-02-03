@@ -3,7 +3,7 @@
 This is its own module to fix circular imports.
 """
 
-from typing import Optional, Literal
+from typing import Optional, Literal, Annotated
 
 from pydantic import BaseModel, Field
 
@@ -48,11 +48,15 @@ class OnAddressableAreaOffsetLocationSequenceComponent(BaseModel):
     )
 
 
-LabwareOffsetLocationSequenceComponents = (
+LabwareOffsetLocationSequenceComponentsUnion = (
     OnLabwareOffsetLocationSequenceComponent
     | OnModuleOffsetLocationSequenceComponent
     | OnAddressableAreaOffsetLocationSequenceComponent
 )
+
+LabwareOffsetLocationSequenceComponents = Annotated[
+    LabwareOffsetLocationSequenceComponentsUnion, Field(discriminator="kind")
+]
 
 LabwareOffsetLocationSequence = list[LabwareOffsetLocationSequenceComponents]
 

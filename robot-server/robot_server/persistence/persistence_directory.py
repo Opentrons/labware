@@ -1,6 +1,5 @@
 """Create or reset the server's persistence directory."""
 
-
 from pathlib import Path
 from logging import getLogger
 from shutil import rmtree
@@ -19,6 +18,7 @@ from ._migrations import (
     v6_to_v7,
     v7_to_v8,
     v8_to_v9,
+    v9_to_v10,
 )
 from .file_and_directory_names import LATEST_VERSION_DIRECTORY
 
@@ -69,7 +69,8 @@ def make_migration_orchestrator(prepared_root: Path) -> MigrationOrchestrator:
             # internal robots.
             v6_to_v7.Migration6to7(subdirectory="7.1"),
             v7_to_v8.Migration7to8(subdirectory="8"),
-            v8_to_v9.Migration8to9(subdirectory=LATEST_VERSION_DIRECTORY),
+            v8_to_v9.Migration8to9(subdirectory="9"),
+            v9_to_v10.Migration9to10(subdirectory=LATEST_VERSION_DIRECTORY),
         ],
         temp_file_prefix="temp-",
     )

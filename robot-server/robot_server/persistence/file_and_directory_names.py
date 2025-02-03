@@ -8,7 +8,7 @@ v2/deck_configuration.json, etc.
 
 from typing import Final
 
-LATEST_VERSION_DIRECTORY: Final = "9"
+LATEST_VERSION_DIRECTORY: Final = "10"
 
 DECK_CONFIGURATION_FILE: Final = "deck_configuration.json"
 PROTOCOLS_DIRECTORY: Final = "protocols"

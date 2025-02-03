@@ -12,11 +12,17 @@ stages:
       json:
         data:
           definitionUri: definitionUri1
-          location:
-            slotName: A1
-            definitionUri: testNamespace/testLoadName/123
-            moduleModel: thermocyclerModuleV2
-          vector: { x: 1, y: 1, z: 1 }
+          locationSequence:
+            - kind: onLabware
+              labwareUri: testNamespace/testLoadName/123
+            - kind: onModule
+              moduleModel: thermocyclerModuleV2
+            - kind: onAddressableArea
+              addressableAreaName: A1
+          vector:
+            x: 1
+            y: 1
+            z: 1
     response:
       status_code: 201
       json:
@@ -24,11 +30,17 @@ stages:
           id: !anystr
           createdAt: !anystr
           definitionUri: definitionUri1
-          location:
-            slotName: A1
-            definitionUri: testNamespace/testLoadName/123
-            moduleModel: thermocyclerModuleV2
-          vector: { x: 1, y: 1, z: 1 }
+          locationSequence:
+            - kind: onLabware
+              labwareUri: testNamespace/testLoadName/123
+            - kind: onModule
+              moduleModel: thermocyclerModuleV2
+            - kind: onAddressableArea
+              addressableAreaName: A1
+          vector:
+            x: 1
+            y: 1
+            z: 1
       save:
         json:
           offset_1_data: data
@@ -41,9 +53,13 @@ stages:
       json:
         data:
           definitionUri: definitionUri2
-          location:
-            slotName: A2
-          vector: { x: 2, y: 2, z: 2 }
+          locationSequence:
+            - kind: onAddressableArea
+              addressableAreaName: A2
+          vector:
+            x: 2
+            y: 2
+            z: 2
     response:
       status_code: 201
       save:
@@ -57,9 +73,13 @@ stages:
       json:
         data:
           definitionUri: definitionUri3
-          location:
-            slotName: A3
-          vector: { x: 3, y: 3, z: 3 }
+          locationSequence:
+            - kind: onAddressableArea
+              addressableAreaName: A3
+          vector:
+            x: 3
+            y: 3
+            z: 3
     response:
       status_code: 201
       save:
@@ -146,10 +166,11 @@ stages:
       json:
         data:
           definitionUri: testNamespace/loadName1/1
-          location:
-            slotName: A1
-            # No moduleModel
-            # No definitionUri
+          locationSequence:
+            - kind: onAddressableArea
+              addressableAreaName: A1
+              # No moduleModel
+              # No definitionUri
           vector:
             x: 1
             y: 2
@@ -166,10 +187,12 @@ stages:
       json:
         data:
           definitionUri: testNamespace/loadName2/1
-          location:
-            slotName: A1
-            moduleModel: temperatureModuleV2
-            # No definitionUri
+          locationSequence:
+            - kind: onModule
+              moduleModel: temperatureModuleV2
+            - kind: onAddressableArea
+              addressableAreaName: A1
+              # No definitionUri
           vector:
             x: 1
             y: 2
@@ -186,10 +209,12 @@ stages:
       json:
         data:
           definitionUri: testNamespace/loadName2/1
-          location:
-            slotName: A1
-            # no moduleModel
-            definitionUri: testNamespace/adapterLoadName/1
+          locationSequence:
+            - kind: onLabware
+              labwareUri: testNamespace/adapterLoadName/1
+            - kind: onAddressableArea
+              addressableAreaName: A1
+              # no moduleModel
           vector:
             x: 1
             y: 2
@@ -206,10 +231,13 @@ stages:
       json:
         data:
           definitionUri: testNamespace/loadName3/1
-          location:
-            slotName: A1
-            moduleModel: temperatureModuleV2
-            definitionUri: testNamespace/adapterLoadName/1
+          locationSequence:
+            - kind: onLabware
+              labwareUri: testNamespace/adapterLoadName/1
+            - kind: onModule
+              moduleModel: temperatureModuleV2
+            - kind: onAddressableArea
+              addressableAreaName: A1
           vector:
             x: 1
             y: 2

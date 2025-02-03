@@ -94,6 +94,7 @@ from .labware_offset_location import (
     OnLabwareOffsetLocationSequenceComponent,
     OnModuleOffsetLocationSequenceComponent,
     OnAddressableAreaOffsetLocationSequenceComponent,
+    LabwareOffsetLocationSequenceComponents,
 )
 from .labware_offset_vector import LabwareOffsetVector
 from .well_position import (
@@ -204,6 +205,7 @@ __all__ = [
     # Labware offset location
     "LegacyLabwareOffsetLocation",
     "LabwareOffsetLocationSequence",
+    "LabwareOffsetLocationSequenceComponents",
     "OnLabwareOffsetLocationSequenceComponent",
     "OnModuleOffsetLocationSequenceComponent",
     "OnAddressableAreaOffsetLocationSequenceComponent",

@@ -37,9 +37,10 @@ def standardize_labware_offset_create(
     )
 
 
-def _legacy_offset_location_to_offset_location_sequence(
+def legacy_offset_location_to_offset_location_sequence(
     location: LegacyLabwareOffsetLocation, deck_definition: DeckDefinitionV5
 ) -> LabwareOffsetLocationSequence:
+    """Convert a legacy location to a new-style sequence."""
     sequence: LabwareOffsetLocationSequence = []
     if location.definitionUri:
         sequence.append(
@@ -165,7 +166,7 @@ def _locations_for_create(
             }
         )
         return (
-            _legacy_offset_location_to_offset_location_sequence(
+            legacy_offset_location_to_offset_location_sequence(
                 normalized, deck_definition
             ),
             normalized,
