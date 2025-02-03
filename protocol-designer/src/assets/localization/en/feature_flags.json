@@ -35,5 +35,9 @@
   "OT_PD_ENABLE_TIMELINE_SCRUBBER": {
     "title": "Enable timeline scrubber",
     "description": "See the protocol timeline visualization in overview"
+  },
+  "OT_PD_ENABLE_PYTHON_EXPORT": {
+    "title": "Enable exporting python",
+    "description": "Enables the ability to export python for pd/python interop"
   }
 }
