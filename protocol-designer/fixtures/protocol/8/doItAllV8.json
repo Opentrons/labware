@@ -33,18 +33,18 @@
       },
       "ingredients": {
         "0": {
-          "name": "h20",
+          "displayName": "h20",
           "displayColor": "#b925ff",
           "description": null,
-          "serialize": false,
-          "liquidGroupId": "0"
+          "pythonName": "liquid_0",
+          "liquidGroupId": "1"
         },
         "1": {
-          "name": "sample",
+          "displayName": "sample",
           "displayColor": "#ffd600",
           "description": null,
-          "serialize": false,
-          "liquidGroupId": "1"
+          "liquidGroupId": "2",
+          "pythonName": "liquid_1"
         }
       },
       "ingredLocations": {

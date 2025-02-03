@@ -20,8 +20,8 @@ import type {
   RobotState,
   ModuleEntities,
   TimelineFrame,
+  LiquidEntities,
 } from '@opentrons/step-generation'
-import type { LiquidGroupsById } from '../../labware-ingred/types'
 
 interface Pipettes {
   [pipetteId: string]: { name: PipetteName }
@@ -33,7 +33,7 @@ export const getLoadCommands = (
   moduleEntities: ModuleEntities,
   labwareEntities: LabwareEntities,
   labwareNicknamesById: Record<string, string>,
-  ingredients: LiquidGroupsById,
+  liquidEntities: LiquidEntities,
   ingredLocations: LabwareLiquidState
 ): CreateCommand[] => {
   const pipettes: Pipettes = mapValues(
@@ -161,7 +161,10 @@ export const getLoadCommands = (
     []
   )
 
-  const loadLiquidCommands = getLoadLiquidCommands(ingredients, ingredLocations)
+  const loadLiquidCommands = getLoadLiquidCommands(
+    liquidEntities,
+    ingredLocations
+  )
 
   const loadModuleCommands = map(
     initialRobotState.modules,

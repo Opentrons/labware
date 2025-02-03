@@ -192,6 +192,7 @@ export function makeContext(): InvariantContext {
     moduleEntities,
     pipetteEntities,
     additionalEquipmentEntities,
+    liquidEntities: {},
     config: DEFAULT_CONFIG,
   }
 }

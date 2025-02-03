@@ -134,6 +134,9 @@ export function constructInvariantContextFromRunCommands(
       moduleEntities: {},
       pipetteEntities: {},
       additionalEquipmentEntities: {},
+      //  this util is used for the timeline scrubber. It grabs liquid info from analysis
+      //  so this will not be wired up right now
+      liquidEntities: {},
       config: { OT_PD_DISABLE_MODULE_RESTRICTIONS: true },
     }
   )

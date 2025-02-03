@@ -20,7 +20,7 @@ import {
   TYPOGRAPHY,
 } from '@opentrons/components'
 import { LINE_CLAMP_TEXT_STYLE } from '../../atoms'
-import { selectors as labwareIngredSelectors } from '../../labware-ingred/selectors'
+import { getLiquidEntities } from '../../step-forms/selectors'
 import * as labwareIngredActions from '../../labware-ingred/actions'
 
 import type { MouseEvent, RefObject } from 'react'
@@ -40,7 +40,7 @@ export function LiquidsOverflowMenu(
   const { onClose, showLiquidsModal, overflowWrapperRef } = props
   const location = useLocation()
   const { t } = useTranslation(['starting_deck_state'])
-  const liquids = useSelector(labwareIngredSelectors.allIngredientNamesIds)
+  const liquids = useSelector(getLiquidEntities)
   const dispatch: ThunkDispatch<any> = useDispatch()
 
   return (
@@ -62,36 +62,38 @@ export function LiquidsOverflowMenu(
       maxHeight="18.75rem"
       overflowY={OVERFLOW_AUTO}
     >
-      {liquids.map(({ name, displayColor, ingredientId }) => {
-        return (
-          <MenuItem
-            data-testid={`${name}_${ingredientId}`}
-            onClick={() => {
-              onClose()
-              showLiquidsModal()
-              dispatch(labwareIngredActions.selectLiquidGroup(ingredientId))
-            }}
-            key={ingredientId}
-            css={css`
-              cursor: ${CURSOR_POINTER};
-            `}
-          >
-            <Flex alignItems={ALIGN_CENTER} gridGap={SPACING.spacing8}>
-              <LiquidIcon color={displayColor ?? ''} />
-              <StyledText
-                desktopStyle="bodyDefaultRegular"
-                css={`
-                  ${LINE_CLAMP_TEXT_STYLE(3)}
-                  text-align: ${TYPOGRAPHY.textAlignLeft}
-                `}
-              >
-                {name}
-              </StyledText>
-            </Flex>
-          </MenuItem>
-        )
-      })}
-      {liquids.length > 0 ? (
+      {Object.values(liquids).map(
+        ({ displayName, displayColor, liquidGroupId }) => {
+          return (
+            <MenuItem
+              data-testid={`${displayName}_${liquidGroupId}`}
+              onClick={() => {
+                onClose()
+                showLiquidsModal()
+                dispatch(labwareIngredActions.selectLiquidGroup(liquidGroupId))
+              }}
+              key={liquidGroupId}
+              css={css`
+                cursor: ${CURSOR_POINTER};
+              `}
+            >
+              <Flex alignItems={ALIGN_CENTER} gridGap={SPACING.spacing8}>
+                <LiquidIcon color={displayColor ?? ''} />
+                <StyledText
+                  desktopStyle="bodyDefaultRegular"
+                  css={`
+                    ${LINE_CLAMP_TEXT_STYLE(3)}
+                    text-align: ${TYPOGRAPHY.textAlignLeft}
+                  `}
+                >
+                  {displayName}
+                </StyledText>
+              </Flex>
+            </MenuItem>
+          )
+        }
+      )}
+      {Object.values(liquids).length > 0 ? (
         <Divider color={COLORS.grey20} marginY="0" />
       ) : null}
       <MenuItem

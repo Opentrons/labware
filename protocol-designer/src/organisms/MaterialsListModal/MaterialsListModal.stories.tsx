@@ -5,6 +5,7 @@ import { i18n } from '../../assets/localization'
 import { configureStore } from '../../configureStore'
 import { MaterialsListModal as MaterialsListModalComponent } from '.'
 
+import type { LiquidEntities } from '@opentrons/step-generation'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { LabwareOnDeck, ModuleOnDeck } from '../../step-forms'
 import type { FixtureInList } from '.'
@@ -45,8 +46,7 @@ const mockLabware = [
   },
 ] as LabwareOnDeck[]
 
-// ToDo (kk:09/03/2024) add test when implementing liquids part completely
-const mockLiquids = [] as any[]
+const mockLiquids = {} as LiquidEntities
 
 const meta: Meta<typeof MaterialsListModalComponent> = {
   title: 'Protocol-Designer/Organisms/MaterialsListModal',
@@ -80,6 +80,6 @@ export const EmptyMaterialsListModal: Story = {
     hardware: [],
     fixtures: [],
     labware: [],
-    liquids: [],
+    liquids: {},
   },
 }

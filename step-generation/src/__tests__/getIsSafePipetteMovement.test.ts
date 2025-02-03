@@ -58,6 +58,7 @@ describe('getIsSafePipetteMovement', () => {
       },
       moduleEntities: {},
       additionalEquipmentEntities: {},
+      liquidEntities: {},
       config: {
         OT_PD_DISABLE_MODULE_RESTRICTIONS: false,
       },
@@ -87,6 +88,7 @@ describe('getIsSafePipetteMovement', () => {
         labwareEntities: {},
         pipetteEntities: {},
         moduleEntities: {},
+        liquidEntities: {},
         additionalEquipmentEntities: {
           trashBin: { name: 'trashBin', location: 'A3', id: 'trashBin' },
         },

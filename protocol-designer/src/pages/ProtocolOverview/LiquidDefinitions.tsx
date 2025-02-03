@@ -26,7 +26,7 @@ const getLiquidDescription = (
   enableLiquidClasses: boolean
 ): JSX.Element | null => {
   const { description, liquidClass } = liquid
-  const liquidClassDisplayName = getLiquidClassDisplayName(liquidClass)
+  const liquidClassDisplayName = getLiquidClassDisplayName(liquidClass ?? null)
   const liquidClassInfo =
     !enableLiquidClasses || liquidClassDisplayName == null ? null : (
       <Tag text={liquidClassDisplayName} type="default" shrinkToContent />
@@ -68,7 +68,7 @@ export function LiquidDefinitions({
             return (
               <ListItem
                 type="noActive"
-                key={`${liquid.name}_${liquid.displayColor}_${index}`}
+                key={`${liquid.displayName}_${liquid.displayColor}_${index}`}
               >
                 <ListItemDescriptor
                   type="large"
@@ -85,7 +85,7 @@ export function LiquidDefinitions({
                         id="liquid-name"
                         css={LINE_CLAMP_TEXT_STYLE(3)}
                       >
-                        {liquid.name}
+                        {liquid.displayName}
                       </StyledText>
                     </Flex>
                   }

@@ -77,7 +77,7 @@ describe('MaterialsListModal', () => {
       hardware: [],
       fixtures: [],
       labware: [],
-      liquids: [],
+      liquids: {},
       setShowMaterialsListModal: mockSetShowMaterialsListModal,
     }
     vi.mocked(getInitialDeckSetup).mockReturnValue({
@@ -157,14 +157,15 @@ describe('MaterialsListModal', () => {
     props = {
       ...props,
 
-      liquids: [
-        {
-          ingredientId: mockId,
-          name: 'mockName',
+      liquids: {
+        [mockId]: {
+          liquidGroupId: mockId,
+          displayName: 'mockName',
           displayColor: 'mockDisplayColor',
-          liquidClass: null,
+          description: null,
+          pythonName: 'mockPythonName',
         },
-      ],
+      },
     }
     render(props)
     screen.getByText('Liquids')

@@ -9087,6 +9087,7 @@ exports[`snapshot tests > makeContext 1`] = `
       "labwareDefURI": "fixture/fixture_12_trough/1",
     },
   },
+  "liquidEntities": {},
   "moduleEntities": {},
   "pipetteEntities": {
     "p100096Id": {

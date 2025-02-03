@@ -24,6 +24,7 @@ import { OT2_ROBOT_TYPE } from '@opentrons/shared-data'
 import {
   getAdditionalEquipmentEntities,
   getInitialDeckSetup,
+  getLiquidEntities,
 } from '../../step-forms/selectors'
 import { selectors as fileSelectors } from '../../file-data'
 import { selectors as stepFormSelectors } from '../../step-forms'
@@ -101,9 +102,7 @@ export function ProtocolOverview(): JSX.Element {
   const fileData = useSelector(fileSelectors.createFile)
   const savedStepForms = useSelector(stepFormSelectors.getSavedStepForms)
   const additionalEquipment = useSelector(getAdditionalEquipmentEntities)
-  const liquidsOnDeck = useSelector(
-    labwareIngredSelectors.allIngredientNamesIds
-  )
+  const liquids = useSelector(getLiquidEntities)
 
   useEffect(() => {
     if (formValues?.created == null) {
@@ -241,7 +240,7 @@ export function ProtocolOverview(): JSX.Element {
               : []
           }
           labware={Object.values(labwaresOnDeck)}
-          liquids={liquidsOnDeck}
+          liquids={liquids}
           setShowMaterialsListModal={setShowMaterialsListModal}
         />
       ) : null}

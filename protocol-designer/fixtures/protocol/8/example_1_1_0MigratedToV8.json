@@ -36,15 +36,17 @@
       },
       "ingredients": {
         "0": {
-          "name": "samples",
+          "displayName": "samples",
           "description": null,
-          "serialize": false,
+          "displayColor": "#b925ff",
+          "pythonName": "liquid_1",
           "liquidGroupId": "0"
         },
         "1": {
-          "name": "dna",
+          "displayName": "dna",
           "description": null,
-          "serialize": false,
+          "pythonName": "liquid_2",
+          "displayColor": "#ffd600",
           "liquidGroupId": "1"
         }
       },

@@ -33,9 +33,11 @@ import { HandleEnter } from '../../atoms/HandleEnter'
 import { LINE_CLAMP_TEXT_STYLE } from '../../atoms'
 import { getMainPagePortalEl } from '../Portal'
 
-import type { AdditionalEquipmentName } from '@opentrons/step-generation'
+import type {
+  AdditionalEquipmentName,
+  LiquidEntities,
+} from '@opentrons/step-generation'
 import type { LabwareOnDeck, ModuleOnDeck } from '../../step-forms'
-import type { OrderedLiquids } from '../../labware-ingred/types'
 
 // ToDo (kk:09/04/2024) this should be removed when break-point is set up
 const MODAL_MIN_WIDTH = '37.125rem'
@@ -50,7 +52,7 @@ interface MaterialsListModalProps {
   hardware: ModuleOnDeck[]
   fixtures: FixtureInList[]
   labware: LabwareOnDeck[]
-  liquids: OrderedLiquids
+  liquids: LiquidEntities
   setShowMaterialsListModal: (showMaterialsListModal: boolean) => void
 }
 
@@ -220,7 +222,7 @@ export function MaterialsListModal({
               {t('liquids')}
             </StyledText>
             <Flex flexDirection={DIRECTION_COLUMN} gridGap={SPACING.spacing4}>
-              {liquids.length > 0 ? (
+              {Object.values(liquids).length > 0 ? (
                 <Flex
                   flexDirection={DIRECTION_ROW}
                   gridGap={SPACING.spacing8}
@@ -243,13 +245,13 @@ export function MaterialsListModal({
                 </Flex>
               ) : null}
               <Flex gridGap={SPACING.spacing4} flexDirection={DIRECTION_COLUMN}>
-                {liquids.length > 0 ? (
-                  liquids.map((liquid, id) => {
+                {Object.values(liquids).length > 0 ? (
+                  Object.values(liquids).map((liquid, id) => {
                     const volumePerWell = Object.values(
                       allLabwareWellContents
                     ).flatMap(labwareWithIngred =>
                       Object.values(labwareWithIngred).map(
-                        ingred => ingred[liquid.ingredientId]?.volume ?? 0
+                        ingred => ingred[liquid.liquidGroupId]?.volume ?? 0
                       )
                     )
                     const totalVolume = sum(volumePerWell)
@@ -273,7 +275,7 @@ export function MaterialsListModal({
                                   desktopStyle="bodyDefaultRegular"
                                   css={LINE_CLAMP_TEXT_STYLE(3)}
                                 >
-                                  {liquid.name ?? t('n/a')}
+                                  {liquid.displayName ?? t('n/a')}
                                 </StyledText>
                               </Flex>
                             }

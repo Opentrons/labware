@@ -33,9 +33,10 @@
       },
       "ingredients": {
         "0": {
-          "name": "Water",
+          "displayName": "Water",
+          "displayColor": "#b925ff",
           "description": null,
-          "serialize": false,
+          "pythonName": "liquid_1",
           "liquidGroupId": "0"
         }
       },

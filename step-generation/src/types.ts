@@ -120,6 +120,19 @@ export interface NormalizedPipetteById {
   }
 }
 
+export interface LiquidEntity {
+  displayName: string
+  displayColor: string
+  description: string | null
+  pythonName: string
+  liquidGroupId: string
+  liquidClass?: string
+}
+
+export interface LiquidEntities {
+  [liquidId: string]: LiquidEntity
+}
+
 export type AdditionalEquipmentName =
   | 'gripper'
   | 'wasteChute'
@@ -515,6 +528,7 @@ export interface InvariantContext {
   moduleEntities: ModuleEntities
   pipetteEntities: PipetteEntities
   additionalEquipmentEntities: AdditionalEquipmentEntities
+  liquidEntities: LiquidEntities
   config: Config
 }
 

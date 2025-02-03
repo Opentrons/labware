@@ -11,6 +11,7 @@ import { uuid } from '../../utils'
 import {
   getInitialDeckSetup,
   getInvariantContext,
+  getLiquidEntities,
 } from '../../step-forms/selectors'
 import { getLabwareNicknamesById } from '../../ui/labware/selectors'
 import { selectors as ingredSelectors } from '../../labware-ingred/selectors'
@@ -32,7 +33,7 @@ export function ScrubberContainer(): JSX.Element | null {
   const labwareNickNames = useSelector(getLabwareNicknamesById)
   const robotStateTimeline = useSelector(getRobotStateTimeline)
   const initialRobotState = useSelector(getInitialRobotState)
-  const ingredients = useSelector(ingredSelectors.getLiquidGroupsById)
+  const liquidEntities = useSelector(getLiquidEntities)
   const ingredientLocations = useSelector(ingredSelectors.getLiquidsByLabwareId)
   const invariantContext = useSelector(getInvariantContext)
   const initialDeckSetup = useSelector(getInitialDeckSetup)
@@ -55,7 +56,7 @@ export function ScrubberContainer(): JSX.Element | null {
     moduleEntities,
     labwareEntities,
     labwareNickNames,
-    ingredients,
+    liquidEntities,
     ingredientLocations
   )
   const nonLoadCommands = flatMap(
@@ -147,10 +148,10 @@ export function ScrubberContainer(): JSX.Element | null {
     }
   })
 
-  const liquids: Liquid[] = Object.entries(ingredients).map(
+  const liquids: Liquid[] = Object.entries(liquidEntities).map(
     ([liquidId, liquidData]) => ({
       id: liquidId,
-      displayName: liquidData.name ?? 'undefined liquid name',
+      displayName: liquidData.displayName ?? 'undefined liquid name',
       description: liquidData.description ?? '',
       displayColor: liquidData.displayColor,
     })

@@ -39,6 +39,7 @@ import type {
   LabwareEntities,
   ModuleEntities,
   PipetteEntities,
+  LiquidEntities,
 } from '@opentrons/step-generation'
 import type { PipetteName, LabwareDefinition2 } from '@opentrons/shared-data'
 import type {
@@ -93,8 +94,11 @@ import type {
   SavedStepFormState,
   BatchEditFormChangesState,
 } from '../reducers'
+import type { RootState as LabwareIngredRootState } from '../../labware-ingred/reducers'
 
 const rootSelector = (state: BaseState): RootState => state.stepForms
+const labwareIngredRootSelector = (state: BaseState): LabwareIngredRootState =>
+  state.labwareIngred
 
 export const getPresavedStepForm = (state: BaseState): PresavedStepFormState =>
   rootSelector(state).presavedStepForm
@@ -104,6 +108,19 @@ export const getCurrentFormIsPresaved: Selector<
 > = createSelector(
   getPresavedStepForm,
   presavedStepForm => presavedStepForm != null
+)
+
+const _getNormalizedLiquidById: Selector<
+  BaseState,
+  LiquidEntities
+> = createSelector(labwareIngredRootSelector, state => state.ingredients)
+
+export const getLiquidEntities: Selector<
+  BaseState,
+  LiquidEntities
+> = createSelector(
+  _getNormalizedLiquidById,
+  normalizedLiquidById => normalizedLiquidById
 )
 
 // NOTE Ian 2019-04-15: outside of this file, you probably only care about
@@ -672,6 +689,7 @@ export const getInvariantContext: Selector<
   getLabwareEntities,
   getModuleEntities,
   getPipetteEntities,
+  getLiquidEntities,
   getAdditionalEquipmentEntities,
   featureFlagSelectors.getDisableModuleRestrictions,
   featureFlagSelectors.getAllowAllTipracks,
@@ -679,6 +697,7 @@ export const getInvariantContext: Selector<
     labwareEntities,
     moduleEntities,
     pipetteEntities,
+    liquidEntities,
     additionalEquipmentEntities,
     disableModuleRestrictions,
     allowAllTipracks
@@ -686,6 +705,7 @@ export const getInvariantContext: Selector<
     labwareEntities,
     moduleEntities,
     pipetteEntities,
+    liquidEntities,
     additionalEquipmentEntities,
     config: {
       OT_PD_ALLOW_ALL_TIPRACKS: Boolean(allowAllTipracks),

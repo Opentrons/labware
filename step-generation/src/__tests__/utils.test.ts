@@ -318,6 +318,7 @@ describe('makeInitialRobotState', () => {
             },
           },
           additionalEquipmentEntities: {},
+          liquidEntities: {},
         },
         labwareLocations: {
           somePlateId: { slot: '1' },
