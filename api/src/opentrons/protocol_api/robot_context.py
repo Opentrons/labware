@@ -9,6 +9,8 @@ from opentrons.types import (
     AxisType,
     StringAxisMap,
 )
+from opentrons.legacy_broker import LegacyBroker
+from opentrons.legacy_commands import robot_commands as cmds
 from opentrons.legacy_commands import publisher
 from opentrons.hardware_control import SyncHardwareAPI
 from opentrons.protocols.api_support.util import requires_version
@@ -49,8 +51,13 @@ class RobotContext(publisher.CommandPublisher):
     """
 
     def __init__(
-        self, core: RobotCore, protocol_core: ProtocolCore, api_version: APIVersion
+        self,
+        core: RobotCore,
+        protocol_core: ProtocolCore,
+        api_version: APIVersion,
+        broker: Optional[LegacyBroker] = None,
     ) -> None:
+        super().__init__(broker)
         self._hardware = HardwareManager(hardware=protocol_core.get_hardware())
         self._core = core
         self._protocol_core = protocol_core
@@ -87,7 +94,16 @@ class RobotContext(publisher.CommandPublisher):
         :param speed:
         """
         mount = validation.ensure_instrument_mount(mount)
-        self._core.move_to(mount, destination.point, speed)
+        with publisher.publish_context(
+            broker=self.broker,
+            command=cmds.move_to(
+                # This needs to be called from protocol context and not the command for import loop reasons
+                mount=mount,
+                location=destination,
+                speed=speed,
+            ),
+        ):
+            self._core.move_to(mount, destination.point, speed)
 
     @requires_version(2, 22)
     def move_axes_to(
@@ -119,7 +135,15 @@ class RobotContext(publisher.CommandPublisher):
             )
         else:
             critical_point = None
-        self._core.move_axes_to(axis_map, critical_point, speed)
+        with publisher.publish_context(
+            broker=self.broker,
+            command=cmds.move_axis_to(
+                # This needs to be called from protocol context and not the command for import loop reasons
+                axis_map=axis_map,
+                speed=speed,
+            ),
+        ):
+            self._core.move_axes_to(axis_map, critical_point, speed)
 
     @requires_version(2, 22)
     def move_axes_relative(
@@ -142,15 +166,33 @@ class RobotContext(publisher.CommandPublisher):
         axis_map = validation.ensure_axis_map_type(
             axis_map, self._protocol_core.robot_type, is_96_channel
         )
-        self._core.move_axes_relative(axis_map, speed)
+        with publisher.publish_context(
+            broker=self.broker,
+            command=cmds.move_axis_relative(
+                # This needs to be called from protocol context and not the command for import loop reasons
+                axis_map=axis_map,
+                speed=speed,
+            ),
+        ):
+            self._core.move_axes_relative(axis_map, speed)
 
     def close_gripper_jaw(self, force: Optional[float] = None) -> None:
         """Command the gripper closed with some force."""
-        self._core.close_gripper(force)
+        with publisher.publish_context(
+            broker=self.broker,
+            command=cmds.close_gripper(
+                force=force,
+            ),
+        ):
+            self._core.close_gripper(force)
 
     def open_gripper_jaw(self) -> None:
         """Command the gripper open."""
-        self._core.release_grip()
+        with publisher.publish_context(
+            broker=self.broker,
+            command=cmds.open_gripper(),
+        ):
+            self._core.release_grip()
 
     def axis_coordinates_for(
         self,

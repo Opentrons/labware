@@ -196,6 +196,7 @@ class ProtocolContext(CommandPublisher):
                 core=self._core.load_robot(),
                 protocol_core=self._core,
                 api_version=self._api_version,
+                broker=broker,
             )
         except APIVersionError:
             self._robot = None
